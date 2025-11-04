@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc -p .",
-    "watch": "tsc -w -p .",
-    "serve": "npx http-server . -p 5173 -c-1"
-  },
+  "start": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
+}
   "devDependencies": {
     "typescript": "^5.6.3"
   }
