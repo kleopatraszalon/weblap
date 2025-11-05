@@ -8,16 +8,16 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
 
     <!-- Saját stíluslap -->
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
 
   <body>
+    <!-- HEADER -->
     <header class="site-header">
       <div class="container header-inner">
-        <!-- LOGÓ -->
         <a class="brand" href="#" aria-label="Kleopátra Szépségszalonok">
           <img src="/images/kleo_logo@2x.png" alt="Kleopátra" />
         </a>
@@ -41,13 +41,14 @@
     </header>
 
     <main>
+      <!-- HERO -->
       <section class="hero">
         <div class="container hero-inner">
+          <!-- Bal oldal: szöveg + ikonok -->
           <div class="hero-copy">
-            <!-- IKONOK a szöveg ELŐTT -->
             <div class="hero-icons" aria-hidden="true">
-              <img src="/images/mobil.png" alt="" />
-              <img src="/images/Utalvany.png" alt="" />
+              <img src="/images/mobil.png" alt="Mobil app" />
+              <img src="/images/Utalvany.png" alt="Utalvány" />
             </div>
 
             <h1>Minden ami szépség, <span class="accent">csak Neked!</span></h1>
@@ -58,35 +59,31 @@
             </div>
           </div>
 
+          <!-- Jobb oldal: FIX méretű képkocka, benne a rotáló képek -->
           <div class="hero-media">
             <div class="hero-badge">Webshop</div>
-            <!-- KÖZÉPSŐ KÉP – automatikusan cserélődik -->
-            <img
-              id="heroImage"
-              src="/images/images_1.webp"
-              alt="Kleopátra szépség – női portré"
-              width="1040" height="1300"
-            />
+            <div class="hero-frame">
+              <img class="hero-img is-active" src="/images/images_1.webp" alt="Kleopátra – női portré 1" />
+              <img class="hero-img"           src="/images/images_2.webp" alt="Kleopátra – női portré 2" />
+              <img class="hero-img"           src="/images/images_3.webp" alt="Kleopátra – női portré 3" />
+              <img class="hero-img"           src="/images/images_4.webp" alt="Kleopátra – női portré 4" />
+            </div>
           </div>
         </div>
         <div class="floating-badge">Bejelentkezés nélkül is!</div>
       </section>
 
-      <!-- NAGY ARANY MENÜGOMBOK a kép alatt -->
+      <!-- KÉP ALATTI NAGY ARANY GOMBOK -->
       <section class="mega-links">
         <div class="container mega-col">
-          <a class="mega-btn" href="#salons">SZALONJAINK</a>
-          <a class="mega-btn" href="#loyalty">HŰSÉGPROGRAM</a>
-          <a class="mega-btn" href="#prices">ÁRAINK</a>
-          <a class="mega-btn" href="#webshop">WEBSHOP</a>
-          <a class="mega-btn" href="#career">KARRIER</a>
-          <a class="mega-btn" href="#education">OKTATÁS</a>
-          <a class="mega-btn" href="#about">RÓLUNK</a>
-          <a class="mega-btn" href="#franchise">FRANCHISE</a>
-          <a class="mega-btn" href="#services">SZOLGÁLTATÁSOK</a>
+          <a class="mega-btn" href="#franchise">SZERETNÉL EGY KLEOPÁTRA SZÉPSÉGSZALONT? FRANCHISE PROGRAM</a>
+          <a class="mega-btn" href="#app">TÖLTSD LE MOBILODRA ALKALMAZÁSUNK</a>
+          <a class="mega-btn" href="#newsletter">HÍRLEVÉL</a>
+          <a class="mega-btn" href="#contact">KAPCSOLAT</a>
         </div>
       </section>
 
+      <!-- SZOLGÁLTATÁSOK -->
       <section id="services" class="section">
         <div class="container">
           <div class="section-head">
@@ -97,6 +94,7 @@
         </div>
       </section>
 
+      <!-- SZALONJAINK -->
       <section id="salons" class="section">
         <div class="container">
           <div class="section-head"><h2>Szalonjaink</h2></div>
@@ -104,14 +102,15 @@
         </div>
       </section>
 
+      <!-- IDŐPONTFOGLALÁS -->
       <section id="booking" class="section alt">
         <div class="container grid-2">
           <div>
             <h2>Időpontfoglalás</h2>
             <form id="bookingForm" class="booking-form">
-              <label><span>Teljes név</span><input type="text" name="full_name" required/></label>
-              <label><span>E-mail</span><input type="email" name="email" required/></label>
-              <label><span>Telefon</span><input type="tel" name="phone" required/></label>
+              <label><span>Teljes név</span><input type="text" name="full_name" required /></label>
+              <label><span>E-mail</span><input type="email" name="email" required /></label>
+              <label><span>Telefon</span><input type="tel" name="phone" required /></label>
               <label><span>Szolgáltatás</span>
                 <select name="service_id" id="serviceSelect" required>
                   <option value="">– Válassz –</option>
@@ -122,7 +121,7 @@
                   <option value="">– Válassz –</option>
                 </select>
               </label>
-              <label><span>Dátum</span><input type="date" name="date" required/></label>
+              <label><span>Dátum</span><input type="date" name="date" required /></label>
               <button class="btn btn-primary" type="submit">Lefoglalom</button>
               <p id="bookingMsg" class="form-msg" role="status"></p>
             </form>
@@ -134,6 +133,7 @@
       </section>
     </main>
 
+    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="brand-col">
@@ -143,18 +143,27 @@
       </div>
     </footer>
 
+    <!-- COOKIE BAR -->
     <div class="cookiebar" id="cookiebar">
       <p>Ez a weboldal sütiket használ.</p>
       <button class="btn btn-primary" id="cookieAccept">Rendben</button>
     </div>
 
-    <!-- Modul típusú betöltés -->
+    <!-- Modul típusú betöltés: projekt TS/JS kódja -->
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- KÉPCSERE – nagyon kicsi JS, ha TS nélkül is szeretné futtatni:
+    <!-- Stabil képcsere (CSS osztály váltással, nem ugrál) -->
     <script>
-      const imgs=['/images/images_1.webp','/images/images_2.webp','/images/images_3.webp','/images/images_4.webp'];
-      let i=0; setInterval(()=>{ const el=document.getElementById('heroImage'); if(el) (el as HTMLImageElement).src=imgs[(++i)%imgs.length]; }, 4500);
-    </script> -->
+      (function () {
+        var imgs = Array.prototype.slice.call(document.querySelectorAll('.hero-frame .hero-img'));
+        if (!imgs.length) return;
+        var i = 0;
+        setInterval(function () {
+          imgs[i].classList.remove('is-active');
+          i = (i + 1) % imgs.length;
+          imgs[i].classList.add('is-active');
+        }, 4500);
+      })();
+    </script>
   </body>
 </html>

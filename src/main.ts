@@ -250,3 +250,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // ... a meglévő init-ek mellé:
   rotateHero();
 });
+
+function rotateHeroStable(): void {
+  const imgs = Array.from(document.querySelectorAll<HTMLImageElement>('.hero-frame .hero-img'));
+  if (!imgs.length) return;
+
+  let i = 0;
+  setInterval(() => {
+    imgs[i].classList.remove('is-active');
+    i = (i + 1) % imgs.length;
+    imgs[i].classList.add('is-active');
+  }, 4500);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ... a meglévő inicializálások mellé:
+  rotateHeroStable();
+});
