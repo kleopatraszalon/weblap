@@ -13,9 +13,9 @@
     <!-- Saját stíluslap -->
     <link rel="stylesheet" href="/css/styles.css" />
 
-    <!-- Kiegészítő stílusok a kért finomításokhoz -->
+    <!-- Kiegészítő stílusok -->
     <style>
-      /* 50–50% rács desktopon, mobilon egyoszlopos */
+      /* 50–50% rács desktopon, mobilon egy oszlop */
       .hero-inner{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; padding:40px 0 24px }
       @media (max-width:960px){ .hero-inner{ grid-template-columns:1fr; gap:28px } }
 
@@ -55,15 +55,18 @@
       }
       .mega-btn:hover{ filter:brightness(1.05) }
 
-      /* Véletlenszerűen mozgó fekete körök a hero fölött */
+      /* Gyorsabban mozgó fekete körök a hero fölött */
       .hero{ position:relative }
       .hero-dots{ position:absolute; inset:0; z-index:6; pointer-events:none; overflow:hidden }
-      .hero-dots .dot{ position:absolute; background:#000; border-radius:50%;
-                       filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); opacity:.85;
-                       animation-timing-function:ease-in-out; animation-iteration-count:infinite }
-      @keyframes drift-a{ 0%{transform:translate(0,0)} 50%{transform:translate(16px,-24px)} 100%{transform:translate(0,0)} }
-      @keyframes drift-b{ 0%{transform:translate(0,0)} 50%{transform:translate(-22px,14px)} 100%{transform:translate(0,0)} }
-      @keyframes drift-c{ 0%{transform:translate(0,0)} 50%{transform:translate(10px,18px)} 100%{transform:translate(0,0)} }
+      .hero-dots .dot{
+        position:absolute; background:#000; border-radius:50%;
+        filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); opacity:.85;
+        animation-timing-function:ease-in-out; animation-iteration-count:infinite;
+        animation-direction:alternate; will-change:transform;
+      }
+      @keyframes drift-a{ 0%{transform:translate(0,0)} 50%{transform:translate(22px,-32px)} 100%{transform:translate(0,0)} }
+      @keyframes drift-b{ 0%{transform:translate(0,0)} 50%{transform:translate(-28px,20px)} 100%{transform:translate(0,0)} }
+      @keyframes drift-c{ 0%{transform:translate(0,0)} 50%{transform:translate(16px,24px)} 100%{transform:translate(0,0)} }
     </style>
   </head>
 
@@ -124,7 +127,7 @@
           </div>
         </div>
 
-        <!-- mozgó, fekete pöttyök -->
+        <!-- Gyorsabban mozgó fekete pöttyök -->
         <div class="hero-dots" id="heroDots" aria-hidden="true"></div>
 
         <div class="floating-badge">Bejelentkezés nélkül is!</div>
@@ -209,9 +212,9 @@
     <!-- Modul típusú betöltés: projekt TS/JS kódja -->
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- Stabil képcsere + véletlen fekete körök -->
+    <!-- Gyorsabb képcsere + gyorsabb fekete körök -->
     <script>
-      // Képcsere: csak az átlátszóság vált, így nem ugrál a layout
+      // Képcsere: 3000 ms-ra gyorsítva
       (function () {
         var imgs = Array.prototype.slice.call(document.querySelectorAll('.hero-frame .hero-img'));
         if (!imgs.length) return;
@@ -220,10 +223,10 @@
           imgs[i].classList.remove('is-active');
           i = (i + 1) % imgs.length;
           imgs[i].classList.add('is-active');
-        }, 4500);
+        }, 3000);
       })();
 
-      // Véletlenszerűen mozgó fekete körök
+      // Fekete körök: rövidebb ciklus (4–9 s), nagyobb elmozdulás a keyframe-ben
       (function () {
         var wrap = document.getElementById('heroDots');
         if (!wrap) return;
@@ -235,7 +238,7 @@
           var dot = document.createElement('span');
           dot.className = 'dot';
 
-          // méret (desktopon nagyobb)
+          // méret
           var sizeMin = (window.innerWidth <= 640) ? 14 : 20;
           var sizeMax = (window.innerWidth <= 640) ? 60 : 90;
           var size = Math.floor(Math.random() * (sizeMax - sizeMin + 1)) + sizeMin;
@@ -246,11 +249,11 @@
           dot.style.left = (Math.random() * 96) + '%';
           dot.style.top  = (Math.random() * 86) + '%';
 
-          // animáció variáns + idő
+          // gyorsabb animációs idő
           var anims = ['drift-a','drift-b','drift-c'];
           var name = anims[i % anims.length];
-          var dur  = (Math.random() * 10 + 10).toFixed(1) + 's';  // 10–20 s
-          var delay = (-Math.random() * 10).toFixed(1) + 's';     // negatív kezdés
+          var dur  = (Math.random() * 5 + 4).toFixed(1) + 's';   // 4–9 s
+          var delay = (-Math.random() * 4).toFixed(1) + 's';     // -0..-4 s
 
           dot.style.animationName = name;
           dot.style.animationDuration = dur;
