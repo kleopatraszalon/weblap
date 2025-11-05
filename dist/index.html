@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kleopátra Szépségszalonok</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Saját stíluslap -->
+    <script type="module" crossorigin src="/index.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-MDfQNh4R.css">
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <!-- LOGÓ -->
+        <a class="brand" href="#"
+          ><img src="/assets/kleo_logo-CDcGgLKk.png" alt="Kleopátra"
+        /></a>
+        <nav id="mainNav" class="nav">
+          <a href="#services">Szolgáltatások</a>
+          <a href="#salons">Szalonjaink</a>
+          <a href="#franchise">Franchise</a>
+          <a href="#booking">Időpont</a>
+        </nav>
+        <button class="hamburger" id="navToggle" aria-label="Menü">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <h1>
+              Minden ami szépség, <span class="accent">csak Neked!</span>
+            </h1>
+            <p class="lead">Bejelentkezés nélkül is várunk – foglalj online!</p>
+            <div class="cta-wrap">
+              <a class="btn btn-primary" href="#booking">Időpontfoglalás</a>
+              <a class="btn btn-ghost" href="#franchise">Franchise</a>
+            </div>
+          </div>
+          <div class="hero-media">
+            <div class="hero-badge">Webshop</div>
+            <!-- KÖZÉPSŐ KÉP -->
+            <img
+              src="/assets/task_01k97nr5azexxs75cp8ymp1r8a_1762268121_img_0-BfYZ0E-Y.webp"
+              alt="Szépség"
+            />
+          </div>
+        </div>
+        <div class="floating-badge">Bejelentkezés nélkül is!</div>
+      </section>
+
+      <section id="services" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Szolgáltatásaink</h2>
+            <p class="muted">Legnépszerűbb szolgáltatások és árak</p>
+          </div>
+          <div id="servicesGrid" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="salons" class="section">
+        <div class="container">
+          <div class="section-head"><h2>Szalonjaink</h2></div>
+          <div id="salonList" class="salon-list"></div>
+        </div>
+      </section>
+
+      <section id="booking" class="section alt">
+        <div class="container grid-2">
+          <div>
+            <h2>Időpontfoglalás</h2>
+            <form id="bookingForm" class="booking-form">
+              <label
+                ><span>Teljes név</span
+                ><input type="text" name="full_name" required
+              /></label>
+              <label
+                ><span>E-mail</span
+                ><input type="email" name="email" required
+              /></label>
+              <label
+                ><span>Telefon</span
+                ><input type="tel" name="phone" required
+              /></label>
+              <label
+                ><span>Szolgáltatás</span>
+                <select name="service_id" id="serviceSelect" required>
+                  <option value="">– Válassz –</option>
+                </select>
+              </label>
+              <label
+                ><span>Szalon</span>
+                <select name="salon_id" id="salonSelect" required>
+                  <option value="">– Válassz –</option>
+                </select>
+              </label>
+              <label
+                ><span>Dátum</span
+                ><input type="date" name="date" required
+              /></label>
+              <button class="btn btn-primary" type="submit">Lefoglalom</button>
+              <p id="bookingMsg" class="form-msg" role="status"></p>
+            </form>
+          </div>
+          <div class="media-cover">
+            <img src="/images/booking.jpg" alt="Foglalás" />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="brand-col">
+          <!-- LOGÓ (láblécben is) -->
+          <img src="/assets/kleo_logo-CDcGgLKk.png" alt="Kleopátra" />
+          <p class="muted small">© <span id="year"></span> Kleopátra</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="cookiebar" id="cookiebar">
+      <p>Ez a weboldal sütiket használ.</p>
+      <button class="btn btn-primary" id="cookieAccept">Rendben</button>
+    </div>
+
+    <!-- Modul típusú betöltések -->
+  </body>
+</html>
