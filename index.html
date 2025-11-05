@@ -8,10 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
 
     <!-- Saját stíluslap -->
     <link rel="stylesheet" href="/css/styles.css" />
@@ -21,15 +18,22 @@
     <header class="site-header">
       <div class="container header-inner">
         <!-- LOGÓ -->
-        <a class="brand" href="#"
-          ><img src="/images/kleo_logo.png" alt="Kleopátra"
-        /></a>
+        <a class="brand" href="#" aria-label="Kleopátra Szépségszalonok">
+          <img src="/images/kleo_logo@2x.png" alt="Kleopátra" />
+        </a>
+
         <nav id="mainNav" class="nav">
-          <a href="#services">Szolgáltatások</a>
           <a href="#salons">Szalonjaink</a>
+          <a href="#loyalty">Hűségprogram</a>
+          <a href="#prices">Áraink</a>
+          <a href="#webshop">Webshop</a>
+          <a href="#career">Karrier</a>
+          <a href="#education">Oktatás</a>
+          <a href="#about">Rólunk</a>
           <a href="#franchise">Franchise</a>
-          <a href="#booking">Időpont</a>
+          <a href="#services">Szolgáltatások</a>
         </nav>
+
         <button class="hamburger" id="navToggle" aria-label="Menü">
           <span></span><span></span><span></span>
         </button>
@@ -40,25 +44,47 @@
       <section class="hero">
         <div class="container hero-inner">
           <div class="hero-copy">
-            <h1>
-              Minden ami szépség, <span class="accent">csak Neked!</span>
-            </h1>
+            <!-- IKONOK a szöveg ELŐTT -->
+            <div class="hero-icons" aria-hidden="true">
+              <img src="/images/mobil.png" alt="" />
+              <img src="/images/Utalvany.png" alt="" />
+            </div>
+
+            <h1>Minden ami szépség, <span class="accent">csak Neked!</span></h1>
             <p class="lead">Bejelentkezés nélkül is várunk – foglalj online!</p>
             <div class="cta-wrap">
               <a class="btn btn-primary" href="#booking">Időpontfoglalás</a>
               <a class="btn btn-ghost" href="#franchise">Franchise</a>
             </div>
           </div>
+
           <div class="hero-media">
             <div class="hero-badge">Webshop</div>
-            <!-- KÖZÉPSŐ KÉP -->
+            <!-- KÖZÉPSŐ KÉP – automatikusan cserélődik -->
             <img
-              src="/images/task_01k97nr5azexxs75cp8ymp1r8a_1762268121_img_0.webp"
-              alt="Szépség"
+              id="heroImage"
+              src="/images/images_1.webp"
+              alt="Kleopátra szépség – női portré"
+              width="1040" height="1300"
             />
           </div>
         </div>
         <div class="floating-badge">Bejelentkezés nélkül is!</div>
+      </section>
+
+      <!-- NAGY ARANY MENÜGOMBOK a kép alatt -->
+      <section class="mega-links">
+        <div class="container mega-col">
+          <a class="mega-btn" href="#salons">SZALONJAINK</a>
+          <a class="mega-btn" href="#loyalty">HŰSÉGPROGRAM</a>
+          <a class="mega-btn" href="#prices">ÁRAINK</a>
+          <a class="mega-btn" href="#webshop">WEBSHOP</a>
+          <a class="mega-btn" href="#career">KARRIER</a>
+          <a class="mega-btn" href="#education">OKTATÁS</a>
+          <a class="mega-btn" href="#about">RÓLUNK</a>
+          <a class="mega-btn" href="#franchise">FRANCHISE</a>
+          <a class="mega-btn" href="#services">SZOLGÁLTATÁSOK</a>
+        </div>
       </section>
 
       <section id="services" class="section">
@@ -83,34 +109,20 @@
           <div>
             <h2>Időpontfoglalás</h2>
             <form id="bookingForm" class="booking-form">
-              <label
-                ><span>Teljes név</span
-                ><input type="text" name="full_name" required
-              /></label>
-              <label
-                ><span>E-mail</span
-                ><input type="email" name="email" required
-              /></label>
-              <label
-                ><span>Telefon</span
-                ><input type="tel" name="phone" required
-              /></label>
-              <label
-                ><span>Szolgáltatás</span>
+              <label><span>Teljes név</span><input type="text" name="full_name" required/></label>
+              <label><span>E-mail</span><input type="email" name="email" required/></label>
+              <label><span>Telefon</span><input type="tel" name="phone" required/></label>
+              <label><span>Szolgáltatás</span>
                 <select name="service_id" id="serviceSelect" required>
                   <option value="">– Válassz –</option>
                 </select>
               </label>
-              <label
-                ><span>Szalon</span>
+              <label><span>Szalon</span>
                 <select name="salon_id" id="salonSelect" required>
                   <option value="">– Válassz –</option>
                 </select>
               </label>
-              <label
-                ><span>Dátum</span
-                ><input type="date" name="date" required
-              /></label>
+              <label><span>Dátum</span><input type="date" name="date" required/></label>
               <button class="btn btn-primary" type="submit">Lefoglalom</button>
               <p id="bookingMsg" class="form-msg" role="status"></p>
             </form>
@@ -125,8 +137,7 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="brand-col">
-          <!-- LOGÓ (láblécben is) -->
-          <img src="/images/kleo_logo.png" alt="Kleopátra" />
+          <img src="/images/kleo_logo@2x.png" alt="Kleopátra" />
           <p class="muted small">© <span id="year"></span> Kleopátra</p>
         </div>
       </div>
@@ -137,8 +148,13 @@
       <button class="btn btn-primary" id="cookieAccept">Rendben</button>
     </div>
 
-    <!-- Modul típusú betöltések -->
+    <!-- Modul típusú betöltés -->
     <script type="module" src="/src/main.ts"></script>
-    <script type="module" src="/src/main.ts"></script>
+
+    <!-- KÉPCSERE – nagyon kicsi JS, ha TS nélkül is szeretné futtatni:
+    <script>
+      const imgs=['/images/images_1.webp','/images/images_2.webp','/images/images_3.webp','/images/images_4.webp'];
+      let i=0; setInterval(()=>{ const el=document.getElementById('heroImage'); if(el) (el as HTMLImageElement).src=imgs[(++i)%imgs.length]; }, 4500);
+    </script> -->
   </body>
 </html>
