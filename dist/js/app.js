@@ -185,8 +185,32 @@ async function renderPrices() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.querySelector("[data-locations-root]")) renderLocations();
-  if (document.querySelector("[data-services-root]")) renderServices();
-  if (document.querySelector("[data-prices-root]")) renderPrices();
+document.addEventListener("DOMContentLoaded", function () {
+  const stack = document.querySelector(".hero-image-stack");
+  if (stack) {
+    const images = Array.from(stack.querySelectorAll("img"));
+    if (images.length > 1) {
+      let i = 0;
+      setInterval(() => {
+        images[i].classList.remove("is-active");
+        i = (i + 1) % images.length;
+        images[i].classList.add("is-active");
+      }, 5000);
+    }
+  }
+
+  const nav = document.getElementById("mainNav");
+  const navToggle = document.getElementById("navToggle");
+  if (nav && navToggle) {
+    navToggle.addEventListener("click", function () {
+      nav.classList.toggle("is-open");
+      navToggle.classList.toggle("is-open");
+    });
+    nav.addEventListener("click", function (e) {
+      if (e.target.tagName === "A") {
+        nav.classList.remove("is-open");
+        navToggle.classList.remove("is-open");
+      }
+    });
+  }
 });
