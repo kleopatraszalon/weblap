@@ -1,17 +1,25 @@
+/* =====================
+   ARCULATI SZÍNEK
+   ===================== */
 :root {
   --bg: #f9f5ef;
   --bg-soft: #ffffff;
   --text-main: #1c1a22;
   --text-muted: #6f6a7a;
-  --gold: #c4a05a;
+
+  /* Brand arany + magenta */
+  --gold: #c49a6c;
   --magenta: #e5007e;
+
   --border-subtle: rgba(0, 0, 0, 0.06);
   --radius-lg: 20px;
   --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.12);
-  --nav-height: 80px;
+  --nav-height: 96px;
 }
 
-/* ALAPOK */
+/* =====================
+   ALAPOK
+   ===================== */
 
 *,
 *::before,
@@ -21,7 +29,7 @@
 
 body {
   margin: 0;
-  font-family: "Open Sans", system-ui, -apple-system, BlinkMacSystemFont,
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text-main);
@@ -42,23 +50,25 @@ a {
   margin-inline: auto;
 }
 
-/* HEADER */
+/* =====================
+   HEADER
+   ===================== */
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.98);
+  background: #ffffff;
   border-bottom: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  height: var(--nav-height);
+  gap: 1.6rem;
+  min-height: var(--nav-height);
+  padding-block: 0.4rem;
 }
 
 .brand {
@@ -68,11 +78,11 @@ a {
 }
 
 .brand img {
-  height: 60px;
+  height: 78px;
   width: auto;
 }
 
-/* MOBIL NAV (ALAP) */
+/* MOBIL NAV */
 
 .nav {
   position: absolute;
@@ -81,7 +91,7 @@ a {
   top: calc(var(--nav-height) - 4px);
   display: none;
   flex-direction: column;
-  padding: 0.8rem 1rem 1rem;
+  padding: 0.8rem 1.2rem 1.2rem;
   border-radius: 16px;
   background: #fff;
   border: 1px solid var(--border-subtle);
@@ -93,11 +103,11 @@ a {
 }
 
 .nav a {
-  padding: 0.35rem 0.2rem;
-  font-size: 0.86rem;
+  padding: 0.4rem 0.2rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-family: "Montserrat", system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  font-weight: 600;
 }
 
 .nav a:hover {
@@ -109,25 +119,27 @@ a {
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  padding: 0.35rem;
+  padding: 0.45rem;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
 .hamburger span {
-  width: 20px;
+  width: 22px;
   height: 2px;
   border-radius: 999px;
   background: #222;
 }
 
-/* CTA alapból mobilon nem kell – menüben ott a Kapcsolat */
+/* CTA mobilon elrejtve – menüben ott a Kapcsolat */
 .header-cta {
   display: none;
 }
 
-/* HERO */
+/* =====================
+   HERO
+   ===================== */
 
 .hero {
   position: relative;
@@ -164,12 +176,10 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--magenta);
-  font-family: "Montserrat", system-ui, sans-serif;
   margin-bottom: 0.9rem;
 }
 
 .hero h1 {
-  font-family: "Montserrat", system-ui, sans-serif;
   font-size: clamp(2.1rem, 4vw, 3rem);
   margin: 0 0 1rem;
   letter-spacing: 0.03em;
@@ -218,12 +228,11 @@ a {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-family: "Montserrat", system-ui, sans-serif;
   cursor: pointer;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--magenta), var(--gold));
+  background: var(--magenta);   /* egyszínű brand CTA */
   color: #fff;
   box-shadow: var(--shadow-soft);
 }
@@ -233,7 +242,12 @@ a {
   background: #fff;
 }
 
-/* HERO MEDIA */
+/* HERO MEDIA (képek váltakozásához fontos!) */
+
+.hero-media {
+  max-width: 420px;
+  margin-inline: auto;
+}
 
 .hero-media-frame {
   position: relative;
@@ -277,7 +291,9 @@ a {
   color: #fff;
 }
 
-/* SZEKCIÓK, KÁRTYÁK */
+/* =====================
+   SZEKCIÓK, KÁRTYÁK
+   ===================== */
 
 .section {
   padding: 2.4rem 0 3rem;
@@ -290,7 +306,6 @@ a {
 .section-eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  font-family: "Montserrat", system-ui, sans-serif;
   font-size: 0.8rem;
   color: var(--magenta);
   margin-bottom: 0.5rem;
@@ -324,7 +339,6 @@ a {
 
 .card-title {
   margin: 0 0 0.6rem;
-  font-family: "Montserrat", system-ui, sans-serif;
   font-size: 1.2rem;
 }
 
@@ -342,83 +356,16 @@ a {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-family: "Montserrat", system-ui, sans-serif;
 }
 
-/* PAGE HERO (más aloldalakhoz) */
-
-.page-hero {
-  padding: 2.4rem 0 1.4rem;
-}
-
-.page-hero .hero-lead.hero-lead--narrow {
-  max-width: 640px;
-}
-
-/* FORM / INFO LIST */
-
-.info-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.94rem;
-  color: var(--text-muted);
-}
-
-.info-list li + li {
-  margin-top: 0.4rem;
-}
-
-.form-card {
-  background: var(--bg-soft);
-  border-radius: var(--radius-lg);
-  padding: 1.4rem 1.5rem;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.86rem;
-}
-
-.field span {
-  font-weight: 600;
-}
-
-.field input,
-.field textarea {
-  border-radius: 12px;
-  border: 1px solid var(--border-subtle);
-  padding: 0.6rem 0.8rem;
-  font-family: inherit;
-  font-size: 0.9rem;
-}
-
-.form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 0.9rem;
-}
-
-.form-row--two {
-  flex-direction: column;
-}
-
-.form-caption {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 0.8rem;
-}
-
-/* LÁBLÉC */
+/* =====================
+   LÁBLÉC
+   ===================== */
 
 .site-footer {
   border-top: 1px solid var(--border-subtle);
   background: #fff;
-  padding: 1.6rem 0;
+  padding: 1.8rem 0;
 }
 
 .footer-inner {
@@ -429,7 +376,7 @@ a {
 }
 
 .footer-brand img {
-  height: 40px;
+  height: 50px;
 }
 
 .small {
@@ -440,51 +387,38 @@ a {
   color: var(--text-muted);
 }
 
-/* ELRENDEZÉS NAGYOBB KÉPERNYŐN */
+/* =====================
+   LAYOUT BREAKPOINTOK
+   ===================== */
 
 @media (min-width: 768px) {
   .hero-grid {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     align-items: center;
   }
-
-  .form-row--two {
-    flex-direction: row;
-  }
-
-  .form-row--two .field {
-    flex: 1;
-  }
-
-  .contact-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    gap: 1.4rem;
-  }
 }
 
-/* DESKTOP (>=960px) – SZÉP, KÉTSOROS MENÜ */
+/* DESKTOP (≥960px) – KÉTSOROS, KÖZÉPRE RENDEZETT MENÜ */
 
 @media (min-width: 960px) {
   .header-inner {
-    align-items: flex-end;
+    align-items: center; /* NAV függőlegesen középen */
   }
 
   .brand img {
-    height: 70px;
+    height: 84px;
   }
 
-  /* NAV: 2 sor, grid, középen, 9 menüponthoz */
   .nav,
   .nav.is-open {
     position: static;
     display: grid;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(5, max-content); /* 1. sor max 5 elem */
-    justify-content: center;
-    align-items: center;
-    column-gap: 1.8rem;
-    row-gap: 0.2rem;
+    grid-template-columns: repeat(5, max-content); /* első sor max 5 */
+    grid-auto-rows: auto;
+    justify-content: center;   /* vízszintesen középen */
+    align-content: center;     /* függőlegesen középen a két sor */
+    column-gap: 2rem;
+    row-gap: 0.35rem;
     padding: 0;
     margin: 0 auto;
     background: transparent;
@@ -494,7 +428,7 @@ a {
 
   .nav a {
     padding: 0;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     text-align: center;
   }
 
@@ -506,17 +440,19 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.6rem 1.5rem;
+    padding: 0.75rem 1.8rem;
     border-radius: 999px;
-    background: linear-gradient(135deg, var(--magenta), var(--gold));
+    background: var(--magenta);
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    font-family: "Montserrat", system-ui, sans-serif;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
     flex-shrink: 0;
-    margin-bottom: 0.2rem;
+  }
+
+  .hero-media {
+    margin-inline: 0;
   }
 }
