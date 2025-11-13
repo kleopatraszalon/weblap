@@ -47,7 +47,7 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-.container { width: min(1160px, 100% - 2.4rem); margin-inline: auto; }
+.container { width: min(1200px, 100% - 2.4rem); margin-inline: auto; }
 
 /* HEADER – LOGÓ + MENÜ EGY SORBAN (light) */
 .site-header {
@@ -72,7 +72,7 @@ select:focus-visible {
   width: auto;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .brand img {
     height: 70px;
   }
@@ -129,7 +129,7 @@ select:focus-visible {
   display: none;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1500px) {
   .header-cta {
     display: inline-flex;
     align-items: center;
@@ -152,7 +152,7 @@ select:focus-visible {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
+  gap: 0px;
   padding: 0.35rem;
   border: 0;
   background: none;
@@ -171,7 +171,7 @@ select:focus-visible {
 .hamburger.is-open span:nth-child(2) { opacity: 0; width: 8px; }
 .hamburger.is-open span:nth-child(3) { transform: translateY(-4px) rotate(-45deg); }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .hamburger { display: none; }
 }
 
