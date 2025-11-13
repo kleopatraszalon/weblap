@@ -1,160 +1,141 @@
 <!doctype html>
 <html lang="hu">
   <head>
+    <title>Kleopátra Szépségszalonok – Minden ami szépség, csak Neked</title>
+    <meta name="description" content="Kleopátra Szépségszalonok – világos, letisztult arculat, egysoros menü a logó mellett." />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kleopátra Szépségszalonok</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/styles.css" />
+<script src="js/app.js" defer></script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
-
-    <!-- Saját stíluslap -->
-    <script type="module" crossorigin src="/assets/index-ZDEc_BVi.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-MDfQNh4R.css">
   </head>
-
   <body>
     <header class="site-header">
-      <div class="container header-inner">
-        <!-- LOGÓ -->
-        <a class="brand" href="#" aria-label="Kleopátra Szépségszalonok">
-          <img src="/assets/kleo_logo@2x-Bf93Ko9n.png" alt="Kleopátra" />
-        </a>
-
-        <nav id="mainNav" class="nav">
-          <a href="#salons">Szalonjaink</a>
-          <a href="#loyalty">Hűségprogram</a>
-          <a href="#prices">Áraink</a>
-          <a href="#webshop">Webshop</a>
-          <a href="#career">Karrier</a>
-          <a href="#education">Oktatás</a>
-          <a href="#about">Rólunk</a>
-          <a href="#franchise">Franchise</a>
-          <a href="#services">Szolgáltatások</a>
-        </nav>
-
-        <button class="hamburger" id="navToggle" aria-label="Menü">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Kleopátra Szépségszalonok – Főoldal">
+      <img src="/images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+    </a>
+    <button class="hamburger" id="navToggle" aria-label="Menü megnyitása">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="mainNav" class="nav">
+      <a href="salons.html">Szalonjaink</a>
+      <a href="loyalty.html">Hűségprogram</a>
+      <a href="prices.html">Áraink</a>
+      <a href="webshop.html">Webshop</a>
+      <a href="career.html">Karrier</a>
+      <a href="training.html">Oktatás</a>
+      <a href="about.html">Rólunk</a>
+      <a href="franchise.html">Franchise</a>
+      <a href="services.html">Szolgáltatások</a>
+    </nav>
+    <a class="header-cta" href="contact.html">Kapcsolat</a>
+  </div>
+</header>
 
     <main>
-      <section class="hero">
-        <div class="container hero-inner">
-          <div class="hero-copy">
-            <!-- IKONOK a szöveg ELŐTT -->
-            <div class="hero-icons" aria-hidden="true">
-              <img src="/assets/mobil-BGfkz-JX.png" alt="" />
-              <img src="/assets/Utalvany-CEPtfpYi.png" alt="" />
-            </div>
 
-            <h1>Minden ami szépség, <span class="accent">csak Neked!</span></h1>
-            <p class="lead">Bejelentkezés nélkül is várunk – foglalj online!</p>
-            <div class="cta-wrap">
-              <a class="btn btn-primary" href="#booking">Időpontfoglalás</a>
-              <a class="btn btn-ghost" href="#franchise">Franchise</a>
-            </div>
-          </div>
-
-          <div class="hero-media">
-            <div class="hero-badge">Webshop</div>
-            <!-- KÖZÉPSŐ KÉP – automatikusan cserélődik -->
-            <img
-              id="heroImage"
-              src="/assets/images_1-BfYZ0E-Y.webp"
-              alt="Kleopátra szépség – női portré"
-              width="1040" height="1300"
-            />
-          </div>
+  <section class="hero hero--home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <p class="hero-kicker">Minden ami szépség, csak Neked.</p>
+        <h1>
+          Kleopátra Szépségszalonok<br />
+          <span class="accent">look good, feel good!</span>
+        </h1>
+        <p class="hero-lead">
+          Szalonjainkban lehetőséget kínálunk arra, hogy bejelentkezés nélkül is igénybe vedd szolgáltatásainkat.
+          Ha inkább előre tervezel, fontos számodra, hogy mindig ugyanazon kollégáinknál szépülj – foglalj időpontot.
+        </p>
+        <div class="hero-pills">
+          <span>Fodrászat</span>
+          <span>Kozmetika</span>
+          <span>Kéz- és lábápolás</span>
+          <span>Szolárium</span>
+          <span>Masszázs</span>
         </div>
-        <div class="floating-badge">Bejelentkezés nélkül is!</div>
-      </section>
-
-      <!-- NAGY ARANY MENÜGOMBOK a kép alatt -->
-      <section class="mega-links">
-        <div class="container mega-col">
-          <a class="mega-btn" href="#salons">SZALONJAINK</a>
-          <a class="mega-btn" href="#loyalty">HŰSÉGPROGRAM</a>
-          <a class="mega-btn" href="#prices">ÁRAINK</a>
-          <a class="mega-btn" href="#webshop">WEBSHOP</a>
-          <a class="mega-btn" href="#career">KARRIER</a>
-          <a class="mega-btn" href="#education">OKTATÁS</a>
-          <a class="mega-btn" href="#about">RÓLUNK</a>
-          <a class="mega-btn" href="#franchise">FRANCHISE</a>
-          <a class="mega-btn" href="#services">SZOLGÁLTATÁSOK</a>
-        </div>
-      </section>
-
-      <section id="services" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Szolgáltatásaink</h2>
-            <p class="muted">Legnépszerűbb szolgáltatások és árak</p>
-          </div>
-          <div id="servicesGrid" class="card-grid"></div>
-        </div>
-      </section>
-
-      <section id="salons" class="section">
-        <div class="container">
-          <div class="section-head"><h2>Szalonjaink</h2></div>
-          <div id="salonList" class="salon-list"></div>
-        </div>
-      </section>
-
-      <section id="booking" class="section alt">
-        <div class="container grid-2">
-          <div>
-            <h2>Időpontfoglalás</h2>
-            <form id="bookingForm" class="booking-form">
-              <label><span>Teljes név</span><input type="text" name="full_name" required/></label>
-              <label><span>E-mail</span><input type="email" name="email" required/></label>
-              <label><span>Telefon</span><input type="tel" name="phone" required/></label>
-              <label><span>Szolgáltatás</span>
-                <select name="service_id" id="serviceSelect" required>
-                  <option value="">– Válassz –</option>
-                </select>
-              </label>
-              <label><span>Szalon</span>
-                <select name="salon_id" id="salonSelect" required>
-                  <option value="">– Válassz –</option>
-                </select>
-              </label>
-              <label><span>Dátum</span><input type="date" name="date" required/></label>
-              <button class="btn btn-primary" type="submit">Lefoglalom</button>
-              <p id="bookingMsg" class="form-msg" role="status"></p>
-            </form>
-          </div>
-          <div class="media-cover">
-            <img src="/images/booking.jpg" alt="Foglalás" />
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <div class="brand-col">
-          <img src="/assets/kleo_logo@2x-Bf93Ko9n.png" alt="Kleopátra" />
-          <p class="muted small">© <span id="year"></span> Kleopátra</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="salons.html">Szalon választása</a>
+          <a class="btn btn-ghost" href="prices.html">Árlista megnyitása</a>
         </div>
       </div>
-    </footer>
-
-    <div class="cookiebar" id="cookiebar">
-      <p>Ez a weboldal sütiket használ.</p>
-      <button class="btn btn-primary" id="cookieAccept">Rendben</button>
+      <div class="hero-media">
+        <div class="hero-media-frame">
+          <div class="hero-image-stack">
+            <img class="is-active" src="images/images_1.webp" alt="Vendég a Kleopátra Szépségszalonban" />
+            <img src="images/images_2.webp" alt="Frizura készítése Kleopátra Szépségszalonban" />
+            <img src="images/images_3.webp" alt="Kozmetikai kezelés Kleopátra Szépségszalonban" />
+            <img src="images/images_4.webp" alt="Manikűr Kleopátra Szépségszalonok" />
+          </div>
+          <div class="hero-chip hero-chip--light">Töltsd le mobilalkalmazásunk</div>
+        </div>
+      </div>
     </div>
+  </section>
+  <section class="section section--cards">
+    <div class="container grid-three">
+      <article class="card">
+        <h2 class="card-title">Franchise program</h2>
+        <p class="card-text">
+          Válj Kleopátra Szépségszalon tulajdonossá és csatlakozz professzionális háttérrel rendelkező márkánkhoz.
+        </p>
+        <a class="link-btn" href="franchise.html">Részletek a franchise-ról</a>
+      </article>
+      <article class="card">
+        <h2 class="card-title">Kleos termékek</h2>
+        <p class="card-text">
+          100% Kleopátrás megjelenés – kiegészítők és termékek limitált darabszámban, arculati csomagolással.
+        </p>
+        <a class="link-btn" href="webshop.html">Tovább a webshopra</a>
+      </article>
+      <article class="card">
+        <h2 class="card-title">Hűségprogram</h2>
+        <p class="card-text">
+          Regisztrált vendégeinket pontokkal, egyedi ajánlatokkal és extra kedvezményekkel jutalmazzuk.
+        </p>
+        <a class="link-btn" href="loyalty.html">Megnézem a hűségprogramot</a>
+      </article>
+    </div>
+  </section>
 
-    <!-- Modul típusú betöltés -->
+    </main>
+    <footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="/images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+    </div>
+    <div class="footer-meta">
+      <span class="small muted">© <span id="year"></span> Kleopátra Szépségszalonok. Minden jog fenntartva.</span>
+    </div>
+  </div>
+</footer>
+<script>
+  (function () {
+    const nav = document.getElementById("mainNav");
+    const navToggle = document.getElementById("navToggle");
+    if (nav && navToggle) {
+      navToggle.addEventListener("click", function () {
+        nav.classList.toggle("is-open");
+        navToggle.classList.toggle("is-open");
+      });
+      nav.addEventListener("click", function (e) {
+        if (e.target.tagName === "A") {
+          nav.classList.remove("is-open");
+          navToggle.classList.remove("is-open");
+        }
+      });
+    }
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+  })();
+</script>
 
-    <!-- KÉPCSERE – nagyon kicsi JS, ha TS nélkül is szeretné futtatni:
-    <script>
-      const imgs=['/images/images_1.webp','/images/images_2.webp','/images/images_3.webp','/images/images_4.webp'];
-      let i=0; setInterval(()=>{ const el=document.getElementById('heroImage'); if(el) (el as HTMLImageElement).src=imgs[(++i)%imgs.length]; }, 4500);
-    </script> -->
   </body>
 </html>

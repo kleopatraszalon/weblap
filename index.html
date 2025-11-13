@@ -1,267 +1,141 @@
 <!doctype html>
 <html lang="hu">
   <head>
+    <title>Kleopátra Szépségszalonok – Minden ami szépség, csak Neked</title>
+    <meta name="description" content="Kleopátra Szépségszalonok – világos, letisztult arculat, egysoros menü a logó mellett." />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kleopátra Szépségszalonok</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/styles.css" />
+<script src="js/app.js" defer></script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
-
-    <!-- Saját stíluslap -->
-    <link rel="stylesheet" href="/css/styles.css" />
-
-    <!-- Kiegészítő stílusok -->
-    <style>
-      /* 50–50% rács desktopon, mobilon egy oszlop */
-      .hero-inner{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; padding:40px 0 24px }
-      @media (max-width:960px){ .hero-inner{ grid-template-columns:1fr; gap:28px } }
-
-      /* Ikonok duplázva (mobilon kisebb) */
-      .hero-icons{ display:flex; gap:12px; margin-bottom:12px }
-      .hero-icons img{ height:88px; width:auto; display:block }
-      @media (max-width:640px){ .hero-icons img{ height:60px } }
-
-      /* CTA-k: nagyobb, szögletes */
-      .btn-lg{ font-size:1.05rem; padding:16px 24px }
-      .btn-square{ border-radius:8px !important }
-
-      /* Jobb oldali képkeret: fix arány, nem ugrál */
-      .hero-media{ position:relative }
-      .hero-badge{
-        position:absolute; top:-14px; left:-14px; z-index:7;
-        background:#111; color:#fff; font-weight:700;
-        padding:6px 12px; border-radius:999px;
-        box-shadow:0 6px 16px rgba(0,0,0,.25)
-      }
-      .hero-frame{
-        position:relative; width:100%; max-width:520px; aspect-ratio:4/5;
-        border-radius:20px; overflow:hidden; margin-left:auto;
-        box-shadow:0 18px 50px rgba(0,0,0,.18)
-      }
-      .hero-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .5s ease }
-      .hero-img.is-active{ opacity:1 }
-      @media (max-width:960px){ .hero-frame{ max-width:92vw; margin-left:0 } }
-
-      /* Kép alatti nagy arany gombok */
-      .mega-links{ padding:18px 0 8px }
-      .mega-col{ display:grid; gap:12px; max-width:920px; margin:0 auto }
-      .mega-btn{
-        display:block; text-align:center; text-decoration:none; text-transform:uppercase;
-        background:#C7A661; color:#fff; font-weight:700; letter-spacing:.4px;
-        padding:16px 18px; border-radius:8px; box-shadow:0 6px 14px rgba(199,166,97,.25)
-      }
-      .mega-btn:hover{ filter:brightness(1.05) }
-
-      /* Gyorsabban mozgó fekete körök a hero fölött */
-      .hero{ position:relative }
-      .hero-dots{ position:absolute; inset:0; z-index:6; pointer-events:none; overflow:hidden }
-      .hero-dots .dot{
-        position:absolute; background:#000; border-radius:50%;
-        filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); opacity:.85;
-        animation-timing-function:ease-in-out; animation-iteration-count:infinite;
-        animation-direction:alternate; will-change:transform;
-      }
-      @keyframes drift-a{ 0%{transform:translate(0,0)} 50%{transform:translate(22px,-32px)} 100%{transform:translate(0,0)} }
-      @keyframes drift-b{ 0%{transform:translate(0,0)} 50%{transform:translate(-28px,20px)} 100%{transform:translate(0,0)} }
-      @keyframes drift-c{ 0%{transform:translate(0,0)} 50%{transform:translate(16px,24px)} 100%{transform:translate(0,0)} }
-    </style>
   </head>
-
   <body>
-    <!-- HEADER -->
     <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" href="#" aria-label="Kleopátra Szépségszalonok">
-          <img src="/images/kleo_logo@2x.png" alt="Kleopátra" />
-        </a>
-
-        <nav id="mainNav" class="nav">
-          <a href="#salons">Szalonjaink</a>
-          <a href="#loyalty">Hűségprogram</a>
-          <a href="#prices">Áraink</a>
-          <a href="#webshop">Webshop</a>
-          <a href="#career">Karrier</a>
-          <a href="#education">Oktatás</a>
-          <a href="#about">Rólunk</a>
-          <a href="#franchise">Franchise</a>
-          <a href="#services">Szolgáltatások</a>
-        </nav>
-
-        <button class="hamburger" id="navToggle" aria-label="Menü">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Kleopátra Szépségszalonok – Főoldal">
+      <img src="/images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+    </a>
+    <button class="hamburger" id="navToggle" aria-label="Menü megnyitása">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="mainNav" class="nav">
+      <a href="salons.html">Szalonjaink</a>
+      <a href="loyalty.html">Hűségprogram</a>
+      <a href="prices.html">Áraink</a>
+      <a href="webshop.html">Webshop</a>
+      <a href="career.html">Karrier</a>
+      <a href="training.html">Oktatás</a>
+      <a href="about.html">Rólunk</a>
+      <a href="franchise.html">Franchise</a>
+      <a href="services.html">Szolgáltatások</a>
+    </nav>
+    <a class="header-cta" href="contact.html">Kapcsolat</a>
+  </div>
+</header>
 
     <main>
-      <!-- HERO -->
-      <section class="hero">
-        <div class="container hero-inner">
-          <!-- Bal oldal: szöveg + ikonok -->
-          <div class="hero-copy">
-            <div class="hero-icons" aria-hidden="true">
-              <img src="/images/mobil.png" alt="Mobil app" />
-              <img src="/images/Utalvany.png" alt="Utalvány" />
-            </div>
 
-            <h1>Minden ami szépség, <span class="accent">csak Neked!</span></h1>
-            <p class="lead">Bejelentkezés nélkül is várunk – foglalj online!</p>
-            <div class="cta-wrap">
-              <a class="btn btn-primary btn-lg btn-square" href="#booking">Időpontfoglalás</a>
-              <a class="btn btn-ghost btn-lg btn-square" href="#franchise">Franchise</a>
-            </div>
-          </div>
-
-          <!-- Jobb oldal: FIX méretű képkocka, benne a rotáló képek -->
-          <div class="hero-media">
-            <div class="hero-badge">Webshop</div>
-            <div class="hero-frame">
-              <img class="hero-img is-active" src="/images/images_1.webp" alt="Kleopátra – női portré 1" />
-              <img class="hero-img"           src="/images/images_2.webp" alt="Kleopátra – női portré 2" />
-              <img class="hero-img"           src="/images/images_3.webp" alt="Kleopátra – női portré 3" />
-              <img class="hero-img"           src="/images/images_4.webp" alt="Kleopátra – női portré 4" />
-            </div>
-          </div>
+  <section class="hero hero--home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <p class="hero-kicker">Minden ami szépség, csak Neked.</p>
+        <h1>
+          Kleopátra Szépségszalonok<br />
+          <span class="accent">look good, feel good!</span>
+        </h1>
+        <p class="hero-lead">
+          Szalonjainkban lehetőséget kínálunk arra, hogy bejelentkezés nélkül is igénybe vedd szolgáltatásainkat.
+          Ha inkább előre tervezel, fontos számodra, hogy mindig ugyanazon kollégáinknál szépülj – foglalj időpontot.
+        </p>
+        <div class="hero-pills">
+          <span>Fodrászat</span>
+          <span>Kozmetika</span>
+          <span>Kéz- és lábápolás</span>
+          <span>Szolárium</span>
+          <span>Masszázs</span>
         </div>
-
-        <!-- Gyorsabban mozgó fekete pöttyök -->
-        <div class="hero-dots" id="heroDots" aria-hidden="true"></div>
-
-        <div class="floating-badge">Bejelentkezés nélkül is!</div>
-      </section>
-
-      <!-- KÉP ALATTI NAGY ARANY GOMBOK -->
-      <section class="mega-links">
-        <div class="container mega-col">
-          <a class="mega-btn" href="#franchise">SZERETNÉL EGY KLEOPÁTRA SZÉPSÉGSZALONT? FRANCHISE PROGRAM</a>
-          <a class="mega-btn" href="#app">TÖLTSD LE MOBILODRA ALKALMAZÁSUNK</a>
-          <a class="mega-btn" href="#newsletter">HÍRLEVÉL</a>
-          <a class="mega-btn" href="#contact">KAPCSOLAT</a>
-        </div>
-      </section>
-
-      <!-- SZOLGÁLTATÁSOK -->
-      <section id="services" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Szolgáltatásaink</h2>
-            <p class="muted">Legnépszerűbb szolgáltatások és árak</p>
-          </div>
-          <div id="servicesGrid" class="card-grid"></div>
-        </div>
-      </section>
-
-      <!-- SZALONJAINK -->
-      <section id="salons" class="section">
-        <div class="container">
-          <div class="section-head"><h2>Szalonjaink</h2></div>
-          <div id="salonList" class="salon-list"></div>
-        </div>
-      </section>
-
-      <!-- IDŐPONTFOGLALÁS -->
-      <section id="booking" class="section alt">
-        <div class="container grid-2">
-          <div>
-            <h2>Időpontfoglalás</h2>
-            <form id="bookingForm" class="booking-form">
-              <label><span>Teljes név</span><input type="text" name="full_name" required /></label>
-              <label><span>E-mail</span><input type="email" name="email" required /></label>
-              <label><span>Telefon</span><input type="tel" name="phone" required /></label>
-              <label><span>Szolgáltatás</span>
-                <select name="service_id" id="serviceSelect" required>
-                  <option value="">– Válassz –</option>
-                </select>
-              </label>
-              <label><span>Szalon</span>
-                <select name="salon_id" id="salonSelect" required>
-                  <option value="">– Válassz –</option>
-                </select>
-              </label>
-              <label><span>Dátum</span><input type="date" name="date" required /></label>
-              <button class="btn btn-primary" type="submit">Lefoglalom</button>
-              <p id="bookingMsg" class="form-msg" role="status"></p>
-            </form>
-          </div>
-          <div class="media-cover">
-            <img src="/images/booking.jpg" alt="Foglalás" />
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <div class="brand-col">
-          <img src="/images/kleo_logo@2x.png" alt="Kleopátra" />
-          <p class="muted small">© <span id="year"></span> Kleopátra</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="salons.html">Szalon választása</a>
+          <a class="btn btn-ghost" href="prices.html">Árlista megnyitása</a>
         </div>
       </div>
-    </footer>
-
-    <!-- COOKIE BAR -->
-    <div class="cookiebar" id="cookiebar">
-      <p>Ez a weboldal sütiket használ.</p>
-      <button class="btn btn-primary" id="cookieAccept">Rendben</button>
+      <div class="hero-media">
+        <div class="hero-media-frame">
+          <div class="hero-image-stack">
+            <img class="is-active" src="images/images_1.webp" alt="Vendég a Kleopátra Szépségszalonban" />
+            <img src="images/images_2.webp" alt="Frizura készítése Kleopátra Szépségszalonban" />
+            <img src="images/images_3.webp" alt="Kozmetikai kezelés Kleopátra Szépségszalonban" />
+            <img src="images/images_4.webp" alt="Manikűr Kleopátra Szépségszalonok" />
+          </div>
+          <div class="hero-chip hero-chip--light">Töltsd le mobilalkalmazásunk</div>
+        </div>
+      </div>
     </div>
+  </section>
+  <section class="section section--cards">
+    <div class="container grid-three">
+      <article class="card">
+        <h2 class="card-title">Franchise program</h2>
+        <p class="card-text">
+          Válj Kleopátra Szépségszalon tulajdonossá és csatlakozz professzionális háttérrel rendelkező márkánkhoz.
+        </p>
+        <a class="link-btn" href="franchise.html">Részletek a franchise-ról</a>
+      </article>
+      <article class="card">
+        <h2 class="card-title">Kleos termékek</h2>
+        <p class="card-text">
+          100% Kleopátrás megjelenés – kiegészítők és termékek limitált darabszámban, arculati csomagolással.
+        </p>
+        <a class="link-btn" href="webshop.html">Tovább a webshopra</a>
+      </article>
+      <article class="card">
+        <h2 class="card-title">Hűségprogram</h2>
+        <p class="card-text">
+          Regisztrált vendégeinket pontokkal, egyedi ajánlatokkal és extra kedvezményekkel jutalmazzuk.
+        </p>
+        <a class="link-btn" href="loyalty.html">Megnézem a hűségprogramot</a>
+      </article>
+    </div>
+  </section>
 
-    <!-- Modul típusú betöltés: projekt TS/JS kódja -->
-    <script type="module" src="/src/main.ts"></script>
-
-    <!-- Gyorsabb képcsere + gyorsabb fekete körök -->
-    <script>
-      // Képcsere: 3000 ms-ra gyorsítva
-      (function () {
-        var imgs = Array.prototype.slice.call(document.querySelectorAll('.hero-frame .hero-img'));
-        if (!imgs.length) return;
-        var i = 0;
-        setInterval(function () {
-          imgs[i].classList.remove('is-active');
-          i = (i + 1) % imgs.length;
-          imgs[i].classList.add('is-active');
-        }, 3000);
-      })();
-
-      // Fekete körök: rövidebb ciklus (4–9 s), nagyobb elmozdulás a keyframe-ben
-      (function () {
-        var wrap = document.getElementById('heroDots');
-        if (!wrap) return;
-
-        var w = wrap.clientWidth || window.innerWidth;
-        var count = w > 1200 ? 14 : w > 800 ? 10 : 7;
-
-        for (var i = 0; i < count; i++) {
-          var dot = document.createElement('span');
-          dot.className = 'dot';
-
-          // méret
-          var sizeMin = (window.innerWidth <= 640) ? 14 : 20;
-          var sizeMax = (window.innerWidth <= 640) ? 60 : 90;
-          var size = Math.floor(Math.random() * (sizeMax - sizeMin + 1)) + sizeMin;
-          dot.style.width = size + 'px';
-          dot.style.height = size + 'px';
-
-          // kezdő pozíció
-          dot.style.left = (Math.random() * 96) + '%';
-          dot.style.top  = (Math.random() * 86) + '%';
-
-          // gyorsabb animációs idő
-          var anims = ['drift-a','drift-b','drift-c'];
-          var name = anims[i % anims.length];
-          var dur  = (Math.random() * 5 + 4).toFixed(1) + 's';   // 4–9 s
-          var delay = (-Math.random() * 4).toFixed(1) + 's';     // -0..-4 s
-
-          dot.style.animationName = name;
-          dot.style.animationDuration = dur;
-          dot.style.animationDelay = delay;
-
-          wrap.appendChild(dot);
+    </main>
+    <footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="/images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+    </div>
+    <div class="footer-meta">
+      <span class="small muted">© <span id="year"></span> Kleopátra Szépségszalonok. Minden jog fenntartva.</span>
+    </div>
+  </div>
+</footer>
+<script>
+  (function () {
+    const nav = document.getElementById("mainNav");
+    const navToggle = document.getElementById("navToggle");
+    if (nav && navToggle) {
+      navToggle.addEventListener("click", function () {
+        nav.classList.toggle("is-open");
+        navToggle.classList.toggle("is-open");
+      });
+      nav.addEventListener("click", function (e) {
+        if (e.target.tagName === "A") {
+          nav.classList.remove("is-open");
+          navToggle.classList.remove("is-open");
         }
-      })();
-    </script>
+      });
+    }
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+  })();
+</script>
+
   </body>
 </html>
