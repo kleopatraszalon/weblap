@@ -2,137 +2,174 @@
 <html lang="hu">
   <head>
     <title>Kleopátra Szépségszalonok – Minden ami szépség, csak Neked</title>
-    <meta name="description" content="Kleopátra Szépségszalonok – világos, letisztult arculat, egysoros menü a logó mellett." />
+    <meta
+      name="description"
+      content="Kleopátra Szépségszalonok – fodrászat, kozmetika, kéz- és lábápolás, masszázs és szolárium több városban, egységes arculattal."
+    />
     <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
-  rel="stylesheet"
-/>
-<link rel="stylesheet" href="css/styles.css" />
-<script src="js/app.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/app.js" defer></script>
   </head>
   <body>
+    <!-- FEJLÉC: LOGÓ + 2 SOROS MENÜ + CTA -->
     <header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html" aria-label="Kleopátra Szépségszalonok – Főoldal">
-      <img src="images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
-    </a>
-    <button class="hamburger" id="navToggle" aria-label="Menü megnyitása">
-      <span></span><span></span><span></span>
-    </button>
-    <nav id="mainNav" class="nav">
-      <a href="salons.html">Szalonjaink</a>
-      <a href="prices.html">Áraink</a>
-      <a href="webshop.html">Webshop</a>
-      <a href="career.html">Karrier</a>
-      <a href="training.html">Oktatás</a>
-      <a href="services.html">Szolgáltatások</a>
-    </nav>
-    <a class="header-cta" href="contact.html">Kapcsolat</a>
-  </div>
-</header>
+      <div class="container header-inner">
+        <!-- LOGÓ -->
+        <a class="brand" href="index.html" aria-label="Kleopátra Szépségszalonok – Főoldal">
+          <img src="images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+        </a>
+
+        <!-- MOBIL MENÜ GOMB -->
+        <button class="hamburger" id="navToggle" aria-label="Menü megnyitása" type="button">
+          <span></span><span></span><span></span>
+        </button>
+
+        <!-- MENÜ – 9 PONT, KÉTSOROS ELRENDEZÉS DESKTOPON -->
+        <nav id="mainNav" class="nav">
+          <a href="salons.html">Szalonjaink</a>
+          <a href="loyalty.html">Hűségprogram</a>
+          <a href="prices.html">Áraink</a>
+          <a href="webshop.html">Webshop</a>
+          <a href="career.html">Karrier</a>
+          <a href="training.html">Oktatás</a>
+          <a href="about.html">Rólunk</a>
+          <a href="franchise.html">Franchise</a>
+          <a href="services.html">Szolgáltatások</a>
+        </nav>
+
+        <!-- JOBB OLDALI CTA -->
+        <a class="header-cta" href="contact.html">Kapcsolat</a>
+      </div>
+    </header>
 
     <main>
-
-  <section class="hero hero--home">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="container hero-grid">
-      <div class="hero-content">
-        <p class="hero-kicker">Minden ami szépség, csak Neked.</p>
-        <h1>
-          Kleopátra Szépségszalonok<br />
-          <span class="accent">look good, feel good!</span>
-        </h1>
-        <p class="hero-lead">
-          Szalonjainkban lehetőséget kínálunk arra, hogy bejelentkezés nélkül is igénybe vedd szolgáltatásainkat.
-          Ha inkább előre tervezel, fontos számodra, hogy mindig ugyanazon kollégáinknál szépülj – foglalj időpontot.
-        </p>
-        <div class="hero-pills">
-          <span>Fodrászat</span>
-          <span>Kozmetika</span>
-          <span>Kéz- és lábápolás</span>
-          <span>Szolárium</span>
-          <span>Masszázs</span>
-        </div>
-        <div class="btn-row">
-          <a class="btn btn-primary" href="salons.html">Szalon választása</a>
-          <a class="btn btn-ghost" href="prices.html">Árlista megnyitása</a>
-        </div>
-      </div>
-      <div class="hero-media">
-        <div class="hero-media-frame">
-          <div class="hero-image-stack">
-            <img class="is-active" src="images/images_1.webp" alt="Vendég a Kleopátra Szépségszalonban" />
-            <img src="images/images_2.webp" alt="Frizura készítése Kleopátra Szépségszalonban" />
-            <img src="images/images_3.webp" alt="Kozmetikai kezelés Kleopátra Szépségszalonban" />
-            <img src="images/images_4.webp" alt="Manikűr Kleopátra Szépségszalonok" />
+      <!-- HERO SZEKCIÓ -->
+      <section class="hero hero--home">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <p class="hero-kicker">Minden ami szépség, csak Neked.</p>
+            <h1>
+              Kleopátra Szépségszalonok<br />
+              <span class="accent">look good, feel good!</span>
+            </h1>
+            <p class="hero-lead">
+              Szalonjainkban a mindennapi szépségápolásodhoz mindent egy helyen megtalálsz: fodrászat, kozmetika,
+              kéz- és lábápolás, masszázs és szolárium vár több városban, hosszú nyitvatartással. Ha szeretsz
+              előre tervezni, foglalj időpontot online.
+            </p>
+            <div class="hero-pills">
+              <span>Fodrászat</span>
+              <span>Kozmetika</span>
+              <span>Kéz- és lábápolás</span>
+              <span>Szolárium</span>
+              <span>Masszázs</span>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn-primary" href="salons.html">Szalon választása</a>
+              <a class="btn btn-ghost" href="prices.html">Árlista megnyitása</a>
+            </div>
           </div>
-          <div class="hero-chip hero-chip--light">Töltsd le mobilalkalmazásunk</div>
+          <div class="hero-media">
+            <div class="hero-media-frame">
+              <div class="hero-image-stack">
+                <img
+                  class="is-active"
+                  src="images/images_1.webp"
+                  alt="Vendég a Kleopátra Szépségszalonban"
+                />
+                <img
+                  src="images/images_2.webp"
+                  alt="Frizura készítése Kleopátra Szépségszalonban"
+                />
+                <img
+                  src="images/images_3.webp"
+                  alt="Kozmetikai kezelés Kleopátra Szépségszalonban"
+                />
+                <img
+                  src="images/images_4.webp"
+                  alt="Kéz- és lábápolás Kleopátra Szépségszalonban"
+                />
+              </div>
+              <div class="hero-chip hero-chip--light">Töltsd le mobilalkalmazásunkat</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KÁRTYÁS BLOKK -->
+      <section class="section section--cards">
+        <div class="container grid-three">
+          <article class="card">
+            <h2 class="card-title">Franchise program</h2>
+            <p class="card-text">
+              Szeretnél Kleopátra Szépségszalont nyitni? A márka komplett arculati, működési és marketing háttérrel
+              támogat, hogy professzionális szalont üzemeltethess.
+            </p>
+            <a class="link-btn" href="franchise.html">Franchise lehetőségek</a>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Kleos termékek</h2>
+            <p class="card-text">
+              Válaszd Kleos kiegészítőinket és termékeinket, hogy a mindennapokban is magaddal vidd a Kleopátra
+              életérzést.
+            </p>
+            <a class="link-btn" href="webshop.html">Tovább a webshopra</a>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Hűségprogram</h2>
+            <p class="card-text">
+              Regisztrált vendégeinket pontokkal, kedvezményekkel és exkluzív ajánlatokkal jutalmazzuk. Iratkozz fel,
+              hogy ne maradj le az újdonságokról.
+            </p>
+            <a class="link-btn" href="loyalty.html">Hűségprogram részletei</a>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- LÁBLÉC -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <img src="images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
+        </div>
+        <div class="footer-meta">
+          <span class="small muted"
+            >© <span id="year"></span> Kleopátra Szépségszalonok. Minden jog fenntartva.</span
+          >
         </div>
       </div>
-    </div>
-  </section>
-  <section class="section section--cards">
-    <div class="container grid-three">
-      <article class="card">
-        <h2 class="card-title">Franchise program</h2>
-        <p class="card-text">
-          Válj Kleopátra Szépségszalon tulajdonossá és csatlakozz professzionális háttérrel rendelkező márkánkhoz.
-        </p>
-        <a class="link-btn" href="franchise.html">Részletek a franchise-ról</a>
-      </article>
-      <article class="card">
-        <h2 class="card-title">Kleos termékek</h2>
-        <p class="card-text">
-          100% Kleopátrás megjelenés – kiegészítők és termékek limitált darabszámban, arculati csomagolással.
-        </p>
-        <a class="link-btn" href="webshop.html">Tovább a webshopra</a>
-      </article>
-      <article class="card">
-        <h2 class="card-title">Hűségprogram</h2>
-        <p class="card-text">
-          Regisztrált vendégeinket pontokkal, egyedi ajánlatokkal és extra kedvezményekkel jutalmazzuk.
-        </p>
-        <a class="link-btn" href="loyalty.html">Megnézem a hűségprogramot</a>
-      </article>
-    </div>
-  </section>
+    </footer>
 
-    </main>
-    <footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <img src="/images/kleo_logo@2x.png" alt="Kleopátra Szépségszalonok logó" />
-    </div>
-    <div class="footer-meta">
-      <span class="small muted">© <span id="year"></span> Kleopátra Szépségszalonok. Minden jog fenntartva.</span>
-    </div>
-  </div>
-</footer>
-<script>
-  (function () {
-    const nav = document.getElementById("mainNav");
-    const navToggle = document.getElementById("navToggle");
-    if (nav && navToggle) {
-      navToggle.addEventListener("click", function () {
-        nav.classList.toggle("is-open");
-        navToggle.classList.toggle("is-open");
-      });
-      nav.addEventListener("click", function (e) {
-        if (e.target.tagName === "A") {
-          nav.classList.remove("is-open");
-          navToggle.classList.remove("is-open");
+    <script>
+      (function () {
+        const nav = document.getElementById("mainNav");
+        const navToggle = document.getElementById("navToggle");
+        if (nav && navToggle) {
+          navToggle.addEventListener("click", function () {
+            nav.classList.toggle("is-open");
+            navToggle.classList.toggle("is-open");
+          });
+          nav.addEventListener("click", function (e) {
+            if (e.target.tagName === "A") {
+              nav.classList.remove("is-open");
+              navToggle.classList.remove("is-open");
+            }
+          });
         }
-      });
-    }
-    const yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-  })();
-</script>
-
+        const yearEl = document.getElementById("year");
+        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+      })();
+    </script>
   </body>
 </html>
