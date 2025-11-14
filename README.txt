@@ -5,7 +5,7 @@ Kleopátra Szépségszalonok – Public SPA frontend (Vite + React + TS)
 3) npm run dev
 
 A public/images mappába másold be:
-- kleo_logo@2x.png
+- Logo.jpeg
 - images_1.webp, images_2.webp, images_3.webp, images_4.webp
 
 A backend oldalon legyen bekötve:

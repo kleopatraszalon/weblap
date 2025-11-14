@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
           aria-label="Kleopátra Szépségszalonok – Főoldal"
         >
           <img
-            src="/images/kleo_logo@2x.png"
+            src="/images/Logo.jpeg"
             alt="Kleopátra Szépségszalonok logó"
           />
         </NavLink>

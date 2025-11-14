@@ -1,36 +1,5 @@
 // src/apiClient.ts
 
-export interface PublicService {
-  id: string;
-  name: string;
-  duration_min: number | null;
-  price: number | null;
-  category_id?: number | null;
-  location_id?: number | null;
-}
-
-const API_BASE =
-  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ||
-  (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin);
-
-export async function fetchJson<T>(
-  path: string,
-  init?: RequestInit
-): Promise<T> {
-  const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
-  const res = await fetch(url, init);
-  const text = await res.text();
-
-  if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${text || "Not Found"}`);
-  }
-
-  return text ? (JSON.parse(text) as T) : (null as any);
-}
-
-// … és a többi (getPublicServices, getPublicSalons) maradhat ahogy megbeszéltük
-// ===== TÍPUSOK =====
-
 export interface PublicSalon {
   id: string;
   slug: string;
@@ -47,31 +16,39 @@ export interface PublicService {
   location_id?: number | null;
 }
 
-// ===== ALAP API URL – CSAK EGYSZER! =====
+// ===== API BASE =====
 
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== "undefined" ? window.location.origin : "");
+const API_BASE = (
+  (import.meta.env.VITE_API_URL as string | undefined) ||
+  (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin)
+).replace(/\/$/, "");
 
-// ===== ÁLTALÁNOS JSON FETCH =====
+// DEBUG: nézzük meg, mit használ a build!
+if (typeof window !== "undefined") {
+  console.log("[apiClient] API_BASE =", API_BASE);
+}
+
+// ===== ÁLTALÁNOS FETCH =====
 
 export async function fetchJson<T>(
   path: string,
   init?: RequestInit
 ): Promise<T> {
   const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
-  const res = await fetch(url, init);
+  console.log("[apiClient] fetchJson:", url);
 
+  const res = await fetch(url, init);
   const text = await res.text();
 
   if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${text}`);
+    console.error("[apiClient] HTTP error", res.status, text);
+    throw new Error(`API error ${res.status}: ${text || "Not Found"}`);
   }
 
   return text ? (JSON.parse(text) as T) : (null as any);
 }
 
-// ===== STATIKUS SZALONLISTA (BIZTONSÁGI TARTALÉK) =====
+// ===== SZALONOK (ha valahol kell) =====
 
 const STATIC_SALONS: PublicSalon[] = [
   {
@@ -109,7 +86,7 @@ const STATIC_SALONS: PublicSalon[] = [
     slug: "gyongyos",
     city_label: "Kleopátra Szépségszalon – Gyöngyös",
     address: "Koháry u. 29.",
-  },
+  },/Logo.jpeg
   {
     id: "salgotarjan",
     slug: "salgotarjan",
@@ -118,16 +95,10 @@ const STATIC_SALONS: PublicSalon[] = [
   },
 ];
 
-// Ha valahol mégis kell API-s szalon lekérdezés, itt van fallbackkel
 export async function getPublicSalons(): Promise<PublicSalon[]> {
   try {
     const data = await fetchJson<PublicSalon[]>("/api/public/salons");
-    if (!Array.isArray(data) || data.length === 0) {
-      console.warn(
-        "getPublicSalons: üres vagy hibás válasz, STATIC_SALONS visszaadva."
-      );
-      return STATIC_SALONS;
-    }
+    if (!Array.isArray(data) || data.length === 0) return STATIC_SALONS;
     return data;
   } catch (err) {
     console.error("getPublicSalons hiba, STATIC_SALONS fallback:", err);
@@ -135,11 +106,8 @@ export async function getPublicSalons(): Promise<PublicSalon[]> {
   }
 }
 
-// ===== SZOLGÁLTATÁSOK TELEPHELY SZERINT =====
+// ===== SZOLGÁLTATÁSOK =====
 
-export async function getPublicServices(
-  locationId?: number | null
-): Promise<PublicService[]> {
-  const qs = locationId ? `?locationId=${locationId}` : "";
-  return fetchJson<PublicService[]>(`/api/public/services${qs}`);
+export async function getPublicServices(): Promise<PublicService[]> {
+  return fetchJson<PublicService[]>("/api/public/services");
 }
