@@ -1,5 +1,7 @@
 // src/apiClient.ts
 
+// ===== TÍPUSOK =====
+
 export interface PublicSalon {
   id: string;
   slug: string;
@@ -23,7 +25,7 @@ const API_BASE = (
   (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin)
 ).replace(/\/$/, "");
 
-// DEBUG: nézzük meg, mit használ a build!
+// DEBUG (nyugodtan hagyhatod, segít hibakeresésnél)
 if (typeof window !== "undefined") {
   console.log("[apiClient] API_BASE =", API_BASE);
 }
@@ -48,7 +50,7 @@ export async function fetchJson<T>(
   return text ? (JSON.parse(text) as T) : (null as any);
 }
 
-// ===== SZALONOK (ha valahol kell) =====
+// ===== STATIKUS SZALONLISTA (fallback) =====
 
 const STATIC_SALONS: PublicSalon[] = [
   {
@@ -86,7 +88,7 @@ const STATIC_SALONS: PublicSalon[] = [
     slug: "gyongyos",
     city_label: "Kleopátra Szépségszalon – Gyöngyös",
     address: "Koháry u. 29.",
-  },/Logo.jpeg
+  },
   {
     id: "salgotarjan",
     slug: "salgotarjan",
@@ -95,6 +97,7 @@ const STATIC_SALONS: PublicSalon[] = [
   },
 ];
 
+// ha valaha kell szalon API-ból, itt fallbackelünk a statikus listára
 export async function getPublicSalons(): Promise<PublicSalon[]> {
   try {
     const data = await fetchJson<PublicSalon[]>("/api/public/salons");
