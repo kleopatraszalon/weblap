@@ -1,5 +1,34 @@
 // src/apiClient.ts
 
+export interface PublicService {
+  id: string;
+  name: string;
+  duration_min: number | null;
+  price: number | null;
+  category_id?: number | null;
+  location_id?: number | null;
+}
+
+const API_BASE =
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ||
+  (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin);
+
+export async function fetchJson<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
+  const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
+  const res = await fetch(url, init);
+  const text = await res.text();
+
+  if (!res.ok) {
+    throw new Error(`API error ${res.status}: ${text || "Not Found"}`);
+  }
+
+  return text ? (JSON.parse(text) as T) : (null as any);
+}
+
+// … és a többi (getPublicServices, getPublicSalons) maradhat ahogy megbeszéltük
 // ===== TÍPUSOK =====
 
 export interface PublicSalon {
