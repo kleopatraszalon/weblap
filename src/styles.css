@@ -1,0 +1,1118 @@
+/* =====================
+   ARCULATI SZÍNEK
+   ===================== */
+:root {
+  --bg: #f9f5ef;
+  --bg-soft: #ffffff;
+  --text-main: #1c1a22;
+  --text-muted: #6f6a7a;
+
+  /* Brand arany + magenta (arculati kézikönyv hangulata) */
+  --gold: #c49a6c;
+  --magenta: #e5007e;
+
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --radius-lg: 20px;
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.12);
+  --nav-height: 96px;
+}
+
+/* =====================
+   ALAPOK
+   ===================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(1160px, 100% - 2.4rem);
+  margin-inline: auto;
+}
+
+/* =====================
+   HEADER
+   ===================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  min-height: var(--nav-height);
+  padding-block: 0.4rem;
+}
+
+/* LOGÓ – nagyban, arculathoz igazítva */
+.brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.brand img {
+  height: 80px;
+  width: auto;
+}
+
+/* MOBIL NAV (lehajtható) */
+.nav {
+  position: absolute;
+  left: 1.2rem;
+  right: 1.2rem;
+  top: calc(var(--nav-height) - 4px);
+  display: none;
+  flex-direction: column;
+  padding: 0.9rem 1.2rem 1.2rem;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+}
+
+.nav.is-open {
+  display: flex;
+}
+
+/* Mobilon a sorok egymás alatt, oszlopban */
+.nav-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.nav-row:last-child {
+  margin-bottom: 0;
+}
+
+.nav a {
+  padding: 0.4rem 0.2rem;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  text-align: left;
+}
+
+.nav a:hover {
+  color: var(--magenta);
+}
+
+.hamburger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.45rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: #222;
+}
+
+/* CTA mobilon elrejtve – desktopon jelenik meg */
+.header-cta {
+  display: none;
+}
+
+/* =====================
+   HERO
+   ===================== */
+
+.hero {
+  position: relative;
+  padding: 2.4rem 0 3rem;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(249, 245, 239, 0.96)
+  );
+  z-index: -1;
+}
+
+.hero-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.hero-content {
+  max-width: 580px;
+}
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--magenta);
+  margin-bottom: 0.9rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  margin: 0 0 1rem;
+  letter-spacing: 0.03em;
+}
+
+.hero h1 .accent {
+  color: var(--gold);
+}
+
+.hero-lead {
+  margin: 0 0 1.4rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.hero-pills span {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--magenta); /* egyszínű brand CTA */
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-ghost {
+  border-color: var(--border-subtle);
+  background: #fff;
+}
+
+/* HERO MEDIA – váltakozó képek */
+
+.hero-media {
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+.hero-media-frame {
+  position: relative;
+  border-radius: 28px;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-image-stack {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  aspect-ratio: 4 / 5;
+}
+
+.hero-image-stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hero-image-stack img.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero-chip {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+
+/* =====================
+   SZEKCIÓK, KÁRTYÁK
+   ===================== */
+
+.section {
+  padding: 2.4rem 0 3rem;
+}
+
+.section--cards {
+  padding-top: 1.4rem;
+}
+
+.section-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+  color: var(--magenta);
+  margin-bottom: 0.5rem;
+}
+
+.grid-three {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.grid-two {
+  display: grid;
+  gap: 1.4rem;
+}
+
+@media (min-width: 768px) {
+  .grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  background: var(--bg-soft);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.5rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  margin: 0 0 0.6rem;
+  font-size: 1.2rem;
+}
+
+.card-text {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.link-btn {
+  display: inline-flex;
+  margin-top: 0.8rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Egységes page-hero a belső oldalakhoz */
+
+.page-hero {
+  padding: 2.4rem 0 1.4rem;
+}
+
+.page-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  margin: 0 0 0.6rem;
+}
+
+/* =====================
+   LÁBLÉC
+   ===================== */
+
+.site-footer {
+  border-top: 1px solid var(--border-subtle);
+  background: #fff;
+  padding: 1.8rem 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-brand img {
+  height: 50px;
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* =====================
+   LAYOUT BREAKPOINTOK
+   ===================== */
+
+/* Tablet layout */
+@media (min-width: 768px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+/* DESKTOP (≥960px) – LOGÓ + MENÜ EGY SORBAN */@media (min-width: 960px) {
+  .header-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* logó | menü | CTA */
+    align-items: center;
+    column-gap: 2rem;
+  }
+
+  /* NAV: két sor, egymás alatt, középen */
+  .nav,
+  .nav.is-open {
+    position: static;
+    display: flex;
+    flex-direction: column;      /* két sor egymás alatt */
+    align-items: center;         /* vízszintesen középen */
+    justify-content: center;     /* függőlegesen is a sáv közepén */
+    gap: 0.4rem;                 /* sorok közötti távolság */
+    padding: 0;
+    margin: 0 auto;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .nav-row {
+    display: flex;
+    flex-direction: row;         /* vízszintes sor */
+    align-items: center;
+    justify-content: center;     /* sor vízszintes közép */
+    gap: 2rem;                   /* menüpontok közötti távolság */
+    margin: 0;
+  }
+
+  .nav a {
+    padding: 0;
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+  .hamburger {
+    display: none;
+  }
+
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.8rem;
+    border-radius: 999px;
+    background: var(--magenta);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .hero-media {
+    margin-inline: 0;
+  }
+}
+
+.page-hero--salons {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero__image-wrap {
+  position: relative;
+  max-height: 420px;
+  overflow: hidden;
+}
+
+.page-hero__image {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 800ms ease-out, filter 800ms ease-out;
+  image-rendering: auto;
+}
+
+.page-hero__image-wrap:hover .page-hero__image {
+  transform: scale(1.05);
+  image-rendering: pixelated; /* kicsit „pixeleződik” hoverre */
+}
+
+.page-hero__image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.65)
+  );
+}
+
+.page-hero__content--center {
+  text-align: center;
+  margin-top: -180px;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.section--salons {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.salons-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.salons-title {
+  letter-spacing: 0.16em;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.salons-subtitle {
+  font-size: 1.2rem;
+}
+
+.salons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.salon-pill {
+  background: #b99a57;
+  color: #fff;
+  text-decoration: none;
+  padding: 1.8rem 2rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  min-width: 220px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    filter 200ms ease-out;
+}
+
+.salon-pill__city {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.salon-pill__address {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.salon-pill:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.05);
+}
+
+/* HERO SZEKCIÓ – SZÖVEG + KÖZÉPEN KÉP */
+.section--salons-hero {
+  padding-top: 3.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.salons-hero {
+  text-align: center;
+}
+
+.salons-hero__text h1 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero-lead--narrow {
+  max-width: 640px;
+  margin: 0.25rem auto 0;
+}
+
+.salons-hero__image-wrap {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.salons-hero__image {
+  max-width: 900px;
+  width: 100%;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transform: scale(1.01);
+  transition:
+    transform 600ms ease-out,
+    filter 600ms ease-out;
+}
+
+.salons-hero__image:hover {
+  transform: scale(1.04);
+  filter: contrast(1.05) saturate(1.05);
+  image-rendering: pixelated; /* enyhe pixeles effekt hoverkor */
+}
+
+/* ALSÓ SZEKCIÓ – SZALON GOMBOK KÖZÉPRE RENDEZVE */
+.section--salons {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.salons-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.salons-grid-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.salons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.7rem;
+  justify-items: center;
+  max-width: 960px;  /* középre szorítva */
+}
+
+/* ERŐSEBB, DIZÁJNOSABB ANIMÁCIÓ A „GOMBOKON” */
+.salon-pill {
+  position: relative;
+  background: #b99a57;
+  color: #fff;
+  text-decoration: none;
+  padding: 1.9rem 2.1rem;
+  border-radius: 0.9rem;
+  text-align: center;
+  min-width: 220px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 220ms ease-out,
+    box-shadow 220ms ease-out,
+    filter 220ms ease-out;
+  overflow: hidden;
+}
+
+/* fénylő keret, ami hoverkor „felvillan” */
+.salon-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 220ms ease-out,
+    transform 220ms ease-out;
+  pointer-events: none;
+}
+
+.salon-pill__city {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.salon-pill__address {
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* erősebb hover animáció: „felugrik” és picit elfordul */
+.salon-pill:hover {
+  transform: translateY(-10px) scale(1.06) rotate(-0.5deg);
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.05);
+}
+
+.salon-pill:hover::before {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* TELJES SZALON OLDAL BLOKK */
+.section--salons-page {
+  padding-top: 3.5rem;
+  padding-bottom: 4rem;
+}
+
+.salons-page {
+  text-align: center;
+}
+
+/* FEJLÉC SZÖVEG */
+.salons-page__text h1 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+
+.hero-lead--narrow {
+  max-width: 640px;
+  margin: 0.25rem auto 0;
+}
+
+/* KÉP KÖZÉPEN, ALATTA GOMBOK */
+.salons-page__image-wrap {
+  margin-top: 2.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.salons-page__image {
+  max-width: 900px;
+  width: 100%;
+  border-radius: 1.25rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transform: scale(1.01);
+  transition:
+    transform 600ms ease-out,
+    filter 600ms ease-out;
+}
+
+.salons-page__image:hover {
+  transform: scale(1.05);
+  filter: contrast(1.08) saturate(1.08);
+  image-rendering: pixelated; /* enyhe pixeles effekt hoverkor */
+}
+
+/* GOMBOK KÖZVETLENÜL A KÉP ALATT, KÖZÉPRE HÚZVA */
+.salons-page__grid-wrapper {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* MINDEN KÖZÉPEN */
+}
+
+.salons-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.salons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.8rem;
+  justify-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ERŐS, DIZÁJNOS GOMB-ANIMÁCIÓ */
+.salon-pill {
+  position: relative;
+  background: linear-gradient(135deg, #b99a57, #d1b46a);
+  color: #fff;
+  text-decoration: none;
+  padding: 2rem 2.3rem;
+  border-radius: 1rem;
+  text-align: center;
+  min-width: 220px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 220ms ease-out,
+    box-shadow 220ms ease-out,
+    filter 220ms ease-out;
+  overflow: hidden;
+}
+
+/* „futó fénycsík” a gombon hoverkor */
+.salon-pill::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-100%) rotate(10deg);
+  transition: opacity 180ms ease-out;
+}
+
+.salon-pill__city {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.03em;
+}
+
+.salon-pill__address {
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* ERŐSEBB HOVER: FELUGRÁS + KIS ELFORDULÁS + FÉNYCSÍK ANIMÁCIÓ */
+.salon-pill:hover {
+  transform: translateY(-14px) scale(1.08) rotate(-1deg);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+  filter: brightness(1.06);
+}
+
+.salon-pill:hover::before {
+  opacity: 1;
+  animation: salon-shine 700ms ease-out forwards;
+}
+
+/* Fénycsík mozgás animáció */
+@keyframes salon-shine {
+  0% {
+    transform: translateX(-120%) rotate(10deg);
+  }
+  100% {
+    transform: translateX(180%) rotate(10deg);
+  }
+}
+
+.section--salons-page {
+  padding: 3rem 0 4rem;
+}
+
+/* EZ HÚZ MINDENT KÖZÉPRE, FEJLÉC + GRID EGYBEN */
+.salons-block {
+  max-width: 1100px;
+  margin: 0 auto;          /* teljes blokk középen */
+  text-align: center;
+}
+
+/* FEJLÉC FELIRAT */
+.salons-block__header h1 {
+  margin-top: 0.4rem;
+  margin-bottom: 2rem;
+}
+
+/* GRID TÉNYLEG KÖZÉPEN */
+.salons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
+  justify-items: center;   /* kártyák a cellán belül is középen */
+}
+
+/* GOMB / KÁRTYA – ERŐS ANIMÁCIÓ */
+.salon-pill {
+  position: relative;
+  background: linear-gradient(135deg, #b99a57, #d1b46a);
+  color: #fff;
+  text-decoration: none;
+  padding: 1.9rem 2.2rem;
+  border-radius: 18px;
+  min-width: 230px;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    filter 200ms ease-out;
+  overflow: hidden;
+}
+
+/* fénycsík */
+.salon-pill::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -40%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-120%) rotate(10deg);
+  pointer-events: none;
+}
+
+.salon-pill__city {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.salon-pill__address {
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* erős hover: felugrik, kicsit elfordul, fénycsík átfut */
+.salon-pill:hover {
+  transform: translateY(-14px) scale(1.08) rotate(-1deg);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+  filter: brightness(1.06);
+}
+
+.salon-pill:hover::before {
+  opacity: 1;
+  animation: salon-pill-shine 700ms ease-out forwards;
+}
+
+@keyframes salon-pill-shine {
+  0% {
+    transform: translateX(-120%) rotate(10deg);
+  }
+  100% {
+    transform: translateX(180%) rotate(10deg);
+  }
+}
+/* === SZALON OLDAL VÉGLEGES STÍLUSOK – KÉP + GOMBOK === */
+
+.section--salons-page {
+  padding: 3rem 0 4rem;
+}
+
+.salons-block {
+  max-width: 1100px;
+  margin: 0 auto;          /* teljes blokk középen */
+  text-align: center;
+}
+
+.salons-block__header h1 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Szöveg alatti leírás */
+.hero-lead--narrow {
+  max-width: 640px;
+  margin: 0.25rem auto 0;
+}
+
+/* KÉP – shine effekt, mint a gombon */
+.salons-hero-image {
+  position: relative;
+  margin: 2rem auto 2.5rem;
+  max-width: 900px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transform: translateZ(0);
+}
+
+.salons-hero-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transform: scale(1.02);
+  transition:
+    transform 0.6s ease-out,
+    filter 0.6s ease-out;
+}
+
+/* ugyanaz a „futó fénycsík”, mint a gombon */
+.salons-hero-image::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -40%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-120%) rotate(10deg);
+  pointer-events: none;
+}
+
+.salons-hero-image:hover .salons-hero-image__img {
+  transform: scale(1.06);
+  filter: brightness(1.06) contrast(1.05);
+}
+
+.salons-hero-image:hover::before {
+  opacity: 1;
+  animation: salon-hero-shine 900ms ease-out forwards;
+}
+
+@keyframes salon-hero-shine {
+  0% {
+    transform: translateX(-120%) rotate(10deg);
+  }
+  100% {
+    transform: translateX(180%) rotate(10deg);
+  }
+}
+
+/* GRID – felül 4, alatta 3 (ahogy kijön), mindig középen */
+.salons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
+  justify-items: center;
+}
+
+/* GOMBOK – erős shine animáció, ahogy kértük */
+.salon-pill {
+  position: relative;
+  background: linear-gradient(135deg, #b99a57, #d1b46a);
+  color: #fff;
+  text-decoration: none;
+  padding: 1.9rem 2.2rem;
+  border-radius: 18px;
+  min-width: 230px;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    filter 200ms ease-out;
+  overflow: hidden;
+}
+
+.salon-pill::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -40%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-120%) rotate(10deg);
+  pointer-events: none;
+}
+
+.salon-pill__city {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.03em;
+}
+
+.salon-pill__address {
+  display: block;
+  font-size: 0.95rem;
+}
+
+/* hover: felugrik, picit elfordul, fénycsík átfut */
+.salon-pill:hover {
+  transform: translateY(-14px) scale(1.08) rotate(-1deg);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+  filter: brightness(1.06);
+}
+
+.salon-pill:hover::before {
+  opacity: 1;
+  animation: salon-pill-shine 700ms ease-out forwards;
+}
+
+@keyframes salon-pill-shine {
+  0% {
+    transform: translateX(-120%) rotate(10deg);
+  }
+  100% {
+    transform: translateX(180%) rotate(10deg);
+  }
+}
+
