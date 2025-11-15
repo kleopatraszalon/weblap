@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { getPublicServices, PublicService } from "../apiClient";
 
-// Telephelyek – itt állítjuk be, melyik locationId melyik szalonnak felel meg
+// Telephelyek – location_id -> cím
 const LOCATIONS = [
   { id: null as number | null, label: "Összes szalon" },
   { id: 1, label: "Budapest IX. – Mester u. 1." },
@@ -15,30 +15,39 @@ const LOCATIONS = [
 ];
 
 export const PriceListPage: React.FC = () => {
-  const [services, setServices] = useState<PublicService[]>([]);
+  const [allServices, setAllServices] = useState<PublicService[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // adatok betöltése, amikor változik a telephely
+  // ÖSSZES SZOLGÁLTATÁS LEKÉRÉSE
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    getPublicServices(selectedLocationId)
-      .then(setServices)
+    getPublicServices()
+      .then((data) => {
+        console.log("Szolgáltatások betöltve:", data);
+        setAllServices(data);
+      })
       .catch((err) => {
         console.error(err);
         setError("Nem sikerült betölteni a szolgáltatásokat.");
       })
       .finally(() => setLoading(false));
-  }, [selectedLocationId]);
+  }, []);
 
-  // Kategorizálás (az első oszlop alapján – category_id)
+  // SZŰRÉS TELEPHELY SZERINT (location_id alapján)
+  const filteredServices =
+    selectedLocationId == null
+      ? allServices
+      : allServices.filter((s) => s.location_id === selectedLocationId);
+
+  // KATEGÓRIÁKRA BONTVA (category_id alapján)
   const groupedByCategory: Record<string, PublicService[]> = {};
-  services.forEach((s) => {
+  filteredServices.forEach((s) => {
     const key = s.category_id?.toString() ?? "egyéb";
     if (!groupedByCategory[key]) groupedByCategory[key] = [];
     groupedByCategory[key].push(s);
@@ -61,6 +70,15 @@ export const PriceListPage: React.FC = () => {
               nézd meg az ott elérhető szolgáltatásokat.
             </p>
           </header>
+
+          {/* HERO KÉP – szolgaltatasok.png, finoman animálva */}
+          <div className="services-hero-image">
+            <img
+              src="/images/szolgaltatasok.png"
+              alt="Kleopátra Szépségszalon – Szolgáltatások"
+              className="services-hero-image__img"
+            />
+          </div>
 
           {/* TELEPHELYVÁLASZTÓ */}
           <div className="pricelist-location-filter">
@@ -91,6 +109,10 @@ export const PriceListPage: React.FC = () => {
               <p className="pricelist-location-label">
                 Jelenleg: <strong>{locationLabel}</strong>
               </p>
+
+              {Object.keys(groupedByCategory).length === 0 && (
+                <p>Nincs megjeleníthető szolgáltatás.</p>
+              )}
 
               {Object.keys(groupedByCategory).map((catKey) => {
                 const items = groupedByCategory[catKey];
@@ -129,7 +151,7 @@ export const PriceListPage: React.FC = () => {
   );
 };
 
-// egyszerű kategória label a category_id alapján
+// Kategória címkék – az első oszlopodban lévő számok szerint
 function categoryLabelFromId(id: string): string {
   switch (id) {
     case "1":

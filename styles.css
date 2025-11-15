@@ -1,0 +1,869 @@
+/* =====================
+   ARCULATI SZÍNEK – KLEOPÁTRA
+   ===================== */
+:root {
+  /* Háttér + szöveg */
+  --bg: #f9f5ef;
+  --bg-soft: #ffffff;
+  --text-main: #120c08; /* majdnem fekete */
+  --text-muted: #5d5a55;
+
+  /* ARANY PALETTA – arculati kézikönyv */
+  --gold-500: #b69861;
+  --gold-400: #c8b187;
+  --gold-300: #d5c4a4;
+  --gold-200: #e3d8c3;
+
+  /* SZÜRKEK */
+  --gray-700: #5d5a55;
+  --gray-500: #84837e;
+  --gray-300: #b0afad;
+
+  /* MAGENTA AKCENTUSOK – arculati kézikönyv */
+  --magenta-500: #ec008c;
+  --magenta-400: #f173ac;
+  --magenta-300: #f59ac2;
+  --magenta-200: #f9c1d9;
+
+  /* Rövidítésekhez használt aliasok */
+  --gold: var(--gold-500);
+  --magenta: var(--magenta-500);
+
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --radius-lg: 20px;
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.12);
+  --nav-height: 82px;
+}
+
+/* =====================
+   ALAP TIPOGRÁFIA
+   ===================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif; /* Digitális másodlagos font – arculat szerint oké */
+  background: var(--bg);
+  color: var(--text-main);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(1160px, 100% - 2.4rem);
+  margin-inline: auto;
+}
+
+/* Címsorok */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-main);
+  margin: 0 0 0.75rem;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+p {
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Kis „eyebrow” címek (pl. SZOLGÁLTATÁSAINK) */
+.section-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+  color: var(--magenta);
+  margin-bottom: 0.5rem;
+}
+
+/* Általános szekciók */
+.section {
+  padding: 3rem 0;
+}
+
+.section--alt {
+  background: var(--bg-soft);
+}
+
+/* =====================
+   HEADER / NAVIGÁCIÓ
+   ===================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(14px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 82px;
+  padding-block: 0.5rem;
+}
+
+/* BAL: logó */
+
+.header-logo-link {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.site-logo-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.site-logo {
+  display: block;
+  height: 56px;    /* elég nagy, de nem túlzó */
+  width: auto;     /* aránytartás – arculati szabály */
+}
+
+/* Csillogó animáció */
+
+.site-logo-wrapper--shiny::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  opacity: 0;
+  pointer-events: none;
+  animation: logo-shine 9s ease-in-out infinite;
+}
+
+@keyframes logo-shine {
+  0% {
+    left: -150%;
+    opacity: 0;
+  }
+  5% {
+    left: 150%;
+    opacity: 1;
+  }
+  6% {
+    opacity: 0;
+  }
+  100% {
+    left: 150%;
+    opacity: 0;
+  }
+}
+
+/* KÖZÉP: két soros navigáció */
+
+.main-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.main-nav-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  max-width: 680px;
+}
+
+.main-nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.8rem;
+}
+
+.main-nav-row--bottom {
+  font-size: 0.78rem;
+}
+
+/* Menü linkek */
+
+.nav-link {
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #5d5a55;
+  position: relative;
+  padding-block: 0.25rem;
+  margin-right: 0.4rem; /* akkor is lesz kis hézag, ha a gap valamiért nem érvényesül */
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.4rem;
+  height: 2px;
+  border-radius: 999px;
+  background: transparent;
+  transform: scaleX(0.4);
+  opacity: 0;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link-active::after {
+  background: #ec008c; /* magenta akcentus */
+  opacity: 1;
+}
+
+.nav-link-active {
+  color: #120c08;
+}
+
+/* JOBB: időpont + social ikonok */
+
+.header-cta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.header-cta-btn {
+  padding-inline: 1.8rem;
+  border-radius: 999px;
+  box-shadow: 0 16px 40px rgba(236, 0, 140, 0.45);
+}
+
+/* Social sor – kicsi ikonok, egy sorban */
+
+.header-social {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.header-social-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #5d5a55;
+}
+
+.header-social-icons {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.header-social-icons img {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* =====================
+   HERO – KEZDŐLAP
+   ===================== */
+
+.hero {
+  position: relative;
+  padding: 3.2rem 0 3.5rem;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at top left,
+      rgba(236, 0, 140, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(182, 152, 97, 0.22),
+      transparent 55%
+    );
+  opacity: 0.92;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 3.2rem;
+  align-items: center;
+}
+
+.hero-content {
+  max-width: 560px;
+}
+
+.hero-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  color: var(--magenta);
+  margin-bottom: 0.75rem;
+}
+
+.hero h1 {
+  margin-bottom: 0.75rem;
+}
+
+.hero .accent {
+  color: var(--magenta);
+}
+
+.hero-lead {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  max-width: 540px;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.hero-pills span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* HERO jobb oldal – home.png */
+.hero-media {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-media-frame {
+  position: relative;
+  max-width: 460px;       /* kicsit nagyobb képkeret */
+  border-radius: 32px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.18);
+}
+
+.hero-image-stack img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero-chip {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  background: rgba(18, 12, 8, 0.9);
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* =====================
+   GOMBOK
+   ===================== */
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.12s ease;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: #ffffff;
+  box-shadow: 0 14px 36px rgba(182, 152, 97, 0.65);
+}
+
+.btn-primary:hover {
+  background: #a78651;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 42px rgba(182, 152, 97, 0.8);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-main);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Link-szerű gomb (kártyák alján) */
+.link-btn {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--magenta);
+  font-weight: 600;
+}
+
+/* =====================
+   KÁRTYÁS RÉSZ – SZOLGÁLTATÁS BLOKK
+   ===================== */
+
+.section--cards {
+  padding: 3.2rem 0 3.5rem;
+  background: var(--bg-soft);
+}
+
+.section--cards .hero-lead {
+  max-width: 600px;
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  margin-bottom: 0.85rem;
+}
+
+/* =====================
+   SZALONOK OLDAL
+   ===================== */
+
+.salons-page {
+  padding: 2.6rem 0 3rem;
+}
+
+.salons-header {
+  text-align: center;
+  margin-bottom: 2.2rem;
+}
+
+.salons-header p {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+.salons-hero-image {
+  margin: 1.8rem auto 1.6rem;
+  width: 60%;
+  max-width: 520px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  background: radial-gradient(
+    circle at top left,
+    rgba(236, 0, 140, 0.2),
+    transparent 55%
+  );
+}
+
+.salons-hero-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Szalon kártyák */
+.salons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.4rem;
+}
+
+.salon-card {
+  width: 220px;
+  height: 160px;
+  border-radius: 18px;
+  background: var(--gold);
+  color: #ffffff;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  transition: transform 0.16s ease, box-shadow 0.16s ease,
+    background-color 0.16s ease;
+}
+
+.salon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.24);
+  background: var(--gold-400);
+}
+
+.salon-card-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.salon-card-address {
+  font-size: 0.85rem;
+}
+
+/* =====================
+   SZOLGÁLTATÁSOK / ÁRLISTA OLDAL
+   ===================== */
+
+.section--pricelist {
+  padding: 2.6rem 0 3.5rem;
+}
+
+.pricelist-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.pricelist-header .hero-lead {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* hero kép – szolgáltatások: homehoz hasonló, de kisebb */
+.services-hero-image {
+  margin: 1.8rem auto 1.6rem;
+  width: 60%; /* kérés szerint kisebb */
+  max-width: 480px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  background: radial-gradient(
+    circle at top right,
+    rgba(236, 0, 140, 0.2),
+    transparent 55%
+  );
+}
+
+.services-hero-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Telephelyválasztó */
+.pricelist-location-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.2rem 0 1.4rem;
+}
+
+.pricelist-location-filter label {
+  font-size: 0.9rem;
+}
+
+.pricelist-location-filter select {
+  min-width: 240px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  font: inherit;
+  background-color: #ffffff;
+}
+
+/* Árlista táblázat */
+.pricelist-location-label {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.pricelist-category {
+  margin-bottom: 1.5rem;
+}
+
+.pricelist-category__title {
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
+}
+
+.pricelist-category__table {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.pricelist-row {
+  display: grid;
+  grid-template-columns: 1.8fr 0.9fr 0.9fr;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.pricelist-row:last-child {
+  border-bottom: none;
+}
+
+.pricelist-row__name {
+  font-weight: 500;
+}
+
+.pricelist-row__duration {
+  text-align: right;
+  color: var(--gray-700);
+}
+
+.pricelist-row__price {
+  text-align: right;
+  font-weight: 600;
+}
+
+/* =====================
+   ŰRLAPOK (kapcsolat / franchise / stb.)
+   ===================== */
+
+.form-field {
+  margin-bottom: 1.1rem;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  color: var(--gray-700);
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  font: inherit;
+  color: var(--text-main);
+  background-color: #ffffff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-field textarea {
+  min-height: 120px;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: var(--magenta-400);
+  box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.18);
+}
+
+.form-msg--error {
+  color: #b00020;
+  font-size: 0.85rem;
+}
+
+.form-msg--success {
+  color: #0a7a35;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* =====================
+   LÁBLÉC és egyebek (ha van)
+   ===================== */
+
+.footer {
+  padding: 1.6rem 0;
+  background: #120c08;
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .hero-media {
+    order: -1;
+  }
+
+  .grid-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salons-hero-image,
+  .services-hero-image {
+    width: 80%;
+  }
+
+  .header-inner {
+    padding-inline: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    gap: 0.5rem;
+  }
+
+  .main-nav {
+    display: none; /* ha később mobilmenüt csinálunk, itt lehet állítani */
+  }
+
+  .hero {
+    padding-top: 2.4rem;
+  }
+
+  .salon-card {
+    width: 100%;
+    max-width: 260px;
+  }
+}
+/* =====================
+   SZOLGÁLTATÁSOK OLDAL – FEJLÉC + KÁRTYÁK
+   ===================== */
+
+.section--services-hero {
+  padding: 2.6rem 0 1rem;
+}
+
+.services-intro {
+  text-align: center;
+}
+
+.services-intro .hero-lead {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* A services-hero-image már létezik (Árlista oldalhoz),
+   itt ugyanúgy használjuk, mint a szalon képnél. */
+
+/* Kártyák a szolgáltatás oldalon – ugyanaz a logika,
+   mint a home „Szolgáltatásaink” részben, csak kicsit emelve. */
+.section--services-page-cards {
+  padding-top: 0.5rem;
+}
+
+.section--services-page-cards .card--service {
+  border-radius: 1.4rem;
+  padding: 1.6rem 1.5rem 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: #120c08;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.section--services-page-cards .card--service:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.16);
+}

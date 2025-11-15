@@ -1,74 +1,95 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
-export const Header: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  "nav-link" + (isActive ? " nav-link-active" : "");
 
-  useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 960 && isOpen) {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [isOpen]);
-
+export function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        {/* LOGÓ – bal oldalt nagyban */}
-        <NavLink
-          className="brand"
-          to="/"
-          aria-label="Kleopátra Szépségszalonok – Főoldal"
-        >
-          <img
-            src="/images/Logo.jpeg"
-            alt="Kleopátra Szépségszalonok logó"
-          />
+        {/* BAL: LOGÓ */}
+        <NavLink to="/" className="header-logo-link" aria-label="Főoldal">
+          <div className="site-logo-wrapper site-logo-wrapper--shiny">
+            <img
+              src="/images/Logo.jpg"
+              alt="Kleopátra Szépségszalonok logó"
+              className="site-logo"
+            />
+          </div>
         </NavLink>
 
-        {/* MOBIL HAMBURGER */}
-        <button
-          className={`hamburger ${isOpen ? "is-open" : ""}`}
-          id="navToggle"
-          aria-label="Menü megnyitása"
-          aria-expanded={isOpen}
-          type="button"
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        {/* KÖZÉP: KÉT SOROS MENÜ */}
+        <nav className="main-nav" aria-label="Fő navigáció">
+          <div className="main-nav-inner">
+            <div className="main-nav-row">
+              <NavLink to="/salons" className={navLinkClass}>
+                Szalonjaink
+              </NavLink>
+             
+              <NavLink to="/services" className={navLinkClass}>
+                Áraink és Szolgáltatásaink 
+              </NavLink>
+              <NavLink to="/webshop" className={navLinkClass}>
+                Webshop
+              </NavLink>
+              <NavLink to="/contact" className={navLinkClass}>
+                Kapcsolat
+              </NavLink>
+              
+            </div>
 
-        {/* MENÜ – két sor, középen */}
-        <nav
-          id="mainNav"
-          className={`nav ${isOpen ? "is-open" : ""}`}
-        >
-          <div className="nav-row">
-            <NavLink to="/salons">Szalonjaink</NavLink>
-            <NavLink to="/prices">Áraink</NavLink>
-            <NavLink to="/services">Szolgáltatások</NavLink>
-            <NavLink to="/webshop">Webshop</NavLink>
-            <NavLink to="/contact">Kapcsolat</NavLink>
-          </div>
-          <div className="nav-row">
-            <NavLink to="/loyalty">Hűségprogram</NavLink>
-            <NavLink to="/franchise">Franchise</NavLink>
-            <NavLink to="/career">Karrier</NavLink>
-            <NavLink to="/training">Oktatás</NavLink>
-            <NavLink to="/about">Rólunk</NavLink>
+            <div className="main-nav-row main-nav-row--bottom">
+              <NavLink to="/about" className={navLinkClass}>
+                Rólunk
+              </NavLink>
+              <NavLink to="/loyalty" className={navLinkClass}>
+                Hűségprogram
+              </NavLink>
+              <NavLink to="/franchise" className={navLinkClass}>
+                Franchise
+              </NavLink>
+              <NavLink to="/career" className={navLinkClass}>
+                Karrier
+              </NavLink>
+              <NavLink to="/education" className={navLinkClass}>
+                Oktatás
+              </NavLink>
+            </div>
           </div>
         </nav>
 
-        {/* Desktop CTA – jobb szélen, arculati gomb */}
-        <a className="header-cta" href="/salons">
-          Időpontfoglalás
-        </a>
+        {/* JOBB: IDŐPONTFOGLALÁS + SOCIAL IKONOK */}
+        <div className="header-cta-block">
+          <NavLink
+            to="/salons"
+            className="btn header-cta-btn"
+            aria-label="Időpontfoglalás"
+          >
+            Időpontfoglalás
+          </NavLink>
+
+          <div className="header-social">
+            <div className="header-social-label">Kövess minket</div>
+            <div className="header-social-icons">
+              <a href="#" aria-label="Facebook">
+                <img src="/images/facebook.png" alt="Facebook" />
+              </a>
+              <a href="#" aria-label="Instagram">
+                <img src="/images/insta.png" alt="Instagram" />
+              </a>
+              <a href="#" aria-label="TikTok">
+                <img src="/images/tiktok.png" alt="TikTok" />
+              </a>
+              <a href="#" aria-label="Messenger">
+                <img src="/images/messenger.png" alt="Messenger" />
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
   );
-};
+}
+
+export default Header;

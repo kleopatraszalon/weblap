@@ -1,109 +1,332 @@
-import React, { useEffect, useState } from "react";
-
-const heroImages = [
-  "/images/images_1.webp",
-  "/images/images_2.webp",
-  "/images/images_3.webp",
-  "/images/images_4.webp",
-];
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 export const HomePage: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => window.clearInterval(id);
-  }, []);
-
   return (
     <main>
-      <section className="hero hero--home">
-        <div className="hero-bg" aria-hidden="true" />
+      {/* HERO – KEZDŐLAP */}
+      <section className="hero">
+        <div className="hero-bg" />
+
         <div className="container hero-grid">
+          {/* BAL: szöveg */}
           <div className="hero-content">
-            <p className="hero-kicker">Minden ami szépség, csak Neked.</p>
-            <h1>
-              Kleopátra Szépségszalonok
-              <br />
-              <span className="accent">look good, feel good!</span>
-            </h1>
-            <p className="hero-lead">
-              Szalonjainkban a mindennapi szépségápolásodhoz mindent egy helyen
-              megtalálsz: fodrászat, kozmetika, kéz- és lábápolás, masszázs és
-              szolárium vár több városban, hosszú nyitvatartással.
-            </p>
-            <div className="hero-pills">
-              <span>Fodrászat</span>
-              <span>Kozmetika</span>
-              <span>Kéz- és lábápolás</span>
-              <span>Szolárium</span>
-              <span>Masszázs</span>
+            <div className="hero-kicker">
+              KLEOPÁTRA SZÉPSÉGSZALONOK · TÖBB MINT 30 ÉVE
             </div>
+
+            <h1 className="hero-title">
+  <span className="hero-part hero-part-default">Éld át a </span>
+  <span className="hero-part hero-part-magenta">Kleopátra-élményt</span>
+  <span className="hero-part hero-part-gold">
+    {" "}– prémium szépségszolgáltatások, akár bejelentkezés nélkül.
+  </span>
+</h1>
+
+            <p className="hero-lead">
+              Fodrászat, kozmetika, manikűr–pedikűr, szolárium és masszázs egy
+              helyen. Tapasztalt szakembereinkkel és minőségi termékekkel
+              várunk minden szalonunkban.
+            </p>
+
+            {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK OLDALRA MUTATNAK */}
+            <div className="hero-pills">
+              <NavLink to="/services#hair" className="hero-pill">
+                Fodrászat
+              </NavLink>
+              <NavLink to="/services#beauty" className="hero-pill">
+                Kozmetika
+              </NavLink>
+              <NavLink to="/services#hands-feet" className="hero-pill">
+                Kéz- és lábápolás
+              </NavLink>
+              <NavLink to="/services#solarium" className="hero-pill">
+                Szolárium
+              </NavLink>
+              <NavLink to="/services#massage" className="hero-pill">
+                Masszázs
+              </NavLink>
+            </div>
+
             <div className="btn-row">
-              <a className="btn btn-primary" href="/salons">
-                Szalon választása
-              </a>
-              <a className="btn btn-ghost" href="/prices">
-                Árlista megnyitása
-              </a>
+              <NavLink to="/salons" className="btn btn-primary">
+                Időpontfoglalás / szalonok
+              </NavLink>
+              <NavLink to="/services" className="btn btn-ghost">
+                Szolgáltatásaink
+              </NavLink>
             </div>
           </div>
+
+          {/* JOBB: nagy kép – webshop link + app chip a képen */}
           <div className="hero-media">
             <div className="hero-media-frame">
-              <div className="hero-image-stack">
-                {heroImages.map((src, idx) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt="Kleopátra Szépségszalon"
-                    className={idx === activeIndex ? "is-active" : ""}
-                  />
-                ))}
-              </div>
-              <div className="hero-chip hero-chip--light">
-                Töltsd le mobilalkalmazásunkat
+              <img
+                src="/images/home.png"
+                alt="Kleopátra Szépségszalon – szépségszolgáltatások"
+                className="hero-media-img"
+              />
+
+              <div className="hero-media-overlay">
+                {/* FELSŐ: WEBSHOP LINK A KÉPEN */}
+                <NavLink to="/webshop" className="hero-media-webshop">
+                  Webshop
+                </NavLink>
+
+                {/* ALSÓ: APP LETÖLTÉS SZÖVEG A KÉPEN */}
+                <div className="hero-media-chip">
+                  Töltsd le mobilalkalmazásunkat
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section section--cards">
-        <div className="container grid-three">
-          <article className="card">
-            <h2 className="card-title">Franchise program</h2>
-            <p className="card-text">
-              Szeretnél Kleopátra Szépségszalont nyitni? A márka komplett
-              arculati, működési és marketing háttérrel támogat, hogy
-              professzionális szalont üzemeltethess.
+      {/* 4 NAGY VÍZSZINTES GOMB – FRANCHISE / APP / HÍRLEVÉL / KAPCSOLAT */}
+      <section className="hero-strips">
+        <div className="container hero-strips-inner">
+          <NavLink
+            to="/franchise"
+            className="hero-strip hero-strip--primary"
+          >
+            SZERETNÉL EGY KLEOPÁTRA SZÉPSZALONT? FRANCHISE PROGRAM
+          </NavLink>
+
+          <NavLink to="/app" className="hero-strip">
+            TÖLTSD LE MOBILODRA ALKALMAZÁSUNK
+          </NavLink>
+
+          <NavLink to="/newsletter" className="hero-strip">
+            HÍRLEVÉL
+          </NavLink>
+
+          <NavLink to="/contact" className="hero-strip">
+            KAPCSOLAT
+          </NavLink>
+        </div>
+      </section>
+
+      {/* FRANCHISE PROGRAM BLOKK */}
+      <section className="section section--franchise">
+        <div className="container grid-two">
+          <div>
+            <p className="section-kicker">Franchise program</p>
+            <h2>Építsd fel saját Kleopátra Szépségszalonod!</h2>
+            <p className="section-lead">
+              Csatlakozz országos hálózatunkhoz, és használd ki a több mint 30
+              év tapasztalatát, kész üzleti modellünket és marketing
+              támogatásunkat.
             </p>
-            <a className="link-btn" href="/franchise">
-              Franchise lehetőségek
-            </a>
-          </article>
-          <article className="card">
-            <h2 className="card-title">Kleos termékek</h2>
-            <p className="card-text">
-              Válaszd Kleos kiegészítőinket és termékeinket, hogy a
-              mindennapokban is magaddal vidd a Kleopátra életérzést.
+
+            <ul className="bullet-list">
+              <li>Országosan ismert, bejáratott márkanév</li>
+              <li>Marketing és grafikai támogatás központból</li>
+              <li>HR-támogatás, folyamatos képzések és oktatás</li>
+              <li>Kedvezményes eszköz- és anyagbeszerzés</li>
+              <li>Központi ügyfélmenedzsment és foglalási rendszer</li>
+            </ul>
+
+            <NavLink to="/franchise" className="btn btn-outline">
+              Tovább a franchise programra
+            </NavLink>
+          </div>
+
+          <div className="section-image-card">
+            <img
+              src="/images/franchise.jpg"
+              alt="Kleopátra franchise szalon"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* MOBILALKALMAZÁS BLOKK */}
+      <section className="section section--app">
+        <div className="container grid-two grid-two--reverse">
+          <div className="section-image-card section-image-card--phone">
+            <img
+              src="/images/app_mockup.png"
+              alt="Kleopátra mobilalkalmazás"
+            />
+          </div>
+
+          <div>
+            <p className="section-kicker">Mobilalkalmazás</p>
+            <h2>Elindult mobil alkalmazásunk – Neked megvan már?</h2>
+            <p className="section-lead">
+              Foglalj időpontot pár kattintással, kövesd bérleted egységeit,
+              egyenlegedet és értesülj elsőként a kedvezményekről.
             </p>
-            <a className="link-btn" href="/webshop">
-              Tovább a webshopra
-            </a>
-          </article>
-          <article className="card">
-            <h2 className="card-title">Hűségprogram</h2>
-            <p className="card-text">
-              Regisztrált vendégeinket pontokkal, kedvezményekkel és exkluzív
-              ajánlatokkal jutalmazzuk. Iratkozz fel, hogy ne maradj le az
-              újdonságokról.
+
+            <ul className="bullet-list">
+              <li>Időpontfoglalás a hozzád legközelebbi szalonba</li>
+              <li>Bérlet-egységek és szolárium egyenleg követése</li>
+              <li>Akciók, kedvezmények, személyre szabott ajánlatok</li>
+              <li>Push értesítések – hogy semmiről ne maradj le</li>
+            </ul>
+
+            <div className="btn-row">
+              <a href="#" className="btn btn-dark">
+                Telepítés iPhone-ra
+              </a>
+              <a href="#" className="btn btn-dark btn-dark--outline">
+                Telepítés Android-ra
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AJÁNDÉKUTALVÁNY BLOKK */}
+      <section className="section section--vouchers">
+        <div className="container grid-two">
+          <div>
+            <p className="section-kicker">Ajándékutalványok</p>
+            <h2>Ajándékozz Kleopátra-élményt!</h2>
+            <p className="section-lead">
+              Egy szépségszalon-élmény mindig jó választás – legyen szó
+              születésnapról, évfordulóról vagy meglepetésről.
             </p>
-            <a className="link-btn" href="/loyalty">
-              Hűségprogram részletei
-            </a>
-          </article>
+            <p>
+              Válassz különböző értékű és tematikájú ajándékutalványaink közül,
+              amelyek bármely Kleopátra Szépségszalonban beválthatók.
+            </p>
+
+            <NavLink to="/gift-vouchers" className="btn btn-outline">
+              Tovább az ajándékutalványokra
+            </NavLink>
+          </div>
+
+          <div className="section-image-card">
+            <img
+              src="/images/voucher.jpg"
+              alt="Kleopátra ajándékutalvány"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* HÍRLEVÉL BLOKK */}
+      <section className="section section--newsletter">
+        <div className="container">
+          <div className="newsletter-box">
+            <div>
+              <p className="section-kicker">Hírlevél</p>
+              <h2>
+                Iratkozz fel hírlevelünkre – most{" "}
+                <span className="accent">1500 Ft kedvezménnyel</span>{" "}
+                ajándékozunk meg!
+              </h2>
+              <p className="section-lead">
+                Értesülj elsőként újdonságainkról, akcióinkról, eseményeinkről,
+                és gyűjts extra kedvezményeket.
+              </p>
+            </div>
+
+            <div className="newsletter-actions">
+              <NavLink to="/newsletter" className="btn btn-primary">
+                Tovább a feliratkozáshoz
+              </NavLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* KLEOS TERMÉKEK / WEBSHOP TEASER */}
+      <section className="section section--products">
+        <div className="container grid-two">
+          <div>
+            <p className="section-kicker">Kleos termékek</p>
+            <h2>100% Kleopátrás megjelenés – vedd magadra az élményt!</h2>
+            <p className="section-lead">
+              Limitált kollekciós termékeinkkel a Kleopátra-élményt a
+              mindennapjaidba is magaddal viheted.
+            </p>
+            <p>
+              Válaszd ki kedvenc darabjaid – stílusos, igényes kiegészítők és
+              ajándéktárgyak várnak webshopunkban.
+            </p>
+
+            <NavLink to="/webshop" className="btn btn-outline">
+              Tovább a termékekre
+            </NavLink>
+          </div>
+
+          <div className="section-image-card section-image-card--products">
+            <img src="/images/products.jpg" alt="Kleos termékek" />
+          </div>
+        </div>
+      </section>
+
+      {/* SZOLGÁLTATÁS ÖSSZEFOGLALÓ – TÉRJ BE HOZZÁNK */}
+      <section className="section section--services-overview">
+        <div className="container">
+          <p className="section-kicker">Szolgáltatásaink</p>
+          <h2>Térj be hozzánk, amikor csak akarsz!</h2>
+          <p className="section-lead">
+            Szalonjaink jelentős részében bejelentkezés nélkül is fogadunk.
+            Találd meg a hozzád legközelebb eső Kleopátra Szépségszalont, és
+            válaszd ki, milyen szolgáltatásra van szükséged.
+          </p>
+
+          <div className="grid-three">
+            <NavLink to="/services#hair" className="card">
+              <h3 className="card-title">Fodrászat</h3>
+              <p className="card-text">
+                Divatos frizurák, professzionális színtechnika és regeneráló
+                hajkezelések a mindennapi szépségedért.
+              </p>
+              <span className="link-btn">
+                Bejelentkezéshez válassz szalont!
+              </span>
+            </NavLink>
+
+            <NavLink to="/services#beauty" className="card">
+              <h3 className="card-title">Kozmetika</h3>
+              <p className="card-text">
+                Klasszikus és modern arckezelések, smink, szempilla- és
+                szemöldökformázás – ragyogó bőr, friss megjelenés.
+              </p>
+              <span className="link-btn">Részletek</span>
+            </NavLink>
+
+            <NavLink to="/services#hands-feet" className="card">
+              <h3 className="card-title">Kéz- és lábápolás</h3>
+              <p className="card-text">
+                Manikűr, pedikűr, géllakk, műköröm – ápolt, esztétikus körmök
+                minden alkalomra.
+              </p>
+              <span className="link-btn">Részletek</span>
+            </NavLink>
+
+            <NavLink to="/services#solarium" className="card">
+              <h3 className="card-title">Szolárium</h3>
+              <p className="card-text">
+                Modern gépekkel, szakértő tanácsadással segítünk elérni az
+                egyenletes, napbarnított bőrt.
+              </p>
+              <span className="link-btn">Részletek</span>
+            </NavLink>
+
+            <NavLink to="/services#massage" className="card">
+              <h3 className="card-title">Masszázs</h3>
+              <p className="card-text">
+                Relaxáló, gyógy- és frissítő masszázsok, amelyek segítenek
+                feltöltődni és kikapcsolni.
+              </p>
+              <span className="link-btn">Részletek</span>
+            </NavLink>
+
+            <NavLink to="/services#fitness" className="card">
+              <h3 className="card-title">Fitness / Wellness</h3>
+              <p className="card-text">
+                Gyöngyösi fitnesz- és wellness szolgáltatásainkkal a teljes
+                testi-lelki megújulást célozzuk.
+              </p>
+              <span className="link-btn">Belépek</span>
+            </NavLink>
+          </div>
         </div>
       </section>
     </main>
