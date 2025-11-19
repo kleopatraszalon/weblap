@@ -1,5 +1,5 @@
 // src/apiClient.ts
-
+import { apiFetch } from "../apiClient";
 // ===== TÍPUSOK =====
 
 export interface PublicSalon {
