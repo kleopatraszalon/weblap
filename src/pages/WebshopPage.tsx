@@ -51,7 +51,9 @@ type CouponResponse = {
   message?: string;
 };
 
-const API_BASE = "/api"; // ha máshol fut az API, itt tudod átírni
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
+  "http://localhost:5000/api";
 
 export const WebshopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -500,10 +502,9 @@ export const WebshopPage: React.FC = () => {
             <p className="section-eyebrow">Online vásárlás</p>
             <h2>Válassz bérletet, szépség- vagy ajándékutalványt</h2>
             <p className="section-lead">
-              A lenti termékek közvetlenül a Kleopátra adatbázis{" "}
-              <strong>products</strong> táblájából érkeznek. Csak azok
-              látszanak, ahol <code>is_retail = true</code> és{" "}
-              <code>web_is_visible = true</code>.
+              A lenti termékek közvetlenül a Kleopátra Szépségszalonokból{" "}
+              <strong>pa lehető leggyorsaban</strong> érkeznek. Csak azok
+              látszanak, amik elérhetőek
             </p>
 
             {productsLoading && (
