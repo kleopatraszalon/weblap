@@ -2186,68 +2186,54 @@ p {
   }
 }
 
-/* Magenta körök – overlay */
-
-.webshop-hero__bubbles {
-  position: absolute;
-  left: max(15rem, 3vw);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 1.7rem;
-}
-
-@media (max-width: 900px) {
-  .webshop-hero__bubbles {
-    position: static;
-    transform: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 1.75rem;
-  }
-}
-
+/* Magenta körök – alap stílus, pozicionálás nélkül */
 .webshop-hero__bubble {
-  --bubble-size: 9.5rem;
+  --bubble-size: 7 rem;
   position: relative;
   width: var(--bubble-size);
   height: var(--bubble-size);
   border-radius: 50%;
-  background: var(--magenta, #ec008c);
+  background: var(--magenta, #00ec4f);
   box-shadow: 0 20px 55px rgba(236, 0, 140, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  animation: bubbleFloat 14s ease-in-out infinite;
 }
 
-.webshop-hero__bubble img {
-  width: 80%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
+/* Desktopon kicsit nagyobb gömbök */
+@media (min-width: 900px) {
+  .webshop-hero__bubble {
+    --bubble-size: 11rem;
+  }
+
+
 }
 
-/* Egyedi késleltetés a fényátfutáshoz */
+/* Buborékonként „véletlen” mozgásvariációk */
 .webshop-hero__bubble--top {
-  --shine-delay: 0s;
+  --shine-delay: 1s;
+  animation-name: bubbleFloatTop;
+  animation-duration: 1s;
 }
+
 .webshop-hero__bubble--middle {
   --shine-delay: 1.8s;
+  animation-name: bubbleFloatMiddle;
+  animation-duration: 1s;
 }
+
 .webshop-hero__bubble--bottom {
   --shine-delay: 3.4s;
+  animation-name: bubbleFloatBottom;
+  animation-duration: 2s;
 }
 
-/* Fényátfutás a körökön */
-
+/* Fényátfutás a körökön változatlanul maradhat */
 .webshop-hero__bubble::after {
   content: "";
   position: absolute;
-  inset: -40%;
+  inset: -240%;
   background: linear-gradient(
     120deg,
     rgba(255, 255, 255, 0),
@@ -2260,18 +2246,66 @@ p {
   animation-delay: var(--shine-delay, 0s);
 }
 
-/* Lebegés animáció */
-
-@keyframes bubbleFloat {
-  0%,
-  100% {
-    transform: translateY(0);
+/* „Véletlenszerűnek” ható lebegések */
+@keyframes bubbleFloatTop {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
   }
-  50% {
-    transform: translateY(-6px);
+  20% {
+    transform: translate(4px, -8px) rotate(1.5deg);
+  }
+  40% {
+    transform: translate(-3px, -14px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(2px, -6px) rotate(2deg);
+  }
+  80% {
+    transform: translate(-4px, -12px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
   }
 }
 
+@keyframes bubbleFloatMiddle {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  15% {
+    transform: translate(-5px, -6px) rotate(-1deg) scale(1.02);
+  }
+  35% {
+    transform: translate(3px, -10px) rotate(1.5deg) scale(1.01);
+  }
+  55% {
+    transform: translate(-2px, -4px) rotate(0.5deg) scale(0.99);
+  }
+  75% {
+    transform: translate(5px, -12px) rotate(-1.5deg) scale(1.02);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes bubbleFloatBottom {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(6px, -5px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-4px, -11px) rotate(-1.5deg);
+  }
+  75% {
+    transform: translate(2px, -7px) rotate(0.5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
 /* Jobb oldali szöveg + gombok */
 
 .webshop-hero__text {
@@ -2296,7 +2330,21 @@ p {
 .hero-part-magenta {
   color: var(--magenta, #ec008c);
 }
+.webshop-hero__visual {
+  display: flex;
+  flex-direction: column;      /* egymás alatt 3 gömb */
+  align-items: left;         /* vízszintesen KÖZÉPEN */
+  justify-content: center;     /* függőlegesen is középen a saját helyén */
+  gap: 100rem;                 /* távolság a gömbök között */
+}
 
+/* Mobilon is maradjon középen */
+@media (max-width: 768px) {
+  .webshop-hero__visual {
+    align-items: center;
+    justify-content: center;
+  }
+}
 .webshop-hero__buttons {
   display: flex;
   flex-wrap: wrap;
@@ -2403,5 +2451,45 @@ p {
 @media (max-width: 900px) {
   .webshop-invoice {
     margin-top: 0.8rem;
+  }
+}
+/* Webshop terméklista grid – 3 oszlop desktopon */
+
+.webshop-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); /* bal: lista, jobb: kosár */
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .webshop-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.webshop-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* ITT: 3 oszlopos termék grid */
+
+.webshop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem 1.6rem;
+}
+
+@media (max-width: 1100px) {
+  .webshop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .webshop-grid {
+    grid-template-columns: 1fr;
   }
 }

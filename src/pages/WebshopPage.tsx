@@ -427,18 +427,18 @@ export const WebshopPage: React.FC = () => {
           <div className="webshop-hero__bubbles">
             <div className="webshop-hero__bubble webshop-hero__bubble--top">
               <img
-                src="/images/ajandekutalvany.png"
+                
                 alt="Ajándékutalványok"
               />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--middle">
               <img
-                src="/images/szepsegcsomagok.png"
+               
                 alt="Szépségcsomagok"
               />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--bottom">
-              <img src="/images/berlet.png" alt="Bérletek" />
+              <img  alt="Bérletek" />
             </div>
           </div>
 
