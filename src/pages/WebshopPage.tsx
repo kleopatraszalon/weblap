@@ -361,18 +361,26 @@ export const WebshopPage: React.FC = () => {
     setCouponError(null);
   };
 
+  // Hány darab termék van összesen a kosárban (ikonhoz a hero tetején)
+  const cartItemCount = useMemo(
+    () => cart.reduce((sum, item) => sum + item.quantity, 0),
+    [cart]
+  );
+
   const cartSubtotal = useMemo(() => {
     return cart.reduce((sum, item) => {
       const raw =
         item.product.retail_price_gross ?? item.product.sale_price ?? 0;
       const price =
         typeof raw === "string"
-          ? parseFloat(raw.replace(",", "."))
+          ? parseFloat(raw.replace(",", ".")) 
           : raw ?? 0;
       if (!price || Number.isNaN(price)) return sum;
       return sum + price * item.quantity;
     }, 0);
   }, [cart]);
+
+
 
   const currencyLabel = "Ft";
 
@@ -595,53 +603,75 @@ export const WebshopPage: React.FC = () => {
       <section className="webshop-hero">
         <div className="webshop-hero__bg">
           <img
-            src="/images/kleoshop.png"
-            alt="Kleoshop – bérletek, szépség- és ajándékutalványok"
+            src="/images/webshop/kleo-webshop-hero.jpg"
+            alt="Kleopátra Szépségszalonok – webshop háttér"
           />
         </div>
 
         <div className="container webshop-hero__content">
+          {/* Fejléc kosár ikon – a social media logók mellé vizuálisan igazítva */}
+          <a
+            href="#webshop-checkout"
+            className="webshop-hero__cart-link"
+            aria-label={`Kosár, ${cartItemCount} tétel`}
+          >
+            <span className="webshop-hero__cart-icon" aria-hidden="true">
+              <svg
+                className="webshop-hero__cart-icon-svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M5 4h2.1l1.2 4H20l-1.6 7.2a2.5 2.5 0 0 1-2.4 1.8H9.4l-.5 2H6.5l.6-2.6L4 6H2V4h3z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span className="webshop-hero__cart-label">Kosár</span>
+            <span className="webshop-hero__cart-badge">{cartItemCount}</span>
+          </a>
+
+          {/* BAL: gömbök */}
           <div className="webshop-hero__bubbles">
             <div className="webshop-hero__bubble webshop-hero__bubble--top">
-              <img alt="Ajándékutalványok" />
+              <img
+                src="/images/webshop/webshop-bubble-1.jpg"
+                alt="Ajándékutalványok"
+              />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--middle">
-              <img alt="Szépségcsomagok" />
+              <img
+                src="/images/webshop/webshop-bubble-2.jpg"
+                alt="Szépségcsomagok"
+              />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--bottom">
-              <img alt="Bérletek" />
+              <img
+                src="/images/webshop/webshop-bubble-3.jpg"
+                alt="Bérletek"
+              />
             </div>
           </div>
 
+          {/* JOBB: szöveg */}
           <div className="webshop-hero__text">
             <p className="section-eyebrow">
               KLEOPÁTRA SZÉPSÉGSZALONOK · ONLINE WEBSHOP
             </p>
-
-            <h1 className="hero-title hero-title--tight">
+            <h1>
               Bérletek, szépségutalványok,{" "}
-              <span className="hero-part hero-part-magenta">
-                ajándékutalványok
-              </span>
+              <span className="text-highlight">ajándékutalványok</span>
             </h1>
-
-            <p className="hero-lead hero-lead--narrow">
+            <p className="section-lead">
               Kleopátra élményt adhatsz ajándékba vagy saját magadnak – online
               vásárlással, bankkártyás vagy utánvétes fizetéssel, kupon
               kedvezményekkel.
             </p>
 
             <div className="webshop-hero__buttons">
-              <a
-                className="btn btn-primary btn-primary--magenta btn--shine"
-                href="#webshop-lista"
-              >
+              <a href="#webshop-lista" className="btn btn-primary">
                 Termékek megtekintése
               </a>
-              <a
-                className="btn btn-secondary btn-secondary--ghost btn--shine"
-                href="#webshop-regisztracio"
-              >
+              <a href="#webshop-regisztracio" className="btn btn-secondary">
                 Vendégprofil / regisztráció
               </a>
             </div>
@@ -649,16 +679,14 @@ export const WebshopPage: React.FC = () => {
             <div className="webshop-invoice">
               <div className="webshop-invoice__image">
                 <img
-                  src="/images/vendegszamla.png"
-                  alt="Vendégszámla minta"
+                  src="/images/webshop/invoice-icon.png"
+                  alt="Vendégszámla ikon"
                 />
               </div>
               <div className="webshop-invoice__text">
-                <p className="small">
-                  Minden online vásárlás után azonnali visszaigazoló
-                  vendégszámlát küldünk e-mailben – így könnyen nyomon
-                  követheted a Kleopátra-élményeket.
-                </p>
+                Online vásárlás után azonnali visszaigazoló vendégszámlát
+                küldünk e-mailben – így könnyen nyomon követheted a
+                Kleopátra-élményeket.
               </div>
             </div>
           </div>
