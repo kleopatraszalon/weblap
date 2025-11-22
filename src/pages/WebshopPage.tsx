@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 /**
  * A TE adatbázisodhoz igazítva:
@@ -12,6 +13,39 @@ import React, { useEffect, useMemo, useState } from "react";
  *     - is_retail boolean
  *     - web_is_visible boolean
  */
+type MainCategoryKey =
+  | "GIFT_VOUCHERS"
+  | "PASSES"
+  | "GUEST_ACCOUNT"
+  | "KLEO_PRODUCTS"
+  | "COMPANY_DISCOUNTS";
+
+type SubCategoryKey =
+  | "GIFT_VOUCHERS_BASIC"
+  | "GIFT_CUSTOM_PACKAGE"
+  | "GIFT_BEAUTY_VOUCHERS"
+  | "GIFT_BEAUTY_PACKAGES"
+  | "PASSES_BUDAPEST"
+  | "PASSES_COUNTRYSIDE";
+
+type ServiceCategoryKey =
+  | "HAIRDRESSING"
+  | "HAIR_BLOWDRY"
+  | "HAIRCUT"
+  | "HAIRTREATMENT"
+  | "HAND_FOOT"
+  | "GEL_LAC"
+  | "NAIL_FILL"
+  | "PEDICURE"
+  | "COSMETIC"
+  | "SUGARP_DEPILATION"
+  | "WAX_DEPILATION"
+  | "IPL"
+  | "CAVITATION"
+  | "EYELASH"
+  | "BROW_LASH"
+  | "MASSAGE";
+
 type Product = {
   id: string;
   name: string;
@@ -21,6 +55,9 @@ type Product = {
   web_description?: string | null;
   is_retail?: boolean | null;
   web_is_visible?: boolean | null;
+  main_category?: MainCategoryKey | null;
+  sub_category?: SubCategoryKey | null;
+  service_category?: ServiceCategoryKey | null;
 };
 
 type CartItem = {
@@ -28,37 +65,151 @@ type CartItem = {
   quantity: number;
 };
 
-type RegistrationForm = {
-  fullName: string;
-  email: string;
-  password: string;
+type CategoryLevel3 = {
+  key: ServiceCategoryKey;
+  label: string;
 };
 
-type CheckoutForm = {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  note: string;
-  paymentMethod: "card" | "cod";
+type CategoryLevel2 = {
+  key: SubCategoryKey;
+  label: string;
+  children?: CategoryLevel3[];
 };
 
-type CouponResponse = {
-  valid: boolean;
-  code?: string;
-  discount_gross?: number;
-  final_total_gross?: number;
-  message?: string;
+type CategoryLevel1 = {
+  key: MainCategoryKey;
+  label: string;
+  children?: CategoryLevel2[];
 };
+
+const CATEGORY_TREE: CategoryLevel1[] = [
+  {
+    key: "GIFT_VOUCHERS",
+    label: "Ajándékutalványok",
+    children: [
+      { key: "GIFT_VOUCHERS_BASIC", label: "Ajándékutalványok" },
+      {
+        key: "GIFT_CUSTOM_PACKAGE",
+        label: "Egyedi szépségcsomag összeállítása",
+      },
+      {
+        key: "GIFT_BEAUTY_VOUCHERS",
+        label: "Szépségutalványok",
+        children: [
+          { key: "HAIRDRESSING", label: "Fodrász szolgáltatások" },
+          { key: "HAND_FOOT", label: "Kéz- és lábápolás szolgáltatások" },
+          { key: "COSMETIC", label: "Kozmetikai szolgáltatások" },
+          { key: "MASSAGE", label: "Masszázs szolgáltatások" },
+          { key: "EYELASH", label: "Szépségutalványok férfiaknak" },
+        ],
+      },
+      { key: "GIFT_BEAUTY_PACKAGES", label: "Szépségcsomagok" },
+    ],
+  },
+  {
+    key: "PASSES",
+    label: "Bérletek",
+    children: [
+      {
+        key: "PASSES_BUDAPEST",
+        label: "Bérletek Budapest",
+        children: [
+          { key: "HAIR_BLOWDRY", label: "Budapest hajszárítás bérletek" },
+          { key: "HAIRCUT", label: "Budapest hajvágás bérletek" },
+          { key: "HAIRTREATMENT", label: "Budapest hajkezelés bérletek" },
+          { key: "HAND_FOOT", label: "Budapest kéz- és lábápolás bérletek" },
+          { key: "GEL_LAC", label: "Budapest géllakk csere bérletek" },
+          { key: "NAIL_FILL", label: "Budapest műköröm töltés bérletek" },
+          { key: "PEDICURE", label: "Budapest pedikűr bérletek" },
+          { key: "COSMETIC", label: "Budapest kozmetikai bérletek" },
+          {
+            key: "SUGARP_DEPILATION",
+            label: "Budapest cukorpasztás szőrtelenítés bérletek",
+          },
+          {
+            key: "WAX_DEPILATION",
+            label: "Budapest gyantás szőrtelenítés bérletek",
+          },
+          { key: "IPL", label: "Budapest IPL tartós szőrtelenítés" },
+          {
+            key: "CAVITATION",
+            label: "Budapest kavitációs zsírbontás bérletek",
+          },
+          { key: "EYELASH", label: "Budapest műszempilla bérletek" },
+          {
+            key: "BROW_LASH",
+            label: "Budapest szemöldök–szempilla bérletek",
+          },
+          { key: "MASSAGE", label: "Budapest masszázsbérletek" },
+        ],
+      },
+      {
+        key: "PASSES_COUNTRYSIDE",
+        label: "Bérletek Vidék",
+        children: [
+          { key: "HAIRTREATMENT", label: "Hajkezelés bérletek" },
+          { key: "HAIR_BLOWDRY", label: "Hajszárítás bérletek" },
+          { key: "HAIRCUT", label: "Hajvágás bérletek" },
+          { key: "HAND_FOOT", label: "Kéz- és lábápolás bérletek" },
+          { key: "GEL_LAC", label: "Géllakk csere bérletek" },
+          { key: "NAIL_FILL", label: "Műköröm töltés bérletek" },
+          { key: "PEDICURE", label: "Pedikűr bérletek" },
+          { key: "COSMETIC", label: "Kozmetikai bérletek" },
+          {
+            key: "SUGARP_DEPILATION",
+            label: "Cukorpasztás szőrtelenítés bérletek",
+          },
+          {
+            key: "WAX_DEPILATION",
+            label: "Gyantás szőrtelenítés bérletek",
+          },
+          { key: "IPL", label: "IPL tartós szőrtelenítés" },
+          {
+            key: "CAVITATION",
+            label: "Kavitációs zsírbontás bérletek",
+          },
+          { key: "EYELASH", label: "Műszempilla bérletek" },
+          {
+            key: "BROW_LASH",
+            label: "Szemöldök–szempilla bérletek",
+          },
+          { key: "MASSAGE", label: "Masszázs bérletek" },
+        ],
+      },
+    ],
+  },
+  { key: "GUEST_ACCOUNT", label: "Vendégszámla" },
+  { key: "KLEO_PRODUCTS", label: "Kleo termékek" },
+  { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
+];
+
+const API_ROOT = API_BASE.replace(/\/api$/, "");
+
+const buildImageUrl = (imageUrl?: string | null): string | undefined => {
+  if (!imageUrl) return undefined;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  const cleaned = imageUrl.replace(/^\/+/, "");
+  return `${API_ROOT}/${cleaned}`;
+};
+
 
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
   "http://localhost:5000/api";
 
+
+
 export const WebshopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
+
+   const [selectedMainCategory, setSelectedMainCategory] =
+    useState<MainCategoryKey | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState<SubCategoryKey | null>(null);
+  const [selectedServiceCategory, setSelectedServiceCategory] =
+    useState<ServiceCategoryKey | null>(null);
 
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -83,11 +234,49 @@ export const WebshopPage: React.FC = () => {
   const [orderMessage, setOrderMessage] = useState<string | null>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
 
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((p) => {
+        if (selectedMainCategory && p.main_category !== selectedMainCategory)
+          return false;
+        if (selectedSubCategory && p.sub_category !== selectedSubCategory)
+          return false;
+        if (
+          selectedServiceCategory &&
+          p.service_category &&
+          p.service_category !== selectedServiceCategory
+        )
+          return false;
+        return true;
+      }),
+    [products, selectedMainCategory, selectedSubCategory, selectedServiceCategory]
+  );
+
+
+
+
   // KUPON ÁLLAPOT
   const [couponInput, setCouponInput] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(
     null
   );
+    (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
+  "http://localhost:5000/api";
+
+const API_ROOT = API_BASE.replace(/\/api$/, "");
+
+const buildImageUrl = (imageUrl?: string | null): string | undefined => {
+  if (!imageUrl) return undefined;
+
+  // Ha már teljes URL (http/https), nem piszkáljuk
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  // Relatív út esetén levágjuk az elejéről a sok /-t
+  const cleaned = imageUrl.replace(/^\/+/, "");
+  return `${API_ROOT}/${cleaned}`;
+};
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
@@ -524,51 +713,69 @@ export const WebshopPage: React.FC = () => {
 
             <div className="webshop-grid">
               {products.map((p) => {
-                const raw = p.retail_price_gross ?? p.sale_price ?? 0;
-                const price =
-                  typeof raw === "string"
-                    ? parseFloat(raw.replace(",", "."))
-                    : raw ?? 0;
-                const formattedPrice =
-                  !price || Number.isNaN(price)
-                    ? "-"
-                    : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+  const raw = p.retail_price_gross ?? p.sale_price ?? 0;
+  const price =
+    typeof raw === "string" ? parseFloat(raw.replace(",", ".")) : raw ?? 0;
+  const formattedPrice =
+    !price || Number.isNaN(price)
+      ? "-"
+      : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
-                return (
-                  <article key={p.id} className="webshop-card">
-                    {p.image_url && (
-                      <div className="webshop-card__image-wrap">
-                        <img
-                          src={p.image_url}
-                          alt={p.name}
-                          className="webshop-card__image"
-                        />
-                      </div>
-                    )}
+  const imageSrc = buildImageUrl(p.image_url);
 
-                    <h3 className="webshop-card__title">{p.name}</h3>
+  return (
+    <article key={p.id} className="webshop-card">
+      {/* Kattintható kép – termék részletei oldal */}
+      <Link
+        to={`/webshop/${p.id}`}
+        state={{ product: p }}
+        className="webshop-card__image-link"
+      >
+        {imageSrc ? (
+          <div className="webshop-card__image-wrap">
+            <img
+              src={imageSrc}
+              alt={p.name}
+              className="webshop-card__image"
+            />
+          </div>
+        ) : (
+          <div className="webshop-card__image-wrap webshop-card__image-wrap--placeholder">
+            <span className="webshop-card__image-placeholder-text">
+              Nincs kép
+            </span>
+          </div>
+        )}
+      </Link>
 
-                    {p.web_description && (
-                      <p className="webshop-card__text">
-                        {p.web_description}
-                      </p>
-                    )}
+      {/* Kattintható cím */}
+      <h3 className="webshop-card__title">
+        <Link
+          to={`/webshop/${p.id}`}
+          state={{ product: p }}
+          className="webshop-card__title-link"
+        >
+          {p.name}
+        </Link>
+      </h3>
 
-                    <div className="webshop-card__footer">
-                      <div className="webshop-card__price">
-                        {formattedPrice}
-                      </div>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-primary--magenta btn--sm"
-                        onClick={() => handleAddToCart(p)}
-                      >
-                        Kosárba
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
+      {p.web_description && (
+        <p className="webshop-card__text">{p.web_description}</p>
+      )}
+
+      <div className="webshop-card__footer">
+        <div className="webshop-card__price">{formattedPrice}</div>
+        <button
+          type="button"
+          className="btn btn-primary btn-primary--magenta btn--sm"
+          onClick={() => handleAddToCart(p)}
+        >
+          Kosárba
+        </button>
+      </div>
+    </article>
+  );
+})}
             </div>
           </div>
 
