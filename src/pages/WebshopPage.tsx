@@ -1,5 +1,8 @@
+// src/pages/WebshopPage.tsx
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import "../styles/kleo-theme.css";
 
 /**
  * A TE adatbázisodhoz igazítva:
@@ -63,6 +66,29 @@ type Product = {
 type CartItem = {
   product: Product;
   quantity: number;
+};
+
+type RegistrationForm = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
+type CheckoutForm = {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  note: string;
+  paymentMethod: "card" | "cod";
+};
+
+type CouponResponse = {
+  valid: boolean;
+  code?: string;
+  discount_gross?: number;
+  final_total_gross?: number;
+  message?: string;
 };
 
 type CategoryLevel3 = {
@@ -183,28 +209,33 @@ const CATEGORY_TREE: CategoryLevel1[] = [
   { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
 ];
 
-const API_ROOT = API_BASE.replace(/\/api$/, "");
-
-const buildImageUrl = (imageUrl?: string | null): string | undefined => {
-  if (!imageUrl) return undefined;
-  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
-  const cleaned = imageUrl.replace(/^\/+/, "");
-  return `${API_ROOT}/${cleaned}`;
-};
-
+// --- API elérési adatok – egyszer, helyesen sorrendben definiálva ---
 
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
   "http://localhost:5000/api";
 
+const API_ROOT = API_BASE.replace(/\/api$/, "");
 
+const buildImageUrl = (imageUrl?: string | null): string | undefined => {
+  if (!imageUrl) return undefined;
+
+  // Ha már teljes URL (http/https), nem piszkáljuk
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  // Relatív út esetén levágjuk az elejéről a sok /-t
+  const cleaned = imageUrl.replace(/^\/+/, "");
+  return `${API_ROOT}/${cleaned}`;
+};
 
 export const WebshopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
 
-   const [selectedMainCategory, setSelectedMainCategory] =
+  const [selectedMainCategory, setSelectedMainCategory] =
     useState<MainCategoryKey | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] =
     useState<SubCategoryKey | null>(null);
@@ -252,31 +283,11 @@ export const WebshopPage: React.FC = () => {
     [products, selectedMainCategory, selectedSubCategory, selectedServiceCategory]
   );
 
-
-
-
-  // KUPON ÁLLAPOT
+  // =============== KUPON ÁLLAPOT ===============
   const [couponInput, setCouponInput] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(
     null
   );
-    (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
-  "http://localhost:5000/api";
-
-const API_ROOT = API_BASE.replace(/\/api$/, "");
-
-const buildImageUrl = (imageUrl?: string | null): string | undefined => {
-  if (!imageUrl) return undefined;
-
-  // Ha már teljes URL (http/https), nem piszkáljuk
-  if (/^https?:\/\//i.test(imageUrl)) {
-    return imageUrl;
-  }
-
-  // Relatív út esetén levágjuk az elejéről a sok /-t
-  const cleaned = imageUrl.replace(/^\/+/, "");
-  return `${API_ROOT}/${cleaned}`;
-};
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
@@ -344,7 +355,6 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
 
   const handleClearCart = () => {
     setCart([]);
-    // kupont is nullázzuk, ha kiürül a kosár
     setAppliedCouponCode(null);
     setCouponDiscount(0);
     setCouponMessage(null);
@@ -364,7 +374,7 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
     }, 0);
   }, [cart]);
 
-  const currencyLabel = "Ft"; // a dump alapján HUF
+  const currencyLabel = "Ft";
 
   const cartTotalAfterCoupon = useMemo(() => {
     const total = cartSubtotal - couponDiscount;
@@ -391,28 +401,6 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
     setCouponLoading(true);
 
     try {
-      /**
-       * BACKEND – javasolt végpont:
-       *   POST /api/public/webshop/validate-coupon
-       *
-       * input:
-       *   {
-       *     code: "KLEO10",
-       *     cart: {
-       *       items: [{ product_id, quantity, unit_price }],
-       *       total_gross: number
-       *     }
-       *   }
-       *
-       * output (példa):
-       *   {
-       *     valid: true,
-       *     code: "KLEO10",
-       *     discount_gross: 2500,
-       *     final_total_gross: 22500,
-       *     message: "10% kedvezmény jóváírva."
-       *   }
-       */
       const payload = {
         code,
         cart: {
@@ -445,7 +433,8 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
         setAppliedCouponCode(null);
         setCouponDiscount(0);
         setCouponError(
-          data.message || "Érvénytelen kuponkód vagy nem alkalmazható erre a rendelésre."
+          data.message ||
+            "Érvénytelen kuponkód vagy nem alkalmazható erre a rendelésre."
         );
         return;
       }
@@ -540,7 +529,7 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
           address: checkoutForm.address,
           note: checkoutForm.note,
         },
-        payment_method: checkoutForm.paymentMethod, // "card" | "cod"
+        payment_method: checkoutForm.paymentMethod,
         coupon: appliedCouponCode
           ? {
               code: appliedCouponCode,
@@ -576,7 +565,6 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
 
       const data = await res.json().catch(() => ({} as any));
 
-      // Ha kártyás fizetés: { payment_url: "https://..." }
       if (checkoutForm.paymentMethod === "card" && data.payment_url) {
         window.location.href = data.payment_url;
         return;
@@ -615,19 +603,13 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
         <div className="container webshop-hero__content">
           <div className="webshop-hero__bubbles">
             <div className="webshop-hero__bubble webshop-hero__bubble--top">
-              <img
-                
-                alt="Ajándékutalványok"
-              />
+              <img alt="Ajándékutalványok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--middle">
-              <img
-               
-                alt="Szépségcsomagok"
-              />
+              <img alt="Szépségcsomagok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--bottom">
-              <img  alt="Bérletek" />
+              <img alt="Bérletek" />
             </div>
           </div>
 
@@ -644,8 +626,8 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
             </h1>
 
             <p className="hero-lead hero-lead--narrow">
-              Kleopátra élményt adhatsz ajándékba vagy saját magadnak –
-              online vásárlással, bankkártyás vagy utánvétes fizetéssel, kupon
+              Kleopátra élményt adhatsz ajándékba vagy saját magadnak – online
+              vásárlással, bankkártyás vagy utánvétes fizetéssel, kupon
               kedvezményekkel.
             </p>
 
@@ -692,8 +674,8 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
             <h2>Válassz bérletet, szépség- vagy ajándékutalványt</h2>
             <p className="section-lead">
               A lenti termékek közvetlenül a Kleopátra Szépségszalonokból{" "}
-              <strong>pa lehető leggyorsaban</strong> érkeznek. Csak azok
-              látszanak, amik elérhetőek
+              <strong>a lehető leggyorsabban</strong> érkeznek. Csak azok
+              látszanak, amik elérhetőek.
             </p>
 
             {productsLoading && (
@@ -704,79 +686,189 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
                 {productsError}
               </p>
             )}
-            {!productsLoading && !productsError && products.length === 0 && (
-              <p className="webshop-status">
-                Jelenleg nem elérhetőek webshop termékek. Kérlek, nézz vissza
-                később.
-              </p>
-            )}
+            {!productsLoading &&
+              !productsError &&
+              filteredProducts.length === 0 && (
+                <p className="webshop-status">
+                  Jelenleg nincs a szűrésnek megfelelő termék. Próbáld más
+                  kategóriával, vagy töröld a szűrést.
+                </p>
+              )}
 
-            <div className="webshop-grid">
-              {products.map((p) => {
-  const raw = p.retail_price_gross ?? p.sale_price ?? 0;
-  const price =
-    typeof raw === "string" ? parseFloat(raw.replace(",", ".")) : raw ?? 0;
-  const formattedPrice =
-    !price || Number.isNaN(price)
-      ? "-"
-      : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+            {/* Kategória-szűrők */}
+            <div className="webshop-category-bar">
+              {CATEGORY_TREE.map((main) => (
+                <div
+                  key={main.key}
+                  className={
+                    main.key === selectedMainCategory
+                      ? "webshop-category webshop-category--active"
+                      : "webshop-category"
+                  }
+                >
+                  <button
+                    type="button"
+                    className="webshop-category__button"
+                    onClick={() => {
+                      const next =
+                        selectedMainCategory === main.key ? null : main.key;
+                      setSelectedMainCategory(next);
+                      setSelectedSubCategory(null);
+                      setSelectedServiceCategory(null);
+                    }}
+                  >
+                    {main.label}
+                  </button>
 
-  const imageSrc = buildImageUrl(p.image_url);
+                  {main.key === selectedMainCategory && main.children && (
+                    <div className="webshop-subcategory-row">
+                      {main.children.map((sub) => (
+                        <div
+                          key={sub.key}
+                          className="webshop-subcategory-group"
+                        >
+                          <button
+                            type="button"
+                            className={
+                              sub.key === selectedSubCategory
+                                ? "webshop-subcategory__button webshop-subcategory__button--active"
+                                : "webshop-subcategory__button"
+                            }
+                            onClick={() => {
+                              const next =
+                                selectedSubCategory === sub.key
+                                  ? null
+                                  : sub.key;
+                              setSelectedSubCategory(next);
+                              setSelectedServiceCategory(null);
+                            }}
+                          >
+                            {sub.label}
+                          </button>
 
-  return (
-    <article key={p.id} className="webshop-card">
-      {/* Kattintható kép – termék részletei oldal */}
-      <Link
-        to={`/webshop/${p.id}`}
-        state={{ product: p }}
-        className="webshop-card__image-link"
-      >
-        {imageSrc ? (
-          <div className="webshop-card__image-wrap">
-            <img
-              src={imageSrc}
-              alt={p.name}
-              className="webshop-card__image"
-            />
-          </div>
-        ) : (
-          <div className="webshop-card__image-wrap webshop-card__image-wrap--placeholder">
-            <span className="webshop-card__image-placeholder-text">
-              Nincs kép
-            </span>
-          </div>
-        )}
-      </Link>
+                          {sub.children &&
+                            sub.key === selectedSubCategory && (
+                              <div className="webshop-servicecategory-row">
+                                {sub.children.map((service) => (
+                                  <button
+                                    key={service.key}
+                                    type="button"
+                                    className={
+                                      service.key === selectedServiceCategory
+                                        ? "webshop-servicecategory__button webshop-servicecategory__button--active"
+                                        : "webshop-servicecategory__button"
+                                    }
+                                    onClick={() => {
+                                      const next =
+                                        selectedServiceCategory === service.key
+                                          ? null
+                                          : service.key;
+                                      setSelectedServiceCategory(next);
+                                    }}
+                                  >
+                                    {service.label}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
 
-      {/* Kattintható cím */}
-      <h3 className="webshop-card__title">
-        <Link
-          to={`/webshop/${p.id}`}
-          state={{ product: p }}
-          className="webshop-card__title-link"
-        >
-          {p.name}
-        </Link>
-      </h3>
-
-      {p.web_description && (
-        <p className="webshop-card__text">{p.web_description}</p>
-      )}
-
-      <div className="webshop-card__footer">
-        <div className="webshop-card__price">{formattedPrice}</div>
-        <button
-          type="button"
-          className="btn btn-primary btn-primary--magenta btn--sm"
-          onClick={() => handleAddToCart(p)}
-        >
-          Kosárba
-        </button>
-      </div>
-    </article>
-  );
-})}
+              <button
+                type="button"
+                className="webshop-category-reset"
+                onClick={() => {
+                  setSelectedMainCategory(null);
+                  setSelectedSubCategory(null);
+                  setSelectedServiceCategory(null);
+                }}
+              >
+                Összes termék
+              </button>
             </div>
+
+            {/* SZŰRT TERMÉKLISTA */}
+            <div className="webshop-grid">
+              {filteredProducts.map((p) => {
+                const raw = p.retail_price_gross ?? p.sale_price ?? 0;
+                const price =
+                  typeof raw === "string"
+                    ? parseFloat(raw.replace(",", "."))
+                    : raw ?? 0;
+                const formattedPrice =
+                  !price || Number.isNaN(price)
+                    ? "-"
+                    : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+
+                const imageSrc = buildImageUrl(p.image_url);
+
+                return (
+                  <article key={p.id} className="webshop-card">
+                    {imageSrc && (
+                      <Link
+                        to={`/webshop/${p.id}`}
+                        state={{ product: p }}
+                        className="webshop-card__image-link"
+                      >
+                        <div className="webshop-card__image-wrap">
+                          <img
+                            src={imageSrc}
+                            alt={p.name}
+                            className="webshop-card__image"
+                          />
+                        </div>
+                      </Link>
+                    )}
+
+                    <h3 className="webshop-card__title">
+                      <Link
+                        to={`/webshop/${p.id}`}
+                        state={{ product: p }}
+                        className="webshop-card__title-link"
+                      >
+                        {p.name}
+                      </Link>
+                    </h3>
+
+                    {p.web_description && (
+                      <p className="webshop-card__text">
+                        {p.web_description}
+                      </p>
+                    )}
+
+                    <div className="webshop-card__footer">
+                      <div className="webshop-card__price">
+                        {formattedPrice}
+                      </div>
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-primary--magenta btn--sm"
+                        onClick={() => handleAddToCart(p)}
+                      >
+                        <span className="icon-cart" aria-hidden="true">
+                          <svg
+                            className="icon-cart__svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M5 4h2.1l1.2 4H20l-1.6 7.2a2.5 2.5 0 0 1-2.4 1.8H9.4l-.5 2H6.5l.6-2.6L4 6H2V4h3z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                        <span>Kosárba</span>
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {/* (Ha külön akarod, itt volt még egy második grid az összes products-szal – ezt most meghagytam szűrt listának.) */}
           </div>
 
           {/* JOBB: KOSÁR */}
@@ -1157,9 +1249,7 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
                   </div>
                   {appliedCouponCode && (
                     <div>
-                      <span>
-                        Kupon kedvezmény ({appliedCouponCode}):{" "}
-                      </span>
+                      <span>Kupon kedvezmény ({appliedCouponCode}): </span>
                       <strong>
                         -{couponDiscount.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
@@ -1197,3 +1287,5 @@ const buildImageUrl = (imageUrl?: string | null): string | undefined => {
     </main>
   );
 };
+
+export default WebshopPage;

@@ -131,9 +131,17 @@ export const WebshopProductDetailPage: React.FC = () => {
         const res = await fetch(
           `${API_BASE}/public/webshop/products/${productId}/reviews`
         );
+
+        // Ha 404-et kapunk, kezeljük úgy, mintha még nem lenne vélemény
+        if (res.status === 404) {
+          setReviews([]);
+          return;
+        }
+
         if (!res.ok) {
           throw new Error(`Hiba a vélemények betöltésekor (${res.status})`);
         }
+
         const data = (await res.json()) as ProductReview[];
         setReviews(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -172,6 +180,13 @@ export const WebshopProductDetailPage: React.FC = () => {
           }),
         }
       );
+
+      // Ha az endpoint még nincs a backendben, barátságosabb üzenetet adunk
+      if (res.status === 404) {
+        throw new Error(
+          "A vélemények beküldése jelenleg nincs engedélyezve ezen a szerveren (404)."
+        );
+      }
 
       if (!res.ok) {
         let msg = "Nem sikerült elmenteni a véleményt.";
@@ -233,8 +248,7 @@ export const WebshopProductDetailPage: React.FC = () => {
   }
 
   const imageSrc = buildImageUrl(product.image_url);
-  const rawPrice =
-    product.sale_price ?? product.retail_price_gross ?? 0;
+  const rawPrice = product.sale_price ?? product.retail_price_gross ?? 0;
   const numericPrice =
     typeof rawPrice === "string"
       ? parseFloat(rawPrice.replace(",", "."))
@@ -345,9 +359,7 @@ export const WebshopProductDetailPage: React.FC = () => {
                             <span
                               key={star}
                               className={
-                                filled
-                                  ? "star star--filled"
-                                  : "star"
+                                filled ? "star star--filled" : "star"
                               }
                             >
                               {filled ? "★" : "☆"}

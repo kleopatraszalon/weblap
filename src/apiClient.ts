@@ -1,6 +1,5 @@
 // src/apiClient.ts
-import { apiFetch } from "../apiClient";
-// ===== TÍPUSOK =====
+// Egységes kliens a publikus Kleopátra API-hoz (weblap számára)
 
 export interface PublicSalon {
   id: string;
@@ -14,44 +13,13 @@ export interface PublicService {
   name: string;
   duration_min: number | null;
   price: number | null;
-  category_id?: number | null;
-  location_id?: number | null;
+  location_id: number | null;
+  service_type_id?: number | null;
+  // az API egyéb mezői is jöhetnek, de ezek kellenek a weblaphoz
+  [key: string]: any;
 }
 
-// ===== API BASE =====
-
-const API_BASE = (
-  (import.meta.env.VITE_API_URL as string | undefined) ||
-  (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin)
-).replace(/\/$/, "");
-
-// DEBUG (nyugodtan hagyhatod, segít hibakeresésnél)
-if (typeof window !== "undefined") {
-  console.log("[apiClient] API_BASE =", API_BASE);
-}
-
-// ===== ÁLTALÁNOS FETCH =====
-
-export async function fetchJson<T>(
-  path: string,
-  init?: RequestInit
-): Promise<T> {
-  const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
-  console.log("[apiClient] fetchJson:", url);
-
-  const res = await fetch(url, init);
-  const text = await res.text();
-
-  if (!res.ok) {
-    console.error("[apiClient] HTTP error", res.status, text);
-    throw new Error(`API error ${res.status}: ${text || "Not Found"}`);
-  }
-
-  return text ? (JSON.parse(text) as T) : (null as any);
-}
-
-// ===== STATIKUS SZALONLISTA (fallback) =====
-
+// Statikus fallback szalonlista – ha az API nem érhető el
 const STATIC_SALONS: PublicSalon[] = [
   {
     id: "budapest-ix",
@@ -97,7 +65,57 @@ const STATIC_SALONS: PublicSalon[] = [
   },
 ];
 
-// ha valaha kell szalon API-ból, itt fallbackelünk a statikus listára
+// API_BASE – a Vite-ból érkező környezeti változó
+const RAW_API_BASE =
+  (import.meta as any).env?.VITE_API_BASE ||
+  (typeof window !== "undefined"
+    ? (window as any).__KLEO_API_BASE__ || ""
+    : "");
+
+export const API_BASE = RAW_API_BASE.replace(/\/$/, "");
+
+// DEBUG (nyugodtan maradhat, segít hibakeresésnél)
+if (typeof console !== "undefined") {
+  console.log("[apiClient] API_BASE =", API_BASE || "(nincs beállítva)");
+}
+
+// Alacsony szintű fetch wrapper
+async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
+  const url =
+    path.startsWith("http://") || path.startsWith("https://")
+      ? path
+      : `${API_BASE}${path}`;
+
+  const res = await fetch(url, {
+    credentials: "include",
+    ...init,
+  });
+
+  if (!res.ok) {
+    let text = "";
+    try {
+      text = await res.text();
+    } catch {
+      // ignore
+    }
+    console.error("[apiClient] HTTP error", res.status, text);
+    throw new Error(`API hiba: ${res.status}`);
+  }
+
+  return res;
+}
+
+// JSON helper
+async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
+  if (typeof console !== "undefined") {
+    console.log("[apiClient] fetchJson:", path);
+  }
+  const res = await apiFetch(path, init);
+  return (await res.json()) as T;
+}
+
+// ===== SZALONOK =====
+
 export async function getPublicSalons(): Promise<PublicSalon[]> {
   try {
     const data = await fetchJson<PublicSalon[]>("/api/public/salons");
@@ -112,5 +130,12 @@ export async function getPublicSalons(): Promise<PublicSalon[]> {
 // ===== SZOLGÁLTATÁSOK =====
 
 export async function getPublicServices(): Promise<PublicService[]> {
-  return fetchJson<PublicService[]>("/api/public/services");
+  try {
+    const data = await fetchJson<PublicService[]>("/api/public/services");
+    if (!Array.isArray(data)) return [];
+    return data;
+  } catch (err) {
+    console.error("getPublicServices hiba:", err);
+    return [];
+  }
 }
