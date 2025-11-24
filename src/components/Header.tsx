@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   "nav-link" + (isActive ? " nav-link-active" : "");
@@ -68,6 +69,7 @@ export function Header() {
           >
             Időpontfoglalás
           </NavLink>
+          
 
           <div className="header-social">
             <div className="header-social-label">Kövess minket</div>

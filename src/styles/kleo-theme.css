@@ -1434,423 +1434,418 @@ textarea:focus {
   border-radius: 8px;
 }
 
-/* =========================================
-   PUBLIC WEBSHOP – HERO + FIX KOSÁR GOMB
-   (csak a webshop oldal használja)
-========================================= */
 
+/* ===== KLEO WEBSHOP – FRONTEND FINOMHANGOLÁS ===================== */
+
+/* A hero magenta gömbök (Ajándékutalványok / Szépségcsomagok / Bérletek) animációja */
 .webshop-hero {
   position: relative;
   overflow: hidden;
-  background: #f9f5ef;
-}
-
-.webshop-hero__bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
 }
 
 .webshop-hero__bg img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center right;
+  height: auto;
+  display: block;
 }
 
 .webshop-hero__content {
   position: relative;
-  min-height: 520px;
-  padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(3rem, 6vw, 4.5rem);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 3rem;
+  z-index: 2;
 }
 
-/* BUBORÉKOK – bal oldalt úsznak a kép felett */
+/* Bubbles wrapper */
 .webshop-hero__bubbles {
-  flex: 0 0 40%;
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
+/* Alap gömb stílus – magenta kör, árnyék, finom áttűnés */
 .webshop-hero__bubble {
-  width: 180px;
-  height: 180px;
-  border-radius: 999px;
-  background: var(--color-magenta);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: var(--magenta-500, #ec008c);
+  box-shadow: 0 0 40px rgba(236, 0, 140, 0.55);
+  filter: saturate(1.2);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  animation: kleoBubbleFloat 18s ease-in-out infinite;
 }
 
+/* Három különböző pálya, hogy kvázi-random legyen a mozgás */
+.webshop-hero__bubble--top {
+  left: 12%;
+  top: 20%;
+  animation-duration: 22s;
+  animation-delay: -3s;
+}
+
+.webshop-hero__bubble--middle {
+  left: 48%;
+  top: 16%;
+  animation-duration: 19s;
+  animation-delay: -6s;
+}
+
+.webshop-hero__bubble--bottom {
+  left: 70%;
+  top: 42%;
+  animation-duration: 24s;
+  animation-delay: -9s;
+}
+
+/* A buborékban lévő <img> most csak átlátszó placeholder, ne zavarjon be */
 .webshop-hero__bubble img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  opacity: 0;
 }
 
-/* egyszerű lebegő animáció – háromféle mozgás */
-.webshop-hero__bubble--top {
-  animation: webshopBubbleA 11s ease-in-out infinite alternate;
-}
-.webshop-hero__bubble--middle {
-  animation: webshopBubbleB 9s ease-in-out infinite alternate;
-}
-.webshop-hero__bubble--bottom {
-  animation: webshopBubbleC 13s ease-in-out infinite alternate;
-}
-
-@keyframes webshopBubbleA {
-  0% { transform: translate(-10%, -8%) scale(1); }
-  25% { transform: translate(5%, 4%) scale(1.05); }
-  50% { transform: translate(20%, -6%) scale(0.97); }
-  75% { transform: translate(-8%, 10%) scale(1.04); }
-  100% { transform: translate(12%, -12%) scale(1); }
-}
-
-@keyframes webshopBubbleB {
-  0% { transform: translate(0%, 6%) scale(1.02); }
-  25% { transform: translate(-12%, -4%) scale(0.98); }
-  50% { transform: translate(18%, 8%) scale(1.06); }
-  75% { transform: translate(-6%, -10%) scale(1); }
-  100% { transform: translate(10%, 4%) scale(1.03); }
+/* Lebegő mozgás */
+@keyframes kleoBubbleFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-18px, 12px, 0);
+  }
+  40% {
+    transform: translate3d(10px, -26px, 0);
+  }
+  60% {
+    transform: translate3d(22px, 8px, 0);
+  }
+  80% {
+    transform: translate3d(-12px, -18px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-@keyframes webshopBubbleC {
-  0% { transform: translate(6%, -4%) scale(1); }
-  25% { transform: translate(-14%, 10%) scale(1.04); }
-  50% { transform: translate(8%, -12%) scale(0.96); }
-  75% { transform: translate(16%, 6%) scale(1.05); }
-  100% { transform: translate(-6%, -8%) scale(1); }
-}
+/* ===== WEBSHOP TERMÉKRÁCS ===================== */
 
-.webshop-hero__text {
-  flex: 0 0 48%;
-  max-width: 560px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.webshop-hero__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-/* Vendégszámla badge – Minden online vásárlás... */
-.webshop-invoice {
-  margin-top: 1.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.9rem 1.6rem;
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-}
-
-.webshop-invoice__image {
-  flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
-  border-radius: 999px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.webshop-invoice__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.webshop-invoice__text {
-  max-width: 320px;
-}
-
-/* Fix pozíciós kosár gomb – mindig látható a jobb felső sarokban */
-.webshop-cart-fab {
-  position: fixed;
-  top: 84px; /* a felső menü alatt */
-  right: 24px;
-  z-index: 30;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  border: none;
-  background: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  cursor: pointer;
-}
-
-.webshop-cart-fab__icon {
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-}
-
-.webshop-cart-fab__icon svg {
-  width: 100%;
-  height: 100%;
+/* A kétoszlopos (lista + kosár) layout helyett teljes szélességű terméklista */
+.section--webshop .webshop-layout {
+  max-width: 1280px;
+  margin: 0 auto;
   display: block;
 }
 
-.webshop-cart-fab__badge {
-  min-width: 1.3rem;
-  height: 1.3rem;
-  border-radius: 999px;
-  background: var(--color-magenta);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
-/* =========================================
-   PUBLIC WEBSHOP – TERMÉK RÁCS
-========================================= */
-
-.section--webshop {
-  background: #f9f5ef;
-  padding: 3rem 0 4rem;
-}
-
-/* a webshop-os container legyen szélesebb, töltse ki a nézetet */
-.section--webshop .webshop-layout {
-  max-width: none;
-  width: 95vw;
+/* A termékblokk legyen középen */
+.section--webshop .webshop-main {
+  max-width: 1280px;
   margin: 0 auto;
 }
 
-.webshop-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* A rács automatikusan annyi oszlopot használ, amennyi kifér */
+/* Rugalmas rács: amennyi oszlop kifér, annyi legyen */
 .webshop-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.75rem;
+  gap: 2rem;
+  align-items: stretch;
 }
 
-/* Termékkártya – kép + név + mennyiség + ár + gomb */
-.webshop-card {
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 1.25rem 1.25rem 1.5rem;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(182, 152, 97, 0.35);
+/* Kosár gomb mindig látható – ne töredezzen le */
+.webshop-card__actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+/* ============= WEBSHOP KATEGÓRIA MENÜ – HEADER STÍLUS ============= */
+
+.webshop-category-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
-.webshop-card__image-wrap {
-  border-radius: 18px;
-  overflow: hidden;
-  background: #f1ebe1;
-  aspect-ratio: 4 / 3;
-}
-
-.webshop-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.webshop-card__title {
-  margin: 0;
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.92rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text);
-}
-
-.webshop-card__unit {
-  margin: 0;
+.webshop-category-nav__item {
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
-  color: var(--color-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
 }
 
-.webshop-card__footer {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+.webshop-category-nav__item--active {
+  background: var(--magenta-500);
+  color: #fff;
+  border-color: var(--magenta-500);
+  box-shadow: 0 6px 18px rgba(236, 0, 140, 0.4);
 }
 
-.webshop-card__price {
-  font-family: "Montserrat", system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--color-gold);
+.webshop-category-nav__item:hover:not(.webshop-category-nav__item--active) {
+  background: rgba(245, 237, 226, 0.9);
+  border-color: var(--gold-400);
+  color: var(--text-main);
 }
 
-/* =========================================
-   PUBLIC WEBSHOP – KOSÁR LISTA (alsó blokk)
-========================================= */
-
-/* a régi oldalsó kosarat elrejtjük */
-.webshop-cart {
-  display: none !important;
+/* Fejlécben a kosár gomb fixen jobb felső sarokban */
+/* (ha már létezik saját pozicionálásod, ez felül fogja bírálni) */
+.header-cart {
+  position: fixed;
+  top: 40px;
+  right: 3150px;
+  z-index: 100;
 }
 
-.webshop-cart__list {
-  margin: 1.5rem 0 1.5rem;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid #f0e3d3;
-  border-bottom: 1px solid #f0e3d3;
+/* Alap gomb stílusok – ha kellenek */
+.btn.btn-primary,
+.btn.btn-secondary {
+  cursor: pointer;
 }
-
-.webshop-cart__item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid #f6ece0;
-}
-
-.webshop-cart__item:last-child {
-  border-bottom: none;
-}
-
-.webshop-cart__item-main {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.webshop-cart__item-name {
-  font-size: 0.9rem;
-}
-
-.webshop-cart__item-price {
-  font-size: 0.85rem;
-  color: var(--color-muted);
-}
-
-.webshop-cart__item-controls {
+.kleo-cart-fab {
+  position: fixed;
+  top: 118px;
+  right: 32px;
+  z-index: 999;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-}
-
-.webshop-cart__qty-btn {
-  min-width: 1.9rem;
-  height: 1.9rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid #e0ceaf;
   background: #ffffff;
-  font-size: 0.9rem;
-  line-height: 1;
-  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #120c08;
+  text-decoration: none;
 }
 
-.webshop-cart__qty-input {
-  width: 3rem;
-  text-align: center;
+.kleo-cart-fab__icon {
+  font-size: 14px;
+}
+
+.kleo-cart-fab__badge {
+  min-width: 1.4rem;
+  height: 1.4rem;
   border-radius: 999px;
-  border: 1px solid #e0ceaf;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.85rem;
+  background: #ec008c;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.kleo-cart-fab {
+  position: fixed;
+  top: 180px;
+  right: 50px;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #120c08;
+  text-decoration: none;
 }
 
-.webshop-cart__remove {
+.kleo-cart-fab__icon {
+  font-size: 14px;
+}
+
+.kleo-cart-fab__badge {
+  min-width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  background: #ec008c;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+/* =========================================================
+   WEBSHOP – KATEGÓRIÁK MENÜ (HEADER STÍLUS)
+   ====================================================== */
+
+.webshop-category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 1200px;
+  margin: 2rem auto 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Fő kategória „pill” – header menü stílusban */
+.webshop-category {
+  position: relative;
+}
+
+.webshop-category__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.08s ease;
+}
+
+.webshop-category__button:hover {
+  background: rgba(245, 237, 226, 0.96);
+  border-color: var(--gold-400);
+  color: var(--text-main);
+}
+
+/* Aktív fő kategória – magenta pill, mint a headerben a kiemelt menü */
+.webshop-category--active > .webshop-category__button {
+  background: var(--magenta-500);
+  color: #ffffff;
+  border-color: var(--magenta-500);
+  box-shadow: 0 6px 18px rgba(236, 0, 140, 0.45);
+}
+
+/* AL-kategóriák sorban a fő kategória alatt */
+.webshop-subcategory-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  justify-content: center;
+}
+
+.webshop-subcategory-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Al-kategória gombok – kisebb pill-ek */
+.webshop-subcategory__button {
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.95);
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.webshop-subcategory__button:hover {
+  background: rgba(245, 237, 226, 0.96);
+  border-color: var(--gold-300);
+  color: var(--text-main);
+}
+
+.webshop-subcategory__button--active {
+  background: var(--gold-500);
+  border-color: var(--gold-500);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(182, 152, 97, 0.45);
+}
+
+/* Szolgáltatás-kategória (harmadik szint) – ugyanaz a stílus, csak még kisebb */
+.webshop-servicecategory-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  justify-content: center;
+}
+
+.webshop-servicecategory__button {
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.webshop-servicecategory__button:hover {
+  background: rgba(245, 237, 226, 0.96);
+  border-color: var(--gold-300);
+  color: var(--text-main);
+}
+
+.webshop-servicecategory__button--active {
+  background: var(--magenta-400);
+  border-color: var(--magenta-400);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(241, 115, 172, 0.45);
+}
+
+/* „Összes termék” gomb – jobb szélre igazított link-stílusú pill */
+.webshop-category-reset {
+  margin-left: 0.75rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
   border: none;
   background: transparent;
-  color: #b00020;
-  font-size: 0.8rem;
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   cursor: pointer;
+  transition: color 0.16s ease, background 0.16s ease;
 }
 
-/* =========================================
-   PUBLIC WEBSHOP – REGISZTRÁCIÓ / FIZETÉS BLOKK
-========================================= */
-
-.section--webshop-alt {
-  background: #ffffff;
-  padding: 3rem 0 4rem;
-}
-
-.webshop-checkout-grid {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
-  gap: 2.25rem;
-  align-items: flex-start;
-}
-
-.webshop-panel {
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 1.75rem 1.75rem 2rem;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(182, 152, 97, 0.25);
-}
-
-.webshop-order-summary-row {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.webshop-order-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-}
-
-/* RESZPONZÍV FINOMHANGOLÁS */
-
-@media (max-width: 1024px) {
-  .webshop-hero__content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .webshop-hero__bubbles {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .webshop-checkout-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .webshop-cart-fab {
-    top: 72px;
-    right: 16px;
-  }
-
-  .webshop-grid {
-    grid-template-columns: 1fr;
-  }
+.webshop-category-reset:hover {
+  color: var(--magenta-500);
+  background: rgba(236, 0, 140, 0.06);
 }

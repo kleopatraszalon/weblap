@@ -1,6 +1,6 @@
 // src/App.tsx
-import React, { useEffect, useState } from "react";
-import { MemoryRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router,MemoryRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header";
 import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
@@ -18,47 +18,34 @@ import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 
-// Egyszerű típus a kosár elemekhez – csak a darabszám érdekel minket itt
-interface CartItem {
-  quantity: number;
-}
 
-/**
- * Lebegő kosár gomb a jobb felső sarokban.
- * - Mindig látszik, bármelyik oldalon vagyunk
- * - A badge-ben mutatja a kosárban lévő tételek számát
- * - Kattintásra a /cart oldalra navigál
- */
-const FloatingCartButton: React.FC = () => {
-  const [count, setCount] = useState<number>(0);
-
-  // Kosár darabszám kiolvasása a localStorage-ből
-  const updateCountFromStorage = () => {
-    try {
-      const raw = localStorage.getItem("kleoCart");
-      if (!raw) {
-        setCount(0);
-        return;
-      }
-      const items = JSON.parse(raw) as CartItem[];
-      const total = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-      setCount(total);
-    } catch {
-      setCount(0);
-    }
-  };
+function FloatingCartButton() {
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    updateCountFromStorage();
+    const update = () => {
+      try {
+        const raw = localStorage.getItem("kleoCart");
+        if (!raw) {
+          setCount(0);
+          return;
+        }
+        const items = JSON.parse(raw) as { quantity: number }[];
+        const total = items.reduce((s, i) => s + (i.quantity || 0), 0);
+        setCount(total);
+      } catch {
+        setCount(0);
+      }
+    };
 
-    // Ha máshol módosul a kosár (pl. termékkártyán), frissítjük a gombot is
-    const handler = () => updateCountFromStorage();
-    window.addEventListener("storage", handler);
-    window.addEventListener("kleo-cart-updated", handler as EventListener);
+    update();
+    window.addEventListener("storage", update as any);
+    // ha a kosár módosításnál dispatch-elsz egy eventet, azt is figyeli
+    window.addEventListener("kleo-cart-updated", update as any);
 
     return () => {
-      window.removeEventListener("storage", handler);
-      window.removeEventListener("kleo-cart-updated", handler as EventListener);
+      window.removeEventListener("storage", update as any);
+      window.removeEventListener("kleo-cart-updated", update as any);
     };
   }, []);
 
@@ -69,7 +56,8 @@ const FloatingCartButton: React.FC = () => {
       <span className="kleo-cart-fab__badge">{count}</span>
     </Link>
   );
-};
+}
+
 
 const App: React.FC = () => {
   const initialPath =
@@ -77,20 +65,37 @@ const App: React.FC = () => {
       ? window.location.pathname
       : "/";
 
-  // URL mindig "/" maradjon a címsorban (Render / statikus host kompatibilitás)
+  // URL mindig "/" maradjon a címsorban
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.pathname !== "/") {
       window.history.replaceState({}, "", "/");
     }
   }, []);
+export const App: React.FC = () => {
+  return (
+    <Router>
+      {/* Itt mehet a header, layout, stb. ha van */}
 
+      {/* Globális kosár gomb – MINDEN oldalon látszik */}
+      <FloatingCartButton />
+
+      <Routes>
+        {/* meglévő route-ok */}
+        <Route path="/webshop" element={<WebshopPage />} />
+        <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
+
+        {/* új oldalak */}
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+
+        {/* a többi route, pl. kezdőlap */}
+      </Routes>
+    </Router>
+  );
+};
   return (
     <MemoryRouter initialEntries={[initialPath]}>
       <Header />
-
-      {/* Globális, lebegő kosár gomb – minden oldalon látszik */}
-      <FloatingCartButton />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/salons" element={<SalonsPage />} />
@@ -107,12 +112,6 @@ const App: React.FC = () => {
         {/* Webshop listanézet + termék részletek */}
         <Route path="/webshop" element={<WebshopPage />} />
         <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
-
-        {/* ÚJ: külön kosár oldal */}
-        <Route path="/cart" element={<CartPage />} />
-
-        {/* ÚJ: külön számlázás / fizetés oldal */}
-        <Route path="/checkout" element={<CheckoutPage />} />
 
         {/* minden más URL menjen vissza a Home-ra */}
         <Route path="*" element={<HomePage />} />

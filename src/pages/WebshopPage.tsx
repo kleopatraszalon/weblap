@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/kleo-theme.css";
+import { addToCart } from "../utils/cart";
 
 /**
  * A TE adatbázisodhoz igazítva:
@@ -282,7 +283,35 @@ export const WebshopPage: React.FC = () => {
       }),
     [products, selectedMainCategory, selectedSubCategory, selectedServiceCategory]
   );
+// Kosár inicializálása localStorage-ből, hogy a /webshop oldal
+  // ugyanazt lássa, mint a /cart és a lebegő kosár gomb
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("kleoCart");
+      if (raw) {
+        const items = JSON.parse(raw) as CartItem[];
+        setCart(items);
+      }
+    } catch {
+      // ha valami gáz van a tárolt adattal, inkább üres kosár
+      localStorage.removeItem("kleoCart");
+    }
+  }, []);
 
+  // Segédfüggvény: minden kosár-módosítást ide tedd, hogy
+  // mindig elmentse localStorage-be és jelezze a badge-nek
+  const saveCart = (updater: (prev: CartItem[]) => CartItem[]) => {
+    setCart((prev) => {
+      const next = updater(prev);
+      try {
+        localStorage.setItem("kleoCart", JSON.stringify(next));
+        window.dispatchEvent(new Event("kleo-cart-updated"));
+      } catch (e) {
+        console.error("Kosár mentése sikertelen", e);
+      }
+      return next;
+    });
+  };
   // =============== KUPON ÁLLAPOT ===============
   const [couponInput, setCouponInput] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(
@@ -327,8 +356,8 @@ export const WebshopPage: React.FC = () => {
 
   // =============== KOSÁR LOGIKA ===============
 
-  const handleAddToCart = (product: Product) => {
-    setCart((prev) => {
+ const handleAddToCart = (product: Product) => {
+    saveCart((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {
         return prev.map((i) =>
@@ -343,9 +372,10 @@ export const WebshopPage: React.FC = () => {
 
   const handleChangeQuantity = (id: string, quantity: number) => {
     if (quantity <= 0) {
-      setCart((prev) => prev.filter((i) => i.product.id !== id));
+      // törlés, ha 0 vagy kisebb
+      saveCart((prev) => prev.filter((i) => i.product.id !== id));
     } else {
-      setCart((prev) =>
+      saveCart((prev) =>
         prev.map((i) =>
           i.product.id === id ? { ...i, quantity } : i
         )
@@ -353,22 +383,14 @@ export const WebshopPage: React.FC = () => {
     }
   };
 
-  const handleRemoveFromCart = (id: string) => {
-    setCart((prev) => prev.filter((i) => i.product.id !== id));
-  };
 
-  const handleClearCart = () => {
-    setCart([]);
+const handleClearCart = () => {
+    saveCart(() => []);
     setAppliedCouponCode(null);
     setCouponDiscount(0);
     setCouponMessage(null);
     setCouponError(null);
   };
-
-  const cartItemCount = useMemo(
-    () => cart.reduce((sum, item) => sum + item.quantity, 0),
-    [cart]
-  );
 
   const cartSubtotal = useMemo(() => {
     return cart.reduce((sum, item) => {
@@ -600,30 +622,6 @@ export const WebshopPage: React.FC = () => {
 
   return (
     <main>
-      {/* FENT FIXEN LÁTHATÓ KOSÁR GOMB */}
-      <button
-        type="button"
-        className="webshop-cart-fab"
-        onClick={() => {
-          const el = document.getElementById("webshop-regisztracio");
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }}
-        aria-label={`Kosár, ${cartItemCount} termék`}
-      >
-        <span className="webshop-cart-fab__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M5 4h2.1l1.2 4H20l-1.6 7.2a2.5 2.5 0 0 1-2.4 1.8H9.4l-.5 2H6.5l.6-2.6L4 6H2V4h3z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <span className="webshop-cart-fab__label">Kosár</span>
-        <span className="webshop-cart-fab__badge">{cartItemCount}</span>
-      </button>
-
       {/* HERO – meglévő látvány a képpel és körökkel */}
       <section className="webshop-hero">
         <div className="webshop-hero__bg">
@@ -1270,85 +1268,6 @@ export const WebshopPage: React.FC = () => {
                 <p className="form-msg--success webshop-form-msg">
                   {orderMessage}
                 </p>
-              )}
-
-
-              {cart.length > 0 && (
-                <ul className="webshop-cart__list">
-                  {cart.map((item) => {
-                    const raw =
-                      item.product.retail_price_gross ??
-                      item.product.sale_price ??
-                      0;
-                    const price =
-                      typeof raw === "string"
-                        ? parseFloat(raw.replace(",", "."))
-                        : raw ?? 0;
-                    const formatted = `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
-                    return (
-                      <li
-                        key={item.product.id}
-                        className="webshop-cart__item"
-                      >
-                        <div className="webshop-cart__item-main">
-                          <span className="webshop-cart__item-name">
-                            {item.product.name}
-                          </span>
-                          <span className="webshop-cart__item-price">
-                            {formatted}
-                          </span>
-                        </div>
-                        <div className="webshop-cart__item-controls">
-                          <button
-                            type="button"
-                            className="webshop-cart__qty-btn"
-                            onClick={() =>
-                              handleChangeQuantity(
-                                item.product.id,
-                                item.quantity - 1
-                              )
-                            }
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            min={1}
-                            className="webshop-cart__qty-input"
-                            value={item.quantity}
-                            onChange={(e) =>
-                              handleChangeQuantity(
-                                item.product.id,
-                                parseInt(e.target.value || "1", 10)
-                              )
-                            }
-                          />
-                          <button
-                            type="button"
-                            className="webshop-cart__qty-btn"
-                            onClick={() =>
-                              handleChangeQuantity(
-                                item.product.id,
-                                item.quantity + 1
-                              )
-                            }
-                          >
-                            +
-                          </button>
-                          <button
-                            type="button"
-                            className="webshop-cart__remove"
-                            onClick={() =>
-                              handleRemoveFromCart(item.product.id)
-                            }
-                          >
-                            Eltávolítás
-                          </button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
               )}
 
               <div className="webshop-order-summary-row">
