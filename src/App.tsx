@@ -17,11 +17,8 @@ import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
-
-// Egyszerű típus a kosár elemekhez – csak a darabszám érdekel minket itt
-interface CartItem {
-  quantity: number;
-}
+import type { CartItem } from "./utils/cart";
+import { LanguageProvider } from "./i18n";
 
 /**
  * Lebegő kosár gomb a jobb felső sarokban.
@@ -41,7 +38,10 @@ const FloatingCartButton: React.FC = () => {
         return;
       }
       const items = JSON.parse(raw) as CartItem[];
-      const total = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      const total = items.reduce(
+        (sum, item) => sum + (item.quantity || 0),
+        0
+      );
       setCount(total);
     } catch {
       setCount(0);
@@ -80,44 +80,47 @@ const App: React.FC = () => {
   // URL mindig "/" maradjon a címsorban (Render / statikus host kompatibilitás)
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.pathname !== "/") {
-      window.history.replaceState({}, "", "/");
+      window.history.replaceState(null, "", "/");
     }
   }, []);
 
   return (
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Header />
+    <LanguageProvider>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Header />
+        <FloatingCartButton />
 
-      {/* Globális, lebegő kosár gomb – minden oldalon látszik */}
-      <FloatingCartButton />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/salons" element={<SalonsPage />} />
+          <Route path="/salons/:id" element={<SalonDetailPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/prices" element={<PriceListPage />} />
+          <Route path="/loyalty" element={<LoyaltyPage />} />
+          <Route path="/franchise" element={<FranchisePage />} />
+          <Route path="/career" element={<CareerPage />} />
+          <Route path="/education" element={<TrainingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/salons" element={<SalonsPage />} />
-        <Route path="/salons/:id" element={<SalonDetailPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/prices" element={<PriceListPage />} />
-        <Route path="/loyalty" element={<LoyaltyPage />} />
-        <Route path="/franchise" element={<FranchisePage />} />
-        <Route path="/career" element={<CareerPage />} />
-        <Route path="/training" element={<TrainingPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+          {/* Webshop listanézet + termék részletek */}
+          <Route path="/webshop" element={<WebshopPage />} />
+          <Route
+            path="/webshop/:productId"
+            element={<WebshopProductDetailPage />}
+          />
 
-        {/* Webshop listanézet + termék részletek */}
-        <Route path="/webshop" element={<WebshopPage />} />
-        <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
+          {/* Külön kosár oldal */}
+          <Route path="/cart" element={<CartPage />} />
 
-        {/* ÚJ: külön kosár oldal */}
-        <Route path="/cart" element={<CartPage />} />
+          {/* Külön számlázás / fizetés oldal */}
+          <Route path="/checkout" element={<CheckoutPage />} />
 
-        {/* ÚJ: külön számlázás / fizetés oldal */}
-        <Route path="/checkout" element={<CheckoutPage />} />
-
-        {/* minden más URL menjen vissza a Home-ra */}
-        <Route path="*" element={<HomePage />} />
-      </Routes>
-    </MemoryRouter>
+          {/* minden más URL menjen vissza a Home-ra */}
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </MemoryRouter>
+    </LanguageProvider>
   );
 };
 

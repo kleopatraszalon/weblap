@@ -1,66 +1,67 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useI18n } from "../i18n";
 
 export const HomePage: React.FC = () => {
+  const { t } = useI18n();
   return (
     <main>
       {/* HERO – KEZDŐLAP */}
+            {/* HERO – KEZDŐLAP */}
       <section className="hero">
         <div className="hero-bg" />
 
         <div className="container hero-grid">
           {/* BAL: szöveg */}
           <div className="hero-content">
-            <div className="hero-kicker">
-              KLEOPÁTRA SZÉPSÉGSZALONOK · TÖBB MINT 30 ÉVE
-            </div>
+            <div className="hero-kicker">{t("home.hero.kicker")}</div>
 
             <h1 className="hero-title">
-  <span className="hero-part hero-part-default">Éld át a </span>
-  <span className="hero-part hero-part-magenta">Kleopátra-élményt</span>
-  <span className="hero-part hero-part-gold">
-    {" "}– prémium szépségszolgáltatások, akár bejelentkezés nélkül.
-  </span>
-</h1>
+              <span className="hero-part hero-part-default">
+                {t("home.hero.title.prefix")}
+              </span>
+              <span className="hero-part hero-part-magenta">
+                {t("home.hero.title.highlight")}
+              </span>
+              <span className="hero-part hero-part-gold">
+                {t("home.hero.title.suffix")}
+              </span>
+            </h1>
 
-            <p className="hero-lead">
-              Fodrászat, kozmetika, manikűr–pedikűr, szolárium és masszázs egy
-              helyen. Tapasztalt szakembereinkkel és minőségi termékekkel
-              várunk minden szalonunkban.
-            </p>
+            <p className="hero-lead">{t("home.hero.lead")}</p>
 
             {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK OLDALRA MUTATNAK */}
             <div className="hero-pills">
               <NavLink to="/services#hair" className="hero-pill">
-                Fodrászat
+                {t("home.hero.pill.hair")}
               </NavLink>
               <NavLink to="/services#beauty" className="hero-pill">
-                Kozmetika
+                {t("home.hero.pill.beauty")}
               </NavLink>
               <NavLink to="/services#hands-feet" className="hero-pill">
-                Kéz- és lábápolás
+                {t("home.hero.pill.handsFeet")}
               </NavLink>
               <NavLink to="/services#solarium" className="hero-pill">
-                Szolárium
+                {t("home.hero.pill.solarium")}
               </NavLink>
               <NavLink to="/services#massage" className="hero-pill">
-                Masszázs
+                {t("home.hero.pill.massage")}
               </NavLink>
             </div>
 
             <div className="btn-row">
               <NavLink to="/salons" className="btn btn-primary">
-                Időpontfoglalás / szalonok
+                {t("home.hero.cta.book")}
               </NavLink>
               <NavLink to="/services" className="btn btn-ghost">
-                Szolgáltatásaink
+                {t("home.hero.cta.services")}
               </NavLink>
             </div>
           </div>
 
-          {/* JOBB: nagy kép – webshop link + app chip a képen */}
+          {/* JOBB: kép */}
           <div className="hero-media">
-            <div className="hero-media-frame">
+            <div className="hero-media-inner">
               <img
                 src="/images/home.png"
                 alt="Kleopátra Szépségszalon – szépségszolgáltatások"
@@ -70,12 +71,12 @@ export const HomePage: React.FC = () => {
               <div className="hero-media-overlay">
                 {/* FELSŐ: WEBSHOP LINK A KÉPEN */}
                 <NavLink to="/webshop" className="hero-media-webshop">
-                  Webshop
+                  {t("home.hero.media.webshop")}
                 </NavLink>
 
                 {/* ALSÓ: APP LETÖLTÉS SZÖVEG A KÉPEN */}
                 <div className="hero-media-chip">
-                  Töltsd le mobilalkalmazásunkat
+                  {t("home.hero.media.appChip")}
                 </div>
               </div>
             </div>
