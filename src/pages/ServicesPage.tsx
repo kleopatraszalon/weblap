@@ -1,91 +1,84 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useI18n } from "../i18n";
 
-type ServiceCard = {
-  slug: string;
-  titleKey: string;
-  descriptionKey: string;
-  ctaKey: string;
-};
-
-const SERVICE_CARDS: ServiceCard[] = [
+const SERVICE_CARDS = [
   {
     slug: "hair",
-    titleKey: "services.cards.hair.title",
-    descriptionKey: "services.cards.hair.text",
-    ctaKey: "services.cards.hair.cta",
+    title: "Fodrászat",
+    description:
+      "Női, férfi és gyermek hajvágás, festés, balayage, frissítő vágás és alkalmi frizurák – személyre szabott tanácsadással.",
+    cta: "Fodrász árlista megnyitása",
   },
   {
     slug: "beauty",
-    titleKey: "services.cards.beauty.title",
-    descriptionKey: "services.cards.beauty.text",
-    ctaKey: "services.cards.beauty.cta",
+    title: "Kozmetika",
+    description:
+      "Klasszikus arckezelések, modern gépi megoldások, smink, szempilla- és szemöldökformázás – a ragyogó bőrért.",
+    cta: "Kozmetikai árlista",
   },
   {
-    slug: "handsfeet",
-    titleKey: "services.cards.handsFeet.title",
-    descriptionKey: "services.cards.handsFeet.text",
-    ctaKey: "services.cards.handsFeet.cta",
+    slug: "hands-feet",
+    title: "Kéz- és lábápolás",
+    description:
+      "Manikűr, gél lakk, műköröm, pedikűr – az ápolt, esztétikus kéz és láb érdekében.",
+    cta: "Kéz- és lábápolás árlista",
   },
   {
     slug: "solarium",
-    titleKey: "services.cards.solarium.title",
-    descriptionKey: "services.cards.solarium.text",
-    ctaKey: "services.cards.solarium.cta",
+    title: "Szolárium",
+    description:
+      "Modern gépekkel, szakértő tanácsadással segítünk elérni az egyenletes, napbarnított bőrt.",
+    cta: "Szolárium árlista",
   },
   {
     slug: "massage",
-    titleKey: "services.cards.massage.title",
-    descriptionKey: "services.cards.massage.text",
-    ctaKey: "services.cards.massage.cta",
-  },
-  {
-    slug: "fitness",
-    titleKey: "services.cards.fitness.title",
-    descriptionKey: "services.cards.fitness.text",
-    ctaKey: "services.cards.fitness.cta",
+    title: "Masszázs",
+    description:
+      "Relaxáló, frissítő és gyógy masszázsok, amelyek segítenek feltöltődni és kikapcsolni.",
+    cta: "Masszázs árlista",
   },
 ];
 
-export const ServicesPage: React.FC = () => {
-  const { t } = useI18n();
+export const ServicesPage: React.FC = () => (
+  <main>
+    {/* FEJLÉC + NAGY KÉP – ugyanaz a logika, mint a Szalonjaink oldalon */}
+    <section className="section section--services-hero">
+      <div className="container services-intro">
+        <p className="section-eyebrow">Szolgáltatások</p>
+        <h1>Szolgáltatásaink – mindent egy helyen</h1>
+        <p className="hero-lead hero-lead--narrow">
+          Fodrászat, kozmetika, kéz- és lábápolás, szolárium és masszázs – egy
+          helyen, Kleopátra-minőségben. Válaszd ki, mire van szükséged, és
+          találd meg a hozzád legközelebb eső szalonunkat!
+        </p>
+      </div>
 
-  return (
-    <main>
-      <section className="section section--services">
-        <div className="container services-block">
-          <header className="services-header">
-            <p className="section-eyebrow">{t("services.eyebrow")}</p>
-            <h1>{t("services.title")}</h1>
-            <p className="hero-lead hero-lead--narrow">
-              {t("services.lead")}
-            </p>
-          </header>
+      <div className="services-hero-image">
+        <img
+          src="/images/szolgaltatasok.jpg"
+          alt="Kleopátra Szépségszalon – fodrászat, kozmetika, kéz- és lábápolás egy helyen"
+          className="services-hero-image__img"
+        />
+      </div>
+    </section>
 
-          <div className="services-hero-image">
-            <img
-              src="/images/szolgaltatasok.png"
-              alt={t("services.heroAlt")}
-              className="services-hero-image__img"
-            />
-          </div>
-
-          <div className="services-grid">
-            {SERVICE_CARDS.map((service) => (
-              <NavLink
-                key={service.slug}
-                to={`/prices#${service.slug}`}
-                className="card card--service"
-              >
-                <h2 className="card-title">{t(service.titleKey)}</h2>
-                <p className="card-text">{t(service.descriptionKey)}</p>
-                <span className="link-btn">{t(service.ctaKey)}</span>
-              </NavLink>
-            ))}
-          </div>
+    {/* SZOLGÁLTATÁS KÁRTYÁK – dizájnban a Szalonjainkhoz igazítva */}
+    <section className="section section--services-overview section--services-page-cards">
+      <div className="container">
+        <div className="grid-three">
+          {SERVICE_CARDS.map((service) => (
+            <NavLink
+              key={service.slug}
+              to={`/prices#${service.slug}`}
+              className="card card--service"
+            >
+              <h2 className="card-title">{service.title}</h2>
+              <p className="card-text">{service.description}</p>
+              <span className="link-btn">{service.cta}</span>
+            </NavLink>
+          ))}
         </div>
-      </section>
-    </main>
-  );
-};
+      </div>
+    </section>
+  </main>
+);

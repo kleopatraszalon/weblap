@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useI18n } from "../i18n";
 
 type PublicSalon = {
   id: string;
@@ -56,7 +55,6 @@ const STATIC_SALONS: PublicSalon[] = [
 ];
 
 export const SalonsPage: React.FC = () => {
-  const { t } = useI18n();
   const salons = STATIC_SALONS;
   const salonCount = salons.length;
 
@@ -66,23 +64,23 @@ export const SalonsPage: React.FC = () => {
         <div className="salons-block">
           {/* FEJLÉC SZÖVEG */}
           <header className="salons-block__header">
-            <p className="section-eyebrow">{t("salons.eyebrow")}</p>
+            <p className="section-eyebrow">Szalonjaink</p>
             <h1>
-              {t("salons.titlePrefix")}{" "}
-              {salonCount > 0 ? <strong>{salonCount}</strong> : null}{" "}
-              {t("salons.titleSuffix")}
+              Bejelentkezés nélkül is várunk már{" "}
+              {salonCount > 0 ? <strong>{salonCount}</strong> : null} helyszínen!
             </h1>
             <p className="hero-lead hero-lead--narrow">
-              {t("salons.lead")}
+              Válaszd ki a hozzád legközelebb eső Kleopátra Szépségszalont, és
+              lépj be a több mint 30 éves szakértelem világába.
             </p>
           </header>
 
-          {/* HERO KÉP / HÁTTÉR */}
+          {/* KÉP KÖZÉPEN – SZALONOK.JPG */}
           <div className="salons-hero-image">
             {/* A fájl:  public/images/szalonok.jpg  */}
             <img
               src="/images/szalonok.jpg"
-              alt={t("salons.heroAlt")}
+              alt="Kleopátra Szalonok"
               className="salons-hero-image__img"
             />
           </div>

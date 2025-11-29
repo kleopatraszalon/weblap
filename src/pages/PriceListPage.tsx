@@ -1,7 +1,6 @@
 // src/pages/PriceListPage.tsx
 import React, { useEffect, useState } from "react";
 import { getPublicServices, PublicService } from "../apiClient";
-import { useI18n } from "../i18n";
 
 // Telephelyek – location_id -> cím
 const LOCATIONS = [
@@ -16,8 +15,6 @@ const LOCATIONS = [
 ];
 
 export const PriceListPage: React.FC = () => {
-  const { t } = useI18n();
-
   const [allServices, setAllServices] = useState<PublicService[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
@@ -36,25 +33,29 @@ export const PriceListPage: React.FC = () => {
         setAllServices(data);
       })
       .catch((err) => {
-        console.error("Hiba a szolgáltatások betöltésekor:", err);
-        setError(t("pricelist.error"));
+        console.error(err);
+        setError("Nem sikerült betölteni a szolgáltatásokat.");
       })
       .finally(() => setLoading(false));
-  }, [t]);
+  }, []);
 
-  const filteredServices = allServices.filter((s) =>
-    selectedLocationId ? s.location_id === selectedLocationId : true
-  );
+  // SZŰRÉS TELEPHELY SZERINT (location_id alapján)
+  const filteredServices =
+    selectedLocationId == null
+      ? allServices
+      : allServices.filter((s) => s.location_id === selectedLocationId);
 
-  // Szétbontjuk kategóriák szerint (public.services.category_id)
-  const categories = new Map<string, PublicService[]>();
-  for (const s of filteredServices) {
-    const key = String(s.category_id ?? "other");
-    if (!categories.has(key)) {
-      categories.set(key, []);
-    }
-    categories.get(key)!.push(s);
-  }
+  // KATEGÓRIÁKRA BONTVA (category_id alapján)
+  const groupedByCategory: Record<string, PublicService[]> = {};
+  filteredServices.forEach((s) => {
+    const key = s.category_id?.toString() ?? "egyéb";
+    if (!groupedByCategory[key]) groupedByCategory[key] = [];
+    groupedByCategory[key].push(s);
+  });
+
+  const locationLabel =
+    LOCATIONS.find((l) => l.id === selectedLocationId)?.label ||
+    "Összes szalon";
 
   return (
     <main>
@@ -62,33 +63,32 @@ export const PriceListPage: React.FC = () => {
         <div className="container pricelist-block">
           {/* FEJLÉC */}
           <header className="pricelist-header">
-            <p className="section-eyebrow">{t("pricelist.eyebrow")}</p>
-            <h1>{t("pricelist.title")}</h1>
+            <p className="section-eyebrow">Szolgáltatásaink</p>
+            <h1>Árlista és szolgáltatások</h1>
             <p className="hero-lead hero-lead--narrow">
-              {t("pricelist.lead")}
+              Válaszd ki a hozzád legközelebb eső Kleopátra Szépségszalont, és
+              nézd meg az ott elérhető szolgáltatásokat.
             </p>
           </header>
 
-          {/* HERO KÉP */}
+          {/* HERO KÉP – szolgaltatasok.png, finoman animálva */}
           <div className="services-hero-image">
             <img
               src="/images/szolgaltatasok.png"
-              alt={t("services.heroAlt")}
+              alt="Kleopátra Szépségszalon – Szolgáltatások"
               className="services-hero-image__img"
             />
           </div>
 
           {/* TELEPHELYVÁLASZTÓ */}
           <div className="pricelist-location-filter">
-            <label htmlFor="location-select">
-              {t("pricelist.location.label")}
-            </label>
+            <label htmlFor="location-select">Telephely kiválasztása:</label>
             <select
               id="location-select"
               value={selectedLocationId ?? ""}
               onChange={(e) => {
-                const value = e.target.value;
-                setSelectedLocationId(value ? Number(value) : null);
+                const v = e.target.value;
+                setSelectedLocationId(v === "" ? null : Number(v));
               }}
             >
               {LOCATIONS.map((loc) => (
@@ -99,48 +99,50 @@ export const PriceListPage: React.FC = () => {
             </select>
           </div>
 
-          {/* ÁLLAPOTÜZENETEK */}
-          {loading && (
-            <p className="webshop-status">{t("pricelist.loading")}</p>
-          )}
-          {error && (
-            <p className="webshop-status webshop-status--error">{error}</p>
-          )}
+          {/* ÁLLAPOT ÜZENETEK */}
+          {loading && <p>Betöltés...</p>}
+          {error && <p className="form-msg form-msg--error">{error}</p>}
 
           {/* SZOLGÁLTATÁS LISTA */}
           {!loading && !error && (
             <div className="pricelist-content">
-              {Array.from(categories.entries()).map(([catKey, services]) => (
-                <div key={catKey} className="pricelist-category">
-                  <h2>{categoryLabelFromId(catKey, t)}</h2>
-                  <table className="pricelist-table">
-                    <thead>
-                      <tr>
-                        <th>{t("pricelist.table.header.service")}</th>
-                        <th>{t("pricelist.table.header.duration")}</th>
-                        <th>{t("pricelist.table.header.price")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {services.map((s) => (
-                        <tr key={s.id}>
-                          <td>{s.name}</td>
-                          <td>{s.duration_min} perc</td>
-                          <td>
-                            {s.price_gross?.toLocaleString("hu-HU")} Ft
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ))}
+              <p className="pricelist-location-label">
+                Jelenleg: <strong>{locationLabel}</strong>
+              </p>
 
-              {categories.size === 0 && (
-                <p className="webshop-status">
-                  {t("pricelist.noServicesForLocation")}
-                </p>
+              {Object.keys(groupedByCategory).length === 0 && (
+                <p>Nincs megjeleníthető szolgáltatás.</p>
               )}
+
+              {Object.keys(groupedByCategory).map((catKey) => {
+                const items = groupedByCategory[catKey];
+                if (!items || items.length === 0) return null;
+
+                return (
+                  <section key={catKey} className="pricelist-category">
+                    <h2 className="pricelist-category__title">
+                      {categoryLabelFromId(catKey)}
+                    </h2>
+                    <div className="pricelist-category__table">
+                      {items.map((s) => (
+                        <div key={s.id} className="pricelist-row">
+                          <div className="pricelist-row__name">{s.name}</div>
+                          <div className="pricelist-row__duration">
+                            {s.duration_min
+                              ? `${s.duration_min} perc`
+                              : "\u00A0"}
+                          </div>
+                          <div className="pricelist-row__price">
+                            {s.price != null
+                              ? `${s.price.toLocaleString("hu-HU")} Ft`
+                              : "egyedi ár"}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
             </div>
           )}
         </div>
@@ -149,26 +151,24 @@ export const PriceListPage: React.FC = () => {
   );
 };
 
-function categoryLabelFromId(
-  categoryId: string | null | undefined,
-  t: (key: string) => string
-): string {
-  switch (String(categoryId)) {
+// Kategória címkék – az első oszlopodban lévő számok szerint
+function categoryLabelFromId(id: string): string {
+  switch (id) {
     case "1":
-      return t("pricelist.category.hair");
+      return "Fodrászat";
     case "2":
-      return t("pricelist.category.cosmetics");
+      return "Kozmetika";
     case "3":
-      return t("pricelist.category.manicure");
+      return "Manikűr / műköröm";
     case "4":
-      return t("pricelist.category.pedicure");
+      return "Pedikűr";
     case "5":
-      return t("pricelist.category.solarium");
+      return "Szolárium";
     case "6":
-      return t("pricelist.category.massage");
+      return "Masszázs";
     case "7":
-      return t("pricelist.category.other");
+      return "Egyéb / kiegészítők";
     default:
-      return t("pricelist.category.fallback");
+      return "Egyéb szolgáltatások";
   }
 }

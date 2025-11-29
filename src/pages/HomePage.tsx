@@ -51,41 +51,37 @@ export const HomePage: React.FC = () => {
 
             {/* CTA GOMBOK – FOGLALÁS / SZOLGÁLTATÁSOK */}
             <div className="hero-actions">
-              <NavLink to="/salons" className="btn btn-primary btn-primary--magenta">
+              <NavLink
+                to="/salons"
+                className="btn btn-primary btn-primary--magenta"
+              >
                 {t("home.hero.cta.book")}
               </NavLink>
               <NavLink to="/services" className="btn btn-outline">
                 {t("home.hero.cta.services")}
               </NavLink>
             </div>
-
-            {/* Média chippek – webshop, app */}
-            <div className="hero-media-row">
-              <NavLink to="/webshop" className="hero-media-link">
-                <span className="hero-media-label">
-                  {t("home.hero.media.webshop")}
-                </span>
-              </NavLink>
-              <a
-                href="#app"
-                className="hero-media-link hero-media-link--chip"
-              >
-                <span className="hero-media-label">
-                  {t("home.hero.media.appChip")}
-                </span>
-              </a>
-            </div>
           </div>
 
-          {/* JOBB: Látvány – körök, kép, stb. */}
-          <div className="hero-visual">
-            <div className="hero-circle hero-circle--large" />
-            <div className="hero-circle hero-circle--small" />
-            <img
-              src="/images/home.png"
-              alt="Kleopátra Szépségszalon – hero"
-              className="hero-main-image"
-            />
+          {/* JOBB: kép + overlay webshop / app chip */}
+          <div className="hero-media">
+            <div className="hero-media-frame">
+              <img
+                src="/images/home.png"
+                alt="Kleopátra Szépségszalon – szépségszolgáltatások"
+                className="hero-media-img"
+              />
+
+              <div className="hero-media-overlay">
+                <NavLink to="/webshop" className="hero-media-webshop">
+                  {t("home.hero.media.webshop")}
+                </NavLink>
+
+                <div className="hero-media-chip">
+                  {t("home.hero.media.appChip")}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -329,3 +325,5 @@ export const HomePage: React.FC = () => {
     </main>
   );
 };
+
+export default HomePage;
