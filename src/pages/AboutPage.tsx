@@ -1,38 +1,37 @@
 import React from "react";
+import { useI18n } from "../i18n";
 
-export const AboutPage: React.FC = () => (
-  <main>
-    <section className="page-hero">
-      <div className="container">
-        <p className="section-eyebrow">Rólunk</p>
-        <h1>Miért válaszd a Kleopátra Szépségszalonokat?</h1>
-        <p className="hero-lead hero-lead--narrow">
-          Célunk, hogy a lehető legrövidebb idő alatt, a legtöbb
-          szépségápolási szolgáltatást egy helyen biztosítsuk számodra,
-          egységes arculattal és magas szakmai színvonallal.
-        </p>
-      </div>
-    </section>
+export const AboutPage: React.FC = () => {
+  const { t } = useI18n();
 
-    <section className="section">
-      <div className="container grid-two">
-        <article className="card">
-          <h2 className="card-title">Minden egy helyen</h2>
-          <p className="card-text">
-            Fodrászat, kozmetika, kéz- és lábápolás, masszázs, szolárium – hogy
-            a magabiztos megjelenéshez szükséges szolgáltatásokat egy csapat
-            biztosítsa neked.
+  return (
+    <main>
+      <section className="page-hero">
+        <div className="container">
+          <p className="section-eyebrow">{t("about.eyebrow")}</p>
+          <h1>{t("about.title")}</h1>
+          <p className="hero-lead hero-lead--narrow">
+            {t("about.lead")}
           </p>
-        </article>
-        <article className="card">
-          <h2 className="card-title">Vendégközpontú gondolkodás</h2>
-          <p className="card-text">
-            Fontos számunkra az időd és az élmény, amit nálunk töltesz. Hosszú
-            nyitvatartással, rugalmas bejelentkezéssel és kedves, felkészült
-            kollégákkal várunk.
-          </p>
-        </article>
-      </div>
-    </section>
-  </main>
-);
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container grid-two">
+          <article className="card">
+            <h2 className="card-title">{t("about.card1.title")}</h2>
+            <p className="card-text">
+              {t("about.card1.text")}
+            </p>
+          </article>
+          <article className="card">
+            <h2 className="card-title">{t("about.card2.title")}</h2>
+            <p className="card-text">
+              {t("about.card2.text")}
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+  );
+};

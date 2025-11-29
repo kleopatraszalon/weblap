@@ -1,44 +1,43 @@
 import React from "react";
+import { useI18n } from "../i18n";
 
-export const FranchisePage: React.FC = () => (
-  <main>
-    <section className="page-hero">
-      <div className="container">
-        <p className="section-eyebrow">Franchise</p>
-        <h1>Szeretnél Kleopátra Szépségszalont?</h1>
-        <p className="hero-lead hero-lead--narrow">
-          Franchise programunkban kész arculattal, üzemeltetési know-how-val
-          és marketingtámogatással segítünk, hogy sikeres szépségszalont
-          építhess.
-        </p>
-      </div>
-    </section>
+export const FranchisePage: React.FC = () => {
+  const { t } = useI18n();
 
-    <section className="section">
-      <div className="container grid-three">
-        <article className="card">
-          <h2 className="card-title">Márka és arculat</h2>
-          <p className="card-text">
-            Egységes vizuális világ, arculati kézikönyv és belsőépítészeti
-            ajánlások, hogy a vendég minden szalonban azonnal felismerje a
-            Kleopátra élményt.
+  return (
+    <main>
+      <section className="page-hero">
+        <div className="container">
+          <p className="section-eyebrow">{t("franchise.eyebrow")}</p>
+          <h1>{t("franchise.title")}</h1>
+          <p className="hero-lead hero-lead--narrow">
+            {t("franchise.lead")}
           </p>
-        </article>
-        <article className="card">
-          <h2 className="card-title">Üzemeltetési támogatás</h2>
-          <p className="card-text">
-            Folyamatos szakmai és vezetői képzések, HR támogatás, rendszeres
-            konzultációk és központi ügyfélmenedzsment.
-          </p>
-        </article>
-        <article className="card">
-          <h2 className="card-title">Marketing &amp; kampányok</h2>
-          <p className="card-text">
-            Központi kampányok, digitális anyagok, hirdetési sablonok,
-            amelyekre helyben is tudsz támaszkodni a vendégszerzésben.
-          </p>
-        </article>
-      </div>
-    </section>
-  </main>
-);
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container grid-three">
+          <article className="card">
+            <h2 className="card-title">{t("franchise.card1.title")}</h2>
+            <p className="card-text">
+              {t("franchise.card1.text")}
+            </p>
+          </article>
+          <article className="card">
+            <h2 className="card-title">{t("franchise.card2.title")}</h2>
+            <p className="card-text">
+              {t("franchise.card2.text")}
+            </p>
+          </article>
+          <article className="card">
+            <h2 className="card-title">{t("franchise.card3.title")}</h2>
+            <p className="card-text">
+              {t("franchise.card3.text")}
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+  );
+};

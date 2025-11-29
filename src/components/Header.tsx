@@ -67,7 +67,7 @@ export function Header() {
           </div>
         </nav>
 
-        {/* JOBB: IDŐPONTFOGLALÁS + NYELVVÁLASZTÓ + SOCIAL – EGY SORBAN */}
+        {/* JOBB: IDŐPONTFOGLALÁS + SOCIAL + NYELVVÁLASZTÓ */}
         <div className="header-cta-block">
           <NavLink
             to="/salons"
@@ -81,6 +81,7 @@ export function Header() {
             <div className="header-social-label">
               {t("header.followUs")}
             </div>
+
             <div className="header-social-row">
               <div
                 className="header-lang-switch"
