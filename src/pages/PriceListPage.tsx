@@ -119,7 +119,11 @@ export const PriceListPage: React.FC = () => {
                 if (!items || items.length === 0) return null;
 
                 return (
-                  <section key={catKey} className="pricelist-category">
+                  <section
+                    key={catKey}
+                    id={`category-${catKey}`}
+                    className="pricelist-category"
+                  >
                     <h2 className="pricelist-category__title">
                       {categoryLabelFromId(catKey)}
                     </h2>

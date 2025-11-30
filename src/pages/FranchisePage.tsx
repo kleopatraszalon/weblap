@@ -2,8 +2,16 @@ import React from "react";
 
 export const FranchisePage: React.FC = () => (
   <main>
-    <section className="page-hero">
-      <div className="container">
+    <section className="page-hero page-hero--franchise">
+      <div className="page-hero__image-wrap">
+        <img
+          src="/images/franchise.jpg"
+          alt="Kleopátra Szépségszalon – franchise lehetőség"
+          className="page-hero__image"
+        />
+        <div className="page-hero__image-overlay" />
+      </div>
+      <div className="container page-hero__content page-hero__content--center">
         <p className="section-eyebrow">Franchise</p>
         <h1>Szeretnél Kleopátra Szépségszalont?</h1>
         <p className="hero-lead hero-lead--narrow">

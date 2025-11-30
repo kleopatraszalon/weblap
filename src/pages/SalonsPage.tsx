@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useI18n } from "../i18n";
 
 type PublicSalon = {
   id: string;
@@ -20,43 +21,63 @@ const STATIC_SALONS: PublicSalon[] = [
     id: "budapest-viii",
     slug: "budapest-viii",
     city_label: "Kleopátra Szépségszalon – Budapest VIII.",
-    address: "Rákóczi u. 63.",
+    address: "Rákóczi út 63.",
   },
   {
     id: "budapest-xii",
     slug: "budapest-xii",
     city_label: "Kleopátra Szépségszalon – Budapest XII.",
-    address: "Krisztina krt. 23.",
+    address: "Krisztina körút 23.",
   },
   {
     id: "budapest-xiii",
     slug: "budapest-xiii",
     city_label: "Kleopátra Szépségszalon – Budapest XIII.",
-    address: "Visegrádi u. 3.",
+    address: "Visegrádi utca 3.",
   },
   {
     id: "eger",
     slug: "eger",
     city_label: "Kleopátra Szépségszalon – Eger",
-    address: "Dr. Nagy János u. 8.",
+    address: "Dr. Nagy János utca 8.",
   },
   {
     id: "gyongyos",
     slug: "gyongyos",
     city_label: "Kleopátra Szépségszalon – Gyöngyös",
-    address: "Koháry u. 29.",
+    address: "Koháry utca 29.",
   },
   {
     id: "salgotarjan",
     slug: "salgotarjan",
     city_label: "Kleopátra Szépségszalon – Salgótarján",
-    address: "Füleki u. 44.",
+    address: "Füleki út 44.",
   },
 ];
 
+const CENTRAL_WIDGET_SRC = "https://w714308.alteg.io/widgetJS";
+
 export const SalonsPage: React.FC = () => {
+  const { t } = useI18n();
   const salons = STATIC_SALONS;
   const salonCount = salons.length;
+
+  // Központi Altegio foglalási widget betöltése (minden szalonra)
+  useEffect(() => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${CENTRAL_WIDGET_SRC}"]`
+    );
+    if (existing) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = CENTRAL_WIDGET_SRC;
+    script.async = true;
+    script.charset = "UTF-8";
+    document.body.appendChild(script);
+  }, []);
 
   return (
     <main>
@@ -64,23 +85,22 @@ export const SalonsPage: React.FC = () => {
         <div className="salons-block">
           {/* FEJLÉC SZÖVEG */}
           <header className="salons-block__header">
-            <p className="section-eyebrow">Szalonjaink</p>
+            <p className="section-eyebrow">{t("salons.list.eyebrow")}</p>
             <h1>
-              Bejelentkezés nélkül is várunk már{" "}
-              {salonCount > 0 ? <strong>{salonCount}</strong> : null} helyszínen!
+              {t("salons.list.titlePrefix")}{" "}
+              {salonCount > 0 ? <strong>{salonCount}</strong> : null}{" "}
+              {t("salons.list.titleSuffix")}
             </h1>
             <p className="hero-lead hero-lead--narrow">
-              Válaszd ki a hozzád legközelebb eső Kleopátra Szépségszalont, és
-              lépj be a több mint 30 éves szakértelem világába.
+              {t("salons.list.lead")}
             </p>
           </header>
 
           {/* KÉP KÖZÉPEN – SZALONOK.JPG */}
           <div className="salons-hero-image">
-            {/* A fájl:  public/images/szalonok.jpg  */}
             <img
               src="/images/szalonok.jpg"
-              alt="Kleopátra Szalonok"
+              alt={t("salons.list.heroAlt")}
               className="salons-hero-image__img"
             />
           </div>
@@ -99,6 +119,54 @@ export const SalonsPage: React.FC = () => {
                 )}
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TÉRKÉP + FACEBOOK BLOKK */}
+      <section className="section section--salons-extra">
+        <div className="container grid-two">
+          <article className="card card--map">
+            <h2 className="card-title">{t("salons.list.mapTitle")}</h2>
+            <p className="card-text">{t("salons.list.mapText")}</p>
+            <div className="salon-map salon-map--global">
+              <iframe
+                src="https://www.google.com/maps?q=Kleop%C3%A1tra%20Sz%C3%A9psz%C3%A9gszalon&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                aria-label={t("salons.list.mapTitle")}
+                title={t("salons.list.mapTitle")}
+              ></iframe>
+            </div>
+          </article>
+
+          <article className="card card--facebook">
+            <h2 className="card-title">
+              {t("salons.list.facebookTitle")}
+            </h2>
+            <p className="card-text">{t("salons.list.facebookText")}</p>
+            <div className="salons-facebook-frame">
+              <iframe
+                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkleovisegradi3%2F&tabs=timeline&width=500&height=400&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+                style={{ border: "none", overflow: "hidden", width: "100%", height: "400px" }}
+                scrolling="no"
+                frameBorder={0}
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              ></iframe>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* ÁLTALÁNOS ONLINE FOGLALÁS BLOKK */}
+      <section className="section section--salons-booking-global">
+        <div className="container">
+          <div className="salons-booking-global">
+            <h2>{t("salons.list.bookingTitle")}</h2>
+            <p>{t("salons.list.bookingText")}</p>
+            <div className="salons-booking-widget">
+              {/* A központi Altegio widget scriptje (w714308) a háttérben betöltődik. */}
+            </div>
           </div>
         </div>
       </section>

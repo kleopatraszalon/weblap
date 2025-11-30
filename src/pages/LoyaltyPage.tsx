@@ -2,8 +2,16 @@ import React from "react";
 
 export const LoyaltyPage: React.FC = () => (
   <main>
-    <section className="page-hero">
-      <div className="container">
+    <section className="page-hero page-hero--loyalty">
+      <div className="page-hero__image-wrap">
+        <img
+          src="/images/Utalvany.png"
+          alt="Kleopátra Szépségszalon – hűségprogram és kedvezmények"
+          className="page-hero__image"
+        />
+        <div className="page-hero__image-overlay" />
+      </div>
+      <div className="container page-hero__content page-hero__content--center">
         <p className="section-eyebrow">Hűségprogram</p>
         <h1>Extra kedvezmények regisztrált vendégeinknek</h1>
         <p className="hero-lead hero-lead--narrow">

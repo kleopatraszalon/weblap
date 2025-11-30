@@ -1446,7 +1446,7 @@ textarea:focus {
 }
 
 .webshop-hero__bg img {
-  width: 10%;
+  width: 100%;
   height: auto;
   display: block;
 }
@@ -2198,6 +2198,7 @@ p {
 .hero-lead {
   max-width: 36rem;
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
 }
 
 .hero-pills {
@@ -2489,10 +2490,10 @@ p {
 }
 
 .salons-hero-image {
-  margin: 1.8rem auto 1.6rem;
-  width: 60%;
-  max-width: 520px;
-  border-radius: 24px;
+  margin: 1.8rem 0 1.6rem;
+  width: 100%;
+  max-width: none;
+  border-radius: 0;
   overflow: hidden;
   position: relative;
   box-shadow: var(--shadow-soft);
@@ -2567,10 +2568,10 @@ p {
 
 /* hero kép – szolgáltatások */
 .services-hero-image {
-  margin: 1.8rem auto 1.6rem;
-  width: 60%;
-  max-width: 480px;
-  border-radius: 24px;
+  margin: 1.8rem 0 1.6rem;
+  width: 100%;
+  max-width: none;
+  border-radius: 0;
   overflow: hidden;
   position: relative;
   box-shadow: var(--shadow-soft);
@@ -3119,7 +3120,11 @@ p {
   }
 }
 
-.page-hero--salons {
+.page-hero--salons,
+.page-hero--about,
+.page-hero--franchise,
+.page-hero--loyalty,
+.page-hero--career {
   position: relative;
   overflow: hidden;
 }
@@ -3155,11 +3160,19 @@ p {
 }
 
 .page-hero__content--center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  margin-top: -180px;
-  position: relative;
-  z-index: 1;
+  z-index: 2;
   color: #fff;
+  pointer-events: none;
+}
+
+.page-hero__content--center > * {
+  pointer-events: auto;
 }
 
 .section--salons {
@@ -3745,6 +3758,7 @@ p {
   font-size: 2.8rem;
   line-height: 1.1;
   margin-bottom: 1.2rem;
+  text-transform: uppercase;
 }
 
 .hero-part {
@@ -5110,4 +5124,358 @@ p {
   background: var(--color-magenta);
   color: #ffffff;
   border-color: transparent;
+}
+
+
+/* Szalon részletek – térkép és foglalási blokk */
+.salon-map {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 1rem;
+}
+
+.salon-map iframe {
+  width: 100%;
+  min-height: 260px;
+  border: 0;
+}
+
+
+/* Szalonlista – központi online foglalási blokk */
+.salons-booking-global {
+  max-width: 960px;
+  margin: 2rem auto 0;
+  padding: 1.8rem 2rem;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.salons-booking-global h2 {
+  margin-bottom: 0.5rem;
+}
+
+.salons-booking-global p {
+  margin-bottom: 0.75rem;
+}
+
+.salons-booking-widget {
+  margin-top: 0.75rem;
+  min-height: 56px;
+}
+
+
+/* FINAL HERO-LEAD UPPERCASE OVERRIDE */
+.hero-lead,
+.hero-lead.hero-lead--narrow {
+  text-transform: uppercase;
+}
+
+
+/* HERO – szolgáltatások: teljes szélességű kép, szöveg overlay-ként felette */
+.section--services-hero {
+  position: relative;
+  padding: 0;
+}
+
+.section--services-hero .services-hero-image {
+  margin: 0;
+}
+
+.section--services-hero .services-hero-image__img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  display: block;
+  object-fit: cover;
+}
+
+.section--services-hero .services-hero-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.75)
+  );
+}
+
+.section--services-hero .services-intro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  color: #fff;
+}
+
+.section--services-hero .services-intro .section-eyebrow {
+  color: #fff;
+}
+
+.section--services-hero .services-intro .hero-lead {
+  color: #fff;
+}
+
+
+/* HERO – árlista: teljes szélességű kép, szöveg overlay-ként felette */
+.section--pricelist .pricelist-block {
+  position: relative;
+  padding-top: 0;
+}
+
+.section--pricelist .services-hero-image {
+  margin: 0;
+}
+
+.section--pricelist .services-hero-image__img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  display: block;
+  object-fit: cover;
+}
+
+.section--pricelist .services-hero-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.75)
+  );
+}
+
+.section--pricelist .pricelist-header {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+  color: #fff;
+  padding: 0 1.5rem;
+}
+
+.section--pricelist .pricelist-header .section-eyebrow {
+  color: #fff;
+}
+
+.section--pricelist .pricelist-header .hero-lead {
+  color: #fff;
+}
+
+
+/* HERO – szalonlista: teljes szélességű kép, szöveg overlay-ként felette */
+.section--salons-page .salons-block {
+  position: relative;
+}
+
+.section--salons-page .salons-hero-image {
+  margin: 0;
+}
+
+.section--salons-page .salons-hero-image__img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  display: block;
+  object-fit: cover;
+}
+
+.section--salons-page .salons-hero-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.75)
+  );
+}
+
+.section--salons-page .salons-block__header {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+  color: #fff;
+  padding: 0 1.5rem;
+}
+
+.section--salons-page .salons-block__header .section-eyebrow {
+  color: #fff;
+}
+
+.section--salons-page .salons-block__header .hero-lead {
+  color: #fff;
+}
+
+
+/* HOME HERO – teljes szélességű kép, szöveg a képen (mint a webshop hero) */
+.home-hero {
+  position: relative;
+  color: #ffffff;
+  margin-bottom: 2.5rem;
+}
+
+.home-hero__bg {
+  position: relative;
+}
+
+.home-hero__image-wrap {
+  position: relative;
+  max-height: 520px;
+  overflow: hidden;
+}
+
+.home-hero__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.home-hero__bg-overlay {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(18, 12, 8, 0.95) 0%,
+    rgba(18, 12, 8, 0.7) 40%,
+    rgba(18, 12, 8, 0.25) 70%,
+    rgba(18, 12, 8, 0.0) 100%
+  );
+  pointer-events: none;
+}
+
+.home-hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.home-hero__content-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 3rem;
+  pointer-events: auto;
+}
+
+.home-hero__text {
+  max-width: 40rem;
+}
+
+.home-hero__text .hero-kicker,
+.home-hero__text .hero-title,
+.home-hero__text .hero-lead {
+  color: #ffffff;
+}
+
+.home-hero__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.9rem;
+}
+
+/* finom igazítás a webshop gombhoz / app chiphez */
+.home-hero__side .hero-media-webshop {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.home-hero__side .hero-media-chip {
+  align-self: flex-end;
+}
+
+@media (max-width: 900px) {
+  .home-hero__content-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-bottom: 1.75rem;
+  }
+
+  .home-hero__side {
+    align-items: flex-start;
+  }
+}
+
+
+/* === SZALONLISTA – TÉRKÉP + FACEBOOK BLOKK, KÖZPONTI FOGLALÁS === */
+.section--salons-extra {
+  padding-top: 0;
+  padding-bottom: 3.5rem;
+}
+
+.section--salons-booking-global {
+  padding-top: 0;
+  padding-bottom: 4rem;
+}
+
+.section--salons-booking-global .salons-booking-global {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.card--facebook .salons-facebook-frame,
+.card--map .salon-map--global {
+  width: 100%;
+}
+
+.salons-facebook-frame {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.salons-facebook-frame iframe {
+  width: 100%;
+  border: 0;
+}
+
+
+/* === SZALONOK HERO SZÖVEG – MAGENTA + ARANY === */
+.section--salons-page .salons-block__header .section-eyebrow {
+  color: #ec008c; /* magenta */
+}
+
+.section--salons-page .salons-block__header h1 {
+  color: #b99a57; /* arany */
+}
+
+/* === SZALONLISTA – TÉRKÉP NAGYOBB, MINT FACEBOOK === */
+.section--salons-extra .grid-two {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+@media (max-width: 900px) {
+  .section--salons-extra .grid-two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.section--salons-extra .card--map .salon-map--global iframe,
+.section--salons-extra .card--map .salon-map iframe {
+  min-height: 420px;
+}
+
+.section--salons-extra .card--facebook iframe {
+  min-height: 360px;
 }

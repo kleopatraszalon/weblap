@@ -153,6 +153,49 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "Gyöngyösi fitnesz- és wellness szolgáltatásainkkal a teljes testi-lelki megújulást célozzuk.",
     "services.cards.fitness.cta": "Fitness és wellness részletek",
+    "salons.list.eyebrow": "Szalonjaink",
+    "salons.list.titlePrefix": "Bejelentkezés nélkül is várunk már",
+    "salons.list.titleSuffix": "helyszínen!",
+    "salons.list.lead":
+      "Válaszd ki a hozzád legközelebb eső Kleopátra Szépségszalont, és lépj be a több mint 30 éves szakértelem világába.",
+    "salons.list.heroAlt": "Kleopátra Szalonok",
+    "salons.list.mapTitle": "Szalonjaink térképen",
+    "salons.list.mapText":
+      "Itt egy pillantással áttekintheted, hol találhatók Kleopátra Szépségszalonjaink.",
+    "salons.list.facebookTitle": "Kövess minket a Facebookon",
+    "salons.list.facebookText":
+      "Akciók, újdonságok, kulisszatitkok – csatlakozz közösségünkhöz a közösségi médiában.",
+    "salons.list.bookingTitle": "Online időpontfoglalás",
+    "salons.list.bookingText":
+      "Használd központi foglalási rendszerünket, válaszd ki a szalont, a szolgáltatást és az időpontot néhány kattintással.",
+
+    "salon.detail.eyebrow": "Szalonjaink",
+    "salon.detail.lead":
+      "Ebben a Kleopátra Szépségszalonban is komplett szépségápolási szolgáltatásokat kínálunk – fodrászat, kozmetika, kéz- és lábápolás, masszázs és további kezelések várnak modern, egységes környezetben.",
+    "salon.detail.basicTitle": "Alapadatok",
+    "salon.detail.basicLabel.name": "Szalon neve:",
+    "salon.detail.basicLabel.address": "Cím:",
+    "salon.detail.basicLabel.services": "Szolgáltatások:",
+    "salon.detail.basicLabel.payments": "Fizetési módok:",
+    "salon.detail.basicServices":
+      "fodrászat, kozmetika, kéz- és lábápolás, masszázs, szolárium (helyszínenként eltérhet).",
+    "salon.detail.basicPayments":
+      "készpénz, bankkártya, SZÉP-kártya.",
+    "salon.detail.bookingTitle": "Időpontfoglalás",
+    "salon.detail.bookingText":
+      "Időpontot foglalhatsz online a foglalási widgeten keresztül, mobilalkalmazásunkból vagy telefonon. Akár bejelentkezés nélkül is betérhetsz, kollégáink a lehető legrövidebb időn belül fogadnak.",
+    "salon.detail.bookingBack": "Vissza a szalonlistához",
+    "salon.detail.mapTitle": "Térkép és megközelítés",
+    "salon.detail.mapOpen": "Megnyitás a térképen",
+    "salon.detail.infoTitle": "Hasznos tudnivalók",
+    "salon.detail.infoText1":
+      "Szalonjaink könnyen megközelíthetők tömegközlekedéssel és gépkocsival is. A pontos parkolási lehetőségeket és aktuális nyitvatartást a foglalási widgetben, illetve a visszaigazoló e-mailben is megtalálod.",
+    "salon.detail.infoText2":
+      "Ha speciális kérésed van (pl. kedvenc fodrász, kozmetikus vagy időpontegyeztetés), kérjük, jelezd a megjegyzésben vagy telefonon.",
+    "salon.detail.loading": "Szalonadatok betöltése...",
+    "salon.detail.error":
+      "Nem sikerült betölteni a szalonadatokat. Kérjük, próbáld meg később.",
+
 
   },
 
@@ -287,6 +330,49 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "With our fitness and wellness services in Gyöngyös we aim for complete physical and mental renewal.",
     "services.cards.fitness.cta": "Fitness & wellness details",
+    "salons.list.eyebrow": "Our salons",
+    "salons.list.titlePrefix": "We welcome you in",
+    "salons.list.titleSuffix": "locations, even without appointment.",
+    "salons.list.lead":
+      "Choose the Kleopátra Beauty Salon closest to you and step into a world of more than 30 years of expertise.",
+    "salons.list.heroAlt": "Kleopatra salons",
+    "salons.list.mapTitle": "Our salons on the map",
+    "salons.list.mapText":
+      "See at a glance where our Kleopátra Beauty Salons are located across the country.",
+    "salons.list.facebookTitle": "Follow us on Facebook",
+    "salons.list.facebookText":
+      "Promotions, news and behind-the-scenes moments – join our community on social media.",
+    "salons.list.bookingTitle": "Online booking",
+    "salons.list.bookingText":
+      "Use our central booking system to choose your salon, service and time in just a few clicks.",
+
+    "salon.detail.eyebrow": "Our salons",
+    "salon.detail.lead":
+      "In this Kleopátra Beauty Salon you will also find a full range of beauty services – hairdressing, beauty, hands & feet care, massage and further treatments in a modern, unified environment.",
+    "salon.detail.basicTitle": "Basic information",
+    "salon.detail.basicLabel.name": "Salon name:",
+    "salon.detail.basicLabel.address": "Address:",
+    "salon.detail.basicLabel.services": "Services:",
+    "salon.detail.basicLabel.payments": "Payment options:",
+    "salon.detail.basicServices":
+      "hairdressing, beauty, hands & feet care, massage, solarium (services may differ by location).",
+    "salon.detail.basicPayments":
+      "cash, bank card, SZÉP card (Hungarian leisure card).",
+    "salon.detail.bookingTitle": "Booking",
+    "salon.detail.bookingText":
+      "You can book an appointment online via the booking widget, through our mobile app or by phone. You are also welcome to walk in without appointment – our colleagues will serve you as soon as possible.",
+    "salon.detail.bookingBack": "Back to salon list",
+    "salon.detail.mapTitle": "Map and access",
+    "salon.detail.mapOpen": "Open in Maps",
+    "salon.detail.infoTitle": "Good to know",
+    "salon.detail.infoText1":
+      "Our salons are easy to reach both by public transport and by car. You can find exact parking options and current opening hours in the booking widget and in the confirmation e-mail.",
+    "salon.detail.infoText2":
+      "If you have any special requests (for example preferred stylist or therapist, or timing questions), please let us know in the comment field or by phone.",
+    "salon.detail.loading": "Loading salon data...",
+    "salon.detail.error":
+      "We could not load the salon data. Please try again later.",
+
 
   },
 
@@ -424,6 +510,49 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "В нашем фитнес- и велнес-центре в Дьендьёше мы стремимся к полной физической и ментальной перезагрузке.",
     "services.cards.fitness.cta": "Подробнее о фитнесе и wellness",
+    "salons.list.eyebrow": "Наши салоны",
+    "salons.list.titlePrefix": "Мы ждём тебя уже в",
+    "salons.list.titleSuffix": "локациях – даже без предварительной записи.",
+    "salons.list.lead":
+      "Выбери салон Kleopátra рядом с тобой и окунись в атмосферу более чем 30-летнего опыта и профессионализма.",
+    "salons.list.heroAlt": "Салоны Kleopátra",
+    "salons.list.mapTitle": "Наши салоны на карте",
+    "salons.list.mapText":
+      "Одним взглядом увидь, где находятся салоны Kleopátra по всей стране.",
+    "salons.list.facebookTitle": "Подписывайся на нас в Facebook",
+    "salons.list.facebookText":
+      "Акции, новости и закулисные моменты – присоединяйся к нашему сообществу в соцсетях.",
+    "salons.list.bookingTitle": "Онлайн-запись",
+    "salons.list.bookingText":
+      "Используй нашу центральную систему онлайн-записи – выбери салон, услугу и время в несколько кликов.",
+
+    "salon.detail.eyebrow": "Наши салоны",
+    "salon.detail.lead":
+      "В этом салоне Kleopátra тебя также ждёт полный спектр бьюти-услуг – парикмахерские услуги, косметология, уход за руками и ногами, массаж и другие процедуры в современном, стильном окружении.",
+    "salon.detail.basicTitle": "Основная информация",
+    "salon.detail.basicLabel.name": "Название салона:",
+    "salon.detail.basicLabel.address": "Адрес:",
+    "salon.detail.basicLabel.services": "Услуги:",
+    "salon.detail.basicLabel.payments": "Способы оплаты:",
+    "salon.detail.basicServices":
+      "парикмахерские услуги, косметология, уход за руками и ногами, массаж, солярий (набор услуг зависит от конкретного салона).",
+    "salon.detail.basicPayments":
+      "наличные, банковская карта, карта SZÉP.",
+    "salon.detail.bookingTitle": "Запись на приём",
+    "salon.detail.bookingText":
+      "Записаться можно онлайн через виджет записи, из мобильного приложения или по телефону. Можно прийти и без предварительной записи – мы постараемся принять тебя как можно скорее.",
+    "salon.detail.bookingBack": "Назад к списку салонов",
+    "salon.detail.mapTitle": "Карта и как добраться",
+    "salon.detail.mapOpen": "Открыть на карте",
+    "salon.detail.infoTitle": "Полезная информация",
+    "salon.detail.infoText1":
+      "До наших салонов удобно добираться как на общественном транспорте, так и на автомобиле. Точную информацию о парковке и актуальном графике работы можно найти в виджете записи и в письме-подтверждении.",
+    "salon.detail.infoText2":
+      "Если у тебя есть особые пожелания (например любимый мастер или вопросы по времени визита), пожалуйста, напиши об этом в комментарии или сообщи по телефону.",
+    "salon.detail.loading": "Загрузка данных салона...",
+    "salon.detail.error":
+      "Не удалось загрузить данные салона. Пожалуйста, попробуй позже.",
+
 
   },
 };

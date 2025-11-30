@@ -55,7 +55,7 @@ export const ServicesPage: React.FC = () => (
 
       <div className="services-hero-image">
         <img
-          src="/images/szolgaltatasok.jpg"
+          src="/images/szolgaltatasok.png"
           alt="Kleopátra Szépségszalon – fodrászat, kozmetika, kéz- és lábápolás egy helyen"
           className="services-hero-image__img"
         />
@@ -69,7 +69,19 @@ export const ServicesPage: React.FC = () => (
           {SERVICE_CARDS.map((service) => (
             <NavLink
               key={service.slug}
-              to={`/prices#${service.slug}`}
+              to={
+                service.slug === "hair"
+                  ? "/prices#category-1"
+                  : service.slug === "beauty"
+                  ? "/prices#category-2"
+                  : service.slug === "hands-feet"
+                  ? "/prices#category-3"
+                  : service.slug === "solarium"
+                  ? "/prices#category-5"
+                  : service.slug === "massage"
+                  ? "/prices#category-6"
+                  : "/prices"
+              }
               className="card card--service"
             >
               <h2 className="card-title">{service.title}</h2>

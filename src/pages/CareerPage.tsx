@@ -2,8 +2,16 @@ import React from "react";
 
 export const CareerPage: React.FC = () => (
   <main>
-    <section className="page-hero">
-      <div className="container">
+    <section className="page-hero page-hero--career">
+      <div className="page-hero__image-wrap">
+        <img
+          src="/images/images_1.webp"
+          alt="Kleopátra Szépségszalon – karrier lehetőségek"
+          className="page-hero__image"
+        />
+        <div className="page-hero__image-overlay" />
+      </div>
+      <div className="container page-hero__content page-hero__content--center">
         <p className="section-eyebrow">Karrier</p>
         <h1>Csatlakozz a Kleopátra csapatához</h1>
         <p className="hero-lead hero-lead--narrow">

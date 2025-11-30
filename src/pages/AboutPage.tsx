@@ -2,8 +2,16 @@ import React from "react";
 
 export const AboutPage: React.FC = () => (
   <main>
-    <section className="page-hero">
-      <div className="container">
+    <section className="page-hero page-hero--about">
+      <div className="page-hero__image-wrap">
+        <img
+          src="/images/home.png"
+          alt="Kleopátra Szépségszalonok – rólunk"
+          className="page-hero__image"
+        />
+        <div className="page-hero__image-overlay" />
+      </div>
+      <div className="container page-hero__content page-hero__content--center">
         <p className="section-eyebrow">Rólunk</p>
         <h1>Miért válaszd a Kleopátra Szépségszalonokat?</h1>
         <p className="hero-lead hero-lead--narrow">

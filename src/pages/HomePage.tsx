@@ -7,78 +7,81 @@ export const HomePage: React.FC = () => {
 
   return (
     <main>
-      {/* HERO – KEZDŐLAP */}
+      {/* HERO – KEZDŐLAP (klasszikus 2 oszlopos layout) */}
       <section className="hero">
-        <div className="hero-bg" />
+        <div className="container">
+          <div className="hero-grid">
+            {/* BAL OLDAL – SZÖVEG */}
+            <div className="hero-content">
+              <div className="hero-kicker">{t("home.hero.kicker")}</div>
 
-        <div className="container hero-grid">
-          {/* BAL: szöveg */}
-          <div className="hero-content">
-            <div className="hero-kicker">{t("home.hero.kicker")}</div>
+              <h1 className="hero-title">
+                <span className="hero-part hero-part-default">
+                  {t("home.hero.title.prefix")}
+                </span>
+                <span className="hero-part hero-part-magenta">
+                  {t("home.hero.title.highlight")}
+                </span>
+                <span className="hero-part hero-part-gold">
+                  {t("home.hero.title.suffix")}
+                </span>
+              </h1>
 
-            <h1 className="hero-title">
-              <span className="hero-part hero-part-default">
-                {t("home.hero.title.prefix")}
-              </span>
-              <span className="hero-part hero-part-magenta">
-                {t("home.hero.title.highlight")}
-              </span>
-              <span className="hero-part hero-part-gold">
-                {t("home.hero.title.suffix")}
-              </span>
-            </h1>
+              {/* A kép melletti szöveg: teljesen NAGYBETŰS */}
+              <p className="hero-lead">
+                {t("home.hero.lead").toUpperCase()}
+              </p>
 
-            <p className="hero-lead">{t("home.hero.lead")}</p>
-
-            {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK OLDALRA MUTATNAK */}
-            <div className="hero-pills">
-              <NavLink to="/services#hair" className="hero-pill">
-                {t("home.hero.pill.hair")}
-              </NavLink>
-              <NavLink to="/services#beauty" className="hero-pill">
-                {t("home.hero.pill.beauty")}
-              </NavLink>
-              <NavLink to="/services#handsfeet" className="hero-pill">
-                {t("home.hero.pill.handsFeet")}
-              </NavLink>
-              <NavLink to="/services#solarium" className="hero-pill">
-                {t("home.hero.pill.solarium")}
-              </NavLink>
-              <NavLink to="/services#massage" className="hero-pill">
-                {t("home.hero.pill.massage")}
-              </NavLink>
-            </div>
-
-            {/* CTA GOMBOK – FOGLALÁS / SZOLGÁLTATÁSOK */}
-            <div className="hero-actions">
-              <NavLink
-                to="/salons"
-                className="btn btn-primary btn-primary--magenta"
-              >
-                {t("home.hero.cta.book")}
-              </NavLink>
-              <NavLink to="/services" className="btn btn-outline">
-                {t("home.hero.cta.services")}
-              </NavLink>
-            </div>
-          </div>
-
-          {/* JOBB: kép + overlay webshop / app chip */}
-          <div className="hero-media">
-            <div className="hero-media-frame">
-              <img
-                src="/images/home.png"
-                alt="Kleopátra Szépségszalon – szépségszolgáltatások"
-                className="hero-media-img"
-              />
-
-              <div className="hero-media-overlay">
-                <NavLink to="/webshop" className="hero-media-webshop">
-                  {t("home.hero.media.webshop")}
+              {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK SZEKCIÓKRA UGRÁS */}
+              <div className="hero-pills">
+                <NavLink to="/prices#category-1" className="hero-pill">
+                  {t("home.hero.pill.hair")}
                 </NavLink>
+                <NavLink to="/prices#category-2" className="hero-pill">
+                  {t("home.hero.pill.beauty")}
+                </NavLink>
+                <NavLink to="/prices#category-3" className="hero-pill">
+                  {t("home.hero.pill.handsFeet")}
+                </NavLink>
+                <NavLink to="/prices#category-5" className="hero-pill">
+                  {t("home.hero.pill.solarium")}
+                </NavLink>
+                <NavLink to="/prices#category-6" className="hero-pill">
+                  {t("home.hero.pill.massage")}
+                </NavLink>
+              </div>
 
-                <div className="hero-media-chip">
-                  {t("home.hero.media.appChip")}
+              {/* CTA GOMBOK – FOGLALÁS / SZOLGÁLTATÁSOK */}
+              <div className="hero-actions">
+                <NavLink
+                  to="/salons"
+                  className="btn btn-primary btn-primary--magenta"
+                >
+                  {t("home.hero.cta.book")}
+                </NavLink>
+                <NavLink to="/services" className="btn btn-outline">
+                  {t("home.hero.cta.services")}
+                </NavLink>
+              </div>
+            </div>
+
+            {/* JOBB OLDAL – KÉP + WEBSHOP / APP OVERLAY */}
+            <div className="hero-media">
+              <div className="hero-media-frame">
+                <img
+                  src="/images/home.png"
+                  alt="Kleopátra Szépségszalon – nyitó kép"
+                  className="hero-media-img"
+                />
+
+                <div className="hero-media-overlay">
+                  <NavLink to="/webshop" className="hero-media-webshop">
+                    {t("home.hero.media.webshop")}
+                  </NavLink>
+
+                  <div className="hero-media-chip">
+                    {t("home.hero.media.appChip")}
+                  </div>
                 </div>
               </div>
             </div>
