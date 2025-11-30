@@ -153,6 +153,95 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "Gyöngyösi fitnesz- és wellness szolgáltatásainkkal a teljes testi-lelki megújulást célozzuk.",
     "services.cards.fitness.cta": "Fitness és wellness részletek",
+    "services.page.heroAlt":
+      "Kleopátra Szépségszalon – fodrászat, kozmetika és wellness egy helyen",
+    "services.page.eyebrow": "Szolgáltatások",
+    "services.page.titlePrefix": "Szolgáltatásaink",
+    "services.page.titleSuffix": "– mindent egy helyen",
+    "services.page.lead":
+      "Prémium fodrászati, kozmetikai, kéz- és lábápolási, szolárium és masszázs szolgáltatások – egységes Kleopátra-minőségben, minden szalonunkban.",
+
+    "services.detail.hair.eyebrow": "Fodrászat",
+    "services.detail.hair.title":
+      "Szalonfodrászat, amely kihozza a maximumot a hajadból",
+    "services.detail.hair.lead":
+      "Fodrászaink a klasszikus technikákat a legújabb trendekkel ötvözik – a konzultáció során figyelembe vesszük arcvonalad, hajtípusod és életmódod, hogy a frizura hosszú távon is hordható legyen.",
+    "services.detail.hair.bullet1":
+      "Női, férfi és gyermek hajvágás, formázás és teljes megújulás.",
+    "services.detail.hair.bullet2":
+      "Festés, melír, balayage és színkorrekció professzionális termékekkel.",
+    "services.detail.hair.bullet3":
+      "Hajápoló kezelések, hajregeneráló kúrák és személyre szabott otthoni ápolási tanácsadás.",
+    "services.detail.hair.cta": "Fodrász árlista megnyitása",
+
+    "services.detail.beauty.eyebrow": "Kozmetika",
+    "services.detail.beauty.title":
+      "Kozmetikai kezelések a ragyogó, egészséges bőrért",
+    "services.detail.beauty.lead":
+      "Kezeléseink a bőr állapotfelmérésével indulnak, így minden alkalommal olyan protokollt állítunk össze, amely illeszkedik bőrtípusodhoz és céljaidhoz – legyen az hidratálás, anti-aging vagy tisztítás.",
+    "services.detail.beauty.bullet1":
+      "Klasszikus és gépi arckezelések, anti-aging és problémamegoldó kúrák.",
+    "services.detail.beauty.bullet2":
+      "Szemöldök- és szempillaformázás, festés, tartósbögre- és lifting technikák.",
+    "services.detail.beauty.bullet3":
+      "Alkalmi és nappali smink, menyasszonyi smink professzionális termékekkel.",
+    "services.detail.beauty.cta": "Kozmetikai árlista megnyitása",
+
+    "services.detail.handsfeet.eyebrow": "Kéz- és lábápolás",
+    "services.detail.handsfeet.title":
+      "Ápolt kezek és lábak – kompromisszumok nélkül",
+    "services.detail.handsfeet.lead":
+      "Manikűröseink és pedikűröseink higiénikus, gondos munkával tesznek az esztétikus megjelenésért és a komfortérzetedért – a gyors frissítéstől a teljes lábápolásig.",
+    "services.detail.handsfeet.bullet1":
+      "Manikűr, gél lakk, műköröm építés és megerősítő kezelések.",
+    "services.detail.handsfeet.bullet2":
+      "Esztétikai és wellness pedikűr, bőrkeményedés- és sarokápolás.",
+    "services.detail.handsfeet.bullet3":
+      "Higiéniai protokollok, professzionális fertőtlenítés és gondosan válogatott ápoló termékek.",
+    "services.detail.handsfeet.cta": "Kéz- és lábápolás árlista megnyitása",
+
+    "services.detail.solarium.eyebrow": "Szolárium",
+    "services.detail.solarium.title":
+      "Egyenletes, napbarnított bőr modern szoláriumgépekkel",
+    "services.detail.solarium.lead":
+      "Szoláriumainkban a bőrtípusodhoz igazított időbeállítással, szakértői útmutatással segítünk elérni az egészséges, egyenletes barnaságot.",
+    "services.detail.solarium.bullet1":
+      "Rendszeresen karbantartott, korszerű fekvő és álló gépek.",
+    "services.detail.solarium.bullet2":
+      "Személyre szabott barnulási terv és fényvédelmi tanácsadás.",
+    "services.detail.solarium.bullet3":
+      "Minőségi szoláriumkozmetikumok a tartósabb, szebb színért.",
+    "services.detail.solarium.cta": "Szolárium árlista megnyitása",
+
+    "services.detail.massage.eyebrow": "Masszázs",
+    "services.detail.massage.title":
+      "Masszázs a teljes testi-lelki feltöltődésért",
+    "services.detail.massage.lead":
+      "Masszőreink különböző technikákból építik fel a kezelést – figyelembe véve az izomfeszültségeket, terhelést és stressz-szintet, hogy valódi regenerációt kapj.",
+    "services.detail.massage.bullet1":
+      "Relaxáló, frissítő és sportmasszázs a feszes, fáradt izmok fellazítására.",
+    "services.detail.massage.bullet2":
+      "Célzott hát-, nyak- és vállövi kezelések a mindennapi ülőmunka kompenzálására.",
+    "services.detail.massage.bullet3":
+      "Aromaterápiás és wellness masszázsok a teljes kikapcsolódásért.",
+    "services.detail.massage.cta": "Masszázs árlista megnyitása",
+
+    "services.detail.fitness.eyebrow": "Fitness & wellness",
+    "services.detail.fitness.title":
+      "Kiegészítő wellness- és testkezelések a hosszú távú eredményért",
+    "services.detail.fitness.lead":
+      "A szépség és a jó közérzet összetartozik: testkezeléseink és wellness szolgáltatásaink támogatják az alakformálást, a regenerációt és az energiaszint növelését.",
+    "services.detail.fitness.bullet1":
+      "Alakformáló és feszesítő testkezelések, amelyek kiegészítik az életmódbeli változtatásokat.",
+    "services.detail.fitness.bullet2":
+      "Wellness-jellegű programok a regeneráció és stresszoldás támogatására.",
+    "services.detail.fitness.bullet3":
+      "Személyre szabott javaslatok a kezelés utáni otthoni ápolásra és életmódra.",
+    "services.detail.fitness.cta": "További információk és árak",
+
+
+
+
     "salons.list.eyebrow": "Szalonjaink",
     "salons.list.titlePrefix": "Bejelentkezés nélkül is várunk már",
     "salons.list.titleSuffix": "helyszínen!",
@@ -330,6 +419,92 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "With our fitness and wellness services in Gyöngyös we aim for complete physical and mental renewal.",
     "services.cards.fitness.cta": "Fitness & wellness details",
+        "services.page.heroAlt":
+      "Kleopatra Beauty Salons – hair, beauty and wellness in one place",
+    "services.page.eyebrow": "Services",
+    "services.page.titlePrefix": "Our services",
+    "services.page.titleSuffix": "– everything in one place",
+    "services.page.lead":
+      "Premium hairdressing, beauty, hands & feet care, solarium and massage services – in unified Kleopátra quality across all our salons.",
+
+    "services.detail.hair.eyebrow": "Hairdressing",
+    "services.detail.hair.title":
+      "Salon hairdressing that brings out the best in your hair",
+    "services.detail.hair.lead":
+      "Our stylists combine classic techniques with the latest trends. During the consultation we look at your face shape, hair type and lifestyle to create a look that stays wearable day after day.",
+    "services.detail.hair.bullet1":
+      "Women’s, men’s and children’s cuts, restyling and complete makeovers.",
+    "services.detail.hair.bullet2":
+      "Colouring, highlights, balayage and colour corrections with professional products.",
+    "services.detail.hair.bullet3":
+      "Deep conditioning rituals, repairing treatments and tailored home-care recommendations.",
+    "services.detail.hair.cta": "Open hairdressing price list",
+
+    "services.detail.beauty.eyebrow": "Beauty",
+    "services.detail.beauty.title":
+      "Professional facials for healthy, glowing skin",
+    "services.detail.beauty.lead":
+      "Every treatment starts with a skin analysis, so we can build a protocol that matches your skin type and goals – from hydration and anti-ageing to deep cleansing.",
+    "services.detail.beauty.bullet1":
+      "Classic and device-based facials, anti-ageing and problem-solving treatments.",
+    "services.detail.beauty.bullet2":
+      "Brow and lash styling, tinting and modern lifting techniques.",
+    "services.detail.beauty.bullet3":
+      "Day, evening and bridal make-up with professional products.",
+    "services.detail.beauty.cta": "Open beauty price list",
+
+    "services.detail.handsfeet.eyebrow": "Hands & feet care",
+    "services.detail.handsfeet.title":
+      "Perfectly groomed hands and feet – without compromise",
+    "services.detail.handsfeet.lead":
+      "Our nail technicians and pedicurists work to high hygiene standards to deliver both aesthetics and comfort – from quick tidy-ups to complete foot care.",
+    "services.detail.handsfeet.bullet1":
+      "Manicure, gel polish, nail extensions and strengthening treatments.",
+    "services.detail.handsfeet.bullet2":
+      "Aesthetic and wellness pedicure, callus and heel care.",
+    "services.detail.handsfeet.bullet3":
+      "Strict hygiene protocols, disinfection and carefully selected care products.",
+    "services.detail.handsfeet.cta": "Open hands & feet price list",
+
+    "services.detail.solarium.eyebrow": "Solarium",
+    "services.detail.solarium.title":
+      "Even, sun-kissed skin with modern solarium machines",
+    "services.detail.solarium.lead":
+      "We tailor session length to your skin type and provide expert guidance so you can enjoy a healthy-looking, even tan.",
+    "services.detail.solarium.bullet1":
+      "Regularly maintained, modern lay-down and stand-up units.",
+    "services.detail.solarium.bullet2":
+      "Personalised tanning plans and advice on skin protection.",
+    "services.detail.solarium.bullet3":
+      "Quality solarium cosmetics for longer-lasting, more beautiful colour.",
+    "services.detail.solarium.cta": "Open solarium price list",
+
+    "services.detail.massage.eyebrow": "Massage",
+    "services.detail.massage.title":
+      "Massage treatments for deep physical and mental relaxation",
+    "services.detail.massage.lead":
+      "Our therapists combine different techniques based on muscle tension, workload and stress level to provide real regeneration.",
+    "services.detail.massage.bullet1":
+      "Relaxing, refreshing and sports massages to release tight, overworked muscles.",
+    "services.detail.massage.bullet2":
+      "Targeted back, neck and shoulder treatments to balance out desk work.",
+    "services.detail.massage.bullet3":
+      "Aromatherapy and wellness massages for complete switch-off moments.",
+    "services.detail.massage.cta": "Open massage price list",
+
+    "services.detail.fitness.eyebrow": "Fitness & wellness",
+    "services.detail.fitness.title":
+      "Complementary wellness and body treatments for long-term results",
+    "services.detail.fitness.lead":
+      "Beauty and wellbeing belong together: our body and wellness programs support shaping, regeneration and energy levels.",
+    "services.detail.fitness.bullet1":
+      "Body-shaping and firming treatments that complement lifestyle changes.",
+    "services.detail.fitness.bullet2":
+      "Wellness-style sessions to support recovery and stress relief.",
+    "services.detail.fitness.bullet3":
+      "Tailored suggestions for post-treatment home care and daily habits.",
+    "services.detail.fitness.cta": "More information and prices",
+
     "salons.list.eyebrow": "Our salons",
     "salons.list.titlePrefix": "We welcome you in",
     "salons.list.titleSuffix": "locations, even without appointment.",
@@ -510,6 +685,92 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "В нашем фитнес- и велнес-центре в Дьендьёше мы стремимся к полной физической и ментальной перезагрузке.",
     "services.cards.fitness.cta": "Подробнее о фитнесе и wellness",
+        "services.page.heroAlt":
+      "Салоны Kleopátra – парикмахерские, косметология и wellness в одном месте",
+    "services.page.eyebrow": "Услуги",
+    "services.page.titlePrefix": "Наши услуги",
+    "services.page.titleSuffix": "– всё в одном салоне",
+    "services.page.lead":
+      "Парикмахерские, косметологические услуги, уход за руками и ногами, солярий и массаж – во всех наших салонах в едином качестве Kleopátra.",
+
+    "services.detail.hair.eyebrow": "Парикмахерские услуги",
+    "services.detail.hair.title":
+      "Салонный уход за волосами, который раскрывает их потенциал",
+    "services.detail.hair.lead":
+      "Наши мастера совмещают классические техники с актуальными трендами. На консультации мы учитываем форму лица, тип и состояние волос, а также образ жизни, чтобы стрижка была удобной каждый день.",
+    "services.detail.hair.bullet1":
+      "Женские, мужские и детские стрижки, укладки и полное обновление образа.",
+    "services.detail.hair.bullet2":
+      "Окрашивание, мелирование, балаяж и коррекция цвета с профессиональными средствами.",
+    "services.detail.hair.bullet3":
+      "Восстанавливающие и ухаживающие процедуры, рекомендации по домашнему уходу.",
+    "services.detail.hair.cta": "Открыть прайс-лист на парикмахерские услуги",
+
+    "services.detail.beauty.eyebrow": "Косметология",
+    "services.detail.beauty.title":
+      "Косметологические процедуры для здоровой и сияющей кожи",
+    "services.detail.beauty.lead":
+      "Каждая процедура начинается с диагностики кожи, чтобы подобрать протокол под ваш тип и задачи: увлажнение, омоложение или глубокое очищение.",
+    "services.detail.beauty.bullet1":
+      "Классические и аппаратные уходы, anti-age программы и курсы лечения проблемной кожи.",
+    "services.detail.beauty.bullet2":
+      "Оформление и окрашивание бровей и ресниц, современные техники лифтинга.",
+    "services.detail.beauty.bullet3":
+      "Дневной, вечерний и свадебный макияж с профессиональной косметикой.",
+    "services.detail.beauty.cta": "Открыть прайс-лист на косметологию",
+
+    "services.detail.handsfeet.eyebrow": "Уход за руками и ногами",
+    "services.detail.handsfeet.title":
+      "Идеально ухоженные руки и ноги – без компромиссов",
+    "services.detail.handsfeet.lead":
+      "Наши мастера маникюра и педикюра работают по строгим гигиеническим стандартам, обеспечивая и эстетику, и комфорт – от экспресс-ухода до полного педикюра.",
+    "services.detail.handsfeet.bullet1":
+      "Маникюр, гель-лак, наращивание и укрепление ногтей.",
+    "services.detail.handsfeet.bullet2":
+      "Эстетический и wellness-педикюр, уход за мозолями и пятками.",
+    "services.detail.handsfeet.bullet3":
+      "Строгие протоколы дезинфекции и тщательно подобранные уходовые средства.",
+    "services.detail.handsfeet.cta": "Открыть прайс-лист на маникюр и педикюр",
+
+    "services.detail.solarium.eyebrow": "Солярий",
+    "services.detail.solarium.title":
+      "Ровный загар с современными соляриями",
+    "services.detail.solarium.lead":
+      "Мы подбираем длительность сеанса под тип вашей кожи и даём рекомендации по безопасному загару, чтобы вы получили красивый, ровный цвет.",
+    "services.detail.solarium.bullet1":
+      "Современные горизонтальные и вертикальные аппараты, регулярно обслуживаемые.",
+    "services.detail.solarium.bullet2":
+      "Индивидуальные программы загара и советы по защите кожи.",
+    "services.detail.solarium.bullet3":
+      "Косметика для солярия для более стойкого и красивого оттенка.",
+    "services.detail.solarium.cta": "Открыть прайс-лист на солярий",
+
+    "services.detail.massage.eyebrow": "Массаж",
+    "services.detail.massage.title":
+      "Массаж для полноценного восстановления тела и души",
+    "services.detail.massage.lead":
+      "Наши массажисты подбирают техники в зависимости от мышечного напряжения, нагрузки и уровня стресса, чтобы обеспечить глубокое расслабление и восстановление.",
+    "services.detail.massage.bullet1":
+      "Расслабляющий, освежающий и спортивный массаж для снятия мышечных зажимов.",
+    "services.detail.massage.bullet2":
+      "Целевые программы для спины, шеи и плечевого пояса при сидячей работе.",
+    "services.detail.massage.bullet3":
+      "Ароматерапевтические и wellness-массажи для полного отключения от повседневных забот.",
+    "services.detail.massage.cta": "Открыть прайс-лист на массаж",
+
+    "services.detail.fitness.eyebrow": "Fitness & wellness",
+    "services.detail.fitness.title":
+      "Дополнительные wellness- и body-процедуры для устойчивого результата",
+    "services.detail.fitness.lead":
+      "Красота и самочувствие неразделимы: наши программы для тела и wellness-услуги поддерживают коррекцию фигуры, восстановление и уровень энергии.",
+    "services.detail.fitness.bullet1":
+      "Корректирующие и подтягивающие процедуры, дополняющие изменения образа жизни.",
+    "services.detail.fitness.bullet2":
+      "Wellness-программы для релаксации и снятия стресса.",
+    "services.detail.fitness.bullet3":
+      "Индивидуальные рекомендации по домашнему уходу и ежедневным привычкам после процедур.",
+    "services.detail.fitness.cta": "Подробнее об услугах и ценах",
+
     "salons.list.eyebrow": "Наши салоны",
     "salons.list.titlePrefix": "Мы ждём тебя уже в",
     "salons.list.titleSuffix": "локациях – даже без предварительной записи.",

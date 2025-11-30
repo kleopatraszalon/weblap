@@ -81,31 +81,43 @@ export const SalonsPage: React.FC = () => {
 
   return (
     <main>
-      <section className="section section--salons-page">
-        <div className="salons-block">
-          {/* FEJLÉC SZÖVEG */}
-          <header className="salons-block__header">
-            <p className="section-eyebrow">{t("salons.list.eyebrow")}</p>
-            <h1>
-              {t("salons.list.titlePrefix")}{" "}
-              {salonCount > 0 ? <strong>{salonCount}</strong> : null}{" "}
+      {/* HERO – szalonlista, arany + magenta felirat a képen */}
+      <section className="page-hero page-hero--salons">
+        <div className="page-hero__image-wrap">
+          <img
+            src="/images/szalonok.jpg"
+            alt={t("salons.list.heroAlt")}
+            className="page-hero__image"
+          />
+          <div className="page-hero__image-overlay" />
+        </div>
+
+        <div className="container page-hero__content page-hero__content--center">
+          <p className="section-eyebrow section-eyebrow--magenta">
+            {t("salons.list.eyebrow")}
+          </p>
+          <h1 className="hero-title">
+            <span className="hero-part hero-part-default">
+              {t("salons.list.titlePrefix")}
+            </span>{" "}
+            {salonCount > 0 && (
+              <span className="hero-part hero-part-magenta">
+                {salonCount}
+              </span>
+            )}{" "}
+            <span className="hero-part hero-part-gold">
               {t("salons.list.titleSuffix")}
-            </h1>
-            <p className="hero-lead hero-lead--narrow">
-              {t("salons.list.lead")}
-            </p>
-          </header>
+            </span>
+          </h1>
+          <p className="hero-lead hero-lead--narrow">
+            {t("salons.list.lead")}
+          </p>
+        </div>
+      </section>
 
-          {/* KÉP KÖZÉPEN – SZALONOK.JPG */}
-          <div className="salons-hero-image">
-            <img
-              src="/images/szalonok.jpg"
-              alt={t("salons.list.heroAlt")}
-              className="salons-hero-image__img"
-            />
-          </div>
-
-          {/* SZALON GOMBOK – KÖZÉPEN GRIDBEN */}
+      {/* SZALON-KÁRTYÁK */}
+      <section className="section section--salons">
+        <div className="container">
           <div className="salons-grid">
             {salons.map((s) => (
               <Link
@@ -131,7 +143,7 @@ export const SalonsPage: React.FC = () => {
             <p className="card-text">{t("salons.list.mapText")}</p>
             <div className="salon-map salon-map--global">
               <iframe
-                src="https://www.google.com/maps?q=Kleop%C3%A1tra%20Sz%C3%A9psz%C3%A9gszalon&output=embed"
+                src="https://www.google.com/maps?q=Kleop%C3%A1tra%20Sz%C3%A9ps%C3%A9gszalon&output=embed"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 aria-label={t("salons.list.mapTitle")}
@@ -148,7 +160,12 @@ export const SalonsPage: React.FC = () => {
             <div className="salons-facebook-frame">
               <iframe
                 src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkleovisegradi3%2F&tabs=timeline&width=500&height=400&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
-                style={{ border: "none", overflow: "hidden", width: "100%", height: "400px" }}
+                style={{
+                  border: "none",
+                  overflow: "hidden",
+                  width: "100%",
+                  height: "400px",
+                }}
                 scrolling="no"
                 frameBorder={0}
                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
@@ -173,3 +190,5 @@ export const SalonsPage: React.FC = () => {
     </main>
   );
 };
+
+export default SalonsPage;

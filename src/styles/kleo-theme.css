@@ -5479,3 +5479,48 @@ p {
 .section--salons-extra .card--facebook iframe {
   min-height: 360px;
 }
+
+
+
+/* HERO STRIPS – 1px rés az arany gombok között */
+.hero-strips-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px; /* 1px rés a gombok között */
+}
+
+
+/* Kiemelt szemöldök – magenta */
+.section-eyebrow--magenta {
+  color: var(--magenta);
+}
+
+
+/* Services hero is ugyanazt a layoutot használja, mint a salons hero */
+.page-hero--services {
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* Services & Salons hero – minden szöveg arany + magenta */
+.page-hero--services .hero-part-default,
+.page-hero--salons .hero-part-default {
+  color: var(--gold);
+}
+
+.page-hero--services .hero-title,
+.page-hero--salons .hero-title {
+  color: var(--gold);
+}
+
+.page-hero--services .hero-lead,
+.page-hero--salons .hero-lead {
+  color: var(--gold);
+}
+
+.page-hero--services .section-eyebrow,
+.page-hero--salons .section-eyebrow {
+  color: var(--magenta);
+}

@@ -7,7 +7,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <main>
-      {/* HERO – KEZDŐLAP (klasszikus 2 oszlopos layout) */}
+      {/* HERO – KEZDŐLAP (klasszikus .hero layout) */}
       <section className="hero">
         <div className="container">
           <div className="hero-grid">
@@ -27,26 +27,24 @@ export const HomePage: React.FC = () => {
                 </span>
               </h1>
 
-              {/* A kép melletti szöveg: teljesen NAGYBETŰS */}
-              <p className="hero-lead">
-                {t("home.hero.lead").toUpperCase()}
-              </p>
+              {/* A kép melletti szöveg teljesen NAGYBETŰS */}
+              <p className="hero-lead">{t("home.hero.lead").toUpperCase()}</p>
 
-              {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK SZEKCIÓKRA UGRÁS */}
+              {/* PILL-ek – közvetlenül a services blokkokra gördülnek */}
               <div className="hero-pills">
-                <NavLink to="/prices#category-1" className="hero-pill">
+                <NavLink to="/services#hair" className="hero-pill">
                   {t("home.hero.pill.hair")}
                 </NavLink>
-                <NavLink to="/prices#category-2" className="hero-pill">
+                <NavLink to="/services#beauty" className="hero-pill">
                   {t("home.hero.pill.beauty")}
                 </NavLink>
-                <NavLink to="/prices#category-3" className="hero-pill">
+                <NavLink to="/services#handsfeet" className="hero-pill">
                   {t("home.hero.pill.handsFeet")}
                 </NavLink>
-                <NavLink to="/prices#category-5" className="hero-pill">
+                <NavLink to="/services#solarium" className="hero-pill">
                   {t("home.hero.pill.solarium")}
                 </NavLink>
-                <NavLink to="/prices#category-6" className="hero-pill">
+                <NavLink to="/services#massage" className="hero-pill">
                   {t("home.hero.pill.massage")}
                 </NavLink>
               </div>
@@ -65,7 +63,7 @@ export const HomePage: React.FC = () => {
               </div>
             </div>
 
-            {/* JOBB OLDAL – KÉP + WEBSHOP / APP OVERLAY */}
+            {/* JOBB OLDAL – KÉP + WEBSHOP / APP CHIP */}
             <div className="hero-media">
               <div className="hero-media-frame">
                 <img
