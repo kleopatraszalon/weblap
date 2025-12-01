@@ -6,6 +6,14 @@ import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
 import { ServicesPage } from "./pages/ServicesPage";
+import { SzempillaPage } from "./pages/services/SzempillaPage";
+import { HajmosasPage } from "./pages/services/HajmosasPage";
+import { ArcmasszazsPage } from "./pages/services/ArcmasszazsPage";
+import { ActisztitasPage } from "./pages/services/ActisztitasPage";
+import { JoicoPage } from "./pages/services/JoicoPage";
+import { MelegollosPage } from "./pages/services/MelegollosPage";
+import { IplPage } from "./pages/services/IplPage";
+
 import { PriceListPage } from "./pages/PriceListPage";
 import { LoyaltyPage } from "./pages/LoyaltyPage";
 import { FranchisePage } from "./pages/FranchisePage";
@@ -95,6 +103,14 @@ const App: React.FC = () => {
           <Route path="/salons" element={<SalonsPage />} />
           <Route path="/salons/:slug" element={<SalonDetailPage />} />
           <Route path="/services" element={<ServicesPage />} />
+<Route path="/services/szempilla" element={<SzempillaPage />} />
+<Route path="/services/hajmosas" element={<HajmosasPage />} />
+<Route path="/services/arcmasszazs" element={<ArcmasszazsPage />} />
+<Route path="/services/actisztitas" element={<ActisztitasPage />} />
+<Route path="/services/joico" element={<JoicoPage />} />
+<Route path="/services/melegollos" element={<MelegollosPage />} />
+<Route path="/services/ipl" element={<IplPage />} />
+
           <Route path="/prices" element={<PriceListPage />} />
           <Route path="/loyalty" element={<LoyaltyPage />} />
           <Route path="/franchise" element={<FranchisePage />} />

@@ -33,15 +33,12 @@ export function Header() {
               <NavLink to="/salons" className={navLinkClass}>
                 {t("menu.salons")}
               </NavLink>
-
               <NavLink to="/services" className={navLinkClass}>
                 {t("menu.pricesServices")}
               </NavLink>
-
               <NavLink to="/webshop" className={navLinkClass}>
                 {t("menu.webshop")}
               </NavLink>
-
               <NavLink to="/contact" className={navLinkClass}>
                 {t("menu.contact")}
               </NavLink>
@@ -78,11 +75,10 @@ export function Header() {
           </NavLink>
 
           <div className="header-social">
-            <div className="header-social-label">
-              {t("header.followUs")}
-            </div>
+            <div className="header-social-label">{t("header.followUs")}</div>
 
             <div className="header-social-row">
+              {/* NYELVVÁLASZTÓ – 25×25 PX ZÁSZLÓKÉPEK */}
               <div
                 className="header-lang-switch"
                 aria-label={t("header.language.label")}
@@ -93,41 +89,108 @@ export function Header() {
                     "lang-btn" + (lang === "hu" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("hu")}
+                  aria-label="Magyar"
+                  title="Magyar"
                 >
-                  HU
+                  <img
+                    src="/images/hungary.png"
+                    alt="Magyar"
+                    className="lang-flag"
+                    width={25}
+                    height={25}
+                  />
                 </button>
+
                 <button
                   type="button"
                   className={
                     "lang-btn" + (lang === "en" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("en")}
+                  aria-label="English"
+                  title="English"
                 >
-                  EN
+                  <img
+                    src="/images/england.png"
+                    alt="English"
+                    className="lang-flag"
+                    width={25}
+                    height={25}
+                  />
                 </button>
+
                 <button
                   type="button"
                   className={
                     "lang-btn" + (lang === "ru" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("ru")}
+                  aria-label="Русский"
+                  title="Русский"
                 >
-                  RU
+                  <img
+                    src="/images/russia.png"
+                    alt="Русский"
+                    className="lang-flag"
+                    width={25}
+                    height={25}
+                  />
                 </button>
               </div>
 
+              {/* SOCIAL – MESSENGER TÖRÖLVE, YOUTUBE BE */}
               <div className="header-social-icons">
-                <a href="#" aria-label="Facebook">
-                  <img src="/images/facebook.png" alt="Facebook" />
+                <a
+                  href="https://www.tiktok.com/@kleoszalon"
+                  aria-label="TikTok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/tiktok.png"
+                    alt="TikTok"
+                    width={25}
+                    height={25}
+                  />
                 </a>
-                <a href="#" aria-label="Instagram">
-                  <img src="/images/insta.png" alt="Instagram" />
+                <a
+                  href="https://www.youtube.com/channel/UC9GNInNzSznaxZkmaNnNTxA"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/youtube.png"
+                    alt="YouTube"
+                    width={25}
+                    height={25}
+                  />
                 </a>
-                <a href="#" aria-label="TikTok">
-                  <img src="/images/tiktok.png" alt="TikTok" />
+                <a
+                  href="https://www.facebook.com/kleoszalon/"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/facebook.png"
+                    alt="Facebook"
+                    width={25}
+                    height={25}
+                  />
                 </a>
-                <a href="#" aria-label="Messenger">
-                  <img src="/images/messenger.png" alt="Messenger" />
+                <a
+                  href="https://www.instagram.com/kleoszalon/"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/insta.png"
+                    alt="Instagram"
+                    width={25}
+                    height={25}
+                  />
                 </a>
               </div>
             </div>

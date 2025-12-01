@@ -1,41 +1,122 @@
+// src/pages/ServicesPage.tsx
 import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n";
 
-type ServiceDef = {
+type ServiceCategoryConfig = {
   id: "hair" | "beauty" | "handsfeet" | "solarium" | "massage" | "fitness";
   priceAnchor: string;
+  titleKey: string;
+  textKey: string;
 };
 
-const SERVICES: ServiceDef[] = [
-  { id: "hair", priceAnchor: "/prices#category-1" },
-  { id: "beauty", priceAnchor: "/prices#category-2" },
-  { id: "handsfeet", priceAnchor: "/prices#category-3" },
-  { id: "solarium", priceAnchor: "/prices#category-5" },
-  { id: "massage", priceAnchor: "/prices#category-6" },
-  { id: "fitness", priceAnchor: "/prices" },
+const SERVICE_CATEGORIES: ServiceCategoryConfig[] = [
+  {
+    id: "hair",
+    priceAnchor: "/prices#category-1",
+    titleKey: "services.cards.hair.title",
+    textKey: "services.cards.hair.text",
+  },
+  {
+    id: "beauty",
+    priceAnchor: "/prices#category-2",
+    titleKey: "services.cards.beauty.title",
+    textKey: "services.cards.beauty.text",
+  },
+  {
+    id: "handsfeet",
+    priceAnchor: "/prices#category-3",
+    titleKey: "services.cards.handsFeet.title",
+    textKey: "services.cards.handsFeet.text",
+  },
+  {
+    id: "solarium",
+    priceAnchor: "/prices#category-5",
+    titleKey: "services.cards.solarium.title",
+    textKey: "services.cards.solarium.text",
+  },
+  {
+    id: "massage",
+    priceAnchor: "/prices#category-6",
+    titleKey: "services.cards.massage.title",
+    textKey: "services.cards.massage.text",
+  },
+  {
+    id: "fitness",
+    priceAnchor: "/prices",
+    titleKey: "services.cards.fitness.title",
+    textKey: "services.cards.fitness.text",
+  },
+];
+
+type HighlightServiceConfig = {
+  slug: string;
+  image: string;
+  titleKey: string;
+};
+
+const HIGHLIGHT_SERVICES: HighlightServiceConfig[] = [
+  {
+    slug: "szempilla",
+    image: "/images/szempilla.png",
+    titleKey: "services.highlight.lash.title",
+  },
+  {
+    slug: "hajmosas",
+    image: "/images/hajmosas.png",
+    titleKey: "services.highlight.hairwash.title",
+  },
+  {
+    slug: "arcmasszazs",
+    image: "/images/arcmasszazs.jpg",
+    titleKey: "services.highlight.facemassage.title",
+  },
+  {
+    slug: "actisztitas",
+    image: "/images/actisztitas.png",
+    titleKey: "services.highlight.actisztitas.title",
+  },
+  {
+    slug: "joico",
+    image: "/images/joico.png",
+    titleKey: "services.highlight.joico.title",
+  },
+  {
+    slug: "melegollos",
+    image: "/images/Melegollos.jpg",
+    titleKey: "services.highlight.hotcut.title",
+  },
+  {
+    slug: "ipl",
+    image: "/images/ipl.jpg",
+    titleKey: "services.highlight.ipl.title",
+  },
 ];
 
 export const ServicesPage: React.FC = () => {
   const { t } = useI18n();
   const location = useLocation();
 
-  // Hash alapú görgetés (#hair, #beauty, stb.)
+  // Ha hash-szel érkezünk (pl. /services#hair), gördüljünk a megfelelő blokkra
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     if (location.hash) {
-      const id = location.hash.replace("#", "");
-      const el = document.getElementById(id);
+      const targetId = location.hash.replace("#", "");
+      const el = document.getElementById(targetId);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        const rect = el.getBoundingClientRect();
+        const offset = window.scrollY + rect.top - 120;
+        window.scrollTo({ top: offset, behavior: "smooth" });
       }
     } else {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0 });
     }
-  }, [location]);
+  }, [location.hash]);
 
   return (
     <main>
-      {/* HERO – ugyanaz a logika, mint a Szalonjaink oldalon, arany + magenta */}
+      {/* FELSŐ NAGY HERO-KÉP – hasonló a régi szolgáltatás oldalhoz */}
       <section className="page-hero page-hero--services">
         <div className="page-hero__image-wrap">
           <img
@@ -54,9 +135,6 @@ export const ServicesPage: React.FC = () => {
             <span className="hero-part hero-part-default">
               {t("services.page.titlePrefix")}
             </span>{" "}
-            <span className="hero-part hero-part-magenta">
-              {t("services.page.titleHighlight")}
-            </span>{" "}
             <span className="hero-part hero-part-gold">
               {t("services.page.titleSuffix")}
             </span>
@@ -64,42 +142,73 @@ export const ServicesPage: React.FC = () => {
           <p className="hero-lead hero-lead--narrow">
             {t("services.page.lead")}
           </p>
+
+          <NavLink
+            to="/prices"
+            className="btn hero-cta-btn hero-cta-btn--gold hero-cta-btn--bold"
+          >
+            {t("services.page.viewPriceList")}
+          </NavLink>
         </div>
       </section>
 
-      {/* RÉSZLETES SZOLGÁLTATÁS BLOKKOK – külön ID-kkel, hogy a hompage-ről odaguruljanak */}
-      <section className="section section--services-page">
+      {/* A) SZOLGÁLTATÁSKATEGÓRIÁK – FODRÁSZAT, KOZMETIKA stb.
+          A gombok ugyanazt a stílust használják, mint a Szalonok oldalon. */}
+      <section className="section section--services-categories">
         <div className="container">
-          {SERVICES.map((service) => (
-            <article
-              key={service.id}
-              id={service.id}
-              className="service-detail-block"
-            >
-              <p className="section-eyebrow section-eyebrow--magenta">
-                {t(`services.detail.${service.id}.eyebrow`)}
-              </p>
-              <h2 className="service-detail-title">
-                {t(`services.detail.${service.id}.title`)}
-              </h2>
-              <p className="service-detail-lead">
-                {t(`services.detail.${service.id}.lead`)}
-              </p>
-
-              <ul className="bullet-list">
-                <li>{t(`services.detail.${service.id}.bullet1`)}</li>
-                <li>{t(`services.detail.${service.id}.bullet2`)}</li>
-                <li>{t(`services.detail.${service.id}.bullet3`)}</li>
-              </ul>
-
+          <div className="salons-grid services-category-grid">
+            {SERVICE_CATEGORIES.map((service) => (
               <NavLink
+                key={service.id}
+                id={service.id}
                 to={service.priceAnchor}
-                className="btn btn-outline service-detail-cta"
+                className="salon-pill salon-pill--service"
               >
-                {t(`services.detail.${service.id}.cta`)}
+                <span className="salon-pill__city">
+                  {t(service.titleKey)}
+                </span>
+                <span className="salon-pill__address">
+                  {t(service.textKey)}
+                </span>
               </NavLink>
-            </article>
-          ))}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* B) KIEMELT SZOLGÁLTATÁSOK – a kép közepén arany/magenta szöveggel */}
+      <section className="section section--services-highlights">
+        <div className="container">
+          <h2 className="section-title section-title--center">
+            {t("services.highlight.sectionTitle")}
+          </h2>
+          <p className="hero-lead hero-lead--narrow services-highlight-lead">
+            {t("services.highlight.sectionLead")}
+          </p>
+
+          <div className="services-highlights-grid">
+            {HIGHLIGHT_SERVICES.map((service) => (
+              <NavLink
+                key={service.slug}
+                to={`/services/${service.slug}`}
+                className="services-highlight-card"
+              >
+                <div
+                  className="services-highlight-card__image"
+                  style={{ backgroundImage: `url('${service.image}')` }}
+                >
+                  <div className="services-highlight-card__overlay">
+                    <span className="services-highlight-card__title">
+                      {t(service.titleKey)}
+                    </span>
+                    <span className="services-highlight-card__more">
+                      {t("services.highlight.more")}
+                    </span>
+                  </div>
+                </div>
+              </NavLink>
+            ))}
+          </div>
         </div>
       </section>
     </main>

@@ -1,22 +1,11 @@
 // src/pages/WebshopPage.tsx
-
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import "../styles/kleo-theme.css";
-import { addToCart } from "../utils/cart";
+import { apiFetch } from "../apiClient";  // <-- EZ LEGYEN
 
-/**
- * A TE adatbázisodhoz igazítva:
- *   public.products:
- *     - id uuid
- *     - name text
- *     - retail_price_gross numeric(12,2)
- *     - sale_price numeric(12,2)
- *     - image_url text
- *     - web_description text
- *     - is_retail boolean
- *     - web_is_visible boolean
- */
+
+
 type MainCategoryKey =
   | "GIFT_VOUCHERS"
   | "PASSES"
@@ -617,7 +606,28 @@ const handleClearCart = () => {
       setOrderLoading(false);
     }
   };
-
+useEffect(() => {
+  (async () => {
+    try {
+      const data = await apiFetch("/public/webshop/products");
+      setProducts(data);
+    } catch (err) {
+      console.error("Webshop termékek betöltési hiba:", err);
+    }
+  })();
+}, []);
+/**
+ * A TE adatbázisodhoz igazítva:
+ *   public.products:
+ *     - id uuid
+ *     - name text
+ *     - retail_price_gross numeric(12,2)
+ *     - sale_price numeric(12,2)
+ *     - image_url text
+ *     - web_description text
+ *     - is_retail boolean
+ *     - web_is_visible boolean
+ */
   // =============== MEGJELENÍTÉS ===============
 
   return (

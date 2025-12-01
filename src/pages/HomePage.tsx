@@ -72,6 +72,13 @@ export const HomePage: React.FC = () => {
                   className="hero-media-img"
                 />
 
+                {/* +3 mozgó fekete kör */}
+                <div className="hero-media-bubbles">
+                  <span className="hero-media-bubble hero-media-bubble--1" />
+                  <span className="hero-media-bubble hero-media-bubble--2" />
+                  <span className="hero-media-bubble hero-media-bubble--3" />
+                </div>
+
                 <div className="hero-media-overlay">
                   <NavLink to="/webshop" className="hero-media-webshop">
                     {t("home.hero.media.webshop")}
@@ -195,9 +202,10 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* HÍRLEVÉL / HŰSÉG BLOKK */}
+      {/* HÍRLEVÉL / HŰSÉG BLOKK – KÉPPEL */}
       <section className="section section--newsletter">
         <div className="container grid-two">
+          {/* Bal oldal: szöveg + gomb egymás alatt */}
           <div>
             <p className="section-kicker">{t("home.newsletter.kicker")}</p>
             <h2>
@@ -206,12 +214,20 @@ export const HomePage: React.FC = () => {
               {t("home.newsletter.titleSuffix")}
             </h2>
             <p className="section-lead">{t("home.newsletter.lead")}</p>
+
+            <div className="newsletter-actions">
+              <NavLink to="/loyalty" className="btn btn-primary">
+                {t("home.newsletter.cta")}
+              </NavLink>
+            </div>
           </div>
 
-          <div className="newsletter-actions">
-            <NavLink to="/loyalty" className="btn btn-primary">
-              {t("home.newsletter.cta")}
-            </NavLink>
+          {/* Jobb oldal: huseg.png kép */}
+          <div className="newsletter-image">
+            <img
+              src="/images/huseg.png"
+              alt="Kleo Card hűségprogram"
+            />
           </div>
         </div>
       </section>

@@ -153,7 +153,21 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "Gyöngyösi fitnesz- és wellness szolgáltatásainkkal a teljes testi-lelki megújulást célozzuk.",
     "services.cards.fitness.cta": "Fitness és wellness részletek",
-    "services.page.heroAlt":
+    "services.page.viewPriceList": "MEGNÉZEM AZ ÁRLISTÁT",
+
+"services.highlight.sectionTitle": "Kiemelt szolgáltatásaink",
+"services.highlight.sectionLead":
+  "Néhány ikonikus kezelésünk a Kleopátra Szépségszalonok kínálatából – kattints a részletekért.",
+"services.highlight.lash.title": "Műszempilla építés",
+"services.highlight.hairwash.title": "Hajmosás után hideg víz",
+"services.highlight.facemassage.title": "Arcmasszázs",
+"services.highlight.actisztitas.title": "Arctisztító kezelés",
+"services.highlight.joico.title": "Joico hajkezelés",
+"services.highlight.hotcut.title": "Melegollós hajvágás",
+"services.highlight.ipl.title": "IPL végleges szőrtelenítés",
+"services.highlight.more": "Bővebben",
+
+"services.page.heroAlt":
       "Kleopátra Szépségszalon – fodrászat, kozmetika és wellness egy helyen",
     "services.page.eyebrow": "Szolgáltatások",
     "services.page.titlePrefix": "Szolgáltatásaink",
@@ -419,7 +433,21 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "With our fitness and wellness services in Gyöngyös we aim for complete physical and mental renewal.",
     "services.cards.fitness.cta": "Fitness & wellness details",
-        "services.page.heroAlt":
+        "services.page.viewPriceList": "View full price list",
+
+"services.highlight.sectionTitle": "Signature services",
+"services.highlight.sectionLead":
+  "A selection of iconic Kleopatra Salon treatments – click to see the details for each service.",
+"services.highlight.lash.title": "Eyelash extensions",
+"services.highlight.hairwash.title": "Cold water after hair wash",
+"services.highlight.facemassage.title": "Facial massage",
+"services.highlight.actisztitas.title": "Deep cleansing facial",
+"services.highlight.joico.title": "Joico hair treatment",
+"services.highlight.hotcut.title": "Hot scissors haircut",
+"services.highlight.ipl.title": "IPL permanent hair removal",
+"services.highlight.more": "Read more",
+
+"services.page.heroAlt":
       "Kleopatra Beauty Salons – hair, beauty and wellness in one place",
     "services.page.eyebrow": "Services",
     "services.page.titlePrefix": "Our services",
@@ -685,7 +713,21 @@ const translations: Record<Language, TranslationDict> = {
     "services.cards.fitness.text":
       "В нашем фитнес- и велнес-центре в Дьендьёше мы стремимся к полной физической и ментальной перезагрузке.",
     "services.cards.fitness.cta": "Подробнее о фитнесе и wellness",
-        "services.page.heroAlt":
+        "services.page.viewPriceList": "Посмотреть прайс-лист",
+
+"services.highlight.sectionTitle": "Наши ключевые услуги",
+"services.highlight.sectionLead":
+  "Некоторые из самых популярных процедур Kleopatra Cалон – нажмите, чтобы узнать подробности.",
+"services.highlight.lash.title": "Наращивание ресниц",
+"services.highlight.hairwash.title": "Холодная вода после мытья волос",
+"services.highlight.facemassage.title": "Массаж лица",
+"services.highlight.actisztitas.title": "Очищающая процедура для лица",
+"services.highlight.joico.title": "Уход для волос Joico",
+"services.highlight.hotcut.title": "Стрижка горячими ножницами",
+"services.highlight.ipl.title": "IPL постоянная эпиляция",
+"services.highlight.more": "Подробнее",
+
+"services.page.heroAlt":
       "Салоны Kleopátra – парикмахерские, косметология и wellness в одном месте",
     "services.page.eyebrow": "Услуги",
     "services.page.titlePrefix": "Наши услуги",
