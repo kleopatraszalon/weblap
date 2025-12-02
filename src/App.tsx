@@ -13,6 +13,7 @@ import { ActisztitasPage } from "./pages/services/ActisztitasPage";
 import { JoicoPage } from "./pages/services/JoicoPage";
 import { MelegollosPage } from "./pages/services/MelegollosPage";
 import { IplPage } from "./pages/services/IplPage";
+import { BrowserRouter } from "react-router-dom"
 
 import { PriceListPage } from "./pages/PriceListPage";
 import { LoyaltyPage } from "./pages/LoyaltyPage";
