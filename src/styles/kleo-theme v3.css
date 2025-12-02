@@ -4116,8 +4116,10 @@ p {
     text-align: center;
   }
 
-  .hamburger {
-    display: none;
+  .  .hamburger {
+    grid-column: 3 / 4;
+    grid-row: 1;
+    justify-self: end;
   }
 
   .header-cta {
