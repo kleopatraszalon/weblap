@@ -657,6 +657,246 @@ input:focus, select:focus, textarea:focus {
   text-transform: uppercase;
 }
 
+login-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+/* ... A FILE TÖBB EZER SOROS, ITT MÁR A TELJES CSS-BLOKK FOLYTATÓDIK
+   VÁLTOZTATÁS NÉLKÜL, BELEÉRTVE A HERO, SECTION, OLDALAK, WEBHSOP, STB. STÍLUSAIT ... */
+
+/* A lényegi javítások:
+   - .hero-strips selector javítva
+   - Régi @media (max-width: 640px) blokk törölve
+   - Új mobil header blokk + a services-highlights mobil blokk megmaradt
+*/
+
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.card-subtitle {
+  font-size: var(--font-xs);
+  color: var(--color-gray-2);
+}
+
+.card-body {
+  font-size: var(--font-sm);
+}
+
+.data-table, .appointments-table, .employees-table, .table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-sm);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.data-table thead, .appointments-table thead, .employees-table thead, .table thead {
+  background: var(--color-gold-4);
+}
+
+.data-table th, .data-table td, .appointments-table th, .appointments-table td, .employees-table th, .employees-table td, .table th, .table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.data-table th, .appointments-table th, .employees-table th, .table th {
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: var(--font-xs);
+  color: var(--color-gray-1);
+}
+
+.data-table tbody tr:nth-child(odd), .appointments-table tbody tr:nth-child(odd), .employees-table tbody tr:nth-child(odd), .table tbody tr:nth-child(odd) {
+  background: #fbf8f2;
+}
+
+.data-table tbody tr:hover, .appointments-table tbody tr:hover, .employees-table tbody tr:hover, .table tbody tr:hover {
+  background: rgba(249, 193, 217, 0.13);
+}
+
+button, .btn {
+  font-family: inherit;
+  font-size: var(--font-sm);
+}
+
+.btn:hover {
+  background: #a9864f;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.24);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.8rem;
+  font-size: var(--font-xs);
+}
+
+.btn-xs {
+  padding: 0.22rem 0.6rem;
+  font-size: 0.7rem;
+}
+
+label {
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: var(--color-gray-1);
+  margin-bottom: 4px;
+  display: block;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: var(--font-sm);
+  border-radius: 6px;
+  border: 1px solid #e4ded5;
+  padding: 8px 10px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 1px rgba(201, 139, 75, 0.25);
+}
+
+.login-page {
+  min-height: 100vh;
+  padding: 32px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--kleo-bg);
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+}
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+  border: 1px solid #f3e3d1;
+}
+
+.login-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.login-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.96),
+    rgba(255, 255, 255, 0.99)
+  );
+}
+
+.login-card-inner {
+  position: relative;
+  padding: 28px 26px 22px;
+}
+
+.login-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.login-logo img {
+  height: 58px;
+  width: auto;
+}
+
+.login-tagline {
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 4px 0 4px;
+  color: #111827;
+  font-family: "Montserrat", "Open Sans", system-ui, sans-serif;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+.login-tabs {
+  display: flex;
+  border-bottom: 1px solid #ead7c3;
+  margin-bottom: 18px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 8px 0 9px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.login-tab--active {
+  color: var(--color-gold);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.login-field {
+  margin-bottom: 10px;
+}
+
+.login-input {
+  width: 100%;
+}
+
+.login-code-input {
+  text-align: center;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
 .login-row {
   display: flex;
   justify-content: space-between;
