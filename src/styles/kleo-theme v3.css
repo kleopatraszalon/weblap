@@ -3821,67 +3821,67 @@ p {
 }
 
 
-/* Original at-rule blocks (media, keyframes, imports, etc.) */
 @media (max-width: 640px) {
-  /* HEADER GRID – logó + hamburger felül, alatta külön sorban a nyelv + social */
+  /* HEADER: 1. sor logó + hamburger, 2. sor nyelv + social */
   .site-header .container.header-inner {
-    grid-template-columns: auto 1fr auto;  /* logó | üres / helykitöltő | hamburger */
-    grid-template-rows: auto auto;         /* 1. sor: logó + hamburger, 2. sor: nyelv + social */
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* logó | üres | hamburger */
+    grid-template-rows: auto auto;        /* 1. sor: logó+hamburger, 2. sor: nyelv+social */
     align-items: center;
     column-gap: 0.5rem;
     row-gap: 0.35rem;
+    min-height: auto;
     padding-block: 0.4rem;
   }
 
-  /* általános hézag mobilon (marad, csak kiegészítjük) */
-  .header-inner {
-    gap: 0.5rem;
-  }
-
-  /* Logó az első sor bal oldalán */
+  /* LOGÓ – bal felső sarok */
   .header-logo-link {
     grid-column: 1 / 2;
     grid-row: 1;
   }
 
-  /* Hamburger az első sor jobb oldalán */
+  /* HAMBURGER – jobb felső sarok, mobilon LÁTSZÓDJON */
   .hamburger {
     grid-column: 3 / 4;
     grid-row: 1;
+    display: inline-flex;
     justify-self: end;
   }
 
-  /* Nyelvválasztó + social egy sorban a logó alatt */
+  /* Főmenü (Szalonjaink, Szolgáltatások, stb.) mobilon ne legyen kint külön sorban */
+  .main-nav {
+    display: none;
+  }
+
+  /* NYELVVÁLASZTÓ + SOCIAL egy sorban, a logó alatt */
   .header-cta-block {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1;   /* teljes szélesség */
     grid-row: 2;
-    display: grid;                          /* flex helyett grid mobilon */
-    grid-template-columns: 1fr auto;        /* bal: nyelvválasztó, jobb: social */
-    grid-template-rows: auto auto;          /* 1. sor: CTA gomb, 2. sor: nyelv + social */
-    gap: 0.35rem 0.75rem;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-items: stretch;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
-  /* Foglalás gomb – a két sor fölött, középen (teljes szélesség) */
+  /* A nagy „IDŐPONTFOGLALÁS” gombot mobilon elrejtjük a headerből,
+     így nem tolja szét a sort (ha kell, később külön mobil gombot is adhatunk) */
   .header-cta-btn {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    justify-self: center;
+    display: none;
   }
 
-  /* Nyelvválasztó – 2. sor, bal oldal */
+  /* Nyelvválasztó – bal oldal, egy sorban */
   .header-lang-switch {
-    grid-column: 1 / 2;
-    grid-row: 2;
-    justify-self: start;
+    order: 0;
+    display: flex;
     flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.25rem;
   }
 
-  /* Social blokk – 2. sor, jobb oldal, vízszintesen rendezve */
+  /* Social blokk – jobb oldal, ikonok vízszintesen */
   .header-social {
-    grid-column: 2 / 3;
-    grid-row: 2;
+    display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.35rem;
@@ -3899,12 +3899,30 @@ p {
     gap: 0.35rem;
   }
 
-  /* Mobilon a középső “asztali” főmenüt elrejtjük (hamburgerrel nyitsz menüt) */
-  .main-nav {
-    display: none;
+  .header-social-icons img {
+    width: 24px;
+    height: auto;
   }
 
-  /* A többi, ami eddig is volt mobilra – marad változatlanul */
+  /* A többi mobil beállítás maradhat, hogy a tartalom se essen szét */
+  .hero {
+    padding-top: 2.2rem;
+  }
+
+  .salon-card {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .grid-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section {
+    padding: 2.5rem 0;
+  }
+}
+
   .hero {
     padding-top: 2.4rem;
   }
