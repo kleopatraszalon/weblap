@@ -176,41 +176,43 @@ export const ServicesPage: React.FC = () => {
         </div>
       </section>
 
-      {/* B) KIEMELT SZOLGÁLTATÁSOK – a kép közepén arany/magenta szöveggel */}
-      <section className="section section--services-highlights">
-        <div className="container">
-          <h2 className="section-title section-title--center">
-            {t("services.highlight.sectionTitle")}
-          </h2>
-          <p className="hero-lead hero-lead--narrow services-highlight-lead">
-            {t("services.highlight.sectionLead")}
-          </p>
+      {/* B) KIEMELT SZOLGÁLTATÁSOK – kártyák képpel, címmel, Bővebben gombbal */}
+<section className="section section--services-highlights">
+  <div className="container">
+    <h2 className="section-title section-title--center">
+      {t("services.highlight.sectionTitle")}
+    </h2>
+    <p className="hero-lead hero-lead--narrow services-highlight-lead">
+      {t("services.highlight.sectionLead")}
+    </p>
 
-          <div className="services-highlights-grid">
-            {HIGHLIGHT_SERVICES.map((service) => (
-              <NavLink
-                key={service.slug}
-                to={`/services/${service.slug}`}
-                className="services-highlight-card"
-              >
-                <div
-                  className="services-highlight-card__image"
-                  style={{ backgroundImage: `url('${service.image}')` }}
-                >
-                  <div className="services-highlight-card__overlay">
-                    <span className="services-highlight-card__title">
-                      {t(service.titleKey)}
-                    </span>
-                    <span className="services-highlight-card__more">
-                      {t("services.highlight.more")}
-                    </span>
-                  </div>
-                </div>
-              </NavLink>
-            ))}
-          </div>
+   <div className="services-highlights-grid">
+  {HIGHLIGHT_SERVICES.map((service) => (
+    <NavLink
+      key={service.slug}
+      to={`/services/${service.slug}`}
+      className="services-highlight-link"
+    >
+      <div className="services-highlight-card">
+        <img
+          src={service.image}
+          alt={t(service.titleKey)}
+          className="services-highlight-card__image"
+        />
+        <div className="services-highlight-card__overlay">
+          <span className="services-highlight-card__title">
+            {t(service.titleKey)}
+          </span>
+          <span className="btn btn--magenta-shine services-highlight-card__more">
+            {t("services.highlight.more")}
+          </span>
         </div>
-      </section>
+      </div>
+    </NavLink>
+  ))}
+</div>
+  </div>
+</section>
     </main>
   );
 };

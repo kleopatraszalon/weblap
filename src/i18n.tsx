@@ -4,12 +4,16 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from "react";
 import translationsJson from "./translations.json";
 
 export type Language = "hu" | "en" | "ru";
 
 type TranslationDict = Record<string, string>;
+type AllTranslations = Record<Language, TranslationDict>;
+
+const translations = translationsJson as AllTranslations;
 
 interface I18nContextValue {
   lang: Language;
@@ -17,26 +21,22 @@ interface I18nContextValue {
   t: (key: string) => string;
 }
 
-const STORAGE_KEY = "kleo_lang";
-
-const translations: Record<Language, TranslationDict> =
-  translationsJson as Record<Language, TranslationDict>;
-
-
 const I18nContext = createContext<I18nContextValue>({
   lang: "hu",
   setLang: () => undefined,
   t: (key: string) => key,
 });
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
+const STORAGE_KEY = "kleo-lang";
+
+export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [lang, setLangState] = useState<Language>("hu");
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY) as Language | null;
+      const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "hu" || stored === "en" || stored === "ru") {
         setLangState(stored);
       }
@@ -45,18 +45,25 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  const setLang = (value: Language) => {
-    setLangState(value);
+  const setLang = useCallback((next: Language) => {
+    setLangState(next);
     try {
-      window.localStorage.setItem(STORAGE_KEY, value);
+      window.localStorage.setItem(STORAGE_KEY, next);
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const t = useMemo(
-    () => (key: string) =>
-      translations[lang]?.[key] ?? translations["hu"]?.[key] ?? key,
+  const t = useCallback(
+    (key: string): string => {
+      const dict = translations[lang] || translations.hu || {};
+      if (key in dict) return dict[key];
+
+      const huDict = translations.hu || {};
+      if (key in huDict) return huDict[key];
+
+      return key;
+    },
     [lang]
   );
 
@@ -66,7 +73,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
       setLang,
       t,
     }),
-    [lang, t]
+    [lang, setLang, t]
   );
 
   return (
@@ -75,3 +82,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useI18n = () => useContext(I18nContext);
+
+// Régi név kompatibilitás miatt:
+export const LanguageProvider = I18nProvider;

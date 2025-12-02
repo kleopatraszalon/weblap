@@ -1,5 +1,6 @@
 // src/pages/WebshopProductDetailPage.tsx
 import React, { useEffect, useState } from "react";
+import { useI18n } from "../i18n";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 type MainCategoryKey =
@@ -72,6 +73,7 @@ function buildImageUrl(imageUrl?: string | null): string | undefined {
 }
 
 export const WebshopProductDetailPage: React.FC = () => {
+  const { t, lang } = useI18n();
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,7 +113,7 @@ export const WebshopProductDetailPage: React.FC = () => {
         setProduct(data);
       } catch (err) {
         console.error(err);
-        setProductError("Nem sikerült betölteni a termék adatait.");
+        setProductError(t("webshop.detail.productError"));
       } finally {
         setProductLoading(false);
       }
@@ -146,14 +148,14 @@ export const WebshopProductDetailPage: React.FC = () => {
         setReviews(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
-        setReviewsError("Nem sikerült betölteni a véleményeket.");
+        setReviewsError(t("webshop.detail.reviewsError"));
       } finally {
         setReviewsLoading(false);
       }
     };
 
     loadReviews();
-  }, [productId]);
+  }, [productId, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -273,13 +275,13 @@ export const WebshopProductDetailPage: React.FC = () => {
                 <img src={imageSrc} alt={product.name} />
               ) : (
                 <div className="webshop-product-detail__image--placeholder">
-                  Nincs kép ehhez a termékhez.
+                  {t("webshop.detail.noImage")}
                 </div>
               )}
             </div>
 
             <div className="webshop-product-detail__info">
-              <p className="section-eyebrow">Webshop termék</p>
+              <p className="section-eyebrow">{t("webshop.detail.breadcrumb")}</p>
               <h1 className="hero-title hero-title--tight">
                 {product.name}
               </h1>
@@ -317,7 +319,7 @@ export const WebshopProductDetailPage: React.FC = () => {
                   </span>
                   <span className="webshop-product-detail__rating-text">
                     {averageRating.toFixed(1)} / 5 · {reviews.length}{" "}
-                    vélemény
+                    {t("webshop.detail.reviewsCountLabel")}
                   </span>
                 </div>
               )}
@@ -331,9 +333,9 @@ export const WebshopProductDetailPage: React.FC = () => {
           </div>
 
           <div className="webshop-product-detail__reviews">
-            <h2>Vélemények</h2>
+            <h2>{t("webshop.detail.reviewsTitle")}</h2>
 
-            {reviewsLoading && <p>Vélemények betöltése…</p>}
+            {reviewsLoading && <p>{t("webshop.detail.reviewsLoading")}</p>}
             {reviewsError && (
               <p className="webshop-status webshop-status--error">
                 {reviewsError}
@@ -341,9 +343,7 @@ export const WebshopProductDetailPage: React.FC = () => {
             )}
 
             {!reviewsLoading && reviews.length === 0 && !reviewsError && (
-              <p>
-                Még nem érkezett vélemény ehhez a termékhez. Légy te az első!
-              </p>
+              <p>{t("webshop.detail.reviewsEmpty")}</p>
             )}
 
             {reviews.length > 0 && (
@@ -368,12 +368,12 @@ export const WebshopProductDetailPage: React.FC = () => {
                         })}
                       </div>
                       <span className="webshop-review__author">
-                        {review.author_name || "Vendég"}
+                        {review.author_name || t("webshop.detail.guestName")}
                       </span>
                       <span className="webshop-review__date">
                         {new Date(
                           review.created_at
-                        ).toLocaleDateString("hu-HU")}
+                        ).toLocaleDateString(lang === "hu" ? "hu-HU" : lang === "en" ? "en-GB" : "ru-RU")}
                       </span>
                     </div>
                     <p className="webshop-review__text">
@@ -385,7 +385,7 @@ export const WebshopProductDetailPage: React.FC = () => {
             )}
 
             <div className="webshop-review-form">
-              <h3>Írj véleményt a termékről</h3>
+              <h3>{t("webshop.detail.reviewFormTitle")}</h3>
 
               {submitError && (
                 <p className="webshop-status webshop-status--error">
@@ -395,18 +395,18 @@ export const WebshopProductDetailPage: React.FC = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
-                  <label htmlFor="review-author">Név (nem kötelező)</label>
+                  <label htmlFor="review-author">{t("webshop.detail.nameLabel")}</label>
                   <input
                     id="review-author"
                     type="text"
                     value={authorName}
                     onChange={(e) => setAuthorName(e.target.value)}
-                    placeholder="Add meg a neved (opcionális)"
+                    placeholder={t("webshop.detail.namePlaceholder")}
                   />
                 </div>
 
                 <div className="form-row">
-                  <span>Értékelés</span>
+                  <span>{t("webshop.detail.ratingLabel")}</span>
                   <div className="rating-input">
                     {Array.from({ length: 5 }, (_, i) => {
                       const star = i + 1;
@@ -431,14 +431,14 @@ export const WebshopProductDetailPage: React.FC = () => {
                 </div>
 
                 <div className="form-row">
-                  <label htmlFor="review-text">Vélemény</label>
+                  <label htmlFor="review-text">{t("webshop.detail.textLabel")}</label>
                   <textarea
                     id="review-text"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     rows={4}
                     required
-                    placeholder="Írd le, mit tapasztaltál a termékkel kapcsolatban…"
+                    placeholder={t("webshop.detail.textPlaceholder")}
                   />
                 </div>
 
@@ -447,7 +447,7 @@ export const WebshopProductDetailPage: React.FC = () => {
                   className="btn btn-primary btn-primary--magenta"
                   disabled={submitLoading}
                 >
-                  {submitLoading ? "Küldés…" : "Vélemény elküldése"}
+                  {submitLoading ? t("webshop.detail.submitLoading") : t("webshop.detail.submitLabel")}
                 </button>
               </form>
             </div>

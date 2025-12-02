@@ -28,7 +28,7 @@ import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
-
+import { Footer } from "./components/Footer"; // ⬅️ ÚJ
 /**
  * Lebegő kosár gomb a jobb felső sarokban.
  * - Mindig látszik, bármelyik oldalon vagyunk
@@ -135,7 +135,8 @@ const App: React.FC = () => {
 
           {/* minden más URL menjen vissza a Home-ra */}
           <Route path="*" element={<HomePage />} />
-        </Routes>
+           </Routes>
+           <Footer />        
       </MemoryRouter>
     </LanguageProvider>
   );
