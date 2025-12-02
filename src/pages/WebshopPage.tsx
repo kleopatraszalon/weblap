@@ -1,9 +1,8 @@
 // src/pages/WebshopPage.tsx
 import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import "../styles/kleo-theme.css";
+import "../styles/kleo-theme v3.css";
 import { apiFetch } from "../apiClient";  // <-- EZ LEGYEN
-import { useI18n } from "../i18n";
 
 
 
@@ -45,7 +44,12 @@ type Product = {
   name: string;
   retail_price_gross: number | string | null;
   sale_price?: number | string | null;
-  image_url?: string | null;
+
+  // --- Kép mezők: több lehetséges backend elnevezéshez ---
+  image_url?: string | null;      // ha így jön a backendből
+  image_path?: string | null;     // ha pl. relatív útvonal
+  thumbnail_url?: string | null;  // ha külön bélyegkép mező van
+
   web_description?: string | null;
   is_retail?: boolean | null;
   web_is_visible?: boolean | null;
@@ -256,8 +260,6 @@ export const WebshopPage: React.FC = () => {
   const [orderMessage, setOrderMessage] = useState<string | null>(null);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  const { t } = useI18n();
-
   const filteredProducts = useMemo(
     () =>
       products.filter((p) => {
@@ -335,7 +337,9 @@ export const WebshopPage: React.FC = () => {
         setProducts(list);
       } catch (err: any) {
         console.error(err);
-        setProductsError(t("webshop.list.error"));
+        setProductsError(
+          "Nem sikerült betölteni a webshop termékeket. Kérlek, próbáld meg később."
+        );
       } finally {
         setProductsLoading(false);
       }
@@ -410,12 +414,12 @@ const handleClearCart = () => {
 
     const code = couponInput.trim().toUpperCase();
     if (!code) {
-      setCouponError(t("webshop.coupon.error.empty"));
+      setCouponError("Írj be egy kuponkódot.");
       return;
     }
 
     if (cart.length === 0) {
-      setCouponError(t("webshop.coupon.error.noCart"));
+      setCouponError("Először tegyél termékeket a kosárba, utána használd a kupont.");
       return;
     }
 
@@ -443,7 +447,9 @@ const handleClearCart = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.coupon.error.general"));
+        throw new Error(
+          text || "Nem sikerült ellenőrizni a kuponkódot. Próbáld meg újra."
+        );
       }
 
       const data: CouponResponse = await res.json();
@@ -452,7 +458,8 @@ const handleClearCart = () => {
         setAppliedCouponCode(null);
         setCouponDiscount(0);
         setCouponError(
-          data.message || t("webshop.coupon.error.invalid")
+          data.message ||
+            "Érvénytelen kuponkód vagy nem alkalmazható erre a rendelésre."
         );
         return;
       }
@@ -460,7 +467,7 @@ const handleClearCart = () => {
       setAppliedCouponCode(data.code || code);
       setCouponDiscount(data.discount_gross);
       setCouponMessage(
-        data.message || t("webshop.coupon.success")
+        data.message || "A kupon sikeresen alkalmazva a rendelésedre."
       );
       setCouponError(null);
     } catch (err: any) {
@@ -485,7 +492,7 @@ const handleClearCart = () => {
 
     try {
       if (!regForm.fullName || !regForm.email || !regForm.password) {
-        throw new Error(t("webshop.registration.error.missingFields"));
+        throw new Error("Kérlek, tölts ki minden mezőt a regisztrációhoz.");
       }
 
       const res = await fetch(`${API_BASE}/public/webshop/register`, {
@@ -500,14 +507,18 @@ const handleClearCart = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.registration.error.general"));
+        throw new Error(
+          text || "Nem sikerült a regisztráció. Kérlek, próbáld meg újra."
+        );
       }
 
-      setRegMessage(t("webshop.registration.success"));
+      setRegMessage(
+        "Sikeres regisztráció! Mostantól Kleopátra vendégprofiloddal is vásárolhatsz."
+      );
       setRegForm({ fullName: "", email: "", password: "" });
     } catch (err: any) {
       console.error(err);
-      setRegError(err.message || t("webshop.registration.error.general"));
+      setRegError(err.message || "Ismeretlen hiba történt.");
     } finally {
       setRegLoading(false);
     }
@@ -521,13 +532,13 @@ const handleClearCart = () => {
     setOrderError(null);
 
     if (cart.length === 0) {
-      setOrderError(t("webshop.order.error.noCart"));
+      setOrderError("A rendeléshez először tegyél termékeket a kosárba.");
       return;
     }
 
     if (!checkoutForm.fullName || !checkoutForm.email || !checkoutForm.address) {
       setOrderError(
-        t("webshop.order.error.missingFields")
+        "Kérlek add meg a nevet, e-mail címet és a szállítási/számlázási címet."
       );
       return;
     }
@@ -572,7 +583,9 @@ const handleClearCart = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.order.error.general"));
+        throw new Error(
+          text || "Nem sikerült a rendelést leadni. Kérlek, próbáld meg újra."
+        );
       }
 
       const data = await res.json().catch(() => ({} as any));
@@ -582,7 +595,9 @@ const handleClearCart = () => {
         return;
       }
 
-      setOrderMessage(t("webshop.order.success"));
+      setOrderMessage(
+        "Köszönjük a rendelést! A visszaigazoló vendégszámlát e-mailben küldjük."
+      );
       setCart([]);
       setAppliedCouponCode(null);
       setCouponDiscount(0);
@@ -591,7 +606,7 @@ const handleClearCart = () => {
       setCouponInput("");
     } catch (err: any) {
       console.error(err);
-      setOrderError(err.message || t("webshop.order.error.unknown"));
+      setOrderError(err.message || "Ismeretlen hiba történt a rendelésnél.");
     } finally {
       setOrderLoading(false);
     }
@@ -627,37 +642,39 @@ useEffect(() => {
         <div className="webshop-hero__bg">
           <img
             src="/images/kleoshop.png"
-            alt={t("webshop.hero.imageAlt")}
+            alt="Kleoshop – bérletek, szépség- és ajándékutalványok"
           />
         </div>
 
         <div className="container webshop-hero__content">
           <div className="webshop-hero__bubbles">
             <div className="webshop-hero__bubble webshop-hero__bubble--top">
-              <img src="/images/ajandekutalvany.png" alt={t("webshop.hero.badge.vouchers")} />
+              <img alt="Ajándékutalványok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--middle">
-              <img src="/images/szepsegcsomagok.png" alt={t("webshop.hero.badge.packages")} />
+              <img alt="Szépségcsomagok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--bottom">
-              <img src="/images/berlet.png" alt={t("webshop.hero.badge.passes")} />
+              <img alt="Bérletek" />
             </div>
           </div>
 
           <div className="webshop-hero__text">
             <p className="section-eyebrow">
-              {t("webshop.hero.eyebrow")}
+              KLEOPÁTRA SZÉPSÉGSZALONOK · ONLINE WEBSHOP
             </p>
 
             <h1 className="hero-title hero-title--tight">
-              {t("webshop.hero.titleMain")}{" "}
+              Bérletek, szépségutalványok,{" "}
               <span className="hero-part hero-part-magenta">
-                {t("webshop.hero.titleHighlight")}
+                ajándékutalványok
               </span>
             </h1>
 
             <p className="hero-lead hero-lead--narrow">
-              {t("webshop.hero.lead")}
+              Kleopátra élményt adhatsz ajándékba vagy saját magadnak – online
+              vásárlással, bankkártyás vagy utánvétes fizetéssel, kupon
+              kedvezményekkel.
             </p>
 
             <div className="webshop-hero__buttons">
@@ -665,25 +682,29 @@ useEffect(() => {
                 className="btn btn-primary btn-primary--magenta btn--shine"
                 href="#webshop-lista"
               >
-                {t("webshop.hero.cta.products")}
+                Termékek megtekintése
               </a>
               <a
                 className="btn btn-secondary btn-secondary--ghost btn--shine"
                 href="#webshop-regisztracio"
               >
-                {t("webshop.hero.cta.profile")}
+                Vendégprofil / regisztráció
               </a>
             </div>
 
             <div className="webshop-invoice">
               <div className="webshop-invoice__image">
                 <img
-                  src="/images/vendegszamla_2.png"
-                  alt={t("webshop.hero.invoiceAlt")}
+                  src="/images/vendegszamla.png"
+                  alt="Vendégszámla minta"
                 />
               </div>
               <div className="webshop-invoice__text">
-                <p className="small">{t("webshop.hero.invoiceText")}</p>
+                <p className="small">
+                  Minden online vásárlás után azonnali visszaigazoló
+                  vendégszámlát küldünk e-mailben – így könnyen nyomon
+                  követheted a Kleopátra-élményeket.
+                </p>
               </div>
             </div>
           </div>
@@ -695,8 +716,8 @@ useEffect(() => {
         <div className="container webshop-layout">
           {/* BAL: TERMÉKEK */}
           <div className="webshop-main">
-            <p className="section-eyebrow">{t("webshop.list.eyebrow")}</p>
-            <h2>{t("webshop.list.title")}</h2>
+            <p className="section-eyebrow">Online vásárlás</p>
+            <h2>Válassz bérletet, szépség- vagy ajándékutalványt</h2>
             <p className="section-lead">
               A lenti termékek közvetlenül a Kleopátra Szépségszalonokból{" "}
               <strong>a lehető leggyorsabban</strong> érkeznek. Csak azok
@@ -704,7 +725,7 @@ useEffect(() => {
             </p>
 
             {productsLoading && (
-              <p className="webshop-status">{t("webshop.list.loading")}</p>
+              <p className="webshop-status">Termékek betöltése…</p>
             )}
             {productsError && (
               <p className="webshop-status webshop-status--error">
@@ -715,7 +736,8 @@ useEffect(() => {
               !productsError &&
               filteredProducts.length === 0 && (
                 <p className="webshop-status">
-                  {t("webshop.list.emptyFiltered")}
+                  Jelenleg nincs a szűrésnek megfelelő termék. Próbáld más
+                  kategóriával, vagy töröld a szűrést.
                 </p>
               )}
 
@@ -811,7 +833,7 @@ useEffect(() => {
                   setSelectedServiceCategory(null);
                 }}
               >
-                {t("webshop.list.resetFilters")}
+                Összes termék
               </button>
             </div>
 
@@ -828,7 +850,9 @@ useEffect(() => {
                     ? "-"
                     : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
-                const imageSrc = buildImageUrl(p.image_url);
+                const imageSrc = buildImageUrl(
+                  p.image_url || p.thumbnail_url || p.image_path || null
+              );
 
                 return (
                   <article key={p.id} className="webshop-card">
@@ -897,10 +921,12 @@ useEffect(() => {
 
           {/* JOBB: KOSÁR */}
           <aside className="webshop-cart">
-            <h3 className="webshop-cart__title">{t("webshop.cart.title")}</h3>
+            <h3 className="webshop-cart__title">Kosár</h3>
 
             {cart.length === 0 && (
-              <p className="webshop-cart__empty">{t("webshop.cart.empty")}</p>
+              <p className="webshop-cart__empty">
+                A kosarad jelenleg üres. Válassz terméket a listából.
+              </p>
             )}
 
             {cart.length > 0 && (
@@ -978,7 +1004,7 @@ useEffect(() => {
 
                 <div className="webshop-cart__summary">
                   <div className="webshop-cart__total">
-                    <span>{t("webshop.cart.subtotal")}</span>
+                    <span>Részösszeg:</span>
                     <strong>
                       {cartSubtotal.toLocaleString("hu-HU")} {currencyLabel}
                     </strong>
@@ -986,9 +1012,7 @@ useEffect(() => {
 
                   {appliedCouponCode && (
                     <div className="webshop-cart__total webshop-cart__total--discount">
-                      <span>
-                      {t("webshop.cart.discount")} ({appliedCouponCode}):
-                    </span>
+                      <span>Kupon kedvezmény ({appliedCouponCode}):</span>
                       <strong>
                         -{couponDiscount.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
@@ -997,7 +1021,7 @@ useEffect(() => {
                   )}
 
                   <div className="webshop-cart__total webshop-cart__total--final">
-                    <span>{t("webshop.cart.total")}</span>
+                    <span>Fizetendő:</span>
                     <strong>
                       {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
                       {currencyLabel}
@@ -1015,7 +1039,7 @@ useEffect(() => {
                     href="#webshop-checkout"
                     className="btn btn-primary btn-primary--magenta webshop-cart__checkout-link"
                   >
-                    {t("webshop.cart.gotoCheckout")}
+                    Tovább a fizetéshez
                   </a>
                 </div>
               </>
@@ -1032,14 +1056,18 @@ useEffect(() => {
         <div className="container webshop-checkout-grid">
           {/* REGISZTRÁCIÓ – users tábla */}
           <div className="webshop-panel">
-            <p className="section-eyebrow">{t("webshop.registration.eyebrow")}</p>
-            <h2>{t("webshop.registration.title")}</h2>
-            <p className="section-lead">{t("webshop.registration.lead")}</p>
+            <p className="section-eyebrow">Vendégprofil</p>
+            <h2>Regisztráció Kleopátra vendégként</h2>
+            <p className="section-lead">
+              Ha szeretnéd, hogy a Kleopátra rendszer vendégként ismerjen, hozz
+              létre webshop fiókot. Az adataid a{" "}
+              <strong>public.users</strong> táblába kerülnek.
+            </p>
 
             <form className="webshop-form" onSubmit={handleRegistrationSubmit}>
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.registration.fullNameLabel")}</span>
+                  <span>Teljes név*</span>
                   <input
                     type="text"
                     value={regForm.fullName}
@@ -1053,7 +1081,7 @@ useEffect(() => {
                   />
                 </label>
                 <label className="field">
-                  <span>{t("webshop.registration.emailLabel")}</span>
+                  <span>E-mail cím*</span>
                   <input
                     type="email"
                     value={regForm.email}
@@ -1070,7 +1098,7 @@ useEffect(() => {
 
               <div className="form-row">
                 <label className="field">
-                  <span>{t("webshop.registration.passwordLabel")}</span>
+                  <span>Jelszó*</span>
                   <input
                     type="password"
                     value={regForm.password}
@@ -1101,27 +1129,31 @@ useEffect(() => {
                 className="btn btn-primary btn-primary--magenta"
                 disabled={regLoading}
               >
-                {regLoading ? t("webshop.registration.submitLoading") : t("webshop.registration.submit")}
+                {regLoading ? "Feldolgozás…" : "Regisztráció"}
               </button>
             </form>
           </div>
 
           {/* FIZETÉS / SZÁLLÍTÁSI ADATOK + KUPON */}
           <div id="webshop-checkout" className="webshop-panel">
-            <p className="section-eyebrow">{t("webshop.checkout.eyebrow")}</p>
-            <h2>{t("webshop.checkout.title")}</h2>
-            <p className="section-lead">{t("webshop.checkout.lead")}</p>
+            <p className="section-eyebrow">Fizetés és szállítás</p>
+            <h2>Rendelés véglegesítése</h2>
+            <p className="section-lead">
+              Add meg a számlázási és szállítási adatokat, válaszd ki a
+              fizetési módot, majd – ha van – írd be a kuponkódot is a
+              kedvezményhez.
+            </p>
 
             {/* Kupon mező blokk */}
             <div className="webshop-form webshop-form--coupon">
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.checkout.couponLabel")}</span>
+                  <span>Kuponkód</span>
                   <input
                     type="text"
                     value={couponInput}
                     onChange={(e) => setCouponInput(e.target.value)}
-                    placeholder={t("webshop.checkout.couponPlaceholder")}
+                    placeholder="Pl. KLEO10"
                   />
                 </label>
                 <div className="field field--button">
@@ -1131,7 +1163,7 @@ useEffect(() => {
                     onClick={handleApplyCoupon}
                     disabled={couponLoading || cart.length === 0}
                   >
-                    {couponLoading ? t("webshop.checkout.couponChecking") : t("webshop.checkout.couponApply")}
+                    {couponLoading ? "Ellenőrzés…" : "Kupon alkalmazása"}
                   </button>
                 </div>
               </div>
@@ -1151,7 +1183,7 @@ useEffect(() => {
             <form className="webshop-form" onSubmit={handleOrderSubmit}>
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.registration.fullNameLabel")}</span>
+                  <span>Teljes név*</span>
                   <input
                     type="text"
                     value={checkoutForm.fullName}
@@ -1165,7 +1197,7 @@ useEffect(() => {
                   />
                 </label>
                 <label className="field">
-                  <span>{t("webshop.checkout.emailLabel")}</span>
+                  <span>E-mail cím*</span>
                   <input
                     type="email"
                     value={checkoutForm.email}
@@ -1182,7 +1214,7 @@ useEffect(() => {
 
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.checkout.phoneLabel")}</span>
+                  <span>Telefonszám</span>
                   <input
                     type="tel"
                     value={checkoutForm.phone}
@@ -1195,7 +1227,7 @@ useEffect(() => {
                   />
                 </label>
                 <label className="field">
-                  <span>{t("webshop.checkout.paymentMethodLabel")}</span>
+                  <span>Fizetési mód</span>
                   <select
                     value={checkoutForm.paymentMethod}
                     onChange={(e) =>
@@ -1206,15 +1238,15 @@ useEffect(() => {
                       }))
                     }
                   >
-                    <option value="card">{t("webshop.checkout.payment.card")}</option>
-                    <option value="cod">{t("webshop.checkout.payment.cod")}</option>
+                    <option value="card">Bankkártyás fizetés</option>
+                    <option value="cod">Utánvét (fizetés a futárnál)</option>
                   </select>
                 </label>
               </div>
 
               <div className="form-row">
                 <label className="field">
-                  <span>{t("webshop.checkout.addressLabel")}</span>
+                  <span>Számlázási / szállítási cím*</span>
                   <textarea
                     value={checkoutForm.address}
                     onChange={(e) =>
@@ -1230,10 +1262,10 @@ useEffect(() => {
 
               <div className="form-row">
                 <label className="field">
-                  <span>{t("webshop.checkout.noteLabel")}</span>
+                  <span>Megjegyzés a rendeléshez</span>
                   <textarea
                     value={checkoutForm.note}
-                    placeholder={t("webshop.checkout.notePlaceholder")}
+                    placeholder="Pl. kinek szól az ajándékutalvány, külön kérés, üzenet a számlára…"
                     onChange={(e) =>
                       setCheckoutForm((prev) => ({
                         ...prev,
@@ -1258,7 +1290,7 @@ useEffect(() => {
               <div className="webshop-order-summary-row">
                 <div className="webshop-order-summary">
                   <div>
-                    <span>{t("webshop.cart.subtotal")}</span>{" "}
+                    <span>Részösszeg:</span>{" "}
                     <strong>
                       {cartSubtotal.toLocaleString("hu-HU")} {currencyLabel}
                     </strong>
@@ -1273,7 +1305,7 @@ useEffect(() => {
                     </div>
                   )}
                   <div>
-                    <span>{t("webshop.cart.total")}</span>{" "}
+                    <span>Fizetendő:</span>{" "}
                     <strong>
                       {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
                       {currencyLabel}
@@ -1286,14 +1318,14 @@ useEffect(() => {
                   disabled={orderLoading || cart.length === 0}
                 >
                   {orderLoading
-                    ? t("webshop.checkout.submitLoading")
-                    : t("webshop.checkout.submit")}
+                    ? "Rendelés küldése…"
+                    : "Rendelés elküldése"}
                 </button>
               </div>
 
               {cart.length === 0 && (
                 <p className="webshop-status webshop-status--hint">
-                  {t("webshop.checkout.emptyCartHint")}
+                  A rendelés leadásához először tegyél termékeket a kosárba.
                 </p>
               )}
             </form>
