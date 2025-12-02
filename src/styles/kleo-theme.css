@@ -4438,7 +4438,6 @@ p {
 .btn--magenta-shine:hover::before {
   animation: kleo-btn-shine 0.9s linear;
 }
-
 @keyframes kleo-btn-shine {
   0% {
     left: -120%;
