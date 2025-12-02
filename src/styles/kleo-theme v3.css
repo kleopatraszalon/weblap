@@ -3822,63 +3822,107 @@ p {
 
 
 /* Original at-rule blocks (media, keyframes, imports, etc.) */
-@media (min-width: 640px) {
-  .login-card-inner {
-    padding: 32px 36px 24px;
+@media (max-width: 640px) {
+  /* HEADER GRID – logó + hamburger felül, alatta külön sorban a nyelv + social */
+  .site-header .container.header-inner {
+    grid-template-columns: auto 1fr auto;  /* logó | üres / helykitöltő | hamburger */
+    grid-template-rows: auto auto;         /* 1. sor: logó + hamburger, 2. sor: nyelv + social */
+    align-items: center;
+    column-gap: 0.5rem;
+    row-gap: 0.35rem;
+    padding-block: 0.4rem;
   }
-}@media (max-width: 900px) {
-  .app-shell {
+
+  /* általános hézag mobilon (marad, csak kiegészítjük) */
+  .header-inner {
+    gap: 0.5rem;
+  }
+
+  /* Logó az első sor bal oldalán */
+  .header-logo-link {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
+
+  /* Hamburger az első sor jobb oldalán */
+  .hamburger {
+    grid-column: 3 / 4;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  /* Nyelvválasztó + social egy sorban a logó alatt */
+  .header-cta-block {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;                          /* flex helyett grid mobilon */
+    grid-template-columns: 1fr auto;        /* bal: nyelvválasztó, jobb: social */
+    grid-template-rows: auto auto;          /* 1. sor: CTA gomb, 2. sor: nyelv + social */
+    gap: 0.35rem 0.75rem;
+    align-items: center;
+    justify-items: stretch;
+  }
+
+  /* Foglalás gomb – a két sor fölött, középen (teljes szélesség) */
+  .header-cta-btn {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  /* Nyelvválasztó – 2. sor, bal oldal */
+  .header-lang-switch {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    justify-self: start;
+    flex-wrap: nowrap;
+  }
+
+  /* Social blokk – 2. sor, jobb oldal, vízszintesen rendezve */
+  .header-social {
+    grid-column: 2 / 3;
+    grid-row: 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .header-social-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .header-social-icons {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  /* Mobilon a középső “asztali” főmenüt elrejtjük (hamburgerrel nyitsz menüt) */
+  .main-nav {
+    display: none;
+  }
+
+  /* A többi, ami eddig is volt mobilra – marad változatlanul */
+  .hero {
+    padding-top: 2.4rem;
+  }
+
+  .salon-card {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .grid-three {
     grid-template-columns: minmax(0, 1fr);
-    max-width: 100%;
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
   }
 
-  .app-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 240px;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    z-index: 30;
+  .section {
+    padding: 2.5rem 0;
   }
+}
 
-  .app-main {
-    position: relative;
-    z-index: 1;
-  }
-
-  .app-content {
-    padding: var(--space-md);
-  }
-
-  .home-container > .calendar-container {
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-}@media (max-width: 1024px) {
-  .workorder-modal {
-    max-width: 100%;
-    margin: 0 var(--space-md);
-  }
-
-  .wo-modal-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .wo-column-right {
-    max-width: none;
-    margin-left: 0;
-  }
-
-  .workorder-modal-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
   .wo-status-chips {
     justify-content: flex-start;
