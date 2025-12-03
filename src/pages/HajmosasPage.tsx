@@ -1,5 +1,5 @@
 import React from "react";
-import "../../kleo-theme v3.css";
+import "../../styles/kleo-theme v3.css";
 import { useI18n } from "../../i18n";
 
 export const HajmosasPage: React.FC = () => {

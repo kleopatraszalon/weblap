@@ -4087,6 +4087,32 @@ p {
     display: inline-flex;
     justify-self: end;
   }
+/* Alap hamburger gomb – desktopon rejtve, mobilon a @media szabály hozza elő */
+.hamburger {
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.25rem 0.35rem;
+  cursor: pointer;
+}
+
+/* A három csík konténere */
+.hamburger-lines {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Egy-egy csík */
+.hamburger-line {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: #111111;
+}
+
+
 
   /* Főmenü (Szalonjaink, Szolgáltatások, stb.) mobilon ne legyen kint külön sorban */
   .main-nav {
@@ -4143,7 +4169,23 @@ p {
     width: 24px;
     height: auto;
   }
+ .main-nav.main-nav--mobile-open {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 0.4rem;
+  }
 
+  .main-nav.main-nav--mobile-open .main-nav-inner {
+    align-items: flex-start;
+  }
+
+  .main-nav.main-nav--mobile-open .main-nav-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
   /* A többi mobil beállítás maradhat, hogy a tartalom se essen szét */
   .hero {
     padding-top: 2.2rem;

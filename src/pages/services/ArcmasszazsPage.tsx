@@ -1,6 +1,5 @@
 import React from "react";
-import "../../kleo-theme v3.css";
-import { useI18n } from "../../i18n";
+import "../../styles/kleo-theme v3.css";import { useI18n } from "../../i18n";
 
 export const ArcmasszazsPage: React.FC = () => {
   const { t } = useI18n();

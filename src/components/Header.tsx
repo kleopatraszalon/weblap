@@ -12,6 +12,13 @@ export function Header() {
     setLang(value);
   };
 
+  // ÚJ: mobil menü nyitva / zárva állapot
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev);
+  };
+
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -26,8 +33,13 @@ export function Header() {
           </div>
         </NavLink>
 
-        {/* KÖZÉP: KÉT SOROS MENÜ */}
-        <nav className="main-nav" aria-label="Fő navigáció">
+        {/* KÖZÉP: KÉT SOROS MENÜ (DESKTOPON LÁTSZIK, MOBILON HAMBURGERREL NYÍLIK) */}
+        <nav
+          className={
+            "main-nav" + (isMobileMenuOpen ? " main-nav--mobile-open" : "")
+          }
+          aria-label="Fő navigáció"
+        >
           <div className="main-nav-inner">
             <div className="main-nav-row">
               <NavLink to="/salons" className={navLinkClass}>
@@ -195,7 +207,21 @@ export function Header() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+
+        {/* ÚJ: HAMBURGER GOMB – csak markup, a pozicionálást a CSS csinálja */}
+        <button
+          type="button"
+          className={"hamburger" + (isMobileMenuOpen ? " is-open" : "")}
+          aria-label="Menü"
+          onClick={toggleMobileMenu}
+        >
+          <span className="hamburger-lines">
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+          </span>
+        </button>
       </div>
     </header>
   );

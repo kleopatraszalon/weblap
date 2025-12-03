@@ -1,5 +1,6 @@
 import React from "react";
-import "../../kleo-theme v3.css";
+import "import "../../styles/kleo-theme v3.css";
+;
 import { useI18n } from "../../i18n";
 
 export const IplPage: React.FC = () => {
