@@ -8,16 +8,17 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function Header() {
   const { lang, setLang, t } = useI18n();
 
-  const handleLangClick = (value: "hu" | "en" | "ru") => {
-    setLang(value);
-  };
-
-  // ÚJ: mobil menü nyitva / zárva állapot
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
+
+  const handleLangClick = (value: "hu" | "en" | "ru") => {
+    setLang(value);
+  };
+
+
 
   return (
     <header className="site-header">
