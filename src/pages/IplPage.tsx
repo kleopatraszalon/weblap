@@ -1,5 +1,5 @@
 import React from "react";
-import "import "../../styles/kleo-theme v4.css";
+import "import "../../styles/kleo-theme v5.css";
 ;
 import { useI18n } from "../../i18n";
 
