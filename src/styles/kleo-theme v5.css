@@ -2376,7 +2376,7 @@ p {
   min-height: min(540px, 80vh);
 }
 
-. .webshop-hero__bubble {
+.webshop-hero__bubble {
   position: absolute;
   width: 120px;
   height: 120px;
@@ -3456,7 +3456,7 @@ p {
   padding: 2.5rem 0;
 }
 
-} .wo-status-chips {
+.wo-status-chips {
   justify-content: flex-start;
 }
 
