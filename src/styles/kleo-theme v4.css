@@ -1,5 +1,4 @@
-/* De-duplicated KLEO CSS. */
-/* For each selector, only the last full block from the source file is kept. */
+
 
 html, body, #root {
   height: 100%;
