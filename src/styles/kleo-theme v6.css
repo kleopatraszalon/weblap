@@ -1019,12 +1019,14 @@ p {
   column-gap: 0.5rem;
   min-height: 90px;
   padding-block: 0.5rem;
+  position: relative;           /* + EZ AZ EGY SOR KELL IDE */
 }
 
 .header-logo-link {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  grid-area: logo;         /* + EZ AZ ÚJ SOR */
 }
 
 .site-logo-wrapper {
@@ -1043,6 +1045,8 @@ p {
   align-self: center;
   display: flex;
   justify-content: center;
+  justify-self: center;    /* + EZ AZ ÚJ SOR */
+  grid-area: nav;          /* + EZ AZ ÚJ SOR */
 }
 
 .main-nav-inner {
@@ -1096,13 +1100,15 @@ p {
   opacity: 1;
 }
 
-.header-cta-block {
+der-cta-block {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
   gap: 0.4rem;
   flex-shrink: 0;
+  grid-area: cta;          /* + EZ AZ ÚJ SOR */
+  justify-self: end;       /* + EZ AZ ÚJ SOR */
 }
 
 .header-cta-btn {
@@ -3652,12 +3658,12 @@ p {
   }
 
   /* KÖVESS MINKET felirat FÖLÜL, alatta zászlók + ikonok egy sorban */
-  .header-social {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.2rem;
-  }
+.header-social {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
 
   .header-social-label {
     font-size: 0.7rem;
@@ -4217,5 +4223,22 @@ p {
 @media (min-width: 641px) {
   .hamburger {
     display: none;
+  }
+}
+@media (min-width: 641px) {
+ 
+.main-nav {
+  flex: 1;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 1025px) {
+  .main-nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
