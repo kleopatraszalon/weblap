@@ -3623,10 +3623,11 @@ der-cta-block {
  * Ezek tartalma változatlanul maradt.
  */
 .hamburger {
-  display: none;
+  display: none;          /* desktopon ne látszódjon */
   border: none;
   background: #000;
   cursor: pointer;
+  padding: 0.35rem 0.75rem;
 }
 
 .hamburger-lines {
@@ -3656,7 +3657,7 @@ der-cta-block {
   }
 
   .site-logo {
-    height: 80px;
+    height: 60px;
     width: auto;
   }
 
