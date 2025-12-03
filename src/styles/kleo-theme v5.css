@@ -3618,8 +3618,8 @@ p {
  */
 
 @media (max-width: 640px) {
-  /* HEADER: 1. sor logó + hamburger, 2. sor nyelv + social */
-  .site-header .container.header-inner {
+  
+   .site-header .container.header-inner {
     display: grid;
     grid-template-columns: auto 1fr auto; /* logó | üres | hamburger */
     grid-template-rows: auto auto;        /* 1. sor: logó+hamburger, 2. sor: nyelv+social */
@@ -3630,88 +3630,18 @@ p {
     padding-block: 0.4rem;
   }
 
+  
   .header-logo-link {
     grid-column: 1 / 2;
     grid-row: 1;
   }
 
-  .hamburger {
+.hamburger {
     grid-column: 3 / 4;
     grid-row: 1;
     display: inline-flex;
     justify-self: end;
   }
-
-  .main-nav {
-    display: none;
-  }
-
-  .header-cta-block {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .header-cta-btn {
-    display: none;
-  }
-
-  .header-lang-switch {
-    order: 0;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .header-social {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .header-social-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .header-social-icons {
-    display: flex;
-    gap: 0.35rem;
-  }
-
-  .header-social-icons img {
-    width: 24px;
-    height: auto;
-  }
-}
-  
-  .site-header .container.header-inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto; 
-    grid-template-rows: auto auto;        
-    align-items: center;
-    column-gap: 0.5rem;
-    row-gap: 0.35rem;
-    min-height: auto;
-    padding-block: 0.4rem;
-  }
-
-  
-  .header-logo-link {
-    grid-column: 1 / 2;
-    grid-row: 1;
-  }
-
-
-
 
   
   .main-nav {
@@ -3747,14 +3677,14 @@ p {
   .header-social {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: right;
     gap: 0.35rem;
   }
 
   .header-social-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: right;
     gap: 0.35rem;
   }
 
@@ -4154,5 +4084,10 @@ p {
   }
   100% {
     left: 140%;
+  }
+}
+@media (min-width: 641px) {
+  .hamburger {
+    display: none;
   }
 }
