@@ -3619,16 +3619,16 @@ p {
 
 @media (max-width: 640px) {
   
-   .site-header .container.header-inner {
+.site-header .container.header-inner {
     display: grid;
-    grid-template-columns: auto 1fr auto; /* logó | üres | hamburger */
-    grid-template-rows: auto auto;        /* 1. sor: logó+hamburger, 2. sor: nyelv+social */
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto;
     align-items: center;
     column-gap: 0.5rem;
     row-gap: 0.35rem;
     min-height: auto;
     padding-block: 0.4rem;
-  }
+}
 
   
   .header-logo-link {
@@ -3645,24 +3645,60 @@ p {
 
   
   .main-nav {
+
     display: none;
   }
 
   
-  .header-cta-block {
-    grid-column: 1 / -1;   
-    grid-row: 2;
+ .header-cta-block {
+    grid-column: 2 / 3;
+    grid-row: 1;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 0.35rem;
+}
   
-  .header-cta-btn {
-    display: none;
-  }
+.header-cta-btn {
+    display: inline-flex;
+    align-self: flex-end;
+}
+
+/* Header maradjon fix mobilon is */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+/* Hamburger fekete csíkban, a header alatt, teljes szélességben */
+.hamburger {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: flex-start;
+    width: 100%;
+    padding: 0.35rem 0.75rem;
+    border: none;
+    border-radius: 0;
+    background: #000;
+}
+
+/* Ha a markupban vannak ezek a span-ek, ebből lesz a 3 fehér csík */
+.hamburger-lines {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hamburger-line {
+    width: 22px;
+    height: 2px;
+    border-radius: 999px;
+    background: #fff;
+}
+
+
 
   
   .header-lang-switch {
@@ -3674,20 +3710,7 @@ p {
   }
 
   
-  .header-social {
-    display: flex;
-    flex-direction: row;
-    align-items: right;
-    gap: 0.35rem;
-  }
-
-  .header-social-row {
-    display: flex;
-    flex-direction: row;
-    align-items: right;
-    gap: 0.35rem;
-  }
-
+  
   .header-social-icons {
     display: flex;
     gap: 0.35rem;
