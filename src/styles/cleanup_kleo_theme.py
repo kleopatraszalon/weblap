@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 # Itt add meg a bemeneti és kimeneti fájl nevét / útvonalát
-INPUT_FILE = Path("kleo-theme v3.css")
+INPUT_FILE = Path("kleo-theme v4.css")
 OUTPUT_FILE = Path("kleo-theme-dedup-last.css")
 
 
