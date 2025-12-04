@@ -213,7 +213,7 @@ export function Header() {
         {/* ÚJ: HAMBURGER GOMB – csak markup, a pozicionálást a CSS csinálja */}
         <button
           type="button"
-          className={"hamburger" + (isMobileMenuOpen ? " is-open" : "")}
+           className="hamburger kleo-shine"
           aria-label="Menü"
           onClick={toggleMobileMenu}
         >
