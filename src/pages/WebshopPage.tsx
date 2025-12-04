@@ -1,7 +1,7 @@
 // src/pages/WebshopPage.tsx
 import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import "../styles/kleo-theme v6.css";
+import "../styles/kleo-theme v7.css";
 import { apiFetch } from "../apiClient";  // <-- EZ LEGYEN
 
 

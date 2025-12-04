@@ -27,7 +27,7 @@ export function Header() {
         <NavLink to="/" className="header-logo-link" aria-label="Főoldal">
           <div className="site-logo-wrapper site-logo-wrapper--shiny">
             <img
-              src="/images/Logo.jpg"
+              src="/images/Logo.png"
               alt="Kleopátra Szépségszalonok logó"
               className="site-logo"
             />
