@@ -3642,25 +3642,29 @@ der-cta-block {
   width: 20px;
   height: 2px;
   border-radius: 999px;
-  background: #fff;
+  background: #ec008c;
 }
 
 @media (max-width: 640px) {
   /* HEADER: balra logó, jobbra IDŐPONTFOGLALÁS + KÖVESS MINKET */
   .site-header .container.header-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
-    min-height: auto;
-    padding-block: 0.45rem;
-  }
-
-  .site-logo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto auto;
+  align-items: flex-start;
+  column-gap: 0.5rem;
+  row-gap: 0.35rem;
+  padding-block: 0.45rem;
+  position: relative;       /* ÚJ – legyen „rétegezhető” */
+  padding-top: 4.5rem;      /* ÚJ – helyet hagyunk a ráültetett logónak */
+}
+ .site-logo {
     height: 60px;
     width: auto;
-    z-index: 40;
+    display: block;      /* LOGÓ BIZTOSAN LÁTSZÓDJON MOBILON IS */
   }
+
+
 
   /* Jobb oldal: gomb + Kövess minket blokkok egymás alatt */
   .header-cta-block {
@@ -3714,7 +3718,7 @@ der-cta-block {
   }
 
 .header-social-icons img {
-  height: 24px;
+  height: 20px;
   width: auto;          /* arányos méret */
   border-radius: 0;     /* maradjon a saját formája */
   object-fit: contain;
@@ -3775,10 +3779,12 @@ der-cta-block {
 }
 
   
-  .header-logo-link {
-    grid-column: 1 / 2;
-    grid-row: 1;
-  }
+ .header-logo-link {
+  position: absolute;     /* gridből kivesszük, külön réteg */
+  top: 0.8rem;            /* kicsit lejjebb a header tetejétől */
+  left: 0.8rem;
+  z-index: 50;
+}
 
 .hamburger {
     grid-column: 3 / 4;
@@ -3838,10 +3844,10 @@ der-cta-block {
 }
 
 .hamburger-line {
-  width: 22px;
-  height: 2px;
+  width: 30px;
+  height: 3px;
   border-radius: 999px;
-  background: #fff;
+  background: #ec008c;
 }
 
 
@@ -4283,54 +4289,147 @@ der-cta-block {
   }
 }
 
-/* MOBIL HEADER – a hamburger a header ALJÁN legyen */
 @media (max-width: 640px) {
-  .site-header .container.header-inner {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto auto auto; /* 1: logo + gomb, 2: Kövess minket, 3: hamburger */
-    align-items: flex-start;
-    column-gap: 0.5rem;
-    row-gap: 0.35rem;
-    padding-block: 0.45rem;
-  }
+ 
+ 
+    /* HEADER rács mobilon: 
+     1. sor: LOGÓ |       | IDŐPONTFOGLALÁS
+     2. sor:           KÖVESS MINKET + ikonok (középen)
+     3. sor: teljes szélességű arany csík + hamburger
+  */
+.site-header .container.header-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.5rem;
+  min-height: 90px;
+  padding-block: 0.1rem;
 
-  .header-logo-link {
-    grid-column: 1 / 2;
-    grid-row: 1;
-  }
+  position: relative;   /* <<< LOGÓHOZ KELL */
+  padding-left: 10 px;  /* <<< ennyi helyet „foglalunk le” a logó számára */
+}
 
+  /* LOGÓ – normál helyen, NEM abszolút, kicsit kisebbre véve */
+ .header-logo-link {
+  position: absolute;        /* külön réteg, nem hat a gridre */
+  left: 0rem;                /* balra igazítva */
+                  /* a header közepén függőlegesen */
+  transform: translateY(-120%);
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: left;
+}
+
+.site-logo {
+  display: block;
+  height: 70px;
+  width: auto;
+}
+
+  /* Jobb oldal: gomb + „Kövess minket” blokk fölötte */
   .header-cta-block {
     grid-column: 2 / 4;
     grid-row: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.25rem;
+    justify-content: flex-start;
+    gap: 0.1rem;
   }
 
+  .header-cta-btn {
+    padding: 0.25rem 0.9rem;
+    font-size: 0.55rem;
+  }
+
+  /* KÖVESS MINKET + zászlók + ikonok – a logó alatt középen */
   .header-social {
     grid-column: 1 / 4;
     grid-row: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.1rem;
+  }
+
+  .header-social-label {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+     align-items: left;
   }
 
   .header-social-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 0.01rem;
   }
 
-  /* HAMBURGER – teljes szélességben legalul */
+  .header-lang-switch {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
+  /* Zászlók + social ikonok MOBILON legyenek 20 px magasak */
+  .header-lang-switch .lang-btn .lang-flag,
+  .header-social-icons img {
+    height: 15px;
+    width: auto;
+  }
+
+  /* HAMBURGER – arany csík a header alján, teljes szélességben */
   .hamburger {
     grid-column: 1 / 4;
     grid-row: 3;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    width: 100%;
     padding: 0.4rem 0.9rem;
     background: #b69861;
-    width: 100%;
+    border: none;
+  }
+
+  .hamburger-lines {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: #fff;
+  }
+
+  /* Főmenü mobilon alapból rejtve, csak nyitva látszik */
+  .main-nav {
+    display: none;
+  }
+
+  .main-nav.main-nav--mobile-open {
+    display: block;
+    padding: 0.45rem 1rem 0.7rem;
+    background: #000;
+  }
+
+  .main-nav.main-nav--mobile-open .main-nav-inner {
+    align-items: flex-start;
+  }
+
+  .main-nav.main-nav--mobile-open .main-nav-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .main-nav.main-nav--mobile-open .nav-link {
+    color: #fff;
   }
 }
