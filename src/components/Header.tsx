@@ -27,7 +27,7 @@ export function Header() {
         <NavLink to="/" className="header-logo-link" aria-label="Főoldal">
           <div className="site-logo-wrapper site-logo-wrapper--shiny">
             <img
-              src="/images/Logo.png"
+              src="/images/Logo.jpg"
               alt="Kleopátra Szépségszalonok logó"
               className="site-logo"
             />
@@ -213,7 +213,7 @@ export function Header() {
         {/* ÚJ: HAMBURGER GOMB – csak markup, a pozicionálást a CSS csinálja */}
         <button
           type="button"
-           className="hamburger kleo-shine"
+          className={"hamburger" + (isMobileMenuOpen ? " is-open" : "")}
           aria-label="Menü"
           onClick={toggleMobileMenu}
         >

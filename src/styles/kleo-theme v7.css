@@ -4510,3 +4510,34 @@ der-cta-block {
     left: 150%;
   }
 }
+/* --- FIX: mobil hamburger menü látszódjon --- */
+@media (max-width: 640px) {
+  /* Alapból rejtve */
+  .main-nav {
+    display: none;
+  }
+
+  /* Hamburger megnyitva: menü jelenjen meg a logó alatt, fekete sávon */
+  .main-nav.main-nav--mobile-open {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 0.4rem;
+    padding: 0.45rem 1rem 0.7rem;
+    background: #000;
+  }
+
+  .main-nav.main-nav--mobile-open .main-nav-inner {
+    align-items: flex-start;
+  }
+
+  .main-nav.main-nav--mobile-open .main-nav-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .main-nav.main-nav--mobile-open .nav-link {
+    color: #fff;
+  }
+}
