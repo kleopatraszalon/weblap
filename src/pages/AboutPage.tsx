@@ -14,131 +14,89 @@ export const AboutPage: React.FC = () => {
             alt={t("about.hero.imageAlt")}
             className="page-hero__image"
           />
-          <div className="page-hero__image-overlay page-hero__image-overlay--gradient" />
+          <div className="page-hero__image-overlay" />
         </div>
-
         <div className="container page-hero__content page-hero__content--center">
           <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
-
-          <h1 className="hero-title hero-title--tight">
-            <span className="hero-part hero-part-default">
-              {t("about.hero.title")}
-            </span>
-          </h1>
-
+          <h1>{t("about.hero.title")}</h1>
           <p className="hero-lead hero-lead--narrow">
             {t("about.hero.lead")}
           </p>
-
-          <div className="hero-pill-row hero-pill-row--soft">
-            <span className="hero-pill hero-pill--outline">
-              {t("home.hero.pill.hair")}
-            </span>
-            <span className="hero-pill hero-pill--outline">
-              {t("home.hero.pill.beauty")}
-            </span>
-            <span className="hero-pill hero-pill--outline">
-              {t("home.hero.pill.handsFeet")}
-            </span>
-            <span className="hero-pill hero-pill--outline">
-              {t("home.hero.pill.solarium")}
-            </span>
-            <span className="hero-pill hero-pill--outline">
-              {t("home.hero.pill.massage")}
-            </span>
-          </div>
         </div>
       </section>
 
-      {/* 1. Víziónk – szöveg balra, kép jobbra (vision.png) */}
-      <section className="section section--soft">
-        <div className="container grid-two">
-          <div className="about-block about-block__text">
-            <h2 className="card-title">
-              {t("about.section.vision.title")}
-            </h2>
-            <p className="card-text">
-              {t("about.section.vision.p1")}
-            </p>
-            <p className="card-text">
-              {t("about.section.vision.p2")}
-            </p>
-          </div>
-          <div className="about-block about-block__image">
+      {/* KÉT FŐ ÍGÉRET – Minden egy helyen / Vendégközpontú gondolkodás */}
+<section className="section section--alt">
+  <div className="container grid-two">
+    <article className="card card--about-promise">
+      <h2 className="card-title">{t("about.card1.title")}</h2>
+      <p className="card-text">{t("about.card1.text")}</p>
+    </article>
+    <article className="card card--about-promise">
+      <h2 className="card-title">{t("about.card2.title")}</h2>
+      <p className="card-text">{t("about.card2.text")}</p>
+    </article>
+  </div>
+</section>
+
+      {/* VÍZIÓ – kép balra, szöveg jobbra (vision.png) */}
+      <section className="section section--alt section--about-vision">
+        <div className="container grid-two grid-two--reverse">
+          <div className="section-image-card section-image-card--about">
             <img
               src="/images/vision.png"
               alt={t("about.vision.imageAlt")}
-              className="card-image-side"
             />
+          </div>
+
+          <div>
+            <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
+            <h2 className="section-title">
+              {t("about.section.vision.title")}
+            </h2>
+
+            <p className="section-lead">
+              {t("about.section.vision.p1")}
+            </p>
+            <p>{t("about.section.vision.p2")}</p>
           </div>
         </div>
       </section>
 
-      {/* 2. Küldetésünk – kép balra, szöveg jobbra (mission.png) */}
-      <section className="section">
+      {/* KÜLDETÉS – kép jobbra, szöveg balra (mission.png) */}
+      <section className="section section--about section--about-mission">
         <div className="container grid-two">
-          <div className="about-block about-block__image">
+          <div>
+            <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
+            <h2 className="section-title">
+              {t("about.section.mission.title")}
+            </h2>
+
+            <p className="section-lead">
+              {t("about.section.mission.p1")}
+            </p>
+            <p>{t("about.section.mission.p2")}</p>
+          </div>
+
+          <div className="section-image-card section-image-card--about">
             <img
               src="/images/mission.png"
               alt={t("about.mission.imageAlt")}
-              className="card-image-side"
-            />
-          </div>
-          <div className="about-block about-block__text">
-            <h2 className="card-title">
-              {t("about.section.mission.title")}
-            </h2>
-            <p className="card-text">
-              {t("about.section.mission.p1")}
-            </p>
-            <p className="card-text">
-              {t("about.section.mission.p2")}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Pozitív visszajelzések – szöveg balra, kép jobbra (feedback.png) */}
-      <section className="section section--soft">
-        <div className="container grid-two">
-          <div className="about-block about-block__text">
-            <h2 className="card-title">
-              {t("about.section.feedback.title")}
-            </h2>
-            <p className="card-text">
-              {t("about.section.feedback.p1")}
-            </p>
-            <ul className="card-list">
-              <li>{t("about.section.feedback.li1")}</li>
-              <li>{t("about.section.feedback.li2")}</li>
-              <li>{t("about.section.feedback.li3")}</li>
-            </ul>
-          </div>
-          <div className="about-block about-block__image">
-            <img
-              src="/images/feedback.png"
-              alt={t("about.feedback.imageAlt")}
-              className="card-image-side"
             />
           </div>
         </div>
       </section>
 
-      {/* 4. Értékrendünk – kép balra, szöveg jobbra (values.png) */}
-      <section className="section">
+      {/* ÉRTÉKREND – bullet lista + kép (values.png) */}
+      <section className="section section--alt section--about-values">
         <div className="container grid-two">
-          <div className="about-block about-block__image">
-            <img
-              src="/images/values.png"
-              alt={t("about.section.values.title")}
-              className="card-image-side"
-            />
-          </div>
-          <div className="about-block about-block__text">
-            <h2 className="card-title">
+          <div>
+            <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
+            <h2 className="section-title">
               {t("about.section.values.title")}
             </h2>
-            <ul className="card-list">
+
+            <ul className="bullet-list">
               <li>{t("about.section.values.li1")}</li>
               <li>{t("about.section.values.li2")}</li>
               <li>{t("about.section.values.li3")}</li>
@@ -148,37 +106,66 @@ export const AboutPage: React.FC = () => {
               <li>{t("about.section.values.li7")}</li>
             </ul>
           </div>
+
+          <div className="section-image-card section-image-card--about">
+            <img
+              src="/images/values.png"
+              alt={t("about.section.values.title")}
+            />
+          </div>
         </div>
       </section>
 
-      {/* 5. Történetünk – szöveg balra, kép jobbra (history.png) */}
-      <section className="section section--soft">
+      {/* VENDÉGVISSZAJELZÉSEK – bullet lista + kép (feedback.png) */}
+      <section className="section section--about section--about-feedback">
+        <div className="container grid-two grid-two--reverse">
+          <div className="section-image-card section-image-card--about">
+            <img
+              src="/images/feedback.png"
+              alt={t("about.feedback.imageAlt")}
+            />
+          </div>
+
+          <div>
+            <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
+            <h2 className="section-title">
+              {t("about.section.feedback.title")}
+            </h2>
+
+            <p className="section-lead">
+              {t("about.section.feedback.p1")}
+            </p>
+            <ul className="bullet-list">
+              <li>{t("about.section.feedback.li1")}</li>
+              <li>{t("about.section.feedback.li2")}</li>
+              <li>{t("about.section.feedback.li3")}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* TÖRTÉNETÜNK RÖVIDEN – történet + kép (history.png) – MOST A VÉGÉN */}
+      <section className="section section--about section--about-story">
         <div className="container grid-two">
-          <div className="about-block about-block__text">
-            <h2 className="card-title">
+          <div>
+            <p className="section-eyebrow">{t("about.hero.eyebrow")}</p>
+            <h2 className="section-title">
               {t("about.section.story.title")}
             </h2>
-            <p className="card-text">
+
+            <p className="section-lead">
               {t("about.section.story.p1")}
             </p>
-            <p className="card-text">
-              {t("about.section.story.p2")}
-            </p>
-            <p className="card-text">
-              {t("about.section.story.p3")}
-            </p>
-            <p className="card-text">
-              {t("about.section.story.p4")}
-            </p>
-            <p className="card-text">
-              {t("about.section.story.p5")}
-            </p>
+            <p>{t("about.section.story.p2")}</p>
+            <p>{t("about.section.story.p3")}</p>
+            <p>{t("about.section.story.p4")}</p>
+            <p>{t("about.section.story.p5")}</p>
           </div>
-          <div className="about-block about-block__image">
+
+          <div className="section-image-card section-image-card--about">
             <img
               src="/images/history.png"
               alt={t("about.section.story.title")}
-              className="card-image-side"
             />
           </div>
         </div>
@@ -186,5 +173,3 @@ export const AboutPage: React.FC = () => {
     </main>
   );
 };
-
-export default AboutPage;

@@ -1236,7 +1236,7 @@ der-cta-block {
   border: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: background 0.18s ease, transform 0.12s ease,
-    box-shadow 0.18s ease;
+
 }
 
 .hero-pills .hero-pill:hover {
@@ -1776,6 +1776,94 @@ der-cta-block {
   align-items: center;
 }
 
+/* ABOUT oldal – képek kisebbre véve, csak az about szekciókban */
+.section--about-story .section-image-card,
+.section--about-vision .section-image-card,
+.section--about-mission .section-image-card,
+.section--about-values .section-image-card,
+.section--about-feedback .section-image-card {
+  box-shadow: none;        /* árnyék = keret érzet, ezt levesszük */
+  border-radius: 0;        /* ne legyen lekerekítve */
+  overflow: visible;       /* ne vágja meg a képet */
+  background: transparent; /* ne legyen külön kártya háttér */
+}
+
+
+
+
+/* A tényleges kép legyen kb. fele akkora, de csak az ABOUT oldal szekcióiban */
+.section--about-story .section-image-card img,
+.section--about-vision .section-image-card img,
+.section--about-mission .section-image-card img,
+.section--about-values .section-image-card img,
+.section--about-feedback .section-image-card img {
+  width: 70%;      /* kb. fele akkora, mint a kártya */
+  height: auto;
+  display: block;
+  margin: 0 auto;  /* középre igazítás */
+}
+
+/* ABOUT – ígéret-kártyák: arany háttér, fehér szöveg, shine animáció */
+
+.card--about-promise {
+  position: relative;
+  overflow: hidden; /* a fény ne lógjon ki */
+  background: var(--gold);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 1.6rem 1.8rem;
+  border: none;
+  box-shadow: 0 16px 40px rgba(182, 152, 97, 0.7);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* A kártyán belüli szöveg is legyen fehér */
+.card--about-promise .card-title,
+.card--about-promise .card-text {
+  color: #ffffff;
+}
+
+/* Hover effekt – kicsi „lebegés” */
+.card--about-promise:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 46px rgba(182, 152, 97, 0.85);
+}
+
+/* Shine csík – ugyanaz a logika, mint a szalonos gomboknál */
+.card--about-promise::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0)
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+/* Hoverkor indul el a fény futása – @keyframes kleo-btn-shine már létezik a CSS-ben */
+.card--about-promise:hover::before {
+  animation: kleo-btn-shine 0.9s linear;
+}
+
+.page-hero--about .page-hero__content--center {
+  color: #ffffff; /* vagy bármilyen más */
+}
+
+/* Ha külön akarod a címet és leadet is játszani: */
+.page-hero--about h1 {
+  color: #ffffff;
+}
+
+.page-hero--about .hero-lead {
+  color: #f5e1c4; /* pl. kicsit „melegebb” fehér/arany tónus */
+}
+
 .grid-two--reverse {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
 }
@@ -1867,7 +1955,7 @@ der-cta-block {
 
 .page-hero__image-wrap {
   position: relative;
-  max-height: 420px;
+  max-height: 320px;
   overflow: hidden;
 }
 
@@ -1875,13 +1963,13 @@ der-cta-block {
   width: 100%;
   display: block;
   object-fit: cover;
-  transform: scale(1.02);
-  transition: transform 800ms ease-out, filter 800ms ease-out;
+  transform: scale(1.32);
+  transition: transform 180ms ease-out, filter 800ms ease-out;
   image-rendering: auto;
 }
 
 .page-hero__image-wrap:hover .page-hero__image {
-  transform: scale(1.05);
+  transform: scale(0.90.99);
   image-rendering: pixelated;
 }
 
@@ -4540,4 +4628,424 @@ der-cta-block {
   .main-nav.main-nav--mobile-open .nav-link {
     color: #fff;
   }
+}
+/* FRANCHISE – hero színek */
+
+.page-hero--franchise .section-eyebrow {
+  /* pl. „Franchise program” feletti kis címke */
+  color: var(--magenta);
+}
+
+.page-hero--franchise h1 {
+  /* fő franchise cím */
+  color: var(--gold);
+}
+
+.page-hero--franchise .hero-lead {
+  /* rövid leírás a hero alatt */
+  color: #ffffff;
+}
+
+/* CAREER – hero színek */
+
+.page-hero--career .section-eyebrow {
+  color: var(--magenta);
+}
+
+.page-hero--career h1 {
+  color: #ffffff;
+}
+
+.page-hero--career .hero-lead {
+  color: #f5e1c4;
+}
+
+.page-hero--services .hero-part-default,
+.page-hero--salons .hero-part-default {
+  color: var(--gold);
+}
+
+.page-hero--services .hero-title,
+.page-hero--salons .hero-title {
+  color: var(--gold);
+}
+
+.page-hero--services .hero-lead,
+.page-hero--salons .hero-lead {
+  color: var(--gold);
+}
+
+.page-hero--services .section-eyebrow,
+.page-hero--salons .section-eyebrow {
+  color: var(--magenta);
+}
+
+/* SALONS – hero színek, egyedileg, a services fölülírására */
+
+.page-hero--salons .hero-title {
+  color: var(--gold); /* maradhat arany, de itt már külön állítható */
+}
+
+.page-hero--salons .hero-lead {/* FRANCHISE – Kinek szól: két fő kártya (arany, fehér, shine animáció) */
+
+.section--franchise-segment {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.section--franchise-segment .section-title {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.section--franchise-segment .grid-two {
+  gap: 2rem;
+}
+
+.card--franchise-segment {
+  position: relative;
+  overflow: hidden; /* shine ne lógjon ki */
+  background: var(--gold);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 1.8rem 2rem;
+  border: none;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Szöveg legyen mindenhol fehér a kártyán belül */
+.card--franchise-segment .card-title,
+.card--franchise-segment .card-text,
+.card--franchise-segment .list-bullets li {
+  color: #ffffff;
+}
+
+/* Hover – finom lebegés */
+.card--franchise-segment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.3);
+}
+
+/* Shine csík – ugyanaz a logika, mint a szalonos gomboknál */
+.card--franchise-segment::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0)
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+/* Hoverkor fut végig a fény – @keyframes kleo-btn-shine már létezik */
+.card--franchise-segment:hover::before {
+  animation: kleo-btn-shine 0.9s linear;
+}
+
+  color: #ffffff;     /* pl. fehér lead a képen */
+}
+
+.page-hero--salons .hero-part-default {
+  color: #ffffff;     /* ha a cím részekre van bontva (hero-part-*) */
+}
+
+.page-hero--salons .section-eyebrow {
+  color: var(--magenta);
+}
+
+/* SERVICES – hero színek, egyedileg */
+
+.page-hero--services .hero-title {
+  color: var(--gold);
+}
+
+.page-hero--services .hero-lead {
+  color: #ffffff;
+}
+
+.page-hero--services .hero-part-default {
+  color: #ffffff;
+}
+
+.page-hero--services .section-eyebrow {
+  color: var(--magenta);
+}
+/* FRANCHISE – hero színek (oldalszintű) */
+.page-hero--franchise .section-eyebrow {
+  color: var(--magenta);
+}
+
+.page-hero--franchise h1 {
+  color: var(--gold);
+}
+
+.page-hero--franchise .hero-lead {
+  color: #ffffff;
+}
+/* ============================
+   FRANCHISE – „Kinek szól?” szekció
+   két arany, animált ígéretkártya
+   ============================ */
+
+.section--franchise-segment {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.section--franchise-segment .section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section--franchise-segment .grid-two {
+  gap: 2rem;
+}
+
+/* Arany, üveges ígéret-kártyák – erős specifikusság, hogy felülírja a .card-ot */
+.section--franchise-segment .card.card--franchise-segment {
+  position: relative;
+  border-radius: 22px;
+  padding: 1.8rem 2.2rem;
+  background: linear-gradient(135deg, #b8923a, #e3c56a) !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  border: none;
+  overflow: hidden;
+  color: #ffffff !important;
+}
+
+/* Fénycsík animáció – mint a szalon pill-eknél */
+.section--franchise-segment .card.card--franchise-segment::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -40%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-120%) rotate(10deg);
+  pointer-events: none;
+}
+
+.section--franchise-segment .card.card--franchise-segment:hover::before {
+  opacity: 1;
+  animation: salon-pill-shine 700ms ease-out forwards;
+}
+
+/* Szövegek fehérre húzva */
+.section--franchise-segment .card.card--franchise-segment .card-title,
+.section--franchise-segment .card.card--franchise-segment .card-text,
+.section--franchise-segment .card.card--franchise-segment .list-bullets li {
+  color: #ffffff !important;
+}
+
+.section--franchise-segment .list-bullets {
+  margin-top: 0.75rem;
+}
+/* === FRANCHISE – Kinek szól: 2 arany ígéret-kártya === */
+
+.section--franchise-segment {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  background: #faf6f2;
+}
+
+.section--franchise-segment .section-title {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+/* 2 oszlopos elrendezés, kicsit nagyobb rés a kártyák között */
+.section--franchise-segment .grid-two {
+  gap: 2rem;
+}
+
+/* Arany ígéret-kártya – hasonló, mint a Szalonjaink gombok hangulata */
+.card--franchise-segment {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 2.2rem 2.5rem;
+  background: linear-gradient(135deg, #f7d79a, #f3b56a);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Szöveg legyen mindenhol fehér a kártyán belül */
+.card--franchise-segment .card-title,
+.card--franchise-segment .card-text,
+.card--franchise-segment .list-bullets li {
+  color: #ffffff;
+}
+
+.card--franchise-segment .card-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.card--franchise-segment .card-text {
+  margin-bottom: 0.75rem;
+}
+
+/* finom lebegés */
+.card--franchise-segment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Shine csík – ugyanaz a logika, mint a szalonos gomboknál */
+.card--franchise-segment::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0)
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+/* hoverkor végigfutó fény – a már meglévő kleo-btn-shine animációt használjuk */
+.card--franchise-segment:hover::before {
+  animation: kleo-btn-shine 0.9s linear;
+}
+
+/* === FRANCHISE – Márka / szakmai / marketing 3 kártya – elegáns, sötét üveghatás === */
+
+.section--franchise-features {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.section--franchise-features .grid-three {
+  gap: 2rem;
+}
+
+.section--franchise-features .card {
+  border-radius: 18px;
+  padding: 1.8rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(12, 12, 12, 0.82);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.section--franchise-features .card-title {
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.section--franchise-features .card-text {
+  color: #f0eded;
+}
+
+.section--franchise-features .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  border-color: rgba(255, 215, 160, 0.7);
+}
+
+/* === FRANCHISE – Befektetés, díjak, megtérülés === */
+
+.section--franchise-invest {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.section--franchise-invest .section-title {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.section--franchise-invest .section-lead {
+  text-align: center;
+  max-width: 720px;
+  margin-inline: auto;
+  margin-bottom: 2.5rem;
+}
+
+.section--franchise-invest .grid-three {
+  gap: 2rem;
+}
+
+.section--franchise-invest .card {
+  border-radius: 18px;
+  padding: 1.8rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: radial-gradient(circle at top left, rgba(255, 215, 160, 0.16), rgba(0, 0, 0, 0.9));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+
+.section--franchise-invest .card-title {
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.section--franchise-invest .card-highlight {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.section--franchise-invest .card-text {
+  color: #e1dfdf;
+}
+
+.section--franchise-invest .section-footnote {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #c1bdbd;
+}
+
+/* === FRANCHISE – Lépések (start / első vendégek / növekedés) === */
+
+.section--franchise-steps {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.section--franchise-steps .section-title {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.section--franchise-steps .grid-three {
+  gap: 2rem;
+}
+
+.section--franchise-steps .card {
+  border-radius: 18px;
+  padding: 1.8rem 2rem;
+  background: rgba(12, 12, 12, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.section--franchise-steps .card-title {
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.section--franchise-steps .card-text {
+  color: #f0eded;
 }
