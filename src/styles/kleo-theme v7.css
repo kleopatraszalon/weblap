@@ -5049,3 +5049,59 @@ der-cta-block {
 .section--franchise-steps .card-text {
   color: #f0eded;
 }
+/* =========================================
+   WEBSHOP – kategória menü finomhangolás
+   ========================================= */
+
+/* A teljes kategória-sor legyen flex, hogy a fő kategóriák egymás mellett legyenek */
+.section--webshop .webshop-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 1.5rem 0 2rem;
+}
+
+/* Egy fő kategória-blokk: fent a fő gomb, alatta (ha kell) az al-kategóriák */
+.section--webshop .webshop-category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Főkategória gombok – kapszula stílus, mint a korábbi category-nav elemek */
+.section--webshop .webshop-category-main,
+.section--webshop .webshop-category-reset {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #f7f1e7;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+/* Aktív főkategória – magenta, árnyék, mint a többi CTA-n */
+.section--webshop .webshop-category-main--active {
+  background: var(--magenta-500);
+  color: #ffffff;
+  border-color: var(--magenta-500);
+  box-shadow: 0 6px 18px rgba(236, 0, 140, 0.4);
+}
+
+/* Hover – finom arany keret, világos háttér */
+.section--webshop .webshop-category-main:hover:not(.webshop-category-main--active),
+.section--webshop .webshop-category-reset:hover {
+  background: rgba(245, 237, 226, 0.9);
+  border-color: var(--gold-400);
+  color: var(--text-main);
+}
+
+/* Az „Összes termék” ne lógjon el különre, ne legyen plusz margója */
+.section--webshop .webshop-category-reset {
+  margin-left: 0; /* felülírja a régi margin-left: 1.5rem-et */
+}

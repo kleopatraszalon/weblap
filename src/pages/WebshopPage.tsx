@@ -552,44 +552,52 @@ export const WebshopPage: React.FC = () => {
     loadProducts();
   }, [t]);
 
-  const filteredProducts = useMemo(() => {
-    let result = products.filter(
-      (p) => p.is_active && p.is_webshop_visible
+ const filteredProducts = useMemo(() => {
+  // csak azokat rejtsük el, ahol kifejezetten false-t kaptunk a DB-ből
+  let result = products.filter(
+    (p) => p.is_active !== false && p.is_webshop_visible !== false
+  );
+
+  if (selectedMainCategory) {
+    result = result.filter((p) => {
+      if (selectedMainCategory === "GIFT_VOUCHERS") {
+        return p.product_group_key === "GIFT_VOUCHERS";
+      }
+      if (selectedMainCategory === "PASSES") {
+        return p.product_group_key === "PASSES";
+      }
+      if (selectedMainCategory === "GUEST_ACCOUNT") {
+        return p.product_group_key === "GUEST_ACCOUNT";
+      }
+      if (selectedMainCategory === "KLEO_PRODUCTS") {
+        return p.product_group_key === "KLEO_PRODUCTS";
+      }
+      if (selectedMainCategory === "COMPANY_DISCOUNTS") {
+        return p.product_group_key === "COMPANY_DISCOUNTS";
+      }
+      return true;
+    });
+  }
+
+  if (selectedSubCategory) {
+    result = result.filter(
+      (p) => p.product_group_key === selectedSubCategory
     );
+  }
 
-    if (selectedMainCategory) {
-      result = result.filter((p) => {
-        if (selectedMainCategory === "GIFT_VOUCHERS") {
-          return p.product_group_key === "GIFT_VOUCHERS";
-        }
-        if (selectedMainCategory === "PASSES") {
-          return p.product_group_key === "PASSES";
-        }
-        if (selectedMainCategory === "GUEST_ACCOUNT") {
-          return p.product_group_key === "GUEST_ACCOUNT";
-        }
-        if (selectedMainCategory === "KLEO_PRODUCTS") {
-          return p.product_group_key === "KLEO_PRODUCTS";
-        }
-        if (selectedMainCategory === "COMPANY_DISCOUNTS") {
-          return p.product_group_key === "COMPANY_DISCOUNTS";
-        }
-        return true;
-      });
-    }
+  if (selectedServiceCategory) {
+    result = result.filter(
+      (p) => p.service_category_key === selectedServiceCategory
+    );
+  }
 
-    if (selectedSubCategory) {
-      result = result.filter((p) => p.product_group_key === selectedSubCategory);
-    }
-
-    if (selectedServiceCategory) {
-      result = result.filter(
-        (p) => p.service_category_key === selectedServiceCategory
-      );
-    }
-
-    return result;
-  }, [products, selectedMainCategory, selectedSubCategory, selectedServiceCategory]);
+  return result;
+}, [
+  products,
+  selectedMainCategory,
+  selectedSubCategory,
+  selectedServiceCategory,
+]);
 
   return (
     <main className="page-main page-main--webshop">
