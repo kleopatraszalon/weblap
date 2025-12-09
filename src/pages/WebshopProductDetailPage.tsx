@@ -38,6 +38,7 @@ type ServiceCategoryKey =
 
 type Product = {
   id: string;
+  sku?: string | null;
   name: string;
   retail_price_gross: number | string | null;
   sale_price?: number | string | null;
@@ -45,9 +46,9 @@ type Product = {
   web_description?: string | null;
   is_retail?: boolean | null;
   web_is_visible?: boolean | null;
-  main_category?: MainCategoryKey | null;
-  sub_category?: SubCategoryKey | null;
-  service_category?: ServiceCategoryKey | null;
+  main_category?: MainCategoryKey | string | null;
+  sub_category?: SubCategoryKey | string | null;
+  service_category?: ServiceCategoryKey | string | null;
 };
 
 type ProductReview = {
@@ -59,10 +60,17 @@ type ProductReview = {
   created_at: string;
 };
 
+type CartItem = {
+  product: Product;
+  quantity: number;
+};
+
+const CART_STORAGE_KEY = "kleoCart";
+const CART_EVENT_NAME = "kleo-cart-updated";
+
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
   "http://localhost:5000/api";
-
 const API_ROOT = API_BASE.replace(/\/api$/, "");
 
 function buildImageUrl(imageUrl?: string | null): string | undefined {
@@ -70,6 +78,33 @@ function buildImageUrl(imageUrl?: string | null): string | undefined {
   if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
   const cleaned = imageUrl.replace(/^\/+/, "");
   return `${API_ROOT}/${cleaned}`;
+}
+
+function loadCartFromStorage(): CartItem[] {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function saveCartToStorage(cart: CartItem[]) {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  } catch (e) {
+    console.error("Kosár mentése sikertelen", e);
+  }
+}
+
+function dispatchCartUpdate(cart: CartItem[]) {
+  const event = new CustomEvent<CartItem[]>(CART_EVENT_NAME, {
+    detail: cart,
+  });
+  window.dispatchEvent(event);
 }
 
 export const WebshopProductDetailPage: React.FC = () => {
@@ -92,8 +127,12 @@ export const WebshopProductDetailPage: React.FC = () => {
   const [rating, setRating] = useState<number>(5);
   const [authorName, setAuthorName] = useState<string>("");
   const [text, setText] = useState<string>("");
+
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const [quantity, setQuantity] = useState<number>(1);
+  const [addToCartMessage, setAddToCartMessage] = useState<string | null>(null);
 
   // Termék betöltése, ha nem érkezett state-ben
   useEffect(() => {
@@ -120,7 +159,7 @@ export const WebshopProductDetailPage: React.FC = () => {
     };
 
     load();
-  }, [productId, state?.product]);
+  }, [productId, state?.product, t]);
 
   // Vélemények betöltése az adatbázisból
   useEffect(() => {
@@ -134,7 +173,6 @@ export const WebshopProductDetailPage: React.FC = () => {
           `${API_BASE}/public/webshop/products/${productId}/reviews`
         );
 
-        // Ha 404-et kapunk, kezeljük úgy, mintha még nem lenne vélemény
         if (res.status === 404) {
           setReviews([]);
           return;
@@ -183,7 +221,6 @@ export const WebshopProductDetailPage: React.FC = () => {
         }
       );
 
-      // Ha az endpoint még nincs a backendben, barátságosabb üzenetet adunk
       if (res.status === 404) {
         throw new Error(
           "A vélemények beküldése jelenleg nincs engedélyezve ezen a szerveren (404)."
@@ -210,12 +247,35 @@ export const WebshopProductDetailPage: React.FC = () => {
       setText("");
     } catch (err: any) {
       console.error(err);
-      setSubmitError(
-        err?.message || "Nem sikerült elmenteni a véleményt."
-      );
+      setSubmitError(err?.message || "Nem sikerült elmenteni a véleményt.");
     } finally {
       setSubmitLoading(false);
     }
+  };
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    const safeQty = quantity > 0 ? quantity : 1;
+
+    const current = loadCartFromStorage();
+    const existing = current.find((item) => item.product.id === product.id);
+
+    let next: CartItem[];
+    if (existing) {
+      next = current.map((item) =>
+        item.product.id === product.id
+          ? { ...item, quantity: item.quantity + safeQty }
+          : item
+      );
+    } else {
+      next = [...current, { product, quantity: safeQty }];
+    }
+
+    saveCartToStorage(next);
+    dispatchCartUpdate(next);
+
+    setAddToCartMessage("Termék hozzáadva a kosárhoz.");
+    setTimeout(() => setAddToCartMessage(null), 3000);
   };
 
   if (!product && productLoading) {
@@ -270,6 +330,7 @@ export const WebshopProductDetailPage: React.FC = () => {
       <section className="section">
         <div className="container webshop-product-detail">
           <div className="webshop-product-detail__top">
+            {/* BAL: TERMÉKKÉP + KIS GALÉRIA-HELY */}
             <div className="webshop-product-detail__image">
               {imageSrc ? (
                 <img src={imageSrc} alt={product.name} />
@@ -280,8 +341,13 @@ export const WebshopProductDetailPage: React.FC = () => {
               )}
             </div>
 
+            {/* JOBB: CÍM, LEÍRÁS, ÁR, KOSÁRBA */}
             <div className="webshop-product-detail__info">
-              <p className="section-eyebrow">{t("webshop.detail.breadcrumb")}</p>
+              <p className="section-eyebrow">
+                <Link to="/webshop">
+                  {t("webshop.detail.breadcrumb")}
+                </Link>
+              </p>
               <h1 className="hero-title hero-title--tight">
                 {product.name}
               </h1>
@@ -293,9 +359,7 @@ export const WebshopProductDetailPage: React.FC = () => {
               )}
 
               {formattedPrice && (
-                <p className="webshop-product-detail__price">
-                  {formattedPrice}
-                </p>
+                <p className="webshop-product-detail__price">{formattedPrice}</p>
               )}
 
               {averageRating !== null && (
@@ -324,6 +388,46 @@ export const WebshopProductDetailPage: React.FC = () => {
                 </div>
               )}
 
+              {/* Mennyiség + Kosárba, mint a GymBeam termékoldalon */}
+              <div className="webshop-product-detail__purchase">
+                <div className="quantity-control">
+                  <span className="quantity-control__label">Mennyiség</span>
+                  <div className="quantity-control__buttons">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuantity((q) => (q > 1 ? q - 1 : 1))
+                      }
+                    >
+                      -
+                    </button>
+                    <span className="quantity-control__value">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => q + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn btn-primary btn-primary--magenta btn--shine webshop-product-detail__addtocart"
+                  onClick={handleAddToCart}
+                >
+                  {t("webshop.list.addToCart")}
+                </button>
+              </div>
+
+              {addToCartMessage && (
+                <p className="webshop-status webshop-status--success">
+                  {addToCartMessage}
+                </p>
+              )}
+
               <div className="webshop-product-detail__actions">
                 <Link to="/webshop" className="btn btn-secondary">
                   Vissza a webshophoz
@@ -332,6 +436,46 @@ export const WebshopProductDetailPage: React.FC = () => {
             </div>
           </div>
 
+          {/* „Részletek” blokk – egyszerű specifikációs táblázat */}
+          <div className="webshop-product-detail__spec">
+            <h2>Termék részletei</h2>
+            <table className="webshop-product-detail__spec-table">
+              <tbody>
+                {product.sku && (
+                  <tr>
+                    <th>SKU</th>
+                    <td>{product.sku}</td>
+                  </tr>
+                )}
+                {formattedPrice && (
+                  <tr>
+                    <th>Bruttó ár</th>
+                    <td>{formattedPrice}</td>
+                  </tr>
+                )}
+                {product.main_category && (
+                  <tr>
+                    <th>Főkategória</th>
+                    <td>{String(product.main_category)}</td>
+                  </tr>
+                )}
+                {product.sub_category && (
+                  <tr>
+                    <th>Alkategória</th>
+                    <td>{String(product.sub_category)}</td>
+                  </tr>
+                )}
+                {product.service_category && (
+                  <tr>
+                    <th>Szolgáltatás kategória</th>
+                    <td>{String(product.service_category)}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* VÉLEMÉNYEK, mint eddig, csak a „GymBeam-szerű” layout alatt */}
           <div className="webshop-product-detail__reviews">
             <h2>{t("webshop.detail.reviewsTitle")}</h2>
 
@@ -358,9 +502,7 @@ export const WebshopProductDetailPage: React.FC = () => {
                           return (
                             <span
                               key={star}
-                              className={
-                                filled ? "star star--filled" : "star"
-                              }
+                              className={filled ? "star star--filled" : "star"}
                             >
                               {filled ? "★" : "☆"}
                             </span>
@@ -371,14 +513,16 @@ export const WebshopProductDetailPage: React.FC = () => {
                         {review.author_name || t("webshop.detail.guestName")}
                       </span>
                       <span className="webshop-review__date">
-                        {new Date(
-                          review.created_at
-                        ).toLocaleDateString(lang === "hu" ? "hu-HU" : lang === "en" ? "en-GB" : "ru-RU")}
+                        {new Date(review.created_at).toLocaleDateString(
+                          lang === "hu"
+                            ? "hu-HU"
+                            : lang === "en"
+                            ? "en-GB"
+                            : "ru-RU"
+                        )}
                       </span>
                     </div>
-                    <p className="webshop-review__text">
-                      {review.text}
-                    </p>
+                    <p className="webshop-review__text">{review.text}</p>
                   </li>
                 ))}
               </ul>
@@ -395,7 +539,9 @@ export const WebshopProductDetailPage: React.FC = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
-                  <label htmlFor="review-author">{t("webshop.detail.nameLabel")}</label>
+                  <label htmlFor="review-author">
+                    {t("webshop.detail.nameLabel")}
+                  </label>
                   <input
                     id="review-author"
                     type="text"
@@ -431,7 +577,9 @@ export const WebshopProductDetailPage: React.FC = () => {
                 </div>
 
                 <div className="form-row">
-                  <label htmlFor="review-text">{t("webshop.detail.textLabel")}</label>
+                  <label htmlFor="review-text">
+                    {t("webshop.detail.textLabel")}
+                  </label>
                   <textarea
                     id="review-text"
                     value={text}
@@ -447,7 +595,9 @@ export const WebshopProductDetailPage: React.FC = () => {
                   className="btn btn-primary btn-primary--magenta"
                   disabled={submitLoading}
                 >
-                  {submitLoading ? t("webshop.detail.submitLoading") : t("webshop.detail.submitLabel")}
+                  {submitLoading
+                    ? t("webshop.detail.submitLoading")
+                    : t("webshop.detail.submitLabel")}
                 </button>
               </form>
             </div>

@@ -2,8 +2,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import "../styles/kleo-theme v7.css";
-import { apiFetch } from "../apiClient";  // <-- EZ LEGYEN
+import "../styles/webshop-layout.css";
+import { apiFetch } from "../apiClient";
 import { useI18n } from "../i18n";
+
+// ====== TÍPUSOK ======
 
 type MainCategoryKey =
   | "GIFT_VOUCHERS"
@@ -38,119 +41,42 @@ type ServiceCategoryKey =
   | "NAILS"
   | "OTHER";
 
-interface CategoryLevel3 {
-  key: ServiceCategoryKey;
-  label: string;
-  icon?: string;
-}
-
-interface CategoryLevel2 {
-  key: SubCategoryKey;
-  label: string;
-  children?: CategoryLevel3[];
-}
+// termékcsoport kulcs – engedjük a stringet is, hogy biztosan ne okozzon TS hibát
+type ProductGroupKey = MainCategoryKey | SubCategoryKey | string;
 
 interface CategoryLevel1 {
   key: MainCategoryKey;
   label: string;
-  children?: CategoryLevel2[];
 }
 
 const CATEGORY_TREE: CategoryLevel1[] = [
-  {
-    key: "GIFT_VOUCHERS",
-    label: "Ajándékutalványok",
-    children: [
-      { key: "GIFT_VOUCHERS_BASIC", label: "Ajándékutalványok" },
-      {
-        key: "GIFT_CUSTOM_PACKAGE",
-        label: "Egyedi szépségcsomag összeállítása",
-      },
-      {
-        key: "GIFT_BEAUTY_VOUCHERS",
-        label: "Szépségutalványok",
-        children: [
-          { key: "HAIRDRESSING", label: "Fodrászat" },
-          { key: "COSMETICS", label: "Kozmetika" },
-          { key: "MASSAGE", label: "Masszázs" },
-          { key: "SOLARIUM", label: "Szolárium" },
-          { key: "NAILS", label: "Kéz- és lábápolás" },
-          { key: "OTHER", label: "Egyéb szépségszolgáltatások" },
-        ],
-      },
-    ],
-  },
-  {
-    key: "PASSES",
-    label: "Bérletek",
-    children: [
-      { key: "PASSES_SOLARIUM", label: "Szolárium bérletek" },
-      { key: "PASSES_MASSAGE", label: "Masszázsbérletek" },
-      {
-        key: "PASSES_FACIAL",
-        label: "Arckezelés bérletek",
-      },
-      {
-        key: "PASSES_HAIR",
-        label: "Fodrászati bérletek",
-      },
-      {
-        key: "PASSES_OTHER",
-        label: "Egyéb bérletek",
-      },
-    ],
-  },
-  {
-    key: "GUEST_ACCOUNT",
-    label: "Vendégfiókok és vendégszámlák",
-    children: [
-      { key: "GUEST_ACCOUNT_CREATE", label: "Vendégprofil létrehozása" },
-      {
-        key: "GUEST_ACCOUNT_BALANCE",
-        label: "Vendégszámlák és egyenlegek",
-      },
-    ],
-  },
-  {
-    key: "KLEO_PRODUCTS",
-    label: "Kleopátra termékek",
-    children: [
-      { key: "KLEO_PRODUCTS_HAIR", label: "Hajápolási termékek" },
-      { key: "KLEO_PRODUCTS_COSMETICS", label: "Kozmetikumok" },
-      {
-        key: "KLEO_PRODUCTS_SOLARIUM",
-        label: "Szolárium krémek és kiegészítők",
-      },
-      { key: "KLEO_PRODUCTS_ACCESSORIES", label: "Kiegészítők" },
-    ],
-  },
-  {
-    key: "COMPANY_DISCOUNTS",
-    label: "Kedvezmények cégeknek",
-    children: [
-      {
-        key: "COMPANY_DISCOUNTS_PARTNERS",
-        label: "Partnercégek és kedvezmények",
-      },
-      {
-        key: "COMPANY_DISCOUNTS_EMPLOYEES",
-        label: "Munkavállalói kedvezmények",
-      },
-    ],
-  },
+  { key: "GIFT_VOUCHERS", label: "Ajándékutalványok" },
+  { key: "PASSES", label: "Bérletek" },
+  { key: "GUEST_ACCOUNT", label: "Vendégfiókok és vendégszámlák" },
+  { key: "KLEO_PRODUCTS", label: "Kleopátra termékek" },
+  { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
 ];
 
 interface Product {
-  id: string;
-  sku: string;
+  id: number;
+  sku: string | null;
   name: string;
-  retail_price_gross: number | null;
-  sale_price: number | null;
-  image_url?: string | null;
-  is_active: boolean;
-  is_webshop_visible: boolean;
-  product_group_key?: string | null;
-  service_category_key?: string | null;
+
+  // fordítások
+  display_name_hu?: string | null;
+  display_name_en?: string | null;
+  display_name_ru?: string | null;
+  name_en?: string | null;
+  name_ru?: string | null;
+
+  product_group_key: ProductGroupKey;
+  service_category_key: ServiceCategoryKey | string | null;
+  retail_price_gross: number | string | null;
+  sale_price: number | string | null;
+  image_url: string | null;
+
+  is_active?: boolean | null;
+  is_webshop_visible?: boolean | null;
 }
 
 interface CartItem {
@@ -173,6 +99,41 @@ interface CheckoutForm {
   paymentMethod: "card" | "cod";
 }
 
+interface MainCategoryFromApi {
+  key: MainCategoryKey | string;
+  name?: string | null;
+  name_hu?: string | null;
+  name_en?: string | null;
+  name_ru?: string | null;
+}
+
+// ====== SEGÉDFÜGGVÉNYEK ======
+
+function getProductName(product: Product, lang: string): string {
+  if (lang === "en") {
+    return (
+      product.display_name_en ||
+      product.name_en ||
+      product.display_name_hu ||
+      product.name
+    );
+  }
+
+  if (lang === "ru") {
+    return (
+      product.display_name_ru ||
+      product.name_ru ||
+      product.display_name_en ||
+      product.name_en ||
+      product.display_name_hu ||
+      product.name
+    );
+  }
+
+  // alapértelmezett: HU
+  return product.display_name_hu || product.name;
+}
+
 const INITIAL_REG_FORM: RegistrationForm = {
   fullName: "",
   email: "",
@@ -188,18 +149,37 @@ const INITIAL_CHECKOUT_FORM: CheckoutForm = {
   paymentMethod: "card",
 };
 
+const PRODUCTS_PER_PAGE = 15;
+const CART_STORAGE_KEY = "kleoCart";
+const CART_EVENT_NAME = "kleo-cart-updated";
+
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
+  "http://localhost:5000/api";
+const API_ROOT = API_BASE.replace(/\/api$/, "");
+
+function buildImageUrl(imageUrl?: string | null): string | undefined {
+  if (!imageUrl) return undefined;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  const cleaned = imageUrl.replace(/^\/+/, "");
+  return `${API_ROOT}/${cleaned}`;
+}
+
+// ====== KOMPONENS ======
+
 export const WebshopPage: React.FC = () => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [couponInput, setCouponInput] = useState("");
-  const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(
-    null
-  );
+  const [appliedCouponCode, setAppliedCouponCode] =
+    useState<string | null>(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponError, setCouponError] = useState<string | null>(null);
@@ -218,42 +198,42 @@ export const WebshopPage: React.FC = () => {
 
   const [selectedMainCategory, setSelectedMainCategory] =
     useState<MainCategoryKey | null>(null);
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState<SubCategoryKey | null>(null);
-  const [selectedServiceCategory, setSelectedServiceCategory] =
-    useState<ServiceCategoryKey | null>(null);
 
-  // Kosár inicializálása localStorage-ből, hogy a /webshop oldal
-  // ugyanazt lássa, mint a /cart és a lebegő kosár gomb
+  // fő kategória nevek adatbázisból (HU/EN/RU)
+  const [mainCategoryNames, setMainCategoryNames] = useState<
+    Partial<Record<MainCategoryKey, string>>
+  >({});
+
+  // ====== KOSÁR KEZELÉS ======
+
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("kleoCart");
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
       if (raw) {
         const items = JSON.parse(raw) as CartItem[];
         setCart(items);
       }
     } catch {
-      // ha valami gáz van a tárolt adattal, inkább üres kosár
-      localStorage.removeItem("kleoCart");
+      localStorage.removeItem(CART_STORAGE_KEY);
     }
   }, []);
 
-  // Segédfüggvény: minden kosár-módosítást ide tedd, hogy
-  // a localStorage és az event is frissüljön
   const updateCart = (updater: (prev: CartItem[]) => CartItem[]) => {
     setCart((prev) => {
       const next = updater(prev);
       try {
-        localStorage.setItem("kleoCart", JSON.stringify(next));
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
       } catch (e) {
         console.error("Kosár mentése sikertelen", e);
       }
+      const event = new CustomEvent<CartItem[]>(CART_EVENT_NAME, {
+        detail: next,
+      });
+      window.dispatchEvent(event);
       return next;
     });
   };
 
-  // Ha máshol (pl. lebegő kosár ikon vagy /cart oldal) változik a kosár,
-  // egy egyedi eseménnyel jelezzük itt is
   useEffect(() => {
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<CartItem[]>;
@@ -262,73 +242,49 @@ export const WebshopPage: React.FC = () => {
       }
     };
 
-    window.addEventListener("kleo-cart-updated", handler as EventListener);
+    window.addEventListener(CART_EVENT_NAME, handler as EventListener);
     return () => {
-      window.removeEventListener("kleo-cart-updated", handler as EventListener);
+      window.removeEventListener(CART_EVENT_NAME, handler as EventListener);
     };
   }, []);
-
-  // Helper: esemény küldése, ha helyben módosítjuk a kosarat
-  const dispatchCartUpdateEvent = (nextCart: CartItem[]) => {
-    const event = new CustomEvent<CartItem[]>("kleo-cart-updated", {
-      detail: nextCart,
-    });
-    window.dispatchEvent(event);
-  };
 
   const handleAddToCart = (product: Product) => {
     updateCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
-      let next: CartItem[];
-
       if (existing) {
-        next = prev.map((item) =>
+        return prev.map((item) =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-      } else {
-        next = [...prev, { product, quantity: 1 }];
       }
+      return [...prev, { product, quantity: 1 }];
+    });
+  };
 
-      dispatchCartUpdateEvent(next);
+  const handleUpdateQuantity = (productId: number, delta: number) => {
+    updateCart((prev) => {
+      const next: CartItem[] = [];
+      for (const item of prev) {
+        if (item.product.id !== productId) {
+          next.push(item);
+          continue;
+        }
+        const newQty = item.quantity + delta;
+        if (newQty > 0) {
+          next.push({ ...item, quantity: newQty });
+        }
+      }
       return next;
     });
   };
 
-  const handleChangeQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      updateCart((prev) => {
-        const next = prev.filter((item) => item.product.id !== productId);
-        dispatchCartUpdateEvent(next);
-        return next;
-      });
-      return;
-    }
-
-    updateCart((prev) => {
-      const next = prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      );
-      dispatchCartUpdateEvent(next);
-      return next;
-    });
-  };
-
-  const handleRemoveFromCart = (productId: string) => {
-    updateCart((prev) => {
-      const next = prev.filter((item) => item.product.id !== productId);
-      dispatchCartUpdateEvent(next);
-      return next;
-    });
+  const handleRemoveFromCart = (productId: number) => {
+    updateCart((prev) => prev.filter((item) => item.product.id !== productId));
   };
 
   const handleClearCart = () => {
-    updateCart(() => {
-      const next: CartItem[] = [];
-      dispatchCartUpdateEvent(next);
-      return next;
-    });
+    updateCart(() => []);
   };
 
   const cartSubtotal = useMemo(() => {
@@ -336,12 +292,15 @@ export const WebshopPage: React.FC = () => {
       const raw =
         item.product.retail_price_gross ?? item.product.sale_price ?? 0;
       const price =
-        typeof raw === "string" ? parseFloat(raw.replace(",", ".")) : raw ?? 0;
+        typeof raw === "string"
+          ? parseFloat(raw.replace(",", ".")) || 0
+          : raw ?? 0;
       if (!price || Number.isNaN(price)) return sum;
       return sum + price * item.quantity;
     }, 0);
   }, [cart]);
 
+  const cartTotal = cartSubtotal;
   const currencyLabel = "Ft";
 
   const cartTotalAfterCoupon = useMemo(() => {
@@ -349,7 +308,131 @@ export const WebshopPage: React.FC = () => {
     return total < 0 ? 0 : total;
   }, [cartSubtotal, couponDiscount]);
 
-  // =============== KUPON ELLENŐRZÉSE ===============
+  // ====== TERMÉKLISTA BETÖLTÉSE ======
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setProductsLoading(true);
+        setProductsError(null);
+
+        const list = await apiFetch<Product[]>(
+          `/public/webshop/products?lang=${lang}`
+        );
+        setProducts(list);
+      } catch (err: any) {
+        console.error(err);
+        setProductsError(t("webshop.list.error"));
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, [lang, t]);
+
+  // ====== FŐ KATEGÓRIA NEVEK BETÖLTÉSE DB-BŐL ======
+
+  useEffect(() => {
+    let active = true;
+
+    const loadMainCategoryNames = async () => {
+      try {
+        const data = await apiFetch<MainCategoryFromApi[]>(
+          `/public/webshop/main-categories?lang=${lang}`
+        );
+
+        if (!active) return;
+
+        const map: Partial<Record<MainCategoryKey, string>> = {};
+        for (const item of data) {
+          const key = item.key as MainCategoryKey;
+          let name =
+            item.name ||
+            (lang === "en"
+              ? item.name_en
+              : lang === "ru"
+              ? item.name_ru
+              : item.name_hu);
+
+          if (!name) {
+            // fallback – ha az adott nyelven nincs, próbáljuk HU-t
+            name = item.name_hu || item.name_en || item.name_ru || undefined;
+          }
+          if (name) {
+            map[key] = name;
+          }
+        }
+        setMainCategoryNames(map);
+      } catch (err) {
+        console.error("Webshop main categories error:", err);
+        // hiba esetén marad a CATEGORY_TREE fallback
+      }
+    };
+
+    loadMainCategoryNames();
+
+    return () => {
+      active = false;
+    };
+  }, [lang]);
+
+  const getMainCategoryLabel = (key: MainCategoryKey): string => {
+    return (
+      mainCategoryNames[key] ||
+      CATEGORY_TREE.find((m) => m.key === key)?.label ||
+      key
+    );
+  };
+
+  // ====== SZŰRÉS + LAPOZÁS ======
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products, selectedMainCategory]);
+
+  const filteredProducts = useMemo(() => {
+    let result = products.filter(
+      (p) => p.is_active !== false && p.is_webshop_visible !== false
+    );
+
+    if (selectedMainCategory) {
+      result = result.filter((p) => {
+        if (selectedMainCategory === "GIFT_VOUCHERS") {
+          return p.product_group_key === "GIFT_VOUCHERS";
+        }
+        if (selectedMainCategory === "PASSES") {
+          return p.product_group_key === "PASSES";
+        }
+        if (selectedMainCategory === "GUEST_ACCOUNT") {
+          return p.product_group_key === "GUEST_ACCOUNT";
+        }
+        if (selectedMainCategory === "KLEO_PRODUCTS") {
+          return p.product_group_key === "KLEO_PRODUCTS";
+        }
+        if (selectedMainCategory === "COMPANY_DISCOUNTS") {
+          return p.product_group_key === "COMPANY_DISCOUNTS";
+        }
+        return true;
+      });
+    }
+
+    return result;
+  }, [products, selectedMainCategory]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
+  );
+
+  const safePage = Math.min(currentPage, totalPages);
+
+  const pagedProducts = useMemo(() => {
+    const start = (safePage - 1) * PRODUCTS_PER_PAGE;
+    return filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
+  }, [filteredProducts, safePage]);
+
+  // ====== KUPON ======
 
   const handleApplyCoupon = async () => {
     setCouponMessage(null);
@@ -385,9 +468,7 @@ export const WebshopPage: React.FC = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(
-          text || t("webshop.coupon.error.general")
-        );
+        throw new Error(text || t("webshop.coupon.error.general"));
       }
 
       const data = await res.json();
@@ -418,7 +499,7 @@ export const WebshopPage: React.FC = () => {
     }
   };
 
-  // =============== REGISZTRÁCIÓ ===============
+  // ====== REGISZTRÁCIÓ ======
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -426,7 +507,8 @@ export const WebshopPage: React.FC = () => {
     setRegMessage(null);
 
     if (!regForm.fullName || !regForm.email || !regForm.password) {
-      throw new Error(t("webshop.registration.error.missingFields"));
+      setRegError(t("webshop.registration.error.missingFields"));
+      return;
     }
 
     setRegLoading(true);
@@ -444,15 +526,11 @@ export const WebshopPage: React.FC = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(
-          text || t("webshop.registration.error.general")
-        );
+        throw new Error(text || t("webshop.registration.error.general"));
       }
 
       setRegForm(INITIAL_REG_FORM);
-      setRegMessage(
-        t("webshop.registration.success")
-      );
+      setRegMessage(t("webshop.registration.success"));
     } catch (err: any) {
       console.error(err);
       setRegError(err.message || t("webshop.registration.error.unknown"));
@@ -461,7 +539,7 @@ export const WebshopPage: React.FC = () => {
     }
   };
 
-  // =============== RENDELÉS LEADÁSA ===============
+  // ====== RENDELÉS ======
 
   const handleOrderSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -474,9 +552,7 @@ export const WebshopPage: React.FC = () => {
     }
 
     if (!checkoutForm.fullName || !checkoutForm.email || !checkoutForm.address) {
-      setOrderError(
-        t("webshop.order.error.missingFields")
-      );
+      setOrderError(t("webshop.order.error.missingFields"));
       return;
     }
 
@@ -507,23 +583,20 @@ export const WebshopPage: React.FC = () => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(
-          text || t("webshop.order.error.general")
-        );
+        throw new Error(text || t("webshop.order.error.general"));
       }
 
       const data = await res.json();
       console.log("Rendelés sikeresen ment:", data);
 
-      setOrderMessage(
-        t("webshop.order.success")
-      );
+      setOrderMessage(t("webshop.order.success"));
       setCart([]);
       setAppliedCouponCode(null);
       setCouponDiscount(0);
       setCouponMessage(null);
       setCouponError(null);
       setCouponInput("");
+      localStorage.removeItem(CART_STORAGE_KEY);
     } catch (err: any) {
       console.error(err);
       setOrderError(err.message || t("webshop.order.error.unknown"));
@@ -532,82 +605,14 @@ export const WebshopPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      setProductsLoading(true);
-      setProductsError(null);
-      try {
-        const list = await apiFetch<Product[]>("/public/webshop/products");
-        setProducts(list);
-      } catch (err: any) {
-        console.error(err);
-        setProductsError(
-          t("webshop.list.error")
-        );
-      } finally {
-        setProductsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, [t]);
-
- const filteredProducts = useMemo(() => {
-  // csak azokat rejtsük el, ahol kifejezetten false-t kaptunk a DB-ből
-  let result = products.filter(
-    (p) => p.is_active !== false && p.is_webshop_visible !== false
-  );
-
-  if (selectedMainCategory) {
-    result = result.filter((p) => {
-      if (selectedMainCategory === "GIFT_VOUCHERS") {
-        return p.product_group_key === "GIFT_VOUCHERS";
-      }
-      if (selectedMainCategory === "PASSES") {
-        return p.product_group_key === "PASSES";
-      }
-      if (selectedMainCategory === "GUEST_ACCOUNT") {
-        return p.product_group_key === "GUEST_ACCOUNT";
-      }
-      if (selectedMainCategory === "KLEO_PRODUCTS") {
-        return p.product_group_key === "KLEO_PRODUCTS";
-      }
-      if (selectedMainCategory === "COMPANY_DISCOUNTS") {
-        return p.product_group_key === "COMPANY_DISCOUNTS";
-      }
-      return true;
-    });
-  }
-
-  if (selectedSubCategory) {
-    result = result.filter(
-      (p) => p.product_group_key === selectedSubCategory
-    );
-  }
-
-  if (selectedServiceCategory) {
-    result = result.filter(
-      (p) => p.service_category_key === selectedServiceCategory
-    );
-  }
-
-  return result;
-}, [
-  products,
-  selectedMainCategory,
-  selectedSubCategory,
-  selectedServiceCategory,
-]);
+  // ====== RENDER ======
 
   return (
     <main className="page-main page-main--webshop">
-      {/* HERO – meglévő látvány a képpel és körökkel */}
+      {/* HERO */}
       <section className="webshop-hero">
         <div className="webshop-hero__bg">
-          <img
-            src="/images/kleoshop.png"
-            alt={t("webshop.hero.imageAlt")}
-          />
+          <img src="/images/kleoshop.png" alt={t("webshop.hero.imageAlt")} />
         </div>
 
         <div className="container webshop-hero__content">
@@ -624,9 +629,7 @@ export const WebshopPage: React.FC = () => {
           </div>
 
           <div className="webshop-hero__text">
-            <p className="section-eyebrow">
-              {t("webshop.hero.eyebrow")}
-            </p>
+            <p className="section-eyebrow">{t("webshop.hero.eyebrow")}</p>
 
             <h1 className="hero-title hero-title--tight">
               {t("webshop.hero.titleMain")}{" "}
@@ -662,199 +665,205 @@ export const WebshopPage: React.FC = () => {
                 />
               </div>
               <div className="webshop-invoice__text">
-                <p className="small">
-                  {t("webshop.hero.invoiceText")}
-                </p>
+                <p className="small">{t("webshop.hero.invoiceText")}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TERMÉKLISTA + KOSÁR */}
+      {/* LISTA + KOSÁR */}
       <section id="webshop-lista" className="section section--webshop">
         <div className="container webshop-layout">
-          {/* BAL: TERMÉKEK */}
+          {/* KÖZÉP: TERMÉKLISTA */}
           <div className="webshop-main">
-            <p className="section-eyebrow">
-              {t("webshop.list.eyebrow")}
-            </p>
+            <p className="section-eyebrow">{t("webshop.list.eyebrow")}</p>
             <h2>{t("webshop.list.title")}</h2>
-            <p className="section-lead">
-              {t("webshop.list.lead")}
-            </p>
+            <p className="section-lead">{t("webshop.list.lead")}</p>
+
+            {/* Felső, vízszintes kategória sáv */}
+            <div className="webshop-categories-bar">
+              <h3 className="webshop-categories-bar__title">
+                {t("webshop.list.sidebarTitle")}
+              </h3>
+
+              <div className="webshop-categories-bar__main">
+                {CATEGORY_TREE.map((main) => {
+                  const isActiveMain = selectedMainCategory === main.key;
+                  return (
+                    <button
+                      key={main.key}
+                      type="button"
+                      className={
+                        "webshop-category-pill" +
+                        (isActiveMain ? " webshop-category-pill--active" : "")
+                      }
+                      onClick={() => {
+                        const next = isActiveMain ? null : main.key;
+                        setSelectedMainCategory(next);
+                      }}
+                    >
+                      {getMainCategoryLabel(main.key)}
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="webshop-category-reset"
+                  onClick={() => {
+                    setSelectedMainCategory(null);
+                  }}
+                >
+                  {t("webshop.list.resetFilters")}
+                </button>
+              </div>
+            </div>
 
             {productsLoading && (
-              <p className="webshop-status">{t("webshop.list.loading")}</p>
+              <p className="webshop-status webshop-status--loading">
+                {t("webshop.list.loading")}
+              </p>
             )}
+
             {productsError && (
               <p className="webshop-status webshop-status--error">
                 {productsError}
               </p>
             )}
 
-            {/* Kategória-szűrők – az általad kért fa alapján */}
-            <div className="webshop-categories">
-              {CATEGORY_TREE.map((main) => {
-                const isActiveMain = selectedMainCategory === main.key;
-
-                return (
-                  <div key={main.key} className="webshop-category-group">
-                    <button
-                      type="button"
-                      className={
-                        isActiveMain
-                          ? "webshop-category-main webshop-category-main--active"
-                          : "webshop-category-main"
-                      }
-                      onClick={() => {
-                        const next = isActiveMain ? null : main.key;
-                        setSelectedMainCategory(next);
-                        setSelectedSubCategory(null);
-                        setSelectedServiceCategory(null);
-                      }}
-                    >
-                      {main.label}
-                    </button>
-
-                    {isActiveMain && main.children && (
-                      <div className="webshop-subcategories">
-                        {main.children.map((sub) => {
-                          const isActiveSub = selectedSubCategory === sub.key;
-                          return (
-                            <div
-                              key={sub.key}
-                              className="webshop-subcategory-block"
-                            >
-                              <button
-                                type="button"
-                                className={
-                                  isActiveSub
-                                    ? "webshop-subcategory__button webshop-subcategory__button--active"
-                                    : "webshop-subcategory__button"
-                                }
-                                onClick={() => {
-                                  const next =
-                                    selectedSubCategory === sub.key
-                                      ? null
-                                      : sub.key;
-                                  setSelectedSubCategory(next);
-                                  setSelectedServiceCategory(null);
-                                }}
-                              >
-                                {sub.label}
-                              </button>
-
-                              {sub.children && isActiveSub && (
-                                <div className="webshop-service-categories">
-                                  {sub.children.map((svc) => (
-                                    <button
-                                      key={svc.key}
-                                      type="button"
-                                      className={
-                                        selectedServiceCategory === svc.key
-                                          ? "webshop-service__button webshop-service__button--active"
-                                          : "webshop-service__button"
-                                      }
-                                      onClick={() => {
-                                        setSelectedServiceCategory(
-                                          selectedServiceCategory === svc.key
-                                            ? null
-                                            : svc.key
-                                        );
-                                      }}
-                                    >
-                                      {svc.label}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              <button
-                type="button"
-                className="webshop-category-reset"
-                onClick={() => {
-                  setSelectedMainCategory(null);
-                  setSelectedSubCategory(null);
-                  setSelectedServiceCategory(null);
-                }}
-              >
-                {t("webshop.list.resetFilters")}
-              </button>
-            </div>
-
-            {/* Terméklista kártyák */}
             <div className="webshop-products-grid">
-              {filteredProducts.map((product) => {
+              {pagedProducts.map((product) => {
                 const raw =
                   product.retail_price_gross ?? product.sale_price ?? 0;
                 const price =
                   typeof raw === "string"
-                    ? parseFloat(raw.replace(",", "."))
+                    ? parseFloat(raw.replace(",", ".")) || 0
                     : raw ?? 0;
                 const displayPrice =
                   !price || Number.isNaN(price)
-                    ? "Ár kérésre"
-                    : `${price.toLocaleString("hu-HU")} Ft`;
+                    ? t("webshop.list.priceOnRequest")
+                    : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+
+                const imageSrc = buildImageUrl(product.image_url || undefined);
 
                 return (
                   <article key={product.id} className="webshop-product-card">
-                    <div className="webshop-product-card__image">
-                      {product.image_url ? (
-                        <img src={product.image_url} alt={product.name} />
+                    <Link
+                      to={`/webshop/products/${product.id}`}
+                      state={{ product }}
+                      className="webshop-product-card__image"
+                    >
+                      {imageSrc ? (
+                        <img src={imageSrc} alt={getProductName(product, lang)} />
                       ) : (
                         <div className="webshop-product-card__image-placeholder">
-                          <span>{product.name[0]}</span>
+                          <span>{product.name?.[0] ?? "K"}</span>
                         </div>
                       )}
-                    </div>
+                    </Link>
+
                     <div className="webshop-product-card__body">
                       <h3 className="webshop-product-card__title">
-                        {product.name}
+                        <Link
+                          to={`/webshop/products/${product.id}`}
+                          state={{ product }}
+                        >
+                          {getProductName(product, lang)}
+                        </Link>
                       </h3>
+
                       <p className="webshop-product-card__sku">
                         <small>SKU: {product.sku}</small>
                       </p>
+
                       <p className="webshop-product-card__price">
                         <strong>{displayPrice}</strong>
                       </p>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-primary--magenta btn--shine webshop-product-card__btn"
-                        onClick={() => handleAddToCart(product)}
-                      >
-                        <span>{t("webshop.list.addToCart")}</span>
-                      </button>
+
+                      <div className="webshop-product-card__actions">
+                        <Link
+                          to={`/webshop/products/${product.id}`}
+                          state={{ product }}
+                          className="btn btn-secondary webshop-product-card__btn-details"
+                        >
+                          {t("webshop.list.details")}
+                        </Link>
+
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-primary--magenta btn--shine webshop-product-card__btn"
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          <span>{t("webshop.list.addToCart")}</span>
+                        </button>
+                      </div>
                     </div>
                   </article>
                 );
               })}
             </div>
 
-            {filteredProducts.length === 0 && !productsLoading && !productsError && (
-              <p className="webshop-status">
+            {filteredProducts.length === 0 &&
+              !productsLoading &&
+              !productsError && (
+                <p className="webshop-status">
                   {t("webshop.list.emptyFiltered")}
                 </p>
+              )}
+
+            {totalPages > 1 && (
+              <div className="webshop-pagination">
+                <button
+                  type="button"
+                  className="webshop-pagination__button"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={safePage === 1}
+                >
+                  ‹
+                </button>
+
+                {Array.from({ length: totalPages }).map((_, index) => {
+                  const page = index + 1;
+                  return (
+                    <button
+                      key={page}
+                      type="button"
+                      className={
+                        "webshop-pagination__button" +
+                        (page === safePage
+                          ? " webshop-pagination__button--active"
+                          : "")
+                      }
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="webshop-pagination__button"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={safePage === totalPages}
+                >
+                  ›
+                </button>
+              </div>
             )}
           </div>
 
-          {/* JOBB: KOSÁR */}
+          {/* JOBB OLDAL: KOSÁR */}
           <aside className="webshop-cart">
             <div className="webshop-cart__head">
-              <h3 className="webshop-cart__title">{t("webshop.cart.title")}</h3>
+              <h3 className="webshop-cart__title">
+                {t("webshop.cart.title")}
+              </h3>
               <p className="webshop-cart__hint">
-                <small>
-                  Válaszd ki a bérleteket és utalványokat, majd a "Tovább a
-                  fizetéshez" gombbal véglegesítsd a rendelést.
-                </small>
+                {t("webshop.cart.hint")}
               </p>
             </div>
 
@@ -874,40 +883,36 @@ export const WebshopPage: React.FC = () => {
                       0;
                     const price =
                       typeof raw === "string"
-                        ? parseFloat(raw.replace(",", "."))
+                        ? parseFloat(raw.replace(",", ".")) || 0
                         : raw ?? 0;
                     const displayPrice =
                       !price || Number.isNaN(price)
-                        ? "Ár kérésre"
-                        : `${price.toLocaleString("hu-HU")} Ft`;
+                        ? t("webshop.list.priceOnRequest")
+                        : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
                     return (
                       <li
                         key={item.product.id}
-                        className="webshop-cart__item webshop-cart-item"
+                        className="webshop-cart-item"
                       >
                         <div className="webshop-cart-item__main">
-                          <div className="webshop-cart-item__info">
-                            <h4 className="webshop-cart-item__title">
-                              {item.product.name}
-                            </h4>
-                            <p className="webshop-cart-item__price">
-                              {displayPrice}
-                            </p>
-                          </div>
+                          <h4 className="webshop-cart-item__title">
+                            {getProductName(item.product, lang)}
+                          </h4>
+                          <p className="webshop-cart-item__price">
+                            {displayPrice}
+                          </p>
                         </div>
+
                         <div className="webshop-cart-item__actions">
                           <button
                             type="button"
                             className="webshop-cart-qty-btn"
                             onClick={() =>
-                              handleChangeQuantity(
-                                item.product.id,
-                                item.quantity - 1
-                              )
+                              handleUpdateQuantity(item.product.id, -1)
                             }
                           >
-                            -
+                            −
                           </button>
                           <span className="webshop-cart-qty">
                             {item.quantity}
@@ -916,13 +921,19 @@ export const WebshopPage: React.FC = () => {
                             type="button"
                             className="webshop-cart-qty-btn"
                             onClick={() =>
-                              handleChangeQuantity(
-                                item.product.id,
-                                item.quantity + 1
-                              )
+                              handleUpdateQuantity(item.product.id, +1)
                             }
                           >
                             +
+                          </button>
+                          <button
+                            type="button"
+                            className="webshop-cart-qty-btn"
+                            onClick={() =>
+                              handleRemoveFromCart(item.product.id)
+                            }
+                          >
+                            ×
                           </button>
                         </div>
                       </li>
@@ -934,27 +945,19 @@ export const WebshopPage: React.FC = () => {
                   <div className="webshop-cart__total">
                     <span>{t("webshop.cart.subtotal")}</span>
                     <strong>
-                      {cartSubtotal.toLocaleString("hu-HU")} {currencyLabel}
+                      {cartTotal.toLocaleString("hu-HU")} {currencyLabel}
                     </strong>
                   </div>
 
-                  {appliedCouponCode && (
+                  {cartTotalAfterCoupon !== cartTotal && (
                     <div className="webshop-cart__total webshop-cart__total--discount">
-                      <span>{t("webshop.cart.discount")} ({appliedCouponCode}):</span>
+                      <span>{t("webshop.cart.totalDiscounted")}</span>
                       <strong>
-                        -{couponDiscount.toLocaleString("hu-HU")}{" "}
+                        {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
                       </strong>
                     </div>
                   )}
-
-                  <div className="webshop-cart__total webshop-cart__total--final">
-                    <span>{t("webshop.cart.total")}</span>
-                    <strong>
-                      {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
-                      {currencyLabel}
-                    </strong>
-                  </div>
 
                   <button
                     type="button"
@@ -963,6 +966,7 @@ export const WebshopPage: React.FC = () => {
                   >
                     {t("webshop.cart.clear")}
                   </button>
+
                   <a
                     href="#webshop-checkout"
                     className="btn btn-primary btn-primary--magenta webshop-cart__checkout-link"
@@ -976,15 +980,17 @@ export const WebshopPage: React.FC = () => {
         </div>
       </section>
 
-      {/* REGISZTRÁCIÓ + FIZETÉS + KUPONMEZŐ */}
+      {/* REGISZTRÁCIÓ + CHECKOUT BLOKK */}
       <section
         id="webshop-regisztracio"
         className="section section--webshop-alt"
       >
         <div className="container webshop-checkout-grid">
-          {/* REGISZTRÁCIÓ – users tábla */}
+          {/* BAL: REGISZTRÁCIÓ / FIÓK */}
           <div className="webshop-panel">
-            <p className="section-eyebrow">{t("webshop.registration.eyebrow")}</p>
+            <p className="section-eyebrow">
+              {t("webshop.registration.eyebrow")}
+            </p>
             <h2>{t("webshop.registration.title")}</h2>
             <p className="section-lead">
               {t("webshop.registration.lead")}
@@ -998,7 +1004,10 @@ export const WebshopPage: React.FC = () => {
                     type="text"
                     value={regForm.fullName}
                     onChange={(e) =>
-                      setRegForm((prev) => ({ ...prev, fullName: e.target.value }))
+                      setRegForm((prev) => ({
+                        ...prev,
+                        fullName: e.target.value,
+                      }))
                     }
                   />
                 </label>
@@ -1008,7 +1017,10 @@ export const WebshopPage: React.FC = () => {
                     type="email"
                     value={regForm.email}
                     onChange={(e) =>
-                      setRegForm((prev) => ({ ...prev, email: e.target.value }))
+                      setRegForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
                     }
                   />
                 </label>
@@ -1020,16 +1032,17 @@ export const WebshopPage: React.FC = () => {
                     type="password"
                     value={regForm.password}
                     onChange={(e) =>
-                      setRegForm((prev) => ({ ...prev, password: e.target.value }))
+                      setRegForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
                     }
                   />
                 </label>
               </div>
 
               {regError && (
-                <p className="form-msg--error webshop-form-msg">
-                  {regError}
-                </p>
+                <p className="form-msg--error webshop-form-msg">{regError}</p>
               )}
               {regMessage && (
                 <p className="form-msg--success webshop-form-msg">
@@ -1049,13 +1062,14 @@ export const WebshopPage: React.FC = () => {
             </form>
           </div>
 
-          {/* FIZETÉS / SZÁLLÍTÁSI ADATOK + KUPON */}
-          <div id="webshop-checkout" className="webshop-panel">
+          {/* JOBB: SZÁLLÍTÁS + FIZETÉS + ÖSSZEFOGLALÓ */}
+          <div
+            id="webshop-checkout"
+            className="webshop-panel webshop-panel--checkout"
+          >
             <p className="section-eyebrow">{t("webshop.checkout.eyebrow")}</p>
             <h2>{t("webshop.checkout.title")}</h2>
-            <p className="section-lead">
-              {t("webshop.checkout.lead")}
-            </p>
+            <p className="section-lead">{t("webshop.checkout.lead")}</p>
 
             <form className="webshop-form" onSubmit={handleOrderSubmit}>
               <div className="form-row form-row--two">
@@ -1108,12 +1122,17 @@ export const WebshopPage: React.FC = () => {
                     onChange={(e) =>
                       setCheckoutForm((prev) => ({
                         ...prev,
-                        paymentMethod: e.target.value as "card" | "cod",
+                        paymentMethod: e.target
+                          .value as CheckoutForm["paymentMethod"],
                       }))
                     }
                   >
-                    <option value="card">{t("webshop.checkout.payment.card")}</option>
-                    <option value="cod">{t("webshop.checkout.payment.cod")}</option>
+                    <option value="card">
+                      {t("webshop.checkout.payment.card")}
+                    </option>
+                    <option value="cod">
+                      {t("webshop.checkout.payment.cod")}
+                    </option>
                   </select>
                 </label>
               </div>
@@ -1150,7 +1169,9 @@ export const WebshopPage: React.FC = () => {
                     onClick={handleApplyCoupon}
                     disabled={couponLoading || cart.length === 0}
                   >
-                    {couponLoading ? t("webshop.checkout.couponChecking") : t("webshop.checkout.couponApply")}
+                    {couponLoading
+                      ? t("webshop.checkout.couponChecking")
+                      : t("webshop.checkout.couponApply")}
                   </button>
                 </div>
               </div>
@@ -1203,7 +1224,9 @@ export const WebshopPage: React.FC = () => {
                   </div>
                   {appliedCouponCode && (
                     <div>
-                      <span>{t("webshop.checkout.discount")} ({appliedCouponCode}): </span>
+                      <span>
+                        {t("webshop.checkout.discount")} ({appliedCouponCode}):{" "}
+                      </span>
                       <strong>
                         -{couponDiscount.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
@@ -1226,8 +1249,8 @@ export const WebshopPage: React.FC = () => {
                     disabled={orderLoading || cart.length === 0}
                   >
                     {orderLoading
-                    ? t("webshop.checkout.submitLoading")
-                    : t("webshop.checkout.submit")}
+                      ? t("webshop.checkout.submitLoading")
+                      : t("webshop.checkout.submit")}
                   </button>
                 </div>
               </div>

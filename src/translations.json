@@ -472,8 +472,6 @@
 "about.section.story.p3": "A vendégkör gyorsan növekedett, ezzel együtt az igény a jól képzett szakemberekre is. A cég ezért kezdett el tanulókat képezni – ma is büszkék vagyunk rá, hány kiváló szakember került ki a Kleopátra „iskolájából”, és hogy jelenlegi legjobb kollégáink közül is sokan itt végezték gyakorlati tanulmányaikat.",
 "about.section.story.p4": "A folyamatosan bővülő vendégkör, az elégedett visszajelzések és a bizalom tették lehetővé, hogy újabb Kleopátra Szépségszalonokat nyissunk, és hálózattá fejlődjünk. Célunk, hogy továbbra is terjeszkedjünk és fejlődjünk, miközben minden vendégünknek elérhető áron, a lehető legmagasabb színvonalon biztosítjuk a hétköznapokba csempészett luxust.",
 "about.section.story.p5": "Bízunk benne, hogy hamarosan Önt is törzsvendégeink között üdvözölhetjük – szeretettel várjuk a Kleopátra Szépségszalonokban!",
-
-
 "contact.hero.title": "Lépj velünk kapcsolatba",
 "contact.hero.title.suffix": " – prémium szépségszolgáltatásokkal.",
 "contact.hero.lead": "Kérdésed van szolgáltatásainkkal, franchise-szal, karrierrel vagy hűségprogramunkkal kapcsolatban? Töltsd ki az űrlapot, és szalonjaink egyikéből felvesszük veled a kapcsolatot.",
@@ -504,21 +502,18 @@
 "franchise.hero.imageAlt": "Kleopátra Szépségszalon – franchise program",
 "franchise.hero.cta.primary": "Franchise jelentkezés",
 "franchise.hero.cta.secondary": "Kérdésem van a franchise-ról",
-
 "franchise.segment.title": "Kinek szól a Kleopátra franchise program?",
 "franchise.segment.new.title": "Akik most vágnának bele egy új szalonba",
 "franchise.segment.new.lead": "Ha régóta gondolkodsz saját szépségszalonon, de nem tudod, hogyan indulj el, kész rendszert adunk a kezedbe.",
 "franchise.segment.new.li1": "Teljes márka- és arculathasználat a nyitástól kezdve",
 "franchise.segment.new.li2": "Belsőépítészeti ajánlások és kialakítási támogatás",
 "franchise.segment.new.li3": "Lépésről lépésre felépített nyitási folyamat",
-
 "franchise.segment.existing.title": "Már működő szalon tulajdonosoknak",
 "franchise.segment.existing.lead": "Ha a forgalom visszaesett vagy túl sok terhet cipelsz egyedül, segítünk újra növekedési pályára állni.",
 "franchise.segment.existing.li1": "Megújított, egységes arculat és vendégélmény",
 "franchise.segment.existing.li2": "Központi marketing és kampányok a vendégszerzéshez",
 "franchise.segment.existing.li3": "HR-támogatás, képzések és vezetői mentoring",
 "franchise.segment.existing.li4": "Költségoptimalizálás és kedvezményes beszerzési rendszer",
-
 "franchise.invest.title": "Befektetés és főbb pénzügyi keretek",
 "franchise.invest.lead": "A Kleopátra franchise átlátható, előre tervezhető költségstruktúrával dolgozik.",
 "franchise.invest.entryFee.title": "Belépési díj",
@@ -531,7 +526,6 @@
 "franchise.invest.royalty.value": "10% forgalom alapú díj",
 "franchise.invest.royalty.text": "Központi marketing, HR- és szakmai támogatás, folyamatos fejlesztések és kedvezményes beszerzési rendszer finanszírozása.",
 "franchise.invest.paybackNote": "Tapasztalataink szerint a befektetés átlagosan 2–3 év alatt térülhet meg, a város, az üzlet mérete és a kihasználtság függvényében.",
-
 "franchise.steps.title": "Mit kapsz franchise partnerként?",
 "franchise.steps.start.title": "Elindulunk a nulláról",
 "franchise.steps.start.text": "Több mint 20 év szépségipari tapasztalatára építve segítünk a megfelelő lokáció kiválasztásától az üzleti tervig és a szalonnyitásig.",
@@ -539,7 +533,6 @@
 "franchise.steps.firstGuests.text": "Bejáratott üzleti és marketingstratégiát kapsz, amely a nyitás első napjától támogatja a vendégforgalom felépítését.",
 "franchise.steps.growth.title": "Felgyorsítjuk a növekedést",
 "franchise.steps.growth.text": "Szoftveres ügyfélkezelés, folyamatos képzések, központi kampányok és vezetőképzés segít a hosszú távú, stabil növekedésben.",
-
 "franchise.cta.title": "Legyél Te is Kleopátra franchise partner!",
 "franchise.cta.lead": "Töltsd ki rövid jelentkezési űrlapunkat, vagy vedd fel velünk a kapcsolatot, és egyeztetünk a részletekről.",
 "franchise.cta.phoneLabel": "Franchise információ:",
@@ -552,34 +545,27 @@
 "franchise.form.name": "Név",
 "franchise.form.email": "E-mail cím",
 "franchise.form.phone": "Telefonszám",
-
 "franchise.form.location.legend": "Tervezett szalon helyszíne",
 "franchise.form.location.city": "Város / település",
 "franchise.form.location.street": "Utca, környék (opcionális)",
-
 "franchise.form.business.legend": "Jelenlegi helyzeted",
 "franchise.form.business.new": "Új szalont szeretnék nyitni",
 "franchise.form.business.convert": "Meglévő szépségszalonomat alakítanám át Kleopátrává",
 "franchise.form.business.investor": "Befektetőként gondolkodom, üzemeltető partnerrel",
-
 "franchise.form.invest.legend": "Tervezett befektetési keret (bruttó)",
 "franchise.form.invest.range1": "20–30 millió Ft",
 "franchise.form.invest.range2": "30–40 millió Ft",
 "franchise.form.invest.range3": "40 millió Ft felett",
 "franchise.form.invest.unsure": "Még nem tudom pontosan",
-
 "franchise.form.timeline.legend": "Mikor szeretnél indulni?",
 "franchise.form.timeline.asap": "Amint lehetséges",
 "franchise.form.timeline.sixMonths": "6 hónapon belül",
 "franchise.form.timeline.year": "1 éven belül vagy később",
-
 "franchise.form.message.legend": "Terveid röviden",
 "franchise.form.messageLabel": "Miben tudunk segíteni?",
 "franchise.form.messagePlaceholder": "Néhány mondatban foglald össze elképzeléseidet (város, méret, csapat, stb.)…",
-
 "franchise.form.caption.demo": "A jelenlegi űrlap bemutató jellegű – a beküldés még nem minősül szerződéses ajánlatnak.",
 "franchise.form.submit": "Franchise érdeklődés elküldése",
-
 "franchise.aside.title": "Következő lépések",
 "franchise.aside.text1": "A kitöltés után franchise szakértőnk e-mailben vagy telefonon keres meg, hogy pontosítsátok az igényeket és egyeztessetek egy személyes vagy online konzultációt.",
 "franchise.aside.text2": "A beszélgetés során bemutatjuk a Kleopátra rendszer elemeit, a várható befektetési igényt, megtérülést és a rendelkezésre álló lokációs lehetőségeket.",
@@ -590,7 +576,6 @@
 "franchise.segment.new.li1": "Bevezetett márkanév és kész arculati csomag",
 "franchise.segment.new.li2": "Kidolgozott nyitási folyamatok és szakmai háttér",
 "franchise.segment.new.li3": "Segítség a lokáció, szolgáltatás-portfólió és árképzés kialakításában",
-
 "franchise.segment.existing.title": "Már működő szalon tulajdonosainak",
 "franchise.segment.existing.lead": "Ha meglévő szalonodat erős márkával és szervezett háttérrel fejlesztenéd tovább.",
 "franchise.segment.existing.li1": "Rebranding Kleopátra arculatra",
@@ -619,12 +604,6 @@
 "franchise.invest.entry.text": "A belépési díj tartalmazza a márkanév és arculat használatát, az arculati és működési kézikönyveket, valamint a nyitáshoz kapcsolódó tanácsadást.",
 "franchise.invest.start.title": "Induló beruházás",
 "franchise.invest.start.text": "Az induló beruházás mértéke a szalon méretétől, állapotától és elhelyezkedésétől függ. Segítünk a költségtervezésben, a berendezés kiválasztásában és a nyitás megtervezésében."
-
-
-
-
-
-
 
   },
 
@@ -1069,7 +1048,6 @@
 "webshop.order.error.general": "We could not place your order. Please try again.",
 "webshop.order.error.unknown": "An unknown error occurred while placing the order.",
 "webshop.order.success": "Thank you for your order! We will send the confirmation invoice by e-mail.",
-
 "contact.hero.title": "Get in touch with us",
 "contact.hero.title.suffix": " – with premium beauty services.",
 "contact.hero.lead": "Do you have questions about our services, franchise opportunities, career options or loyalty program? Fill in the form and one of our salons will get in touch with you.",
@@ -1101,7 +1079,6 @@
 "about.hero.eyebrow": "About us",
 "about.hero.title": "More than a beauty salon network",
 "about.hero.lead": "Our goal at Kleopatra Beauty Salons is to provide our guests with as many beauty services as possible in one place, in the shortest possible time – as accessible everyday luxury, in consistent Kleopatra quality.",
-
 "about.vision.imageAlt": "Guest in a Kleopatra Beauty Salon in front of the mirror",
 "about.mission.imageAlt": "Kleopatra team working together in the salon",
 "about.feedback.imageAlt": "Happy guest and beauty professional in a Kleopatra Beauty Salon",
@@ -1133,21 +1110,18 @@
 "franchise.hero.imageAlt": "Kleopatra Beauty Salons – franchise program",
 "franchise.hero.cta.primary": "Franchise application",
 "franchise.hero.cta.secondary": "I have a question about the franchise",
-
 "franchise.segment.title": "Who is the Kleopátra franchise for?",
 "franchise.segment.new.title": "For those opening a new salon",
 "franchise.segment.new.lead": "If you have been dreaming of your own beauty salon but don’t know where to start, we give you a complete, proven system.",
 "franchise.segment.new.li1": "Full use of the Kleopátra brand and visual identity from day one",
 "franchise.segment.new.li2": "Interior design recommendations and support for the build-out",
 "franchise.segment.new.li3": "Step-by-step opening process and operational guidelines",
-
-"franchise.segment.existing.title": "For existing salon owners",
+"franchisesegment.existing.title": "For existing salon owners",
 "franchise.segment.existing.lead": "If your turnover has dropped or you carry too much on your own, we help you put your salon back on a growth path.",
 "franchise.segment.existing.li1": "Renewed, unified visual identity and guest experience",
 "franchise.segment.existing.li2": "Central marketing and campaigns to attract guests",
 "franchise.segment.existing.li3": "HR support, trainings and leadership mentoring",
 "franchise.segment.existing.li4": "Cost optimisation and access to discounted procurement",
-
 "franchise.invest.title": "Investment and main financial framework",
 "franchise.invest.lead": "The Kleopátra franchise works with a transparent, predictable cost structure.",
 "franchise.invest.entryFee.title": "Entry fee",
@@ -1160,7 +1134,6 @@
 "franchise.invest.royalty.value": "10% turnover-based fee",
 "franchise.invest.royalty.text": "Finances central marketing, HR and professional support, continuous developments and the discounted purchasing system.",
 "franchise.invest.paybackNote": "Based on our experience the investment can typically pay back within 2–3 years, depending on the city, salon size and utilisation.",
-
 "franchise.steps.title": "What you receive as a franchise partner",
 "franchise.steps.start.title": "We help you start from zero",
 "franchise.steps.start.text": "We support you with more than 20 years of beauty industry experience – from choosing the right location through the business plan to opening the salon.",
@@ -1168,7 +1141,6 @@
 "franchise.steps.firstGuests.text": "You receive a tried-and-tested business and marketing strategy that builds up guest traffic from the very first day.",
 "franchise.steps.growth.title": "Accelerating growth",
 "franchise.steps.growth.text": "Customer management software, ongoing trainings, central campaigns and leadership development help you grow sustainably in the long term.",
-
 "franchise.cta.title": "Become a Kleopátra franchise partner!",
 "franchise.cta.lead": "Fill in our short franchise application form or contact us and we will discuss the details.",
 "franchise.cta.phoneLabel": "Franchise information:",
@@ -1181,34 +1153,27 @@
 "franchise.form.name": "Name",
 "franchise.form.email": "E-mail",
 "franchise.form.phone": "Phone",
-
 "franchise.form.location.legend": "Planned salon location",
 "franchise.form.location.city": "City / town",
 "franchise.form.location.street": "Street, area (optional)",
-
 "franchise.form.business.legend": "Your current situation",
 "franchise.form.business.new": "I would like to open a new salon",
 "franchise.form.business.convert": "I would like to convert my existing beauty salon to Kleopátra",
 "franchise.form.business.investor": "I am an investor looking for an operating partner",
-
 "franchise.form.invest.legend": "Planned investment budget (gross)",
 "franchise.form.invest.range1": "20–30 million HUF",
 "franchise.form.invest.range2": "30–40 million HUF",
 "franchise.form.invest.range3": "Above 40 million HUF",
 "franchise.form.invest.unsure": "I am not sure yet",
-
 "franchise.form.timeline.legend": "When would you like to start?",
 "franchise.form.timeline.asap": "As soon as possible",
 "franchise.form.timeline.sixMonths": "Within 6 months",
 "franchise.form.timeline.year": "Within 1 year or later",
-
 "franchise.form.message.legend": "Your plans in a few words",
 "franchise.form.messageLabel": "How can we help you?",
 "franchise.form.messagePlaceholder": "Briefly describe your plans (city, size, team, etc.)…",
-
 "franchise.form.caption.demo": "This form is for informational purposes only – submitting it does not constitute a contractual offer.",
 "franchise.form.submit": "Send franchise inquiry",
-
 "franchise.aside.title": "Next steps",
 "franchise.aside.text1": "After you submit the form, our franchise specialist will contact you by e-mail or phone to clarify your needs and schedule an in-person or online consultation.",
 "franchise.aside.text2": "During the call we present the elements of the Kleopátra system, the expected investment, return on investment and available location options.",
@@ -1219,14 +1184,12 @@
 "franchise.segment.new.li1": "Established brand and full visual identity package",
 "franchise.segment.new.li2": "Well-defined opening processes and professional support",
 "franchise.segment.new.li3": "Help with location, service mix and pricing",
-
 "franchise.segment.existing.title": "For existing salon owners",
 "franchise.segment.existing.lead": "If you would like to strengthen your current salon with a strong brand and organised background.",
 "franchise.segment.existing.li1": "Rebranding to the Kleopatra visual identity",
 "franchise.segment.existing.li2": "Unified operating and quality-assurance system",
 "franchise.segment.existing.li3": "Centralised marketing and online presence",
 "franchise.segment.existing.li4": "Continuous professional and business support",
-
 "franchise.invest.title": "Investment and main financial parameters",
 "franchise.invest.lead": "The Kleopatra franchise operates with a transparent, predictable fee structure.",
 "franchise.invest.entryFee.title": "Entry fee",
@@ -1241,21 +1204,14 @@
 "franchise.invest.paybackNote": "The exact payback period depends on the location, size and service portfolio of the salon.",
 "franchise.benefits.brand.title": "Well-known brand",
 "franchise.benefits.brand.text": "Kleopatra Beauty Salons have been present on the market for decades, with an established client base and proven professional background. By joining, your salon immediately benefits from a recognised brand name.",
-
 "franchise.benefits.support.title": "Full professional support",
 "franchise.benefits.support.text": "We provide regular trainings, unified professional protocols, as well as marketing and business development support, so your daily operations can be predictable and well-organised.",
-
 "franchise.benefits.flexible.title": "Flexible concept",
 "franchise.benefits.flexible.text": "The franchise model is adapted to local conditions: together we fine-tune the service portfolio, opening hours and team size, while keeping the Kleopatra quality standards.",
-
 "franchise.invest.entry.title": "Entry fee",
 "franchise.invest.entry.text": "The entry fee includes the right to use the brand and visual identity, brand and operations manuals, and advisory support for the opening phase.",
 "franchise.invest.start.title": "Initial investment",
 "franchise.invest.start.text": "The size of the initial investment depends on the size, condition and location of the salon. We help with cost planning, selecting equipment and planning the opening."
-
-
-
-
 
   },
   "ru": {
@@ -1277,8 +1233,8 @@
     "home.hero.title.highlight": "эффект Клеопатры",
     "home.hero.title.suffix": " – премиальные бьюти-услуги, даже без предварительной записи.",
     "home.hero.lead": "Парикмахерские услуги, косметология, маникюр и педикюр, солярий и массаж в одном месте. Опытные специалисты и качественная косметика ждут тебя во всех наших салонах.",
-    "home.hero.pill.hair": "Парикмахерская",
-    "home.hero.pill.beauty": "Косметология",
+   "home.hero.pill.hair": "Уход за волосами",
+    "home.hero.pill.beauty": "Косметические услуги",
     "home.hero.pill.handsFeet": "Уход за руками и ногами",
     "home.hero.pill.solarium": "Солярий",
     "home.hero.pill.massage": "Массаж",
@@ -1726,7 +1682,6 @@
 "contact.aside.websiteLabel": "Сайт:",
 "contact.aside.salonInfo": "Точные адреса и часы работы салонов вы найдёте в разделе «Наши салоны».",
 "contact.aside.urgentNote": "Если вам нужен срочный приём или изменение записи, пожалуйста, звоните напрямую в соответствующий салон – так мы сможем помочь быстрее всего.",
-
 "about.hero.imageAlt": "Салоны красоты Kleopátra – о нас",
 "about.hero.eyebrow": "О нас",
 "about.hero.title": "Больше, чем сеть салонов красоты",
@@ -1762,21 +1717,18 @@
 "franchise.hero.imageAlt": "Салоны красоты Kleopatra – франчайзинговая программа",
 "franchise.hero.cta.primary": "Заявка на франшизу",
 "franchise.hero.cta.secondary": "У меня есть вопрос по франшизе",
-
 "franchise.segment.title": "Для кого подходит франшиза Kleopatra?",
 "franchise.segment.new.title": "Для тех, кто открывает новый салон",
 "franchise.segment.new.lead": "Если вы давно мечтаете о собственном салоне красоты, но не знаете, с чего начать, мы даём вам готовую, проверенную модель.",
 "franchise.segment.new.li1": "Полное право использования бренда и фирменного стиля Kleopatra с первого дня",
 "franchise.segment.new.li2": "Рекомендации по дизайну интерьера и поддержка при обустройстве",
 "franchise.segment.new.li3": "Пошаговая схема запуска салона и регламенты работы",
-
 "franchise.segment.existing.title": "Для владельцев действующих салонов",
 "franchise.segment.existing.lead": "Если оборот снизился или всё лежит на вас одном, мы поможем вернуть салон на траекторию роста.",
 "franchise.segment.existing.li1": "Обновлённый, единый фирменный стиль и современный клиентский опыт",
 "franchise.segment.existing.li2": "Централизованный маркетинг и кампании для привлечения гостей",
 "franchise.segment.existing.li3": "Поддержка в HR, обучение и наставничество для руководителя",
 "franchise.segment.existing.li4": "Оптимизация затрат и доступ к системе льготных закупок",
-
 "franchise.invest.title": "Инвестиции и основные финансовые параметры",
 "franchise.invest.lead": "Франшиза Kleopatra работает с прозрачной и предсказуемой структурой затрат.",
 "franchise.invest.entryFee.title": "Паушальный взнос",
@@ -1789,7 +1741,6 @@
 "franchise.invest.royalty.value": "10% от оборота",
 "franchise.invest.royalty.text": "Финансирует центральный маркетинг, HR и профессиональную поддержку, постоянные доработки системы и льготные закупки.",
 "franchise.invest.paybackNote": "По нашему опыту, инвестиции обычно окупаются в течение 2–3 лет в зависимости от города, размера салона и загрузки.",
-
 "franchise.steps.title": "Что вы получаете как партнёр франшизы",
 "franchise.steps.start.title": "Помогаем стартовать с нуля",
 "franchise.steps.start.text": "Мы делимся более чем 20-летним опытом в бьюти-индустрии – от выбора локации и бизнес-плана до открытия салона.",
@@ -1797,7 +1748,6 @@
 "franchise.steps.firstGuests.text": "Вы получаете отработанную бизнес- и маркетинговую стратегию, которая помогает наращивать клиентопоток с первого дня.",
 "franchise.steps.growth.title": "Ускоряем рост",
 "franchise.steps.growth.text": "Программное обеспечение для работы с клиентами, регулярные тренинги, центральные кампании и обучение руководителей обеспечивают устойчивый долгосрочный рост.",
-
 "franchise.cta.title": "Станьте партнёром франшизы Kleopatra!",
 "franchise.cta.lead": "Заполните краткую заявку на франшизу или свяжитесь с нами, и мы обсудим детали.",
 "franchise.cta.phoneLabel": "Информация о франшизе:",
@@ -1810,34 +1760,27 @@
 "franchise.form.name": "Имя",
 "franchise.form.email": "E-mail",
 "franchise.form.phone": "Телефон",
-
 "franchise.form.location.legend": "Планируемое местоположение салона",
 "franchise.form.location.city": "Город / населённый пункт",
 "franchise.form.location.street": "Улица, район (необязательно)",
-
 "franchise.form.business.legend": "Текущая ситуация",
 "franchise.form.business.new": "Хочу открыть новый салон",
 "franchise.form.business.convert": "Хочу перевести существующий салон красоты на бренд Kleopátra",
 "franchise.form.business.investor": "Рассматриваю проект как инвестор с операционным партнёром",
-
 "franchise.form.invest.legend": "Планируемый бюджет инвестиций (брутто)",
 "franchise.form.invest.range1": "20–30 млн форинтов",
 "franchise.form.invest.range2": "30–40 млн форинтов",
 "franchise.form.invest.range3": "Свыше 40 млн форинтов",
 "franchise.form.invest.unsure": "Пока не знаю точно",
-
 "franchise.form.timeline.legend": "Когда вы хотите стартовать?",
 "franchise.form.timeline.asap": "Как можно скорее",
 "franchise.form.timeline.sixMonths": "В течение 6 месяцев",
 "franchise.form.timeline.year": "В течение года или позже",
-
 "franchise.form.message.legend": "Кратко о ваших планах",
 "franchise.form.messageLabel": "Чем мы можем помочь?",
 "franchise.form.messagePlaceholder": "Кратко опишите ваши планы (город, размер салона, команда и т.д.)…",
-
 "franchise.form.caption.demo": "Данная форма носит информационный характер и не является юридически обязательным предложением.",
 "franchise.form.submit": "Отправить запрос по франшизе",
-
 "franchise.aside.title": "Следующие шаги",
 "franchise.aside.text1": "После отправки формы наш специалист по франчайзингу свяжется с вами по e-mail или телефону, чтобы уточнить детали и согласовать личную или онлайн-встречу.",
 "franchise.aside.text2": "Во время встречи мы представим систему Kleopátra, ожидаемый объём инвестиций, окупаемость и возможные варианты локаций.",
@@ -1848,14 +1791,12 @@
 "franchise.segment.new.li1": "Bevezetett márkanév és kész arculati csomag",
 "franchise.segment.new.li2": "Kidolgozott nyitási folyamatok és szakmai háttér",
 "franchise.segment.new.li3": "Segítség a lokáció, szolgáltatás-portfólió és árképzés kialakításában",
-
 "franchise.segment.existing.title": "Már működő szalon tulajdonosainak",
 "franchise.segment.existing.lead": "Ha meglévő szalonodat erős márkával és szervezett háttérrel fejlesztenéd tovább.",
 "franchise.segment.existing.li1": "Rebranding Kleopátra arculatra",
 "franchise.segment.existing.li2": "Egységes működési és minőségbiztosítási rendszer",
 "franchise.segment.existing.li3": "Központi marketing és online jelenlét",
 "franchise.segment.existing.li4": "Folyamatos szakmai és üzleti támogatás",
-
 "franchise.invest.title": "Befektetés és fő pénzügyi paraméterek",
 "franchise.invest.lead": "A Kleopátra franchise átlátható, előre tervezhető díjstruktúrával működik.",
 "franchise.invest.entryFee.title": "Belépési díj",
@@ -1870,16 +1811,12 @@
 "franchise.invest.paybackNote": "A megtérülés pontos ideje a lokációtól, mérettől és szolgáltatás-portfóliótól függően változik.",
 "franchise.benefits.brand.title": "Известный бренд",
 "franchise.benefits.brand.text": "Сеть салонов красоты Kleopatra успешно работает на рынке уже много лет, имеет сформированную клиентскую базу и подтверждённую профессиональную репутацию. Присоединяясь к сети, ваш салон сразу получает силу узнаваемого бренда.",
-
 "franchise.benefits.support.title": "Полная профессиональная поддержка",
 "franchise.benefits.support.text": "Мы обеспечиваем регулярные обучения, единые профессиональные протоколы, маркетинговую и бизнес-поддержку, чтобы ежедневная работа салона была предсказуемой и организованной.",
-
 "franchise.benefits.flexible.title": "Гибкая концепция",
 "franchise.benefits.flexible.text": "Франчайзинговую модель мы адаптируем под местные условия: вместе подбираем набор услуг, режим работы и размер команды, сохраняя стандарты качества Kleopatra.",
-
 "franchise.invest.entry.title": "Паушальный взнос",
 "franchise.invest.entry.text": "Паушальный взнос включает право использовать бренд и фирменный стиль, бренд-бук и операционные регламенты, а также консультационную поддержку на этапе открытия.",
-
 "franchise.invest.start.title": "Стартовые инвестиции",
 "franchise.invest.start.text": "Объём стартовых инвестиций зависит от размера, состояния и локации салона. Мы помогаем спланировать бюджет, подобрать оборудование и подготовить открытие.",
 "franchise.segment.title": "Для кого подходит франшиза Kleopatra?",
@@ -1888,14 +1825,12 @@
 "franchise.segment.new.li1": "Известный бренд и готовый фирменный стиль",
 "franchise.segment.new.li2": "Прописанные процессы открытия и профессиональная поддержка",
 "franchise.segment.new.li3": "Помощь в выборе локации, услуг и ценообразования",
-
 "franchise.segment.existing.title": "Для владельцев действующих салонов",
 "franchise.segment.existing.lead": "Если вы хотите развивать существующий салон под сильным брендом и с организованной поддержкой.",
 "franchise.segment.existing.li1": "Ребрендинг под фирменный стиль Kleopatra",
 "franchise.segment.existing.li2": "Единая система работы и контроля качества",
 "franchise.segment.existing.li3": "Централизованный маркетинг и онлайн-присутствие",
 "franchise.segment.existing.li4": "Постоянная профессиональная и бизнес-поддержка",
-
 "franchise.invest.title": "Инвестиции и основные финансовые параметры",
 "franchise.invest.lead": "Франшиза Kleopatra работает с прозрачной и предсказуемой системой платежей.",
 "franchise.invest.entryFee.title": "Паушальный взнос",
@@ -1908,9 +1843,6 @@
 "franchise.invest.royalty.value": "Процент от оборота",
 "franchise.invest.royalty.text": "Включает постоянную профессиональную, маркетинговую и системную поддержку.",
 "franchise.invest.paybackNote": "Срок окупаемости зависит от локации, размера и набора услуг салона."
-
-
-
 
 
   }

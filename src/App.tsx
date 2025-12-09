@@ -122,10 +122,8 @@ const App: React.FC = () => {
 
           {/* Webshop listanézet + termék részletek */}
           <Route path="/webshop" element={<WebshopPage />} />
-          <Route
-            path="/webshop/:productId"
-            element={<WebshopProductDetailPage />}
-          />
+  <Route path="/webshop/products/:productId" element={<WebshopProductDetailPage />} />
+          
 
           {/* Külön kosár oldal */}
           <Route path="/cart" element={<CartPage />} />

@@ -799,16 +799,6 @@ input:focus, select:focus, textarea:focus {
   opacity: 0;
 }
 
-.section--webshop .webshop-layout {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: block;
-}
-
-.section--webshop .webshop-main {
-  max-width: 1280px;
-  margin: 0 auto;
-}
 
 .webshop-card__actions {
   display: flex;
@@ -5104,4 +5094,1768 @@ der-cta-block {
 /* Az „Összes termék” ne lógjon el különre, ne legyen plusz margója */
 .section--webshop .webshop-category-reset {
   margin-left: 0; /* felülírja a régi margin-left: 1.5rem-et */
+}
+/* =========================
+   WEBSHOP – FŐ OLDAL LAYOUT
+   ========================= */
+
+.page-main--webshop {
+  background-color: #ffffff;
+}
+
+/* HERO – felül, háttérképpel */
+
+.webshop-hero {
+  position: relative;
+  padding: 3rem 0 4rem;
+  overflow: hidden;
+}
+
+.webshop-hero__bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.webshop-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.webshop-hero__content {
+  position: relative;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+}
+
+.webshop-hero__bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.webshop-hero__bubble {
+  position: absolute;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.8), transparent);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  animation: kleoBubbleFloat 18s ease-in-out infinite;
+}
+
+.webshop-hero__bubble--top {
+  top: 5%;
+  left: 10%;
+}
+
+.webshop-hero__bubble--middle {
+  top: 40%;
+  left: 0;
+}
+
+.webshop-hero__bubble--bottom {
+  bottom: -5%;
+  left: 25%;
+}
+
+.webshop-hero__text {
+  position: relative;
+  max-width: 620px;
+  margin-left: auto;
+}
+
+.webshop-hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.webshop-invoice {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.webshop-invoice__image img {
+  max-width: 120px;
+  display: block;
+}
+
+/* Ha még nincs meg, ez az animáció a buborékokhoz */
+@keyframes kleoBubbleFloat {
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(10px, -20px, 0); }
+  40%  { transform: translate3d(-6px, -35px, 0); }
+  60%  { transform: translate3d(0, -10px, 0); }
+  80%  { transform: translate3d(8px, -25px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* =========================
+   WEBSHOP LISTA – 3 OSZLOP
+   ========================= */
+
+.section--webshop {
+  padding: 3rem 0;
+}
+
+.webshop-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 320px;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Bal oldali kategória sáv */
+
+.webshop-sidebar {
+  border-radius: 1rem;
+  padding: 1.5rem 1.25rem;
+  background: #fafafa;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+.webshop-sidebar__title {
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  opacity: 0.75;
+}
+
+.webshop-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.webshop-category-group + .webshop-category-group {
+  border-top: 1px solid #e6e6e6;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.webshop-category-main {
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+
+.webshop-category-main:hover {
+  background-color: #f0f0f0;
+  padding-left: 0.7rem;
+}
+
+.webshop-category-main--active {
+  background-color: #111;
+  color: #fff;
+  padding-left: 0.7rem;
+}
+
+.webshop-subcategories {
+  margin-top: 0.4rem;
+  padding-left: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.webshop-subcategory-block {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-subcategory__button {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  color: #444;
+  transition: background-color 0.16s ease, padding-left 0.16s ease;
+}
+
+.webshop-subcategory__button:hover {
+  background-color: #f1f1f1;
+  padding-left: 0.75rem;
+}
+
+.webshop-subcategory__button--active {
+  background-color: #e2e2e2;
+  padding-left: 0.75rem;
+}
+
+.webshop-service-categories {
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.webshop-service__button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.16s ease, transform 0.12s ease;
+}
+
+.webshop-service__button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.webshop-service__button--active {
+  background-color: #111;
+  color: #fff;
+}
+
+.webshop-category-reset {
+  margin-top: 0.75rem;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Középső oszlop – terméklista */
+
+.webshop-main h2 {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-main .section-lead {
+  margin-bottom: 1rem;
+}
+
+.webshop-status {
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.webshop-status--error {
+  color: #c62828;
+}
+
+.webshop-status--hint {
+  color: #666;
+}
+
+.webshop-products-grid {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.webshop-product-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.8rem;
+  background-color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.webshop-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.webshop-product-card__image {
+  display: block;
+  background: #f8f8f8;
+  position: relative;
+  overflow: hidden;
+}
+
+.webshop-product-card__image img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+.webshop-product-card__image-placeholder {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f3f3;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #bbb;
+}
+
+.webshop-product-card__body {
+  padding: 0.9rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.webshop-product-card__title {
+  font-size: 0.95rem;
+  margin: 0;
+  min-height: 2.4em;
+}
+
+.webshop-product-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.webshop-product-card__title a:hover {
+  text-decoration: underline;
+}
+
+.webshop-product-card__sku {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.webshop-product-card__price {
+  margin-top: 0.25rem;
+  font-size: 1rem;
+}
+
+.webshop-product-card__actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.webshop-product-card__btn-details {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.webshop-product-card__btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* Jobb oldali kosár – GymBeam szerű mini összegző */
+
+.webshop-cart {
+  border-radius: 1rem;
+  padding: 1.4rem 1.25rem 1.5rem;
+  background: #fafafa;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 6rem;
+}
+
+.webshop-cart__head {
+  margin-bottom: 0.75rem;
+}
+
+.webshop-cart__title {
+  margin: 0 0 0.25rem;
+}
+
+.webshop-cart__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.webshop-cart__empty {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.webshop-cart__list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.webshop-cart-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.webshop-cart-item__main {
+  flex: 1 1 auto;
+}
+
+.webshop-cart-item__title {
+  font-size: 0.85rem;
+  margin: 0 0 0.1rem;
+}
+
+.webshop-cart-item__price {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.webshop-cart-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.webshop-cart-qty-btn {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  border: none;
+  background: #e5e5e5;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.webshop-cart-qty-btn:hover {
+  background: #d6d6d6;
+}
+
+.webshop-cart-qty {
+  min-width: 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.webshop-cart__summary {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.webshop-cart__total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.webshop-cart__total--discount span {
+  color: #c62828;
+}
+
+.webshop-cart__total--discount strong {
+  color: #c62828;
+}
+
+.webshop-cart__total--final {
+  margin-top: 0.2rem;
+  font-weight: 600;
+}
+
+.webshop-cart__clear {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  align-self: flex-start;
+}
+
+.webshop-cart__checkout-link {
+  margin-top: 0.35rem;
+  text-align: center;
+}
+
+/* =========================
+   REGISZTRÁCIÓ + CHECKOUT
+   ========================= */
+
+.section--webshop-alt {
+  padding: 3rem 0 4rem;
+  background: #f7f7f7;
+}
+
+.webshop-checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.webshop-panel {
+  border-radius: 1rem;
+  background: #ffffff;
+  padding: 1.75rem 1.5rem 2rem;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+}
+
+.webshop-panel--checkout {
+  border: 1px solid #ececec;
+}
+
+.webshop-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-row--two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.field span {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.15rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+}
+
+.field--button {
+  display: flex;
+  align-items: flex-end;
+}
+
+.webshop-form-msg {
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+
+.webshop-order-summary-row {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.webshop-order-summary {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.webshop-order-summary strong {
+  font-weight: 600;
+}
+
+.webshop-order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.quantity-control__label {
+  font-size: 0.85rem;
+}
+
+.quantity-control__buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem;
+  border-radius: 999px;
+  background: #f1f1f1;
+}
+
+.quantity-control__buttons button {
+  border: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.quantity-control__buttons button:hover {
+  background: #e7e7e7;
+}
+
+.quantity-control__value {
+  min-width: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   TERMÉK RÉSZLETOLDAL
+   ========================= */
+
+.webshop-product-detail {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.webshop-product-detail__top {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.webshop-product-detail__image {
+  border-radius: 1rem;
+  background: #fafafa;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.webshop-product-detail__image img {
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+  display: block;
+}
+
+.webshop-product-detail__image--placeholder {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.webshop-product-detail__info .hero-title {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-product-detail__price {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+.webshop-product-detail__rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.webshop-product-detail__rating-stars .star {
+  font-size: 1rem;
+  color: #b0b0b0;
+}
+
+.webshop-product-detail__rating-stars .star--filled {
+  color: #ffb300;
+}
+
+.webshop-product-detail__purchase {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+.webshop-product-detail__addtocart {
+  min-width: 200px;
+}
+
+.webshop-product-detail__actions {
+  margin-top: 1rem;
+}
+
+/* „Termék részletei” tábla */
+
+.webshop-product-detail__spec {
+  margin-bottom: 2rem;
+}
+
+.webshop-product-detail__spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: #fafafa;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.webshop-product-detail__spec-table th,
+.webshop-product-detail__spec-table td {
+  padding: 0.55rem 0.9rem;
+}
+
+.webshop-product-detail__spec-table th {
+  width: 30%;
+  text-align: left;
+  background: #f0f0f0;
+  font-weight: 600;
+}
+
+.webshop-product-detail__spec-table tr + tr td,
+.webshop-product-detail__spec-table tr + tr th {
+  border-top: 1px solid #e2e2e2;
+}
+
+/* Vélemények */
+
+.webshop-product-detail__reviews h2 {
+  margin-bottom: 0.75rem;
+}
+
+.webshop-review-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.webshop-review {
+  border-radius: 0.75rem;
+  background: #fafafa;
+  padding: 0.75rem 0.9rem;
+}
+
+.webshop-review__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.webshop-review__rating .star {
+  font-size: 0.95rem;
+  color: #b0b0b0;
+}
+
+.webshop-review__rating .star--filled {
+  color: #ffb300;
+}
+
+.webshop-review__author {
+  font-weight: 600;
+}
+
+.webshop-review__date {
+  color: #777;
+}
+
+.webshop-review__text {
+  font-size: 0.9rem;
+  margin: 0.1rem 0 0;
+}
+
+.webshop-review-form {
+  border-top: 1px solid #e2e2e2;
+  padding-top: 1rem;
+}
+
+.rating-input .star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.15rem;
+  font-size: 1.1rem;
+  color: #b0b0b0;
+}
+
+.rating-input .star--filled {
+  color: #ffb300;
+}
+
+/* =========================
+   MEDIA QUERY – MOBIL / TABLET
+   ========================= */
+
+@media (max-width: 1024px) {
+  .webshop-hero__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .webshop-hero__text {
+    margin-left: 0;
+  }
+
+  .webshop-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-sidebar {
+    order: 1;
+  }
+
+  .webshop-main {
+    order: 2;
+  }
+
+  .webshop-cart {
+    order: 3;
+    position: static;
+  }
+
+  .webshop-checkout-grid {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .form-row--two {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .webshop-product-detail__top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-product-detail__image img,
+  .webshop-product-detail__image--placeholder {
+    height: 260px;
+  }
+}
+
+@media (max-width: 640px) {
+  .webshop-products-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-product-card__image img,
+  .webshop-product-card__image-placeholder {
+    height: 200px;
+  }
+
+  .webshop-order-summary-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .webshop-product-detail__addtocart {
+    width: 100%;
+  }
+}
+/* =========================
+   WEBSHOP – FŐ OLDAL LAYOUT
+   ========================= */
+
+.page-main--webshop {
+  background-color: #ffffff;
+}
+
+/* HERO – felül, háttérképpel */
+
+.webshop-hero {
+  position: relative;
+  padding: 3rem 0 4rem;
+  overflow: hidden;
+}
+
+.webshop-hero__bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.webshop-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.webshop-hero__content {
+  position: relative;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+}
+
+.webshop-hero__bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.webshop-hero__bubble {
+  position: absolute;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.8), transparent);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  animation: kleoBubbleFloat 18s ease-in-out infinite;
+}
+
+.webshop-hero__bubble--top {
+  top: 5%;
+  left: 10%;
+}
+
+.webshop-hero__bubble--middle {
+  top: 40%;
+  left: 0;
+}
+
+.webshop-hero__bubble--bottom {
+  bottom: -5%;
+  left: 25%;
+}
+
+.webshop-hero__text {
+  position: relative;
+  max-width: 620px;
+  margin-left: auto;
+}
+
+.webshop-hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.webshop-invoice {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.webshop-invoice__image img {
+  max-width: 120px;
+  display: block;
+}
+
+/* Ha még nincs meg, ez az animáció a buborékokhoz */
+@keyframes kleoBubbleFloat {
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(10px, -20px, 0); }
+  40%  { transform: translate3d(-6px, -35px, 0); }
+  60%  { transform: translate3d(0, -10px, 0); }
+  80%  { transform: translate3d(8px, -25px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* =========================
+   WEBSHOP LISTA – 3 OSZLOP
+   ========================= */
+
+.section--webshop {
+  padding: 3rem 0;
+}
+
+.webshop-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 320px;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Bal oldali kategória sáv */
+
+.webshop-sidebar {
+  border-radius: 1rem;
+  padding: 1.5rem 1.25rem;
+  background: #fafafa;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+.webshop-sidebar__title {
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  opacity: 0.75;
+}
+
+.webshop-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.webshop-category-group + .webshop-category-group {
+  border-top: 1px solid #e6e6e6;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.webshop-category-main {
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+
+.webshop-category-main:hover {
+  background-color: #f0f0f0;
+  padding-left: 0.7rem;
+}
+
+.webshop-category-main--active {
+  background-color: #111;
+  color: #fff;
+  padding-left: 0.7rem;
+}
+
+.webshop-subcategories {
+  margin-top: 0.4rem;
+  padding-left: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.webshop-subcategory-block {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-subcategory__button {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  color: #444;
+  transition: background-color 0.16s ease, padding-left 0.16s ease;
+}
+
+.webshop-subcategory__button:hover {
+  background-color: #f1f1f1;
+  padding-left: 0.75rem;
+}
+
+.webshop-subcategory__button--active {
+  background-color: #e2e2e2;
+  padding-left: 0.75rem;
+}
+
+.webshop-service-categories {
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.webshop-service__button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.16s ease, transform 0.12s ease;
+}
+
+.webshop-service__button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.webshop-service__button--active {
+  background-color: #111;
+  color: #fff;
+}
+
+.webshop-category-reset {
+  margin-top: 0.75rem;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Középső oszlop – terméklista */
+
+.webshop-main h2 {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-main .section-lead {
+  margin-bottom: 1rem;
+}
+
+.webshop-status {
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.webshop-status--error {
+  color: #c62828;
+}
+
+.webshop-status--hint {
+  color: #666;
+}
+
+.webshop-products-grid {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.webshop-product-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.8rem;
+  background-color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.webshop-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.webshop-product-card__image {
+  display: block;
+  background: #f8f8f8;
+  position: relative;
+  overflow: hidden;
+}
+
+.webshop-product-card__image img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+.webshop-product-card__image-placeholder {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f3f3;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #bbb;
+}
+
+.webshop-product-card__body {
+  padding: 0.9rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.webshop-product-card__title {
+  font-size: 0.95rem;
+  margin: 0;
+  min-height: 2.4em;
+}
+
+.webshop-product-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.webshop-product-card__title a:hover {
+  text-decoration: underline;
+}
+
+.webshop-product-card__sku {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.webshop-product-card__price {
+  margin-top: 0.25rem;
+  font-size: 1rem;
+}
+
+.webshop-product-card__actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.webshop-product-card__btn-details {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.webshop-product-card__btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* Jobb oldali kosár – GymBeam szerű mini összegző */
+
+.webshop-cart {
+  border-radius: 1rem;
+  padding: 1.4rem 1.25rem 1.5rem;
+  background: #fafafa;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 6rem;
+}
+
+.webshop-cart__head {
+  margin-bottom: 0.75rem;
+}
+
+.webshop-cart__title {
+  margin: 0 0 0.25rem;
+}
+
+.webshop-cart__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.webshop-cart__empty {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.webshop-cart__list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.webshop-cart-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.webshop-cart-item__main {
+  flex: 1 1 auto;
+}
+
+.webshop-cart-item__title {
+  font-size: 0.85rem;
+  margin: 0 0 0.1rem;
+}
+
+.webshop-cart-item__price {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.webshop-cart-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.webshop-cart-qty-btn {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  border: none;
+  background: #e5e5e5;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.webshop-cart-qty-btn:hover {
+  background: #d6d6d6;
+}
+
+.webshop-cart-qty {
+  min-width: 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.webshop-cart__summary {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.webshop-cart__total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.webshop-cart__total--discount span {
+  color: #c62828;
+}
+
+.webshop-cart__total--discount strong {
+  color: #c62828;
+}
+
+.webshop-cart__total--final {
+  margin-top: 0.2rem;
+  font-weight: 600;
+}
+
+.webshop-cart__clear {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  align-self: flex-start;
+}
+
+.webshop-cart__checkout-link {
+  margin-top: 0.35rem;
+  text-align: center;
+}
+
+/* =========================
+   REGISZTRÁCIÓ + CHECKOUT
+   ========================= */
+
+.section--webshop-alt {
+  padding: 3rem 0 4rem;
+  background: #f7f7f7;
+}
+
+.webshop-checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.webshop-panel {
+  border-radius: 1rem;
+  background: #ffffff;
+  padding: 1.75rem 1.5rem 2rem;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+}
+
+.webshop-panel--checkout {
+  border: 1px solid #ececec;
+}
+
+.webshop-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-row--two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.field span {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.15rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+}
+
+.field--button {
+  display: flex;
+  align-items: flex-end;
+}
+
+.webshop-form-msg {
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+
+.webshop-order-summary-row {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.webshop-order-summary {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.webshop-order-summary strong {
+  font-weight: 600;
+}
+
+.webshop-order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.quantity-control__label {
+  font-size: 0.85rem;
+}
+
+.quantity-control__buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem;
+  border-radius: 999px;
+  background: #f1f1f1;
+}
+
+.quantity-control__buttons button {
+  border: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.quantity-control__buttons button:hover {
+  background: #e7e7e7;
+}
+
+.quantity-control__value {
+  min-width: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   TERMÉK RÉSZLETOLDAL
+   ========================= */
+
+.webshop-product-detail {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.webshop-product-detail__top {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.webshop-product-detail__image {
+  border-radius: 1rem;
+  background: #fafafa;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  padding: 1.5rem;
+}
+
+.webshop-product-detail__image img {
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+  display: block;
+}
+
+.webshop-product-detail__image--placeholder {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.webshop-product-detail__info .hero-title {
+  margin-bottom: 0.4rem;
+}
+
+.webshop-product-detail__price {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+.webshop-product-detail__rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.webshop-product-detail__rating-stars .star {
+  font-size: 1rem;
+  color: #b0b0b0;
+}
+
+.webshop-product-detail__rating-stars .star--filled {
+  color: #ffb300;
+}
+
+.webshop-product-detail__purchase {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+.webshop-product-detail__addtocart {
+  min-width: 200px;
+}
+
+.webshop-product-detail__actions {
+  margin-top: 1rem;
+}
+
+/* „Termék részletei” tábla */
+
+.webshop-product-detail__spec {
+  margin-bottom: 2rem;
+}
+
+.webshop-product-detail__spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: #fafafa;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.webshop-product-detail__spec-table th,
+.webshop-product-detail__spec-table td {
+  padding: 0.55rem 0.9rem;
+}
+
+.webshop-product-detail__spec-table th {
+  width: 30%;
+  text-align: left;
+  background: #f0f0f0;
+  font-weight: 600;
+}
+
+.webshop-product-detail__spec-table tr + tr td,
+.webshop-product-detail__spec-table tr + tr th {
+  border-top: 1px solid #e2e2e2;
+}
+
+/* Vélemények */
+
+.webshop-product-detail__reviews h2 {
+  margin-bottom: 0.75rem;
+}
+
+.webshop-review-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.webshop-review {
+  border-radius: 0.75rem;
+  background: #fafafa;
+  padding: 0.75rem 0.9rem;
+}
+
+.webshop-review__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.webshop-review__rating .star {
+  font-size: 0.95rem;
+  color: #b0b0b0;
+}
+
+.webshop-review__rating .star--filled {
+  color: #ffb300;
+}
+
+.webshop-review__author {
+  font-weight: 600;
+}
+
+.webshop-review__date {
+  color: #777;
+}
+
+.webshop-review__text {
+  font-size: 0.9rem;
+  margin: 0.1rem 0 0;
+}
+
+.webshop-review-form {
+  border-top: 1px solid #e2e2e2;
+  padding-top: 1rem;
+}
+
+.rating-input .star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.15rem;
+  font-size: 1.1rem;
+  color: #b0b0b0;
+}
+
+.rating-input .star--filled {
+  color: #ffb300;
+}
+
+/* =========================
+   MEDIA QUERY – MOBIL / TABLET
+   ========================= */
+
+@media (max-width: 1024px) {
+  .webshop-hero__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .webshop-hero__text {
+    margin-left: 0;
+  }
+
+  .webshop-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-sidebar {
+    order: 1;
+  }
+
+  .webshop-main {
+    order: 2;
+  }
+
+  .webshop-cart {
+    order: 3;
+    position: static;
+  }
+
+  .webshop-checkout-grid {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .form-row--two {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .webshop-product-detail__top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-product-detail__image img,
+  .webshop-product-detail__image--placeholder {
+    height: 260px;
+  }
+}
+
+@media (max-width: 640px) {
+  .webshop-products-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .webshop-product-card__image img,
+  .webshop-product-card__image-placeholder {
+    height: 200px;
+  }
+
+  .webshop-order-summary-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .webshop-product-detail__addtocart {
+    width: 100%;
+  }
 }
