@@ -1,6 +1,12 @@
 // src/App.tsx
 import React, { useEffect, useState } from "react";
-import { MemoryRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  MemoryRouter,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import { Header } from "./components/Header";
 import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
@@ -13,7 +19,6 @@ import { ActisztitasPage } from "./pages/services/ActisztitasPage";
 import { JoicoPage } from "./pages/services/JoicoPage";
 import { MelegollosPage } from "./pages/services/MelegollosPage";
 import { IplPage } from "./pages/services/IplPage";
-import { BrowserRouter } from "react-router-dom"
 
 import { PriceListPage } from "./pages/PriceListPage";
 import { LoyaltyPage } from "./pages/LoyaltyPage";
@@ -28,15 +33,20 @@ import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
-import { Footer } from "./components/Footer"; // ⬅️ ÚJ
+import { Footer } from "./components/Footer";
+
 /**
  * Lebegő kosár gomb a jobb felső sarokban.
- * - Mindig látszik, bármelyik oldalon vagyunk
+ * - Csak a /webshop oldalon látszik
  * - A badge-ben mutatja a kosárban lévő tételek számát
  * - Kattintásra a /cart oldalra navigál
  */
 const FloatingCartButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
+  const location = useLocation();
+
+  // csak a fő webshop listanézeten jelenjen meg
+  const isWebshopRoute = location.pathname === "/webshop";
 
   // Kosár darabszám kiolvasása a localStorage-ből
   const updateCountFromStorage = () => {
@@ -47,10 +57,7 @@ const FloatingCartButton: React.FC = () => {
         return;
       }
       const items = JSON.parse(raw) as CartItem[];
-      const total = items.reduce(
-        (sum, item) => sum + (item.quantity || 0),
-        0
-      );
+      const total = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
       setCount(total);
     } catch {
       setCount(0);
@@ -70,6 +77,10 @@ const FloatingCartButton: React.FC = () => {
       window.removeEventListener("kleo-cart-updated", handler as EventListener);
     };
   }, []);
+
+  if (!isWebshopRoute) {
+    return null;
+  }
 
   return (
     <Link to="/cart" className="kleo-cart-fab">
@@ -104,13 +115,13 @@ const App: React.FC = () => {
           <Route path="/salons" element={<SalonsPage />} />
           <Route path="/salons/:slug" element={<SalonDetailPage />} />
           <Route path="/services" element={<ServicesPage />} />
-<Route path="/services/szempilla" element={<SzempillaPage />} />
-<Route path="/services/hajmosas" element={<HajmosasPage />} />
-<Route path="/services/arcmasszazs" element={<ArcmasszazsPage />} />
-<Route path="/services/actisztitas" element={<ActisztitasPage />} />
-<Route path="/services/joico" element={<JoicoPage />} />
-<Route path="/services/melegollos" element={<MelegollosPage />} />
-<Route path="/services/ipl" element={<IplPage />} />
+          <Route path="/services/szempilla" element={<SzempillaPage />} />
+          <Route path="/services/hajmosas" element={<HajmosasPage />} />
+          <Route path="/services/arcmasszazs" element={<ArcmasszazsPage />} />
+          <Route path="/services/actisztitas" element={<ActisztitasPage />} />
+          <Route path="/services/joico" element={<JoicoPage />} />
+          <Route path="/services/melegollos" element={<MelegollosPage />} />
+          <Route path="/services/ipl" element={<IplPage />} />
 
           <Route path="/prices" element={<PriceListPage />} />
           <Route path="/loyalty" element={<LoyaltyPage />} />
@@ -122,8 +133,10 @@ const App: React.FC = () => {
 
           {/* Webshop listanézet + termék részletek */}
           <Route path="/webshop" element={<WebshopPage />} />
-  <Route path="/webshop/products/:productId" element={<WebshopProductDetailPage />} />
-          
+          <Route
+            path="/webshop/products/:productId"
+            element={<WebshopProductDetailPage />}
+          />
 
           {/* Külön kosár oldal */}
           <Route path="/cart" element={<CartPage />} />
@@ -133,8 +146,9 @@ const App: React.FC = () => {
 
           {/* minden más URL menjen vissza a Home-ra */}
           <Route path="*" element={<HomePage />} />
-           </Routes>
-           <Footer />        
+        </Routes>
+
+        <Footer />
       </MemoryRouter>
     </LanguageProvider>
   );

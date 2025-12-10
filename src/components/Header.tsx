@@ -8,7 +8,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function Header() {
   const { lang, setLang, t } = useI18n();
 
-   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -17,8 +17,6 @@ export function Header() {
   const handleLangClick = (value: "hu" | "en" | "ru") => {
     setLang(value);
   };
-
-
 
   return (
     <header className="site-header">
@@ -77,16 +75,8 @@ export function Header() {
           </div>
         </nav>
 
-        {/* JOBB: IDŐPONTFOGLALÁS + SOCIAL + NYELVVÁLASZTÓ */}
+        {/* JOBB: SOCIAL + NYELVVÁLASZTÓ (IDŐPONTFOGLALÁS NÉLKÜL) */}
         <div className="header-cta-block">
-          <NavLink
-            to="/salons"
-            className="btn header-cta-btn"
-            aria-label={t("header.booking")}
-          >
-            {t("header.booking")}
-          </NavLink>
-
           <div className="header-social">
             <div className="header-social-label">{t("header.followUs")}</div>
 
@@ -208,7 +198,7 @@ export function Header() {
               </div>
             </div>
           </div>
-          </div>
+        </div>
 
         {/* ÚJ: HAMBURGER GOMB – csak markup, a pozicionálást a CSS csinálja */}
         <button

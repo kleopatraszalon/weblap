@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useI18n } from "../i18n";
 
 export const HomePage: React.FC = () => {
   const { t } = useI18n();
+
+  // Alteg központi foglaló script betöltése csak a HomePage-en
+  useEffect(() => {
+    const src = "https://w714308.alteg.io/widgetJS";
+
+    // ha már be lett húzva, ne töltsük be újra
+    if (document.querySelector(`script[src="${src}"]`)) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = src;
+    script.charset = "UTF-8";
+
+    document.body.appendChild(script);
+
+    // Ha nagyon szigorúan csak a HomePage-en akarod,
+    // akkor unmountkor le is vehetjük:
+    // return () => {
+    //   document.body.removeChild(script);
+    // };
+
+  }, []);
 
   return (
     <main>
@@ -205,7 +229,6 @@ export const HomePage: React.FC = () => {
       {/* HÍRLEVÉL / HŰSÉG BLOKK – KÉPPEL */}
       <section className="section section--newsletter">
         <div className="container grid-two">
-          {/* Bal oldal: szöveg + gomb egymás alatt */}
           <div>
             <p className="section-kicker">{t("home.newsletter.kicker")}</p>
             <h2>
@@ -222,12 +245,8 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Jobb oldal: huseg.png kép */}
           <div className="newsletter-image">
-            <img
-              src="/images/huseg.png"
-              alt="Kleo Card hűségprogram"
-            />
+            <img src="/images/huseg.png" alt="Kleo Card hűségprogram" />
           </div>
         </div>
       </section>

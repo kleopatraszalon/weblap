@@ -1018,7 +1018,7 @@ p {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 0.5rem;
-  min-height: 90px;
+  min-height: var(--nav-height);  /* 82px a :root-ban */
   padding-block: 0.5rem;
   position: relative;           /* + EZ AZ EGY SOR KELL IDE */
 }
@@ -1036,9 +1036,60 @@ p {
   overflow: hidden;
 }
 
+/* HEADER LOGÓ – IDŐNKÉNTI CSILLOGÁS */
+.site-logo-wrapper--shiny {
+  position: relative;
+}
+
+/* Időnként átfutó fénycsík a logón */
+.site-logo-wrapper--shiny::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0;
+  transform: skewX(-20deg);
+  pointer-events: none;
+  animation: kleoLogoShine 4s ease-in-out infinite;
+}
+
+/* ~6 másodpercenként egyszer végigfut a fény a logón */
+@keyframes kleoLogoShine {
+  0% {
+    left: -150%;
+    opacity: 0;
+  }
+  70% {
+    left: -150%;
+    opacity: 0;
+  }
+  75% {
+    left: -150%;
+    opacity: 1;
+  }
+  95% {
+    left: 150%;
+    opacity: 1;
+  }
+  100% {
+    left: 150%;
+    opacity: 0;
+  }
+}
+
 .site-logo {
   display: block;
-  height: 95px;
+  height: 100px;
   width: auto;
   z-index: 40;
 }
@@ -1143,9 +1194,11 @@ der-cta-block {
 
 .header-social-row {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;   /* két sor: felül zászlók, alul ikonok */
+  align-items: flex-end;
+  gap: 0.25rem;
 }
+
 
 .header-social-label {
   font-size: 0.75rem;
@@ -1160,7 +1213,7 @@ der-cta-block {
 }
 
 .header-social-icons img {
-  height: 24px;
+  height: 30px;
   width: auto;          /* arányos méret */
   border-radius: 0;     /* maradjon a saját formája */
   object-fit: contain;
@@ -3488,9 +3541,9 @@ der-cta-block {
 }
 
 .header-lang-switch .lang-btn .lang-flag {
-  height: 25px;
-  width: auto;          /* arányos méret */
-  border-radius: 0px;   /* opcionális, ha ne legyen teljesen kör */
+  height: 28px;
+  width: auto;
+  border-radius: 0;
   display: block;
   object-fit: contain;
 }
@@ -3785,13 +3838,13 @@ der-cta-block {
     letter-spacing: 0.12em;
   }
 
- .header-social-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;   /* ikonok középre */
-    gap: 0.3rem;
-  }
+.header-social-row {
+  display: flex;
+  flex-direction: column;   /* két sor: felül zászlók, alul ikonok */
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 
   .header-lang-switch {
     display: flex;
@@ -3806,7 +3859,7 @@ der-cta-block {
   }
 
 .header-social-icons img {
-  height: 20px;
+  height: 30px;
   width: auto;          /* arányos méret */
   border-radius: 0;     /* maradjon a saját formája */
   object-fit: contain;
@@ -3869,7 +3922,7 @@ der-cta-block {
   
  .header-logo-link {
   position: absolute;     /* gridből kivesszük, külön réteg */
-  top: 0.8rem;            /* kicsit lejjebb a header tetejétől */
+  top: 0rem;            /* kicsit lejjebb a header tetejétől */
   left: 0.8rem;
   z-index: 50;
 }
@@ -3956,7 +4009,7 @@ der-cta-block {
   }
 
   .header-social-icons img {
-    width: 24px;
+    width: 30px;
     height: auto;
   }
  .main-nav.main-nav--mobile-open {
@@ -4397,17 +4450,6 @@ der-cta-block {
   padding-left: 10 px;  /* <<< ennyi helyet „foglalunk le” a logó számára */
 }
 
-  /* LOGÓ – normál helyen, NEM abszolút, kicsit kisebbre véve */
- .header-logo-link {
-  position: absolute;        /* külön réteg, nem hat a gridre */
-  left: 0rem;                /* balra igazítva */
-                  /* a header közepén függőlegesen */
-  transform: translateY(-120%);
-  z-index: 10;
-
-  display: inline-flex;
-  align-items: left;
-}
 
 .site-logo {
   display: block;
@@ -4448,13 +4490,13 @@ der-cta-block {
      align-items: left;
   }
 
-  .header-social-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.01rem;
-  }
+.header-social-row {
+  display: flex;
+  flex-direction: column;   /* két sor: felül zászlók, alul ikonok */
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 
   .header-lang-switch {
     display: flex;
@@ -4466,7 +4508,7 @@ der-cta-block {
   /* Zászlók + social ikonok MOBILON legyenek 20 px magasak */
   .header-lang-switch .lang-btn .lang-flag,
   .header-social-icons img {
-    height: 15px;
+    height: 20px;
     width: auto;
   }
 
