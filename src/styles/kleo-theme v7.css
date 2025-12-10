@@ -3804,6 +3804,12 @@ der-cta-block {
     width: auto;
     display: block;      /* LOGÓ BIZTOSAN LÁTSZÓDJON MOBILON IS */
   }
+ .header-logo-link {
+  position: absolute;     /* gridből kivesszük, külön réteg */
+  top: 10rem;            /* kicsit lejjebb a header tetejétől */
+  left: 0rem;
+  z-index: 50;
+}
 
 
 
@@ -3922,7 +3928,7 @@ der-cta-block {
   
  .header-logo-link {
   position: absolute;     /* gridből kivesszük, külön réteg */
-  top: -4.5rem;            /* kicsit lejjebb a header tetejétől */
+  top: 0rem;            /* kicsit lejjebb a header tetejétől */
   left: 0rem;
   z-index: 50;
 }
@@ -4521,7 +4527,7 @@ der-cta-block {
     justify-content: flex-start;
     width: 100%;
     padding: 0.7srem 0.9rem;
-    background: linear-gradient(0deg, #b69861 0%, #b69861 30%);
+    background: linear-gradient(135deg, #000000 10%, #dad1c2 30%);
     border: none;
   }
 
@@ -4662,3 +4668,11 @@ der-cta-block {
   }
 }
 
+@media (max-width: 640px) {
+  /* HEADER: balra logó, jobbra IDŐPONTFOGLALÁS + KÖVESS MINKET */
+  }
+ .header-logo-link {
+  position: absolute;     /* gridből kivesszük, külön réteg */
+  top:-4.5rem;        /* kicsit lejjebb a header tetejétől */
+  left: 0rem;
+  z-index: 50;
