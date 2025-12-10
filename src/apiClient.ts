@@ -18,6 +18,10 @@ async function request<T = any>(
     ? path
     : `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 
+  // Public endpointokra ("/public/") ne vigyünk credentials-t,
+  // minden másra marad az include (admin / belépett user).
+  const isPublic = path.startsWith("/public/");
+
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(options.headers || {}),
@@ -26,7 +30,7 @@ async function request<T = any>(
   const res = await fetch(url, {
     ...options,
     headers,
-    credentials: "include", // ha később kell cookie/session, már jó lesz
+    credentials: isPublic ? "omit" : "include",
   });
 
   if (!res.ok) {
