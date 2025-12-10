@@ -782,13 +782,7 @@ export const WebshopPage: React.FC = () => {
                       </p>
 
                       <div className="webshop-product-card__actions">
-                        <Link
-                          to={`/webshop/products/${product.id}`}
-                          state={{ product }}
-                          className="btn btn-secondary webshop-product-card__btn-details"
-                        >
-                          {t("webshop.list.details")}
-                        </Link>
+                    
 
                         <button
                           type="button"
