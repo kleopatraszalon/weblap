@@ -8,11 +8,54 @@ import { useI18n } from "../i18n";
 
 // ====== TÍPUSOK ======
 
-// Kategóriafa, amit a termékadatokból építünk fel – közvetlenül a terméklistából építjük
-interface CategoryFromProducts {
-  mainName: string;
-  subcategories: string[];
+type MainCategoryKey =
+  | "GIFT_VOUCHERS"
+  | "PASSES"
+  | "GUEST_ACCOUNT"
+  | "KLEO_PRODUCTS"
+  | "COMPANY_DISCOUNTS";
+
+type SubCategoryKey =
+  | "GIFT_VOUCHERS_BASIC"
+  | "GIFT_CUSTOM_PACKAGE"
+  | "GIFT_BEAUTY_VOUCHERS"
+  | "PASSES_SOLARIUM"
+  | "PASSES_MASSAGE"
+  | "PASSES_FACIAL"
+  | "PASSES_HAIR"
+  | "PASSES_OTHER"
+  | "GUEST_ACCOUNT_CREATE"
+  | "GUEST_ACCOUNT_BALANCE"
+  | "KLEO_PRODUCTS_HAIR"
+  | "KLEO_PRODUCTS_COSMETICS"
+  | "KLEO_PRODUCTS_SOLARIUM"
+  | "KLEO_PRODUCTS_ACCESSORIES"
+  | "COMPANY_DISCOUNTS_PARTNERS"
+  | "COMPANY_DISCOUNTS_EMPLOYEES";
+
+type ServiceCategoryKey =
+  | "HAIRDRESSING"
+  | "COSMETICS"
+  | "MASSAGE"
+  | "SOLARIUM"
+  | "NAILS"
+  | "OTHER";
+
+// termékcsoport kulcs – engedjük a stringet is, hogy biztosan ne okozzon TS hibát
+type ProductGroupKey = MainCategoryKey | SubCategoryKey | string;
+
+interface CategoryLevel1 {
+  key: MainCategoryKey;
+  label: string;
 }
+
+const CATEGORY_TREE: CategoryLevel1[] = [
+  { key: "GIFT_VOUCHERS", label: "Ajándékutalványok" },
+  { key: "PASSES", label: "Bérletek" },
+  { key: "GUEST_ACCOUNT", label: "Vendégfiókok és vendégszámlák" },
+  { key: "KLEO_PRODUCTS", label: "Kleopátra termékek" },
+  { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
+];
 
 interface Product {
   id: number;
@@ -26,20 +69,21 @@ interface Product {
   name_en?: string | null;
   name_ru?: string | null;
 
+  // kategória-információk a terméktáblából
+  main_category?: string | null;
+  sub_category?: string | null;
+  service_category?: string | null;
+  category_id?: number | null;
+
+  product_group_key: ProductGroupKey;
+  service_category_key: ServiceCategoryKey | string | null;
   retail_price_gross: number | string | null;
   sale_price: number | string | null;
   image_url: string | null;
 
   is_active?: boolean | null;
   is_webshop_visible?: boolean | null;
-
-  // Webshop specifikus mezők – közvetlenül az adatbázisból
-  product_category_id?: number | string | null;
-  main_category?: string | null;
-  sub_category?: string | null;
-  service_category?: string | null;
 }
-
 
 interface CartItem {
   product: Product;
@@ -61,18 +105,25 @@ interface CheckoutForm {
   paymentMethod: "card" | "cod";
 }
 
+interface MainCategoryFromApi {
+  key: MainCategoryKey | string;
+  name?: string | null;
+  name_hu?: string | null;
+  name_en?: string | null;
+  name_ru?: string | null;
+}
 
 // ====== SEGÉDFÜGGVÉNYEK ======
 
-
-
 function getProductName(product: Product, lang: string): string {
+  // Elsődlegesen az adatbázis 3 nyelvű oszlopaiból olvasunk
   if (lang === "en") {
     return (
       product.display_name_en ||
       product.name_en ||
+      product.name ||
       product.display_name_hu ||
-      product.name
+      ""
     );
   }
 
@@ -80,15 +131,22 @@ function getProductName(product: Product, lang: string): string {
     return (
       product.display_name_ru ||
       product.name_ru ||
+      product.name ||
       product.display_name_en ||
       product.name_en ||
       product.display_name_hu ||
-      product.name
+      ""
     );
   }
 
   // alapértelmezett: HU
-  return product.display_name_hu || product.name;
+  return (
+    product.display_name_hu ||
+    product.name ||
+    product.name_en ||
+    product.display_name_en ||
+    ""
+  );
 }
 
 const INITIAL_REG_FORM: RegistrationForm = {
@@ -154,45 +212,17 @@ export const WebshopPage: React.FC = () => {
   const [orderMessage, setOrderMessage] = useState<string | null>(null);
 
   const [selectedMainCategory, setSelectedMainCategory] =
-    useState<string | null>(null);
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState<string | null>(null);
+    useState<MainCategoryKey | null>(null);
+  // alkategória szűrő a kiválasztott fő kategórián belül
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
 
-  // Kategóriafa a betöltött termékek alapján
-  const categoryTreeFromProducts = useMemo<CategoryFromProducts[]>(() => {
-    const map = new Map<string, Set<string>>();
 
-    for (const p of products) {
-      const main = (p.main_category || "").trim();
-      if (!main) continue;
+  // fő kategória nevek adatbázisból (HU/EN/RU)
+  const [mainCategoryNames, setMainCategoryNames] = useState<
+    Partial<Record<MainCategoryKey, string>>
+  >({});
 
-      if (!map.has(main)) {
-        map.set(main, new Set<string>());
-      }
-
-      const sub = (p.sub_category || "").trim();
-      if (sub) {
-        map.get(main)!.add(sub);
-      }
-    }
-
-    const mainCategories: CategoryFromProducts[] = Array.from(
-      map.entries()
-    ).map(([mainName, subSet]) => ({
-      mainName,
-      subcategories: Array.from(subSet.values()).sort((a, b) =>
-        a.localeCompare(b, "hu")
-      ),
-    }));
-
-    mainCategories.sort((a, b) =>
-      a.mainName.localeCompare(b.mainName, "hu")
-    );
-
-    return mainCategories;
-  }, [products]);
-
-// ====== KOSÁR KEZELÉS ======
+  // ====== KOSÁR KEZELÉS ======
 
   useEffect(() => {
     try {
@@ -319,29 +349,103 @@ export const WebshopPage: React.FC = () => {
     loadProducts();
   }, [lang, t]);
 
-  // ====== SZŰRÉS + LAPOZÁS ======
+  // ====== FŐ KATEGÓRIA NEVEK BETÖLTÉSE DB-BŐL ======
+
+  useEffect(() => {
+    let active = true;
+
+    const loadMainCategoryNames = async () => {
+      try {
+        const data = await apiFetch<MainCategoryFromApi[]>(
+          `/public/webshop/main-categories?lang=${lang}`
+        );
+
+        if (!active) return;
+
+        const map: Partial<Record<MainCategoryKey, string>> = {};
+        for (const item of data) {
+          const key = item.key as MainCategoryKey;
+          let name =
+            item.name ||
+            (lang === "en"
+              ? item.name_en
+              : lang === "ru"
+              ? item.name_ru
+              : item.name_hu);
+
+          if (!name) {
+            // fallback – ha az adott nyelven nincs, próbáljuk HU-t
+            name = item.name_hu || item.name_en || item.name_ru || undefined;
+          }
+          if (name) {
+            map[key] = name;
+          }
+        }
+        setMainCategoryNames(map);
+      } catch (err) {
+        console.error("Webshop main categories error:", err);
+        // hiba esetén marad a CATEGORY_TREE fallback
+      }
+    };
+
+    loadMainCategoryNames();
+
+    return () => {
+      active = false;
+    };
+  }, [lang]);
+
+  const getMainCategoryLabel = (key: MainCategoryKey): string => {
+    return (
+      mainCategoryNames[key] ||
+      CATEGORY_TREE.find((m) => m.key === key)?.label ||
+      key
+    );
+  };
+
+  // ====== ALKATEGÓRIA RESET, HA FŐ KATEGÓRIA VAGY NYELV VÁLTOZIK ======
+
+  useEffect(() => {
+    setSelectedSubCategory(null);
+  }, [selectedMainCategory, lang]);
+
+// ====== SZŰRÉS + LAPOZÁS ======
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [products, selectedMainCategory, selectedSubCategory]);
+  }, [products, selectedMainCategory]);
 
-  const filteredProducts = useMemo(() => {
+    const subcategoriesForSelectedMain = useMemo(() => {
+    if (!selectedMainCategory) return [] as string[];
+
+    const labels = new Set<string>();
+
+    for (const p of products) {
+      const mainKey = (p.product_group_key || p.main_category) as MainCategoryKey | string | null;
+      if (mainKey !== selectedMainCategory) continue;
+      if (!p.sub_category) continue;
+      labels.add(p.sub_category);
+    }
+
+    return Array.from(labels).sort();
+  }, [products, selectedMainCategory]);
+
+const filteredProducts = useMemo(() => {
     let result = products.filter(
       (p) => p.is_active !== false && p.is_webshop_visible !== false
     );
 
     if (selectedMainCategory) {
-      const main = selectedMainCategory.trim();
-      result = result.filter(
-        (p) => (p.main_category || "").trim() === main
-      );
+      result = result.filter((p) => {
+        const mainKey = (p.product_group_key || p.main_category) as MainCategoryKey | string | null;
+
+        if (!mainKey) return false;
+        return mainKey === selectedMainCategory;
+      });
     }
 
     if (selectedSubCategory) {
-      const sub = selectedSubCategory.trim();
-      result = result.filter(
-        (p) => (p.sub_category || "").trim() === sub
-      );
+      result = result.filter((p) => p.sub_category === selectedSubCategory);
     }
 
     return result;
@@ -601,330 +705,316 @@ export const WebshopPage: React.FC = () => {
 
       {/* LISTA + KOSÁR */}
       <section id="webshop-lista" className="section section--webshop">
-        <div className="container">
-          {/* KÖZÉP: TERMÉKLISTA FEJLÉC */}
+        <div className="container webshop-layout">
+{/* Felső, vízszintes kategória sáv – két hasábon át */}
+<div className="webshop-categories-bar webshop-layout__categories">
+  <h3 className="webshop-categories-bar__title">
+    {t("webshop.list.sidebarTitle")}
+  </h3>
+
+  <div className="webshop-categories-bar__main">
+    {CATEGORY_TREE.map((main) => {
+      const isActiveMain = selectedMainCategory === main.key;
+      return (
+        <button
+          key={main.key}
+          type="button"
+          className={
+            "webshop-category-pill" +
+            (isActiveMain ? " webshop-category-pill--active" : "")
+          }
+          onClick={() => {
+            const next = isActiveMain ? null : main.key;
+            setSelectedMainCategory(next);
+          }}
+        >
+          {getMainCategoryLabel(main.key)}
+        </button>
+      );
+    })}
+  </div>
+  {selectedMainCategory && subcategoriesForSelectedMain.length > 0 && (
+    <div className="webshop-subcategory-row">
+      {subcategoriesForSelectedMain.map((sub) => {
+        const isActiveSub = selectedSubCategory === sub;
+        return (
+          <button
+            key={sub}
+            type="button"
+            className={
+              "webshop-category-pill webshop-category-pill--sub" +
+              (isActiveSub ? " webshop-category-pill--active" : "")
+            }
+            onClick={() => {
+              const next = isActiveSub ? null : sub;
+              setSelectedSubCategory(next);
+            }}
+          >
+            {sub}
+          </button>
+        );
+      })}
+    </div>
+  )}
+</div>
+
+          {/* KÖZÉP: TERMÉKLISTA */}
           <div className="webshop-main">
             <p className="section-eyebrow">{t("webshop.list.eyebrow")}</p>
             <h2>{t("webshop.list.title")}</h2>
             <p className="section-lead">{t("webshop.list.lead")}</p>
-          </div>
 
-          {/* Felső, vízszintes kategória sáv */}
-          <div className="webshop-categories">
-            <h3 className="webshop-categories-bar__title">
-              {t("webshop.list.sidebarTitle")}
-            </h3>
+                        {productsLoading && (
+              <p className="webshop-status webshop-status--loading">
+                {t("webshop.list.loading")}
+              </p>
+            )}
 
-            <div className="webshop-category-nav">
-              {categoryTreeFromProducts.map((main) => {
-                const isActiveMain = selectedMainCategory === main.mainName;
+            {productsError && (
+              <p className="webshop-status webshop-status--error">
+                {productsError}
+              </p>
+            )}
+
+            <div className="webshop-products-grid">
+              {pagedProducts.map((product) => {
+                const raw =
+                  product.retail_price_gross ?? product.sale_price ?? 0;
+                const price =
+                  typeof raw === "string"
+                    ? parseFloat(raw.replace(",", ".")) || 0
+                    : raw ?? 0;
+                const displayPrice =
+                  !price || Number.isNaN(price)
+                    ? t("webshop.list.priceOnRequest")
+                    : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+
+                const imageSrc = buildImageUrl(product.image_url || undefined);
+
                 return (
-                  <button
-                    key={main.mainName}
-                    type="button"
-                    className={
-                      "webshop-category-nav__item" +
-                      (isActiveMain
-                        ? " webshop-category-nav__item--active"
-                        : "")
-                    }
-                    onClick={() => {
-                      const next = isActiveMain ? null : main.mainName;
-                      setSelectedMainCategory(next);
-                      setSelectedSubCategory(null);
-                    }}
-                  >
-                    {main.mainName}
-                  </button>
+                  <article key={product.id} className="webshop-product-card">
+                    <Link
+                      to={`/webshop/products/${product.id}`}
+                      state={{ product }}
+                      className="webshop-product-card__image"
+                    >
+                      {imageSrc ? (
+                        <img src={imageSrc} alt={getProductName(product, lang)} />
+                      ) : (
+                        <div className="webshop-product-card__image-placeholder">
+                          <span>{product.name?.[0] ?? "K"}</span>
+                        </div>
+                      )}
+                    </Link>
+
+                    <div className="webshop-product-card__body">
+                      <h3 className="webshop-product-card__title">
+                        <Link
+                          to={`/webshop/products/${product.id}`}
+                          state={{ product }}
+                        >
+                          {getProductName(product, lang)}
+                        </Link>
+                      </h3>
+
+                      <p className="webshop-product-card__sku">
+                        <small>SKU: {product.sku}</small>
+                      </p>
+
+                      <p className="webshop-product-card__price">
+                        <strong>{displayPrice}</strong>
+                      </p>
+
+                      <div className="webshop-product-card__actions">
+                    
+
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-primary--magenta btn--shine webshop-product-card__btn"
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          <span>{t("webshop.list.addToCart")}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </article>
                 );
               })}
-
-              <button
-                type="button"
-                className="webshop-category-reset"
-                onClick={() => {
-                  setSelectedMainCategory(null);
-                  setSelectedSubCategory(null);
-                }}
-              >
-                {t("webshop.list.resetFilters")}
-              </button>
             </div>
 
-            {selectedMainCategory && (
-              <div className="webshop-subcategory-row">
-                {(categoryTreeFromProducts.find(
-                  (cat) => cat.mainName === selectedMainCategory
-                )?.subcategories || []
-                ).map((sub) => {
-                  const isActiveSub = selectedSubCategory === sub;
+            {filteredProducts.length === 0 &&
+              !productsLoading &&
+              !productsError && (
+                <p className="webshop-status">
+                  {t("webshop.list.emptyFiltered")}
+                </p>
+              )}
+
+            {totalPages > 1 && (
+              <div className="webshop-pagination">
+                <button
+                  type="button"
+                  className="webshop-pagination__button"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={safePage === 1}
+                >
+                  ‹
+                </button>
+
+                {Array.from({ length: totalPages }).map((_, index) => {
+                  const page = index + 1;
                   return (
                     <button
-                      key={sub}
+                      key={page}
                       type="button"
                       className={
-                        "webshop-subcategory__button" +
-                        (isActiveSub
-                          ? " webshop-subcategory__button--active"
+                        "webshop-pagination__button" +
+                        (page === safePage
+                          ? " webshop-pagination__button--active"
                           : "")
                       }
-                      onClick={() => {
-                        const next = isActiveSub ? null : sub;
-                        setSelectedSubCategory(next);
-                      }}
+                      onClick={() => setCurrentPage(page)}
                     >
-                      {sub}
+                      {page}
                     </button>
                   );
                 })}
+
+                <button
+                  type="button"
+                  className="webshop-pagination__button"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={safePage === totalPages}
+                >
+                  ›
+                </button>
               </div>
             )}
           </div>
 
-                    <div className="webshop-layout">
-            {/* KÖZÉP: TERMÉKLISTA */}
-            <div className="webshop-main">
-              {productsLoading && (
-                <p className="webshop-status webshop-status--loading">
-                  {t("webshop.list.loading")}
-                </p>
-              )}
-
-              {productsError && (
-                <p className="webshop-status webshop-status--error">
-                  {productsError}
-                </p>
-              )}
-
-              <div className="webshop-grid">
-                {pagedProducts.map((product) => {
-                  const raw =
-                    product.retail_price_gross ?? product.sale_price ?? 0;
-                  const price =
-                    typeof raw === "string"
-                      ? parseFloat(raw.replace(",", ".")) || 0
-                      : raw ?? 0;
-                  const displayPrice =
-                    !price || Number.isNaN(price)
-                      ? t("webshop.list.priceOnRequest")
-                      : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
-
-                  const imageSrc = buildImageUrl(product.image_url || undefined);
-
-                  return (
-                    <article
-                      key={product.id}
-                      className="webshop-product-card"
-                    >
-                      <Link
-                        to={`/webshop/products/${product.id}`}
-                        state={{ product }}
-                        className="webshop-product-card__image"
-                      >
-                        {imageSrc ? (
-                          <img
-                            src={imageSrc}
-                            alt={getProductName(product, lang)}
-                          />
-                        ) : (
-                          <div className="webshop-product-card__image-placeholder">
-                            <span>{product.name?.[0] ?? "K"}</span>
-                          </div>
-                        )}
-                      </Link>
-
-                      <div className="webshop-product-card__body">
-                        <h3 className="webshop-product-card__title">
-                          <Link
-                            to={`/webshop/products/${product.id}`}
-                            state={{ product }}
-                          >
-                            {getProductName(product, lang)}
-                          </Link>
-                        </h3>
-
-                        <p className="webshop-product-card__sku">
-                          <small>SKU: {product.sku}</small>
-                        </p>
-
-                        <p className="webshop-product-card__price">
-                          <strong>{displayPrice}</strong>
-                        </p>
-
-                        <div className="webshop-product-card__actions">
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-primary--magenta btn--shine webshop-product-card__btn"
-                            onClick={() => handleAddToCart(product)}
-                          >
-                            <span>{t("webshop.list.addToCart")}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-
-              {totalPages > 1 && (
-                <div className="webshop-pagination">
-                  <button
-                    type="button"
-                    className="webshop-pagination__button"
-                    onClick={() =>
-                      setCurrentPage((p) => Math.max(1, p - 1))
-                    }
-                    disabled={safePage === 1}
-                  >
-                    ‹
-                  </button>
-
-                  {Array.from({ length: totalPages }).map((_, index) => {
-                    const page = index + 1;
-                    return (
-                      <button
-                        key={page}
-                        type="button"
-                        className={
-                          "webshop-pagination__button" +
-                          (page === safePage
-                            ? " webshop-pagination__button--active"
-                            : "")
-                        }
-                        onClick={() => setCurrentPage(page)}
-                      >
-                        {page}
-                      </button>
-                    );
-                  })}
-
-                  <button
-                    type="button"
-                    className="webshop-pagination__button"
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={safePage === totalPages}
-                  >
-                    ›
-                  </button>
-                </div>
-              )}
+          {/* JOBB OLDAL: KOSÁR */}
+          <aside className="webshop-cart">
+            <div className="webshop-cart__head">
+              <h3 className="webshop-cart__title">
+                {t("webshop.cart.title")}
+              </h3>
+              <p className="webshop-cart__hint">
+                {t("webshop.cart.hint")}
+              </p>
             </div>
 
-            {/* JOBB OLDAL: KOSÁR */}
-            <aside className="webshop-cart">
-              <div className="webshop-cart__head">
-                <h3 className="webshop-cart__title">
-                  {t("webshop.cart.title")}
-                </h3>
-                <p className="webshop-cart__hint">
-                  {t("webshop.cart.hint")}
-                </p>
-              </div>
+            {cart.length === 0 && (
+              <p className="webshop-cart__empty">
+                {t("webshop.cart.empty")}
+              </p>
+            )}
 
-              {cart.length === 0 && (
-                <p className="webshop-cart__empty">
-                  {t("webshop.cart.empty")}
-                </p>
-              )}
+            {cart.length > 0 && (
+              <>
+                <ul className="webshop-cart__list">
+                  {cart.map((item) => {
+                    const raw =
+                      item.product.retail_price_gross ??
+                      item.product.sale_price ??
+                      0;
+                    const price =
+                      typeof raw === "string"
+                        ? parseFloat(raw.replace(",", ".")) || 0
+                        : raw ?? 0;
+                    const displayPrice =
+                      !price || Number.isNaN(price)
+                        ? t("webshop.list.priceOnRequest")
+                        : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
-              {cart.length > 0 && (
-                <>
-                  <ul className="webshop-cart__list">
-                    {cart.map((item) => {
-                      const raw =
-                        item.product.retail_price_gross ??
-                        item.product.sale_price ??
-                        0;
-                      const price =
-                        typeof raw === "string"
-                          ? parseFloat(raw.replace(",", ".")) || 0
-                          : raw ?? 0;
-                      const displayPrice =
-                        !price || Number.isNaN(price)
-                          ? t("webshop.list.priceOnRequest")
-                          : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
+                    return (
+                      <li
+                        key={item.product.id}
+                        className="webshop-cart-item"
+                      >
+                        <div className="webshop-cart-item__main">
+                          <h4 className="webshop-cart-item__title">
+                            {getProductName(item.product, lang)}
+                          </h4>
+                          <p className="webshop-cart-item__price">
+                            {displayPrice}
+                          </p>
+                        </div>
 
-                      return (
-                        <li
-                          key={item.product.id}
-                          className="webshop-cart__item"
-                        >
-                          <div className="webshop-cart__item-main">
-                            <span className="webshop-cart__item-name">
-                              {getProductName(item.product, lang)}
-                            </span>
-                            <span className="webshop-cart__item-price">
-                              {displayPrice}
-                            </span>
-                          </div>
+                        <div className="webshop-cart-item__actions">
+                          <button
+                            type="button"
+                            className="webshop-cart-qty-btn"
+                            onClick={() =>
+                              handleUpdateQuantity(item.product.id, -1)
+                            }
+                          >
+                            −
+                          </button>
+                          <span className="webshop-cart-qty">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            className="webshop-cart-qty-btn"
+                            onClick={() =>
+                              handleUpdateQuantity(item.product.id, +1)
+                            }
+                          >
+                            +
+                          </button>
+                          <button
+                            type="button"
+                            className="webshop-cart-qty-btn"
+                            onClick={() =>
+                              handleRemoveFromCart(item.product.id)
+                            }
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
 
-                          <div className="webshop-cart__item-controls">
-                            <button
-                              type="button"
-                              className="webshop-cart-qty-btn"
-                              onClick={() =>
-                                handleUpdateQuantity(item.product.id, -1)
-                              }
-                            >
-                              −
-                            </button>
-                            <span className="webshop-cart-qty">
-                              {item.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              className="webshop-cart-qty-btn"
-                              onClick={() =>
-                                handleUpdateQuantity(item.product.id, +1)
-                              }
-                            >
-                              +
-                            </button>
-                            <button
-                              type="button"
-                              className="webshop-cart-qty-btn"
-                              onClick={() =>
-                                handleRemoveFromCart(item.product.id)
-                              }
-                            >
-                              ×
-                            </button>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                <div className="webshop-cart__summary">
+                  <div className="webshop-cart__total">
+                    <span>{t("webshop.cart.subtotal")}</span>
+                    <strong>
+                      {cartTotal.toLocaleString("hu-HU")} {currencyLabel}
+                    </strong>
+                  </div>
 
-                  <div className="webshop-cart__summary">
-                    <div className="webshop-cart__total">
-                      <span>{t("webshop.cart.subtotal")}</span>
+                  {cartTotalAfterCoupon !== cartTotal && (
+                    <div className="webshop-cart__total webshop-cart__total--discount">
+                      <span>{t("webshop.cart.totalDiscounted")}</span>
                       <strong>
-                        {cartTotal.toLocaleString("hu-HU")} {currencyLabel}
+                        {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
+                        {currencyLabel}
                       </strong>
                     </div>
+                  )}
 
-                    <button
-                      type="button"
-                      className="btn btn-ghost webshop-cart__clear"
-                      onClick={handleClearCart}
-                    >
-                      {t("webshop.cart.clear")}
-                    </button>
+                  <button
+                    type="button"
+                    className="btn btn-ghost webshop-cart__clear"
+                    onClick={handleClearCart}
+                  >
+                    {t("webshop.cart.clear")}
+                  </button>
 
-                    <a
-                      href="#webshop-checkout"
-                      className="btn btn-primary btn-primary--magenta webshop-cart__checkout-link"
-                    >
-                      {t("webshop.cart.gotoCheckout")}
-                    </a>
-                  </div>
-                </>
-              )}
-            </aside>
-          </div>
-      
+                  <a
+                    href="#webshop-checkout"
+                    className="btn btn-primary btn-primary--magenta webshop-cart__checkout-link"
+                  >
+                    {t("webshop.cart.gotoCheckout")}
+                  </a>
+                </div>
+              </>
+            )}
+          </aside>
         </div>
       </section>
 

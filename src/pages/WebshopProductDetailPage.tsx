@@ -143,7 +143,7 @@ export const WebshopProductDetailPage: React.FC = () => {
       setProductError(null);
       try {
         const res = await fetch(
-          `${API_BASE}/public/webshop/products/${productId}`
+          `${API_BASE}/public/webshop/products/${productId}?lang=${lang}`
         );
         if (!res.ok) {
           throw new Error(`Hiba a termék betöltésekor (${res.status})`);
