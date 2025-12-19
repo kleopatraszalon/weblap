@@ -1,0 +1,146 @@
+/* Franchise landing page – isolated styles (no global overrides) */
+
+.frlp {
+  min-height: 100vh;
+  background: #1452cc;
+  color: #fefff3;
+  overflow-x: hidden;
+}
+
+.frlp-hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 64px 16px 80px;
+}
+
+.frlp-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 600px at 50% 45%, rgba(25, 45, 80, 0.75), rgba(11, 18, 32, 0.92) 60%, #070b14 100%),
+    radial-gradient(600px 320px at 50% 30%, rgba(255, 215, 125, 0.10), rgba(0,0,0,0) 65%);
+  filter: saturate(1.02);
+}
+
+.frlp-hero__wrap {
+  position: relative;
+  width: min(1080px, 100%);
+  text-align: center;
+}
+
+.frlp-hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 18px;
+}
+
+.frlp-hero__dot {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 30% 30%, rgba(255,215,125,0.95), rgba(172, 128, 35, 0.95));
+  box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+  color: #d7b15e;
+}
+
+.frlp-hero__title {
+  margin: 0 auto;
+  font-weight: 700;
+  line-height: 1.02;
+  font-size: clamp(34px, 4.6vw, 10px);
+  max-width: 980px;
+  text-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+.frlp-hero__title--break {
+  display: inline;
+  color: #d7b15e;
+}
+
+.frlp-hero__title--emph {
+  color: #d7b15e;
+}
+
+.frlp-hero__lead {
+  margin: 14px auto 26px;
+  max-width: 860px;
+  font-size: 10px;
+  line-height: 1.55;
+  color: rgba(235, 240, 255, 0.80);
+}
+
+.frlp-videoCard {
+  margin: 26px auto 28px;
+  width: min(740px, 100%);
+  border-radius: 18px;
+  background: rgba(14, 22, 41, 0.55);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+}
+
+.frlp-videoCard__inner {
+  padding: 46px 22px 42px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.frlp-play {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #0b1220;
+  background: radial-gradient(circle at 30% 30%, rgba(255,215,125,1), rgba(172, 128, 35, 1));
+  box-shadow: 0 18px 55px rgba(0,0,0,0.55);
+}
+
+.frlp-videoCard__title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.frlp-videoCard__sub {
+  font-size: 12px;
+  color: rgba(235, 240, 255, 0.70);
+}
+
+.frlp-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0b1220;
+  background: radial-gradient(circle at 30% 30%, rgba(255,215,125,1), rgba(172, 128, 35, 1));
+  box-shadow: 0 18px 55px rgba(0,0,0,0.45);
+}
+
+.frlp-cta:hover {
+  filter: brightness(1.03);
+}
+
+@media (min-width: 900px) {
+  .frlp-hero__lead {
+    font-size: 15px;
+  }
+  .frlp-videoCard__inner {
+    padding: 56px 26px 52px;
+  }
+}

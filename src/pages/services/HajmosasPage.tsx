@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function HajmosasPage() {
+export function HajmosasPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.hajmosas.title"
@@ -26,3 +24,6 @@ export default function HajmosasPage() {
     />
   );
 }
+
+
+export default HajmosasPage;

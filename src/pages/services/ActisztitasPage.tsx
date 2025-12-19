@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function ActisztitasPage() {
+export function ActisztitasPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.arctisztitas.title"
@@ -24,3 +22,6 @@ export default function ActisztitasPage() {
     />
   );
 }
+
+
+export default ActisztitasPage;

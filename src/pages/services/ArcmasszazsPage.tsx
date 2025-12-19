@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function ArcmasszazsPage() {
+export function ArcmasszazsPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.arcmasszazs.title"
@@ -26,3 +24,6 @@ export default function ArcmasszazsPage() {
     />
   );
 }
+
+
+export default ArcmasszazsPage;

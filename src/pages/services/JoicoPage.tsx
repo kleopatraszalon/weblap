@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function JoicoPage() {
+export function JoicoPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.joicohajkezeles.title"
@@ -25,3 +23,6 @@ export default function JoicoPage() {
     />
   );
 }
+
+
+export default JoicoPage;

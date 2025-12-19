@@ -4,6 +4,9 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Link,
+  Outlet,
+  useLocation,
   Navigate,
 } from "react-router-dom";
 
@@ -13,177 +16,216 @@ import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
-
 import { ServicesPage } from "./pages/ServicesPage";
-import SzempillaPage from "./pages/services/SzempillaPage";
-import HajmosasPage from "./pages/services/HajmosasPage";
-import ArcmasszazsPage from "./pages/services/ArcmasszazsPage";
-import ActisztitasPage from "./pages/services/ActisztitasPage";
-import JoicoPage from "./pages/services/JoicoPage";
-import MelegollosPage from "./pages/services/MelegollosPage";
-import IplPage from "./pages/services/IplPage";
+import { SzempillaPage } from "./pages/services/SzempillaPage";
+import { HajmosasPage } from "./pages/services/HajmosasPage";
+import { ArcmasszazsPage } from "./pages/services/ArcmasszazsPage";
+import { ActisztitasPage } from "./pages/services/ActisztitasPage";
+import { JoicoPage } from "./pages/services/JoicoPage";
+import { MelegollosPage } from "./pages/services/MelegollosPage";
+import { IplPage } from "./pages/services/IplPage";
 
 import { PriceListPage } from "./pages/PriceListPage";
 import { LoyaltyPage } from "./pages/LoyaltyPage";
-import { FranchisePage } from "./pages/FranchisePage";
-import { FranchiseV1Page } from "./pages/FranchiseV1Page";
-import { FranchiseInfoPage } from "./pages/FranchiseInfoPage";
-import { FranchiseKoszonjukPage } from "./pages/FranchiseKoszonjukPage";
-
 import { CareerPage } from "./pages/CareerPage";
 import { TrainingPage } from "./pages/TrainingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 
+import { FranchisePage } from "./pages/FranchisePage";
+import { FranchiseV1Page } from "./pages/FranchiseV1Page";
+import { FranchiseInfoPage } from "./pages/FranchiseInfoPage";
+import { FranchiseKoszonjukPage } from "./pages/FranchiseKoszonjukPage";
+
 import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
-import { CheckoutPage } from "./pages/CheckoutPage";
 
-import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
 
 /**
- * Route-kiosztás célja:
- * - Megfeleljen a kleoszalon.hu jelenlegi (HU) URL-struktúrájának.
- * - A régi/angol útvonalakat kliensoldali redirecttel is kezelje
- *   (a végleges SEO 301-eket Render oldalon érdemes beállítani).
+ * Franchise landing oldalak – nincs Header / Footer / lebegő kosár.
+ * Ide tartozik: /franchise, /franchise-v1, /franchise-info, /franchise-koszonjuk
+ * (valamint a /hu|/en|/ru prefixel induló verziók)
  */
-const App: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+const isFranchisePath = (pathname: string) => {
+  return /^\/(hu|en|ru)?\/?(franchise|franchise-v1|franchise-info|franchise-koszonjuk)(\/.*)?$/.test(
+    pathname
+  );
+};
+
+const FloatingCartButton: React.FC = () => {
+  const { pathname } = useLocation();
+  const isFranchise = isFranchisePath(pathname);
+
+  // Franchise LP-n soha ne jelenjen meg
+  if (isFranchise) return null;
+
+  // csak webshop route-okon legyen (ahogy eddig is)
+  const isWebshopRoute =
+    pathname.startsWith("/webshop") || pathname.startsWith("/cart");
+
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
-    const stored = localStorage.getItem("kleo_cart");
-    if (stored) {
+    const calcCount = () => {
       try {
-        setCartItems(JSON.parse(stored));
+        const raw = localStorage.getItem("kleo_cart_items");
+        if (!raw) return 0;
+        const items = JSON.parse(raw);
+        if (!Array.isArray(items)) return 0;
+        return items.reduce((sum, item) => sum + (item?.quantity || 0), 0);
       } catch {
-        // ignore
+        return 0;
       }
-    }
+    };
+
+    const handler = () => setCount(calcCount());
+    handler();
+
+    window.addEventListener("storage", handler);
+    window.addEventListener("kleo-cart-updated", handler as EventListener);
+
+    return () => {
+      window.removeEventListener("storage", handler);
+      window.removeEventListener("kleo-cart-updated", handler as EventListener);
+    };
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("kleo_cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+  if (!isWebshopRoute) return null;
 
-  const cartCount = cartItems.reduce((n, i) => n + (i.quantity ?? 1), 0);
+  return (
+    <Link to="/cart" className="kleo-cart-fab">
+      <span className="kleo-cart-fab__icon">🛒</span>
+      <span className="kleo-cart-fab__label">Kosár</span>
+      <span className="kleo-cart-fab__badge">{count}</span>
+    </Link>
+  );
+};
 
+const MainLayout: React.FC = () => {
+  return (
+    <>
+      <Header />
+      <FloatingCartButton />
+      <Outlet />
+      <Footer />
+    </>
+  );
+};
+
+const FranchiseLayout: React.FC = () => {
+  return <Outlet />;
+};
+
+/**
+ * Régi (legacy) szolgáltatás URL-ek – React Router szinten is kezeljük,
+ * hogy lokálisan és prodon is működjön akkor is, ha a Render redirect valamiért nem fut le.
+ */
+const LegacyServiceRedirects: React.FC = () => {
+  const { pathname } = useLocation();
+
+  const map: Record<string, string> = {
+    "/ipl": "/szolgaltatasok/ipl",
+    "/mollos": "/szolgaltatasok/melegollos",
+    "/melegollos": "/szolgaltatasok/melegollos",
+    "/joico": "/szolgaltatasok/joico",
+    "/szempilla": "/szolgaltatasok/szempilla",
+    "/hajmosas": "/szolgaltatasok/hajmosas",
+    "/arcmasszazs": "/szolgaltatasok/arcmasszazs",
+    "/actisztitas": "/szolgaltatasok/actisztitas",
+  };
+
+  const target = map[pathname];
+  if (!target) return null;
+
+  return <Navigate to={target} replace />;
+};
+
+const App: React.FC = () => {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        <Header cartItemsCount={cartCount} />
+        {/* legacy root redirectek */}
+        <LegacyServiceRedirects />
+
         <Routes>
-          {/* Főoldal */}
-          <Route path="/" element={<HomePage />} />
-
-          {/* Szalonok */}
-          <Route path="/szalonok" element={<SalonsPage />} />
-          <Route path="/szalonok/:slug" element={<SalonDetailPage />} />
-
-          {/* Szolgáltatások */}
-          <Route path="/szolgaltatasok" element={<ServicesPage />} />
-          <Route
-            path="/szolgaltatasok/muszempilla"
-            element={<SzempillaPage />}
-          />
-          <Route path="/szolgaltatasok/hajmosas" element={<HajmosasPage />} />
-          <Route
-            path="/szolgaltatasok/arcmasszazs"
-            element={<ArcmasszazsPage />}
-          />
-          <Route
-            path="/szolgaltatasok/arctisztitas"
-            element={<ActisztitasPage />}
-          />
-          <Route
-            path="/szolgaltatasok/joicohajkezeles"
-            element={<JoicoPage />}
-          />
-          <Route path="/szolgaltatasok/mollos" element={<MelegollosPage />} />
-          <Route path="/szolgaltatasok/melegollos" element={<MelegollosPage />} />
-          <Route path="/szolgaltatasok/ipl" element={<IplPage />} />
-
-          {/* Régi alias útvonalak (301 a Renderen, de fejlesztésben is működjön) */}
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/services/szempilla" element={<SzempillaPage />} />
-          <Route path="/services/hajmosas" element={<HajmosasPage />} />
-          <Route path="/services/arcmasszazs" element={<ArcmasszazsPage />} />
-          <Route path="/services/actisztitas" element={<ActisztitasPage />} />
-          <Route path="/services/joico" element={<JoicoPage />} />
-          <Route path="/services/melegollos" element={<MelegollosPage />} />
-          <Route path="/services/ipl" element={<IplPage />} />
+          {/* Franchise – TELJESEN IZOLÁLT (nincs Header/Footer) */}
+          <Route element={<FranchiseLayout />}>
+            <Route path="/franchise" element={<FranchisePage />} />
+            <Route path="/franchise-v1" element={<FranchiseV1Page />} />
+            <Route path="/franchise-info" element={<FranchiseInfoPage />} />
+            <Route
+              path="/franchise-koszonjuk"
+              element={<FranchiseKoszonjukPage />}
+            />
 
 
-          {/* Árak / hűség */}
-          <Route path="/araink" element={<PriceListPage />} />
-          <Route path="/husegprogram" element={<LoyaltyPage />} />
+            {/* Lang prefix támogatás (HU/EN/RU) */}
+            <Route path="/:lang/franchise" element={<FranchisePage />} />
+            <Route path="/:lang/franchise-v1" element={<FranchiseV1Page />} />
+            <Route path="/:lang/franchise-info" element={<FranchiseInfoPage />} />
+            <Route
+              path="/:lang/franchise-koszonjuk"
+              element={<FranchiseKoszonjukPage />}
+            />
+          </Route>
 
-          {/* Franchise landingek */}
-          <Route path="/franchise" element={<FranchisePage />} />
-          <Route path="/franchise-v1" element={<FranchiseV1Page />} />
-          <Route path="/franchise-info" element={<FranchiseInfoPage />} />
-          <Route
-            path="/franchise-koszonjuk"
-            element={<FranchiseKoszonjukPage />}
-          />
+          {/* Fő weboldal – standard chrome */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
 
-          {/* Egyéb */}
-          <Route path="/karrier" element={<CareerPage />} />
-          <Route path="/karrier.php" element={<CareerPage />} />
-          <Route path="/oktatas" element={<TrainingPage />} />
-          <Route path="/rolunk" element={<AboutPage />} />
-          <Route path="/kapcsolat" element={<ContactPage />} />
+            <Route path="/salons" element={<SalonsPage />} />
+            <Route path="/salons/:slug" element={<SalonDetailPage />} />
 
-          {/* Webshop (ha külön domain lesz, később kivehető) */}
-          <Route
-            path="/webshop"
-            element={<WebshopPage cartItems={cartItems} setCartItems={setCartItems} />}
-          />
-          <Route
-            path="/webshop/products/:productId"
-            element={<WebshopProductDetailPage cartItems={cartItems} setCartItems={setCartItems} />}
-          />
-          <Route
-            path="/kosar"
-            element={<CartPage cartItems={cartItems} setCartItems={setCartItems} />}
-          />
-          <Route
-            path="/checkout"
-            element={<CheckoutPage cartItems={cartItems} setCartItems={setCartItems} />}
-          />
+            {/* Services – új canonical */}
+            <Route path="/szolgaltatasok" element={<ServicesPage />} />
+            <Route path="/szolgaltatasok/szempilla" element={<SzempillaPage />} />
+            <Route path="/szolgaltatasok/hajmosas" element={<HajmosasPage />} />
+            <Route
+              path="/szolgaltatasok/arcmasszazs"
+              element={<ArcmasszazsPage />}
+            />
+            <Route
+              path="/szolgaltatasok/actisztitas"
+              element={<ActisztitasPage />}
+            />
+            <Route path="/szolgaltatasok/joico" element={<JoicoPage />} />
+            <Route
+              path="/szolgaltatasok/melegollos"
+              element={<MelegollosPage />}
+            />
+            <Route path="/szolgaltatasok/ipl" element={<IplPage />} />
 
-          {/* Régi / angol útvonalak – kliensoldali átvezetés */}
-          <Route path="/salons" element={<Navigate to="/szalonok" replace />} />
-          <Route path="/salons/:slug" element={<Navigate to="/szalonok" replace />} />
-          <Route path="/services" element={<Navigate to="/szolgaltatasok" replace />} />
-          <Route path="/services/szempilla" element={<Navigate to="/szolgaltatasok/muszempilla" replace />} />
-          <Route path="/services/hajmosas" element={<Navigate to="/szolgaltatasok/hajmosas" replace />} />
-          <Route path="/services/arcmasszazs" element={<Navigate to="/szolgaltatasok/arcmasszazs" replace />} />
-          <Route path="/services/actisztitas" element={<Navigate to="/szolgaltatasok/arctisztitas" replace />} />
-          <Route path="/services/joico" element={<Navigate to="/szolgaltatasok/joicohajkezeles" replace />} />
-          <Route path="/services/melegollos" element={<Navigate to="/szolgaltatasok/mollos" replace />} />
-          <Route path="/services/ipl" element={<Navigate to="/szolgaltatasok/ipl" replace />} />
+            {/* Services – régi URL-ek (kompatibilitás) */}
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/services/szempilla" element={<SzempillaPage />} />
+            <Route path="/services/hajmosas" element={<HajmosasPage />} />
+            <Route path="/services/arcmasszazs" element={<ArcmasszazsPage />} />
+            <Route path="/services/actisztitas" element={<ActisztitasPage />} />
+            <Route path="/services/joico" element={<JoicoPage />} />
+            <Route path="/services/melegollos" element={<MelegollosPage />} />
+            <Route path="/services/ipl" element={<IplPage />} />
 
-          {/* Régi (gyökér) szolgáltatás URL-ek -> új, egységes /szolgaltatasok/* struktúra */}
-          <Route path="/muszempilla" element={<Navigate to="/szolgaltatasok/muszempilla" replace />} />
-          <Route path="/joicohajkezeles" element={<Navigate to="/szolgaltatasok/joicohajkezeles" replace />} />
-          <Route path="/melegolloshajvagas" element={<Navigate to="/szolgaltatasok/mollos" replace />} />
-          <Route path="/iplszortelenites" element={<Navigate to="/szolgaltatasok/ipl" replace />} />
-          <Route path="/arcmasszazs" element={<Navigate to="/szolgaltatasok/arcmasszazs" replace />} />
-          <Route path="/arctisztitas" element={<Navigate to="/szolgaltatasok/arctisztitas" replace />} />
+            <Route path="/prices" element={<PriceListPage />} />
+            <Route path="/loyalty" element={<LoyaltyPage />} />
+            <Route path="/career" element={<CareerPage />} />
+            <Route path="/education" element={<TrainingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
-          <Route path="/prices" element={<Navigate to="/araink" replace />} />
-          <Route path="/loyalty" element={<Navigate to="/husegprogram" replace />} />
-          <Route path="/about" element={<Navigate to="/rolunk" replace />} />
-          <Route path="/education" element={<Navigate to="/oktatas" replace />} />
-          <Route path="/contact" element={<Navigate to="/kapcsolat" replace />} />
-          <Route path="/career" element={<Navigate to="/karrier" replace />} />
+            {/* Webshop */}
+            <Route path="/webshop" element={<WebshopPage />} />
+            <Route
+              path="/webshop/products/:productId"
+              element={<WebshopProductDetailPage />}
+            />
+            <Route path="/cart" element={<CartPage />} />
 
-          {/* Default */}
-          <Route path="*" element={<HomePage />} />
+            {/* Fallback */}
+            <Route path="*" element={<HomePage />} />
+          </Route>
         </Routes>
-        <Footer />
       </BrowserRouter>
     </LanguageProvider>
   );

@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function SzempillaPage() {
+export function SzempillaPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.muszempilla.title"
@@ -27,3 +25,6 @@ export default function SzempillaPage() {
     />
   );
 }
+
+
+export default SzempillaPage;

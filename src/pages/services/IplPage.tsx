@@ -1,6 +1,4 @@
-import ServiceDetailLayout from "../../components/ServiceDetailLayout";
-
-export default function IplPage() {
+export function IplPage() {
   return (
     <ServiceDetailLayout
       titleKey="services.detail.ipl.title"
@@ -26,3 +24,6 @@ export default function IplPage() {
     />
   );
 }
+
+
+export default IplPage;

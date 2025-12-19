@@ -47,6 +47,9 @@ export function Header() {
               <NavLink to="/services" className={navLinkClass}>
                 {t("menu.pricesServices")}
               </NavLink>
+              <a href="/franchise" target="_blank" rel="noopener noreferrer" className="nav-link">
+                {t("menu.franchise")}
+              </a>
               <NavLink to="/webshop" className={navLinkClass}>
                 {t("menu.webshop")}
               </NavLink>
@@ -62,10 +65,7 @@ export function Header() {
               <NavLink to="/loyalty" className={navLinkClass}>
                 {t("menu.loyalty")}
               </NavLink>
-              <NavLink to="/franchise" className={navLinkClass}>
-                {t("menu.franchise")}
-              </NavLink>
-              <NavLink to="/career" className={navLinkClass}>
+<NavLink to="/career" className={navLinkClass}>
                 {t("menu.career")}
               </NavLink>
               <NavLink to="/education" className={navLinkClass}>
