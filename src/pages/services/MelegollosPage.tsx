@@ -1,23 +1,28 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const MelegollosPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function MelegollosPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/Melegollos.jpg')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.hotcut.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.mollos.title"
+      leadKey="services.detail.mollos.lead"
+      heroImageSrc="/images/services/melegollos-hero.jpg"
+      priceAnchor="/araink#category-1"
+      sections={[
+        {
+          titleKey: "services.detail.mollos.section1.title",
+          items: [
+            "services.detail.mollos.section1.item1",
+            "services.detail.mollos.section1.item2",
+          ],
+        },
+        {
+          titleKey: "services.detail.mollos.section2.title",
+          items: [
+            "services.detail.mollos.section2.item1",
+            "services.detail.mollos.section2.item2",
+          ],
+        },
+      ]}
+    />
   );
-};
-
-export default MelegollosPage;
+}

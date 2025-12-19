@@ -1,23 +1,27 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const JoicoPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function JoicoPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/joico.png')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.joico.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.joicohajkezeles.title"
+      leadKey="services.detail.joicohajkezeles.lead"
+      heroImageSrc="/images/services/joico-hero.jpg"
+      priceAnchor="/araink#category-1"
+      sections={[
+        {
+          titleKey: "services.detail.joicohajkezeles.section1.title",
+          items: [
+            "services.detail.joicohajkezeles.section1.item1",
+            "services.detail.joicohajkezeles.section1.item2",
+            "services.detail.joicohajkezeles.section1.item3",
+            "services.detail.joicohajkezeles.section1.item4",
+          ],
+        },
+        {
+          titleKey: "services.detail.joicohajkezeles.section2.title",
+          items: ["services.detail.joicohajkezeles.section2.item1"],
+        },
+      ]}
+    />
   );
-};
-
-export default JoicoPage;
+}

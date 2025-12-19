@@ -1,23 +1,26 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const ActisztitasPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function ActisztitasPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/actisztitas.png')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.actisztitas.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.arctisztitas.title"
+      leadKey="services.detail.arctisztitas.lead"
+      heroImageSrc="/images/services/arctisztitas-hero.jpg"
+      priceAnchor="/araink#category-2"
+      sections={[
+        {
+          titleKey: "services.detail.arctisztitas.section1.title",
+          items: [
+            "services.detail.arctisztitas.section1.item1",
+            "services.detail.arctisztitas.section1.item2",
+            "services.detail.arctisztitas.section1.item3",
+          ],
+        },
+        {
+          titleKey: "services.detail.arctisztitas.section2.title",
+          items: ["services.detail.arctisztitas.section2.item1"],
+        },
+      ]}
+    />
   );
-};
-
-export default ActisztitasPage;
+}

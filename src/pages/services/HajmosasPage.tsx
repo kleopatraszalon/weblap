@@ -1,23 +1,28 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const HajmosasPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function HajmosasPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/hajmosas.png')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.hairwash.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.hajmosas.title"
+      leadKey="services.detail.hajmosas.lead"
+      heroImageSrc="/images/services/hajmosas-hero.jpg"
+      priceAnchor="/araink#category-1"
+      sections={[
+        {
+          titleKey: "services.detail.hajmosas.section1.title",
+          items: [
+            "services.detail.hajmosas.section1.item1",
+            "services.detail.hajmosas.section1.item2",
+          ],
+        },
+        {
+          titleKey: "services.detail.hajmosas.section2.title",
+          items: [
+            "services.detail.hajmosas.section2.item1",
+            "services.detail.hajmosas.section2.item2",
+          ],
+        },
+      ]}
+    />
   );
-};
-
-export default HajmosasPage;
+}

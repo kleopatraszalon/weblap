@@ -1,10 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useI18n } from "../i18n"; // <<< FONTOS: egy szinttel feljebb!
 import "../styles/FranchisePage.css";  // <<< EZT ADD HOZZÁ
+import { submitToMailchimp } from "../utils/mailchimp";
 
 export const FranchisePage: React.FC = () => {
   const { t } = useI18n();
+  const nav = useNavigate();
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const payload: Record<string, string> = {
+      FNAME: String(fd.get("name") || ""),
+      EMAIL: String(fd.get("email") || ""),
+      PHONE: String(fd.get("phone") || ""),
+      CITY: String(fd.get("city") || ""),
+      STREET: String(fd.get("street") || ""),
+      BUSINESS: String(fd.get("business") || ""),
+      TIMELINE: String(fd.get("timeline") || ""),
+      SOURCE: "franchise",
+    };
+    await submitToMailchimp(payload);
+    nav("/franchise-koszonjuk");
+  }
 
   return (
     <main className="page-franchise">
@@ -187,7 +206,7 @@ export const FranchisePage: React.FC = () => {
       >
         <div className="container contact-layout">
           {/* FORM */}
-          <form className="form-card beauty-form">
+          <form className="form-card beauty-form" onSubmit={onSubmit}>
             <h2 className="form-title">{t("franchise.form.title")}</h2>
             <p className="form-intro">{t("franchise.form.intro")}</p>
 

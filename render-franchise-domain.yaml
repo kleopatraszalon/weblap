@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: kleopatraszepsegszalonok-redirect
+    runtime: static
+    buildCommand: 'true'
+    staticPublishPath: ./
+
+    routes:
+      - type: redirect
+        source: /*
+        destination: https://kleoszalon.hu/franchise

@@ -1,0 +1,71 @@
+# render.yaml (Blueprint)
+# A "routes" rész statikus site esetén kezeli a 301 redirecteket + SPA rewrite-ot.
+# Ahol szükséges, állítsd a szolgáltatás nevét/build parancsot a saját projektedhez.
+
+services:
+  - type: web
+    name: kleoszalon-weblap
+    env: static
+    staticPublishPath: dist
+    buildCommand: npm ci && npm run build
+    routes:
+      # --- 301: régi /services/* -> új /szolgaltatasok/* ---
+      - type: redirect
+        source: /services
+        destination: /szolgaltatasok
+        status: 301
+      - type: redirect
+        source: /services/*
+        destination: /szolgaltatasok/*
+        status: 301
+
+      # --- 301: régi "root" szolgáltatás oldalak -> új megfelelőjük ---
+      - type: redirect
+        source: /ipl
+        destination: /szolgaltatasok/ipl
+        status: 301
+      - type: redirect
+        source: /mollos
+        destination: /szolgaltatasok/mollos
+        status: 301
+      - type: redirect
+        source: /melegollos
+        destination: /szolgaltatasok/melegollos
+        status: 301
+      - type: redirect
+        source: /szempilla
+        destination: /szolgaltatasok/muszempilla
+        status: 301
+      - type: redirect
+        source: /muszempilla
+        destination: /szolgaltatasok/muszempilla
+        status: 301
+      - type: redirect
+        source: /arcmasszazs
+        destination: /szolgaltatasok/arcmasszazs
+        status: 301
+      - type: redirect
+        source: /arctisztitas
+        destination: /szolgaltatasok/arctisztitas
+        status: 301
+      - type: redirect
+        source: /actisztitas
+        destination: /szolgaltatasok/arctisztitas
+        status: 301
+      - type: redirect
+        source: /joico
+        destination: /szolgaltatasok/joicohajkezeles
+        status: 301
+      - type: redirect
+        source: /joicohajkezeles
+        destination: /szolgaltatasok/joicohajkezeles
+        status: 301
+      - type: redirect
+        source: /hajmosas
+        destination: /szolgaltatasok/hajmosas
+        status: 301
+
+      # --- SPA rewrite: catch-all 404 elkerülése (React Router) ---
+      - type: rewrite
+        source: /*
+        destination: /index.html

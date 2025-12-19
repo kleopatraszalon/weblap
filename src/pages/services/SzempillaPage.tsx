@@ -1,23 +1,29 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const SzempillaPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function SzempillaPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/szempilla.png')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.lash.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.muszempilla.title"
+      leadKey="services.detail.muszempilla.lead"
+      heroImageSrc="/images/services/muszempilla-hero.jpg"
+      priceAnchor="/araink#category-2"
+      sections={[
+        {
+          titleKey: "services.detail.muszempilla.section1.title",
+          items: [
+            "services.detail.muszempilla.section1.item1",
+            "services.detail.muszempilla.section1.item2",
+            "services.detail.muszempilla.section1.item3",
+          ],
+        },
+        {
+          titleKey: "services.detail.muszempilla.section2.title",
+          items: [
+            "services.detail.muszempilla.section2.item1",
+            "services.detail.muszempilla.section2.item2",
+          ],
+        },
+      ]}
+    />
   );
-};
-
-export default SzempillaPage;
+}

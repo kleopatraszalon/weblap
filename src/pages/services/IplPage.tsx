@@ -1,23 +1,28 @@
-import React from "react";
-import "../../styles/kleo-theme v7.css";import { useI18n } from "../../i18n";
+import ServiceDetailLayout from "../../components/ServiceDetailLayout";
 
-export const IplPage: React.FC = () => {
-  const { t } = useI18n();
-
+export default function IplPage() {
   return (
-    <main className="service-detail">
-      <div
-        className="service-hero service-hero--image"
-        style={{ backgroundImage: "url('/images/ipl.jpg')" }}
-      >
-        <div className="service-hero-overlay">
-          <h1 className="service-hero-title service-hero-title--center">
-            {t("services.highlight.ipl.title")}
-          </h1>
-        </div>
-      </div>
-    </main>
+    <ServiceDetailLayout
+      titleKey="services.detail.ipl.title"
+      leadKey="services.detail.ipl.lead"
+      heroImageSrc="/images/services/ipl-hero.jpg"
+      priceAnchor="/araink#category-2"
+      sections={[
+        {
+          titleKey: "services.detail.ipl.section1.title",
+          items: [
+            "services.detail.ipl.section1.item1",
+            "services.detail.ipl.section1.item2",
+          ],
+        },
+        {
+          titleKey: "services.detail.ipl.section2.title",
+          items: [
+            "services.detail.ipl.section2.item1",
+            "services.detail.ipl.section2.item2",
+          ],
+        },
+      ]}
+    />
   );
-};
-
-export default IplPage;
+}
