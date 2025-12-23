@@ -1,0 +1,104 @@
+
+/* Franchise landing – headerless, Abacus-style */
+.fr-landing { font-family: inherit; color: #0b1220; }
+.fr-hero {
+  position: relative;
+  min-height: 90vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(1200px 600px at 20% 30%, rgba(212,175,55,.20), transparent 55%),
+              radial-gradient(900px 500px at 80% 70%, rgba(212,175,55,.15), transparent 60%),
+              linear-gradient(135deg, #0b1220 0%, #0a1626 45%, #060a10 100%);
+  overflow:hidden;
+}
+.fr-hero::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:120px;
+  background: linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%);
+}
+.fr-hero-inner{ position:relative; z-index:2; width:100%; max-width: 1050px; padding: 72px 20px 40px; text-align:center; }
+.fr-badge{ width:56px; height:56px; border-radius:999px; margin:0 auto 18px; background:#D4AF37; display:flex; align-items:center; justify-content:center; box-shadow:0 14px 40px rgba(0,0,0,.25);}
+.fr-badge svg{ width:26px; height:26px; fill:#fff; }
+.fr-title{ margin:0 auto; max-width: 980px; font-size: clamp(32px, 5vw, 56px); line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; color:#fff; }
+.fr-title em{ font-style: normal; color:#D4AF37; }
+.fr-sub{ margin:18px auto 0; max-width: 920px; font-size: clamp(14px, 1.7vw, 18px); line-height:1.6; color: rgba(255,255,255,.78); }
+.fr-video-card{
+  margin: 38px auto 0;
+  max-width: 860px;
+  border-radius: 18px;
+  padding: 34px 18px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 40px 110px rgba(0,0,0,.45);
+  backdrop-filter: blur(8px);
+}
+.fr-play{
+  width:62px; height:62px; border-radius:999px;
+  background:#D4AF37;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 14px;
+}
+.fr-play svg{ width:26px; height:26px; fill:#fff; margin-left:2px; }
+.fr-video-title{ margin:0; font-weight:800; color:#fff; }
+.fr-video-sub{ margin:6px 0 0; color: rgba(255,255,255,.70); font-size: 13px; }
+
+.fr-section{ padding: 56px 20px; background:#fff; }
+.fr-section.alt{ background:#f7f3ee; }
+.fr-container{ max-width: 1050px; margin:0 auto; }
+.fr-h2{ font-size: 32px; margin:0 0 14px; letter-spacing:-.02em; }
+.fr-lead{ color:#334155; margin:0 0 18px; line-height:1.7; }
+
+.fr-grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; }
+@media (max-width: 860px){ .fr-grid-2{ grid-template-columns:1fr; } }
+
+.fr-card{
+  border-radius: 18px;
+  padding: 22px 22px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 18px 50px rgba(2,6,23,.06);
+}
+.fr-card.gold{
+  background: linear-gradient(180deg, rgba(212,175,55,.85) 0%, rgba(212,175,55,.70) 100%);
+  border: 1px solid rgba(212,175,55,.55);
+  color:#fff;
+}
+.fr-card h3{ margin:0 0 10px; font-size: 20px; }
+.fr-card.gold h3{ color:#fff; }
+.fr-card p{ margin:0 0 12px; color: inherit; opacity: .95; }
+.fr-ul{ margin: 0; padding-left: 18px; }
+.fr-ul li{ margin: 6px 0; }
+
+.fr-quote{ margin-top: 14px; padding: 18px 18px; border-left: 4px solid #D4AF37; background: rgba(212,175,55,.10); border-radius: 12px; }
+.fr-quote p{ margin:0; }
+.fr-quote small{ display:block; margin-top:10px; color:#334155; }
+
+.fr-form{ margin-top: 18px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 860px){ .fr-form{ grid-template-columns:1fr; } }
+.fr-input{
+  width:100%;
+  border-radius: 12px;
+  border:1px solid rgba(15,23,42,.14);
+  padding: 12px 14px;
+  font-size: 15px;
+  outline:none;
+}
+.fr-input:focus{ border-color: rgba(212,175,55,.9); box-shadow: 0 0 0 4px rgba(212,175,55,.18); }
+.fr-consent{ margin-top: 12px; display:flex; gap:10px; align-items:flex-start; color:#334155; font-size: 13px; line-height:1.45; }
+.fr-btn{
+  margin-top: 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background:#D4AF37;
+  color:#0b1220;
+  font-weight: 800;
+  cursor:pointer;
+}
+.fr-btn:disabled{ opacity:.6; cursor:not-allowed; }
+.fr-mini{ color:#64748b; font-size: 13px; margin-top: 10px; }

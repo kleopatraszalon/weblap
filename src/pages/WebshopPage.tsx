@@ -1,13 +1,22 @@
 // src/pages/WebshopPage.tsx
-import React, { useEffect, useState, useMemo } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/kleo-theme v7.css";
-import "../styles/webshop-layout.css";
-import { apiFetch } from "../apiClient";
-import { useI18n } from "../i18n";
+import "../styles/kleo-theme.css";
+import { addToCart } from "../utils/cart";
 
-// ====== TÍPUSOK ======
-
+/**
+ * A TE adatbázisodhoz igazítva:
+ *   public.products:
+ *     - id uuid
+ *     - name text
+ *     - retail_price_gross numeric(12,2)
+ *     - sale_price numeric(12,2)
+ *     - image_url text
+ *     - web_description text
+ *     - is_retail boolean
+ *     - web_is_visible boolean
+ */
 type MainCategoryKey =
   | "GIFT_VOUCHERS"
   | "PASSES"
@@ -19,290 +28,368 @@ type SubCategoryKey =
   | "GIFT_VOUCHERS_BASIC"
   | "GIFT_CUSTOM_PACKAGE"
   | "GIFT_BEAUTY_VOUCHERS"
-  | "PASSES_SOLARIUM"
-  | "PASSES_MASSAGE"
-  | "PASSES_FACIAL"
-  | "PASSES_HAIR"
-  | "PASSES_OTHER"
-  | "GUEST_ACCOUNT_CREATE"
-  | "GUEST_ACCOUNT_BALANCE"
-  | "KLEO_PRODUCTS_HAIR"
-  | "KLEO_PRODUCTS_COSMETICS"
-  | "KLEO_PRODUCTS_SOLARIUM"
-  | "KLEO_PRODUCTS_ACCESSORIES"
-  | "COMPANY_DISCOUNTS_PARTNERS"
-  | "COMPANY_DISCOUNTS_EMPLOYEES";
+  | "GIFT_BEAUTY_PACKAGES"
+  | "PASSES_BUDAPEST"
+  | "PASSES_COUNTRYSIDE";
 
 type ServiceCategoryKey =
   | "HAIRDRESSING"
-  | "COSMETICS"
-  | "MASSAGE"
-  | "SOLARIUM"
-  | "NAILS"
-  | "OTHER";
+  | "HAIR_BLOWDRY"
+  | "HAIRCUT"
+  | "HAIRTREATMENT"
+  | "HAND_FOOT"
+  | "GEL_LAC"
+  | "NAIL_FILL"
+  | "PEDICURE"
+  | "COSMETIC"
+  | "SUGARP_DEPILATION"
+  | "WAX_DEPILATION"
+  | "IPL"
+  | "CAVITATION"
+  | "EYELASH"
+  | "BROW_LASH"
+  | "MASSAGE";
 
-// termékcsoport kulcs – engedjük a stringet is, hogy biztosan ne okozzon TS hibát
-type ProductGroupKey = MainCategoryKey | SubCategoryKey | string;
-
-interface CategoryLevel1 {
-  key: MainCategoryKey;
-  label: string;
-}
-
-const CATEGORY_TREE: CategoryLevel1[] = [
-  { key: "GIFT_VOUCHERS", label: "Ajándékutalványok" },
-  { key: "PASSES", label: "Bérletek" },
-  { key: "GUEST_ACCOUNT", label: "Vendégfiókok és vendégszámlák" },
-  { key: "KLEO_PRODUCTS", label: "Kleopátra termékek" },
-  { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
-];
-
-interface Product {
-  id: number;
-  sku: string | null;
+type Product = {
+  id: string;
   name: string;
-
-  // fordítások
-  display_name_hu?: string | null;
-  display_name_en?: string | null;
-  display_name_ru?: string | null;
-  name_en?: string | null;
-  name_ru?: string | null;
-
-  // kategória-információk a terméktáblából
-  main_category?: string | null;
-  sub_category?: string | null;
-  service_category?: string | null;
-  category_id?: number | null;
-
-  product_group_key: ProductGroupKey;
-  service_category_key: ServiceCategoryKey | string | null;
   retail_price_gross: number | string | null;
-  sale_price: number | string | null;
-  image_url: string | null;
+  sale_price?: number | string | null;
+  image_url?: string | null;
+  web_description?: string | null;
+  is_retail?: boolean | null;
+  web_is_visible?: boolean | null;
+  main_category?: MainCategoryKey | null;
+  sub_category?: SubCategoryKey | null;
+  service_category?: ServiceCategoryKey | null;
+};
 
-  is_active?: boolean | null;
-  is_webshop_visible?: boolean | null;
-}
-
-interface CartItem {
+type CartItem = {
   product: Product;
   quantity: number;
-}
+};
 
-interface RegistrationForm {
+type RegistrationForm = {
   fullName: string;
   email: string;
   password: string;
-}
+};
 
-interface CheckoutForm {
+type CheckoutForm = {
   fullName: string;
   email: string;
   phone: string;
   address: string;
   note: string;
   paymentMethod: "card" | "cod";
-}
-
-interface MainCategoryFromApi {
-  key: MainCategoryKey | string;
-  name?: string | null;
-  name_hu?: string | null;
-  name_en?: string | null;
-  name_ru?: string | null;
-}
-
-// ====== SEGÉDFÜGGVÉNYEK ======
-
-function getProductName(product: Product, lang: string): string {
-  // Elsődlegesen az adatbázis 3 nyelvű oszlopaiból olvasunk
-  if (lang === "en") {
-    return (
-      product.display_name_en ||
-      product.name_en ||
-      product.name ||
-      product.display_name_hu ||
-      ""
-    );
-  }
-
-  if (lang === "ru") {
-    return (
-      product.display_name_ru ||
-      product.name_ru ||
-      product.name ||
-      product.display_name_en ||
-      product.name_en ||
-      product.display_name_hu ||
-      ""
-    );
-  }
-
-  // alapértelmezett: HU
-  return (
-    product.display_name_hu ||
-    product.name ||
-    product.name_en ||
-    product.display_name_en ||
-    ""
-  );
-}
-
-const INITIAL_REG_FORM: RegistrationForm = {
-  fullName: "",
-  email: "",
-  password: "",
 };
 
-const INITIAL_CHECKOUT_FORM: CheckoutForm = {
-  fullName: "",
-  email: "",
-  phone: "",
-  address: "",
-  note: "",
-  paymentMethod: "card",
+type CouponResponse = {
+  valid: boolean;
+  code?: string;
+  discount_gross?: number;
+  final_total_gross?: number;
+  message?: string;
 };
 
-const PRODUCTS_PER_PAGE = 15;
-const CART_STORAGE_KEY = "kleoCart";
-const CART_EVENT_NAME = "kleo-cart-updated";
+type CategoryLevel3 = {
+  key: ServiceCategoryKey;
+  label: string;
+};
+
+type CategoryLevel2 = {
+  key: SubCategoryKey;
+  label: string;
+  children?: CategoryLevel3[];
+};
+
+type CategoryLevel1 = {
+  key: MainCategoryKey;
+  label: string;
+  children?: CategoryLevel2[];
+};
+
+const CATEGORY_TREE: CategoryLevel1[] = [
+  {
+    key: "GIFT_VOUCHERS",
+    label: "Ajándékutalványok",
+    children: [
+      { key: "GIFT_VOUCHERS_BASIC", label: "Ajándékutalványok" },
+      {
+        key: "GIFT_CUSTOM_PACKAGE",
+        label: "Egyedi szépségcsomag összeállítása",
+      },
+      {
+        key: "GIFT_BEAUTY_VOUCHERS",
+        label: "Szépségutalványok",
+        children: [
+          { key: "HAIRDRESSING", label: "Fodrász szolgáltatások" },
+          { key: "HAND_FOOT", label: "Kéz- és lábápolás szolgáltatások" },
+          { key: "COSMETIC", label: "Kozmetikai szolgáltatások" },
+          { key: "MASSAGE", label: "Masszázs szolgáltatások" },
+          { key: "EYELASH", label: "Szépségutalványok férfiaknak" },
+        ],
+      },
+      { key: "GIFT_BEAUTY_PACKAGES", label: "Szépségcsomagok" },
+    ],
+  },
+  {
+    key: "PASSES",
+    label: "Bérletek",
+    children: [
+      {
+        key: "PASSES_BUDAPEST",
+        label: "Bérletek Budapest",
+        children: [
+          { key: "HAIR_BLOWDRY", label: "Budapest hajszárítás bérletek" },
+          { key: "HAIRCUT", label: "Budapest hajvágás bérletek" },
+          { key: "HAIRTREATMENT", label: "Budapest hajkezelés bérletek" },
+          { key: "HAND_FOOT", label: "Budapest kéz- és lábápolás bérletek" },
+          { key: "GEL_LAC", label: "Budapest géllakk csere bérletek" },
+          { key: "NAIL_FILL", label: "Budapest műköröm töltés bérletek" },
+          { key: "PEDICURE", label: "Budapest pedikűr bérletek" },
+          { key: "COSMETIC", label: "Budapest kozmetikai bérletek" },
+          {
+            key: "SUGARP_DEPILATION",
+            label: "Budapest cukorpasztás szőrtelenítés bérletek",
+          },
+          {
+            key: "WAX_DEPILATION",
+            label: "Budapest gyantás szőrtelenítés bérletek",
+          },
+          { key: "IPL", label: "Budapest IPL tartós szőrtelenítés" },
+          {
+            key: "CAVITATION",
+            label: "Budapest kavitációs zsírbontás bérletek",
+          },
+          { key: "EYELASH", label: "Budapest műszempilla bérletek" },
+          {
+            key: "BROW_LASH",
+            label: "Budapest szemöldök–szempilla bérletek",
+          },
+          { key: "MASSAGE", label: "Budapest masszázsbérletek" },
+        ],
+      },
+      {
+        key: "PASSES_COUNTRYSIDE",
+        label: "Bérletek Vidék",
+        children: [
+          { key: "HAIRTREATMENT", label: "Hajkezelés bérletek" },
+          { key: "HAIR_BLOWDRY", label: "Hajszárítás bérletek" },
+          { key: "HAIRCUT", label: "Hajvágás bérletek" },
+          { key: "HAND_FOOT", label: "Kéz- és lábápolás bérletek" },
+          { key: "GEL_LAC", label: "Géllakk csere bérletek" },
+          { key: "NAIL_FILL", label: "Műköröm töltés bérletek" },
+          { key: "PEDICURE", label: "Pedikűr bérletek" },
+          { key: "COSMETIC", label: "Kozmetikai bérletek" },
+          {
+            key: "SUGARP_DEPILATION",
+            label: "Cukorpasztás szőrtelenítés bérletek",
+          },
+          {
+            key: "WAX_DEPILATION",
+            label: "Gyantás szőrtelenítés bérletek",
+          },
+          { key: "IPL", label: "IPL tartós szőrtelenítés" },
+          {
+            key: "CAVITATION",
+            label: "Kavitációs zsírbontás bérletek",
+          },
+          { key: "EYELASH", label: "Műszempilla bérletek" },
+          {
+            key: "BROW_LASH",
+            label: "Szemöldök–szempilla bérletek",
+          },
+          { key: "MASSAGE", label: "Masszázs bérletek" },
+        ],
+      },
+    ],
+  },
+  { key: "GUEST_ACCOUNT", label: "Vendégszámla" },
+  { key: "KLEO_PRODUCTS", label: "Kleo termékek" },
+  { key: "COMPANY_DISCOUNTS", label: "Kedvezmények cégeknek" },
+];
+
+// --- API elérési adatok – egyszer, helyesen sorrendben definiálva ---
 
 const API_BASE =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/$/, "") ||
   "http://localhost:5000/api";
+
 const API_ROOT = API_BASE.replace(/\/api$/, "");
 
-function buildImageUrl(imageUrl?: string | null): string | undefined {
+const buildImageUrl = (imageUrl?: string | null): string | undefined => {
   if (!imageUrl) return undefined;
-  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+
+  // Ha már teljes URL (http/https), nem piszkáljuk
+  if (/^https?:\/\//i.test(imageUrl)) {
+    return imageUrl;
+  }
+
+  // Relatív út esetén levágjuk az elejéről a sok /-t
   const cleaned = imageUrl.replace(/^\/+/, "");
   return `${API_ROOT}/${cleaned}`;
-}
-
-// ====== KOMPONENS ======
+};
 
 export const WebshopPage: React.FC = () => {
-  const { t, lang } = useI18n();
-
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [couponInput, setCouponInput] = useState("");
-  const [appliedCouponCode, setAppliedCouponCode] =
-    useState<string | null>(null);
-  const [couponDiscount, setCouponDiscount] = useState(0);
-  const [couponLoading, setCouponLoading] = useState(false);
-  const [couponError, setCouponError] = useState<string | null>(null);
-  const [couponMessage, setCouponMessage] = useState<string | null>(null);
-
-  const [regForm, setRegForm] = useState<RegistrationForm>(INITIAL_REG_FORM);
-  const [regLoading, setRegLoading] = useState(false);
-  const [regError, setRegError] = useState<string | null>(null);
-  const [regMessage, setRegMessage] = useState<string | null>(null);
-
-  const [checkoutForm, setCheckoutForm] =
-    useState<CheckoutForm>(INITIAL_CHECKOUT_FORM);
-  const [orderLoading, setOrderLoading] = useState(false);
-  const [orderError, setOrderError] = useState<string | null>(null);
-  const [orderMessage, setOrderMessage] = useState<string | null>(null);
-
   const [selectedMainCategory, setSelectedMainCategory] =
     useState<MainCategoryKey | null>(null);
-  // alkategória szűrő a kiválasztott fő kategórián belül
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState<SubCategoryKey | null>(null);
+  const [selectedServiceCategory, setSelectedServiceCategory] =
+    useState<ServiceCategoryKey | null>(null);
 
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  // fő kategória nevek adatbázisból (HU/EN/RU)
-  const [mainCategoryNames, setMainCategoryNames] = useState<
-    Partial<Record<MainCategoryKey, string>>
-  >({});
+  const [regForm, setRegForm] = useState<RegistrationForm>({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const [regLoading, setRegLoading] = useState(false);
+  const [regMessage, setRegMessage] = useState<string | null>(null);
+  const [regError, setRegError] = useState<string | null>(null);
 
-  // ====== KOSÁR KEZELÉS ======
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutForm>({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    note: "",
+    paymentMethod: "card",
+  });
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [orderMessage, setOrderMessage] = useState<string | null>(null);
+  const [orderError, setOrderError] = useState<string | null>(null);
 
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((p) => {
+        if (selectedMainCategory && p.main_category !== selectedMainCategory)
+          return false;
+        if (selectedSubCategory && p.sub_category !== selectedSubCategory)
+          return false;
+        if (
+          selectedServiceCategory &&
+          p.service_category &&
+          p.service_category !== selectedServiceCategory
+        )
+          return false;
+        return true;
+      }),
+    [products, selectedMainCategory, selectedSubCategory, selectedServiceCategory]
+  );
+// Kosár inicializálása localStorage-ből, hogy a /webshop oldal
+  // ugyanazt lássa, mint a /cart és a lebegő kosár gomb
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      const raw = localStorage.getItem("kleoCart");
       if (raw) {
         const items = JSON.parse(raw) as CartItem[];
         setCart(items);
       }
     } catch {
-      localStorage.removeItem(CART_STORAGE_KEY);
+      // ha valami gáz van a tárolt adattal, inkább üres kosár
+      localStorage.removeItem("kleoCart");
     }
   }, []);
 
-  const updateCart = (updater: (prev: CartItem[]) => CartItem[]) => {
+  // Segédfüggvény: minden kosár-módosítást ide tedd, hogy
+  // mindig elmentse localStorage-be és jelezze a badge-nek
+  const saveCart = (updater: (prev: CartItem[]) => CartItem[]) => {
     setCart((prev) => {
       const next = updater(prev);
       try {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
+        localStorage.setItem("kleoCart", JSON.stringify(next));
+        window.dispatchEvent(new Event("kleo-cart-updated"));
       } catch (e) {
         console.error("Kosár mentése sikertelen", e);
       }
-      const event = new CustomEvent<CartItem[]>(CART_EVENT_NAME, {
-        detail: next,
-      });
-      window.dispatchEvent(event);
       return next;
     });
   };
+  // =============== KUPON ÁLLAPOT ===============
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(
+    null
+  );
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
+  // =============== TERMÉKEK BETÖLTÉSE ===============
   useEffect(() => {
-    const handler = (event: Event) => {
-      const customEvent = event as CustomEvent<CartItem[]>;
-      if (customEvent.detail) {
-        setCart(customEvent.detail);
+    const loadProducts = async () => {
+      setProductsLoading(true);
+      setProductsError(null);
+      try {
+        const res = await fetch(`${API_BASE}/public/webshop/products`);
+        if (!res.ok) {
+          throw new Error(`Hiba a termékek betöltésekor (${res.status})`);
+        }
+
+        const data = await res.json();
+        const list: Product[] = Array.isArray(data)
+          ? data
+          : Array.isArray(data.items)
+          ? data.items
+          : [];
+
+        setProducts(list);
+      } catch (err: any) {
+        console.error(err);
+        setProductsError(
+          "Nem sikerült betölteni a webshop termékeket. Kérlek, próbáld meg később."
+        );
+      } finally {
+        setProductsLoading(false);
       }
     };
 
-    window.addEventListener(CART_EVENT_NAME, handler as EventListener);
-    return () => {
-      window.removeEventListener(CART_EVENT_NAME, handler as EventListener);
-    };
+    loadProducts();
   }, []);
 
-  const handleAddToCart = (product: Product) => {
-    updateCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+  // =============== KOSÁR LOGIKA ===============
+
+ const handleAddToCart = (product: Product) => {
+    saveCart((prev) => {
+      const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prev.map((i) =>
+          i.product.id === product.id
+            ? { ...i, quantity: i.quantity + 1 }
+            : i
         );
       }
       return [...prev, { product, quantity: 1 }];
     });
   };
 
-  const handleUpdateQuantity = (productId: number, delta: number) => {
-    updateCart((prev) => {
-      const next: CartItem[] = [];
-      for (const item of prev) {
-        if (item.product.id !== productId) {
-          next.push(item);
-          continue;
-        }
-        const newQty = item.quantity + delta;
-        if (newQty > 0) {
-          next.push({ ...item, quantity: newQty });
-        }
-      }
-      return next;
-    });
+  const handleChangeQuantity = (id: string, quantity: number) => {
+    if (quantity <= 0) {
+      // törlés, ha 0 vagy kisebb
+      saveCart((prev) => prev.filter((i) => i.product.id !== id));
+    } else {
+      saveCart((prev) =>
+        prev.map((i) =>
+          i.product.id === id ? { ...i, quantity } : i
+        )
+      );
+    }
   };
 
-  const handleRemoveFromCart = (productId: number) => {
-    updateCart((prev) => prev.filter((item) => item.product.id !== productId));
-  };
 
-  const handleClearCart = () => {
-    updateCart(() => []);
+const handleClearCart = () => {
+    saveCart(() => []);
+    setAppliedCouponCode(null);
+    setCouponDiscount(0);
+    setCouponMessage(null);
+    setCouponError(null);
   };
 
   const cartSubtotal = useMemo(() => {
@@ -311,14 +398,13 @@ export const WebshopPage: React.FC = () => {
         item.product.retail_price_gross ?? item.product.sale_price ?? 0;
       const price =
         typeof raw === "string"
-          ? parseFloat(raw.replace(",", ".")) || 0
+          ? parseFloat(raw.replace(",", "."))
           : raw ?? 0;
       if (!price || Number.isNaN(price)) return sum;
       return sum + price * item.quantity;
     }, 0);
   }, [cart]);
 
-  const cartTotal = cartSubtotal;
   const currencyLabel = "Ft";
 
   const cartTotalAfterCoupon = useMemo(() => {
@@ -326,144 +412,7 @@ export const WebshopPage: React.FC = () => {
     return total < 0 ? 0 : total;
   }, [cartSubtotal, couponDiscount]);
 
-  // ====== TERMÉKLISTA BETÖLTÉSE ======
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setProductsLoading(true);
-        setProductsError(null);
-
-        const list = await apiFetch<Product[]>(
-          `/public/webshop/products?lang=${lang}`
-        );
-        setProducts(list);
-      } catch (err: any) {
-        console.error(err);
-        setProductsError(t("webshop.list.error"));
-      } finally {
-        setProductsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, [lang, t]);
-
-  // ====== FŐ KATEGÓRIA NEVEK BETÖLTÉSE DB-BŐL ======
-
-  useEffect(() => {
-    let active = true;
-
-    const loadMainCategoryNames = async () => {
-      try {
-        const data = await apiFetch<MainCategoryFromApi[]>(
-          `/public/webshop/main-categories?lang=${lang}`
-        );
-
-        if (!active) return;
-
-        const map: Partial<Record<MainCategoryKey, string>> = {};
-        for (const item of data) {
-          const key = item.key as MainCategoryKey;
-          let name =
-            item.name ||
-            (lang === "en"
-              ? item.name_en
-              : lang === "ru"
-              ? item.name_ru
-              : item.name_hu);
-
-          if (!name) {
-            // fallback – ha az adott nyelven nincs, próbáljuk HU-t
-            name = item.name_hu || item.name_en || item.name_ru || undefined;
-          }
-          if (name) {
-            map[key] = name;
-          }
-        }
-        setMainCategoryNames(map);
-      } catch (err) {
-        console.error("Webshop main categories error:", err);
-        // hiba esetén marad a CATEGORY_TREE fallback
-      }
-    };
-
-    loadMainCategoryNames();
-
-    return () => {
-      active = false;
-    };
-  }, [lang]);
-
-  const getMainCategoryLabel = (key: MainCategoryKey): string => {
-    return (
-      mainCategoryNames[key] ||
-      CATEGORY_TREE.find((m) => m.key === key)?.label ||
-      key
-    );
-  };
-
-  // ====== ALKATEGÓRIA RESET, HA FŐ KATEGÓRIA VAGY NYELV VÁLTOZIK ======
-
-  useEffect(() => {
-    setSelectedSubCategory(null);
-  }, [selectedMainCategory, lang]);
-
-// ====== SZŰRÉS + LAPOZÁS ======
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [products, selectedMainCategory]);
-
-    const subcategoriesForSelectedMain = useMemo(() => {
-    if (!selectedMainCategory) return [] as string[];
-
-    const labels = new Set<string>();
-
-    for (const p of products) {
-      const mainKey = (p.product_group_key || p.main_category) as MainCategoryKey | string | null;
-      if (mainKey !== selectedMainCategory) continue;
-      if (!p.sub_category) continue;
-      labels.add(p.sub_category);
-    }
-
-    return Array.from(labels).sort();
-  }, [products, selectedMainCategory]);
-
-const filteredProducts = useMemo(() => {
-    let result = products.filter(
-      (p) => p.is_active !== false && p.is_webshop_visible !== false
-    );
-
-    if (selectedMainCategory) {
-      result = result.filter((p) => {
-        const mainKey = (p.product_group_key || p.main_category) as MainCategoryKey | string | null;
-
-        if (!mainKey) return false;
-        return mainKey === selectedMainCategory;
-      });
-    }
-
-    if (selectedSubCategory) {
-      result = result.filter((p) => p.sub_category === selectedSubCategory);
-    }
-
-    return result;
-  }, [products, selectedMainCategory, selectedSubCategory]);
-
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
-  );
-
-  const safePage = Math.min(currentPage, totalPages);
-
-  const pagedProducts = useMemo(() => {
-    const start = (safePage - 1) * PRODUCTS_PER_PAGE;
-    return filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
-  }, [filteredProducts, safePage]);
-
-  // ====== KUPON ======
+  // =============== KUPON ELLENŐRZÉSE ===============
 
   const handleApplyCoupon = async () => {
     setCouponMessage(null);
@@ -471,12 +420,12 @@ const filteredProducts = useMemo(() => {
 
     const code = couponInput.trim().toUpperCase();
     if (!code) {
-      setCouponError(t("webshop.coupon.error.empty"));
+      setCouponError("Írj be egy kuponkódot.");
       return;
     }
 
     if (cart.length === 0) {
-      setCouponError(t("webshop.coupon.error.noCart"));
+      setCouponError("Először tegyél termékeket a kosárba, utána használd a kupont.");
       return;
     }
 
@@ -484,14 +433,19 @@ const filteredProducts = useMemo(() => {
 
     try {
       const payload = {
-        couponCode: code,
-        cartItems: cart.map((item) => ({
-          product_id: item.product.id,
-          quantity: item.quantity,
-        })),
+        code,
+        cart: {
+          items: cart.map((item) => ({
+            product_id: item.product.id,
+            quantity: item.quantity,
+            unit_price:
+              item.product.retail_price_gross ?? item.product.sale_price ?? 0,
+          })),
+          total_gross: cartSubtotal,
+        },
       };
 
-      const res = await fetch("/api/public/webshop/coupons/validate", {
+      const res = await fetch(`${API_BASE}/public/webshop/validate-coupon`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -499,53 +453,55 @@ const filteredProducts = useMemo(() => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.coupon.error.general"));
+        throw new Error(
+          text || "Nem sikerült ellenőrizni a kuponkódot. Próbáld meg újra."
+        );
       }
 
-      const data = await res.json();
+      const data: CouponResponse = await res.json();
 
-      if (!data.valid) {
-        setCouponDiscount(0);
+      if (!data.valid || !data.discount_gross) {
         setAppliedCouponCode(null);
-        setCouponError(t("webshop.coupon.error.invalid"));
-        setCouponMessage(null);
+        setCouponDiscount(0);
+        setCouponError(
+          data.message ||
+            "Érvénytelen kuponkód vagy nem alkalmazható erre a rendelésre."
+        );
         return;
       }
 
-      const discountAmount = Number(data.discountAmount || 0);
-      if (Number.isNaN(discountAmount)) {
-        setCouponDiscount(0);
-        setAppliedCouponCode(null);
-      } else {
-        setCouponDiscount(discountAmount);
-        setAppliedCouponCode(code);
-      }
-
-      setCouponMessage(t("webshop.coupon.success"));
+      setAppliedCouponCode(data.code || code);
+      setCouponDiscount(data.discount_gross);
+      setCouponMessage(
+        data.message || "A kupon sikeresen alkalmazva a rendelésedre."
+      );
+      setCouponError(null);
     } catch (err: any) {
       console.error(err);
-      setCouponError(err.message || t("webshop.coupon.error.unknown"));
+      setAppliedCouponCode(null);
+      setCouponDiscount(0);
+      setCouponError(err.message || "Ismeretlen hiba történt a kupon ellenőrzésénél.");
     } finally {
       setCouponLoading(false);
     }
   };
 
-  // ====== REGISZTRÁCIÓ ======
+  // =============== REGISZTRÁCIÓ – users tábla ===============
 
-  const handleRegistrationSubmit = async (e: React.FormEvent) => {
+  const handleRegistrationSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
-    setRegError(null);
-    setRegMessage(null);
-
-    if (!regForm.fullName || !regForm.email || !regForm.password) {
-      setRegError(t("webshop.registration.error.missingFields"));
-      return;
-    }
-
     setRegLoading(true);
+    setRegMessage(null);
+    setRegError(null);
 
     try {
-      const res = await fetch("/api/public/webshop/register-guest", {
+      if (!regForm.fullName || !regForm.email || !regForm.password) {
+        throw new Error("Kérlek, tölts ki minden mezőt a regisztrációhoz.");
+      }
+
+      const res = await fetch(`${API_BASE}/public/webshop/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -557,33 +513,39 @@ const filteredProducts = useMemo(() => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.registration.error.general"));
+        throw new Error(
+          text || "Nem sikerült a regisztráció. Kérlek, próbáld meg újra."
+        );
       }
 
-      setRegForm(INITIAL_REG_FORM);
-      setRegMessage(t("webshop.registration.success"));
+      setRegMessage(
+        "Sikeres regisztráció! Mostantól Kleopátra vendégprofiloddal is vásárolhatsz."
+      );
+      setRegForm({ fullName: "", email: "", password: "" });
     } catch (err: any) {
       console.error(err);
-      setRegError(err.message || t("webshop.registration.error.unknown"));
+      setRegError(err.message || "Ismeretlen hiba történt.");
     } finally {
       setRegLoading(false);
     }
   };
 
-  // ====== RENDELÉS ======
+  // =============== RENDELÉS – work_orders + work_order_items + kupon ===============
 
-  const handleOrderSubmit = async (e: React.FormEvent) => {
+  const handleOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setOrderError(null);
     setOrderMessage(null);
+    setOrderError(null);
 
     if (cart.length === 0) {
-      setOrderError(t("webshop.order.error.noCart"));
+      setOrderError("A rendeléshez először tegyél termékeket a kosárba.");
       return;
     }
 
     if (!checkoutForm.fullName || !checkoutForm.email || !checkoutForm.address) {
-      setOrderError(t("webshop.order.error.missingFields"));
+      setOrderError(
+        "Kérlek add meg a nevet, e-mail címet és a szállítási/számlázási címet."
+      );
       return;
     }
 
@@ -599,14 +561,27 @@ const filteredProducts = useMemo(() => {
           note: checkoutForm.note,
         },
         payment_method: checkoutForm.paymentMethod,
-        coupon_code: appliedCouponCode,
-        cart_items: cart.map((item) => ({
+        coupon: appliedCouponCode
+          ? {
+              code: appliedCouponCode,
+              discount_gross: couponDiscount,
+            }
+          : null,
+        items: cart.map((item) => ({
           product_id: item.product.id,
           quantity: item.quantity,
+          unit_price:
+            item.product.retail_price_gross ?? item.product.sale_price ?? 0,
         })),
+        totals: {
+          subtotal_gross: cartSubtotal,
+          discount_gross: couponDiscount,
+          total_gross: cartTotalAfterCoupon,
+          currency: currencyLabel,
+        },
       };
 
-      const res = await fetch("/api/public/webshop/orders", {
+      const res = await fetch(`${API_BASE}/public/webshop/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -614,63 +589,77 @@ const filteredProducts = useMemo(() => {
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        throw new Error(text || t("webshop.order.error.general"));
+        throw new Error(
+          text || "Nem sikerült a rendelést leadni. Kérlek, próbáld meg újra."
+        );
       }
 
-      const data = await res.json();
-      console.log("Rendelés sikeresen ment:", data);
+      const data = await res.json().catch(() => ({} as any));
 
-      setOrderMessage(t("webshop.order.success"));
+      if (checkoutForm.paymentMethod === "card" && data.payment_url) {
+        window.location.href = data.payment_url;
+        return;
+      }
+
+      setOrderMessage(
+        "Köszönjük a rendelést! A visszaigazoló vendégszámlát e-mailben küldjük."
+      );
       setCart([]);
       setAppliedCouponCode(null);
       setCouponDiscount(0);
       setCouponMessage(null);
       setCouponError(null);
       setCouponInput("");
-      localStorage.removeItem(CART_STORAGE_KEY);
     } catch (err: any) {
       console.error(err);
-      setOrderError(err.message || t("webshop.order.error.unknown"));
+      setOrderError(err.message || "Ismeretlen hiba történt a rendelésnél.");
     } finally {
       setOrderLoading(false);
     }
   };
 
-  // ====== RENDER ======
+  // =============== MEGJELENÍTÉS ===============
 
   return (
-    <main className="page-main page-main--webshop">
-      {/* HERO */}
+    <main>
+      {/* HERO – meglévő látvány a képpel és körökkel */}
       <section className="webshop-hero">
         <div className="webshop-hero__bg">
-          <img src="/images/kleoshop.png" alt={t("webshop.hero.imageAlt")} />
+          <img
+            src="/images/kleoshop.png"
+            alt="Kleoshop – bérletek, szépség- és ajándékutalványok"
+          />
         </div>
 
         <div className="container webshop-hero__content">
           <div className="webshop-hero__bubbles">
             <div className="webshop-hero__bubble webshop-hero__bubble--top">
-              <img alt={t("webshop.hero.badge.giftVouchers")} />
+              <img alt="Ajándékutalványok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--middle">
-              <img alt={t("webshop.hero.badge.beautyPackages")} />
+              <img alt="Szépségcsomagok" />
             </div>
             <div className="webshop-hero__bubble webshop-hero__bubble--bottom">
-              <img alt={t("webshop.hero.badge.passes")} />
+              <img alt="Bérletek" />
             </div>
           </div>
 
           <div className="webshop-hero__text">
-            <p className="section-eyebrow">{t("webshop.hero.eyebrow")}</p>
+            <p className="section-eyebrow">
+              KLEOPÁTRA SZÉPSÉGSZALONOK · ONLINE WEBSHOP
+            </p>
 
             <h1 className="hero-title hero-title--tight">
-              {t("webshop.hero.titleMain")}{" "}
+              Bérletek, szépségutalványok,{" "}
               <span className="hero-part hero-part-magenta">
-                {t("webshop.hero.titleHighlight")}
+                ajándékutalványok
               </span>
             </h1>
 
             <p className="hero-lead hero-lead--narrow">
-              {t("webshop.hero.lead")}
+              Kleopátra élményt adhatsz ajándékba vagy saját magadnak – online
+              vásárlással, bankkártyás vagy utánvétes fizetéssel, kupon
+              kedvezményekkel.
             </p>
 
             <div className="webshop-hero__buttons">
@@ -678,236 +667,248 @@ const filteredProducts = useMemo(() => {
                 className="btn btn-primary btn-primary--magenta btn--shine"
                 href="#webshop-lista"
               >
-                {t("webshop.hero.cta.products")}
+                Termékek megtekintése
               </a>
               <a
                 className="btn btn-secondary btn-secondary--ghost btn--shine"
                 href="#webshop-regisztracio"
               >
-                {t("webshop.hero.cta.profile")}
+                Vendégprofil / regisztráció
               </a>
             </div>
 
             <div className="webshop-invoice">
               <div className="webshop-invoice__image">
                 <img
-                  src="/images/vendegszamla-minta.png"
-                  alt={t("webshop.hero.invoiceAlt")}
+                  src="/images/vendegszamla.png"
+                  alt="Vendégszámla minta"
                 />
               </div>
               <div className="webshop-invoice__text">
-                <p className="small">{t("webshop.hero.invoiceText")}</p>
+                <p className="small">
+                  Minden online vásárlás után azonnali visszaigazoló
+                  vendégszámlát küldünk e-mailben – így könnyen nyomon
+                  követheted a Kleopátra-élményeket.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* LISTA + KOSÁR */}
+      {/* TERMÉKLISTA + KOSÁR */}
       <section id="webshop-lista" className="section section--webshop">
         <div className="container webshop-layout">
-{/* Felső, vízszintes kategória sáv – két hasábon át */}
-<div className="webshop-categories-bar webshop-layout__categories">
-  <h3 className="webshop-categories-bar__title">
-    {t("webshop.list.sidebarTitle")}
-  </h3>
-
-  <div className="webshop-categories-bar__main">
-    {CATEGORY_TREE.map((main) => {
-      const isActiveMain = selectedMainCategory === main.key;
-      return (
-        <button
-          key={main.key}
-          type="button"
-          className={
-            "webshop-category-pill" +
-            (isActiveMain ? " webshop-category-pill--active" : "")
-          }
-          onClick={() => {
-            const next = isActiveMain ? null : main.key;
-            setSelectedMainCategory(next);
-          }}
-        >
-          {getMainCategoryLabel(main.key)}
-        </button>
-      );
-    })}
-  </div>
-  {selectedMainCategory && subcategoriesForSelectedMain.length > 0 && (
-    <div className="webshop-subcategory-row">
-      {subcategoriesForSelectedMain.map((sub) => {
-        const isActiveSub = selectedSubCategory === sub;
-        return (
-          <button
-            key={sub}
-            type="button"
-            className={
-              "webshop-category-pill webshop-category-pill--sub" +
-              (isActiveSub ? " webshop-category-pill--active" : "")
-            }
-            onClick={() => {
-              const next = isActiveSub ? null : sub;
-              setSelectedSubCategory(next);
-            }}
-          >
-            {sub}
-          </button>
-        );
-      })}
-    </div>
-  )}
-</div>
-
-          {/* KÖZÉP: TERMÉKLISTA */}
+          {/* BAL: TERMÉKEK */}
           <div className="webshop-main">
-            <p className="section-eyebrow">{t("webshop.list.eyebrow")}</p>
-            <h2>{t("webshop.list.title")}</h2>
-            <p className="section-lead">{t("webshop.list.lead")}</p>
+            <p className="section-eyebrow">Online vásárlás</p>
+            <h2>Válassz bérletet, szépség- vagy ajándékutalványt</h2>
+            <p className="section-lead">
+              A lenti termékek közvetlenül a Kleopátra Szépségszalonokból{" "}
+              <strong>a lehető leggyorsabban</strong> érkeznek. Csak azok
+              látszanak, amik elérhetőek.
+            </p>
 
-                        {productsLoading && (
-              <p className="webshop-status webshop-status--loading">
-                {t("webshop.list.loading")}
-              </p>
+            {productsLoading && (
+              <p className="webshop-status">Termékek betöltése…</p>
             )}
-
             {productsError && (
               <p className="webshop-status webshop-status--error">
                 {productsError}
               </p>
             )}
+            {!productsLoading &&
+              !productsError &&
+              filteredProducts.length === 0 && (
+                <p className="webshop-status">
+                  Jelenleg nincs a szűrésnek megfelelő termék. Próbáld más
+                  kategóriával, vagy töröld a szűrést.
+                </p>
+              )}
 
-            <div className="webshop-products-grid">
-              {pagedProducts.map((product) => {
-                const raw =
-                  product.retail_price_gross ?? product.sale_price ?? 0;
+            {/* Kategória-szűrők */}
+            <div className="webshop-category-bar">
+              {CATEGORY_TREE.map((main) => (
+                <div
+                  key={main.key}
+                  className={
+                    main.key === selectedMainCategory
+                      ? "webshop-category webshop-category--active"
+                      : "webshop-category"
+                  }
+                >
+                  <button
+                    type="button"
+                    className="webshop-category__button"
+                    onClick={() => {
+                      const next =
+                        selectedMainCategory === main.key ? null : main.key;
+                      setSelectedMainCategory(next);
+                      setSelectedSubCategory(null);
+                      setSelectedServiceCategory(null);
+                    }}
+                  >
+                    {main.label}
+                  </button>
+
+                  {main.key === selectedMainCategory && main.children && (
+                    <div className="webshop-subcategory-row">
+                      {main.children.map((sub) => (
+                        <div
+                          key={sub.key}
+                          className="webshop-subcategory-group"
+                        >
+                          <button
+                            type="button"
+                            className={
+                              sub.key === selectedSubCategory
+                                ? "webshop-subcategory__button webshop-subcategory__button--active"
+                                : "webshop-subcategory__button"
+                            }
+                            onClick={() => {
+                              const next =
+                                selectedSubCategory === sub.key
+                                  ? null
+                                  : sub.key;
+                              setSelectedSubCategory(next);
+                              setSelectedServiceCategory(null);
+                            }}
+                          >
+                            {sub.label}
+                          </button>
+
+                          {sub.children &&
+                            sub.key === selectedSubCategory && (
+                              <div className="webshop-servicecategory-row">
+                                {sub.children.map((service) => (
+                                  <button
+                                    key={service.key}
+                                    type="button"
+                                    className={
+                                      service.key === selectedServiceCategory
+                                        ? "webshop-servicecategory__button webshop-servicecategory__button--active"
+                                        : "webshop-servicecategory__button"
+                                    }
+                                    onClick={() => {
+                                      const next =
+                                        selectedServiceCategory === service.key
+                                          ? null
+                                          : service.key;
+                                      setSelectedServiceCategory(next);
+                                    }}
+                                  >
+                                    {service.label}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="webshop-category-reset"
+                onClick={() => {
+                  setSelectedMainCategory(null);
+                  setSelectedSubCategory(null);
+                  setSelectedServiceCategory(null);
+                }}
+              >
+                Összes termék
+              </button>
+            </div>
+
+            {/* SZŰRT TERMÉKLISTA */}
+            <div className="webshop-grid">
+              {filteredProducts.map((p) => {
+                const raw = p.retail_price_gross ?? p.sale_price ?? 0;
                 const price =
                   typeof raw === "string"
-                    ? parseFloat(raw.replace(",", ".")) || 0
+                    ? parseFloat(raw.replace(",", "."))
                     : raw ?? 0;
-                const displayPrice =
+                const formattedPrice =
                   !price || Number.isNaN(price)
-                    ? t("webshop.list.priceOnRequest")
+                    ? "-"
                     : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
-                const imageSrc = buildImageUrl(product.image_url || undefined);
+                const imageSrc = buildImageUrl(p.image_url);
 
                 return (
-                  <article key={product.id} className="webshop-product-card">
-                    <Link
-                      to={`/webshop/products/${product.id}`}
-                      state={{ product }}
-                      className="webshop-product-card__image"
-                    >
-                      {imageSrc ? (
-                        <img src={imageSrc} alt={getProductName(product, lang)} />
-                      ) : (
-                        <div className="webshop-product-card__image-placeholder">
-                          <span>{product.name?.[0] ?? "K"}</span>
+                  <article key={p.id} className="webshop-card">
+                    {imageSrc && (
+                      <Link
+                        to={`/webshop/${p.id}`}
+                        state={{ product: p }}
+                        className="webshop-card__image-link"
+                      >
+                        <div className="webshop-card__image-wrap">
+                          <img
+                            src={imageSrc}
+                            alt={p.name}
+                            className="webshop-card__image"
+                          />
                         </div>
-                      )}
-                    </Link>
+                      </Link>
+                    )}
 
-                    <div className="webshop-product-card__body">
-                      <h3 className="webshop-product-card__title">
-                        <Link
-                          to={`/webshop/products/${product.id}`}
-                          state={{ product }}
-                        >
-                          {getProductName(product, lang)}
-                        </Link>
-                      </h3>
+                    <h3 className="webshop-card__title">
+                      <Link
+                        to={`/webshop/${p.id}`}
+                        state={{ product: p }}
+                        className="webshop-card__title-link"
+                      >
+                        {p.name}
+                      </Link>
+                    </h3>
 
-                      <p className="webshop-product-card__sku">
-                        <small>SKU: {product.sku}</small>
+                    {p.web_description && (
+                      <p className="webshop-card__text">
+                        {p.web_description}
                       </p>
+                    )}
 
-                      <p className="webshop-product-card__price">
-                        <strong>{displayPrice}</strong>
-                      </p>
-
-                      <div className="webshop-product-card__actions">
-                    
-
-                        <button
-                          type="button"
-                          className="btn btn-primary btn-primary--magenta btn--shine webshop-product-card__btn"
-                          onClick={() => handleAddToCart(product)}
-                        >
-                          <span>{t("webshop.list.addToCart")}</span>
-                        </button>
+                    <div className="webshop-card__footer">
+                      <div className="webshop-card__price">
+                        {formattedPrice}
                       </div>
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-primary--magenta btn--sm"
+                        onClick={() => handleAddToCart(p)}
+                      >
+                        <span className="icon-cart" aria-hidden="true">
+                          <svg
+                            className="icon-cart__svg"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M5 4h2.1l1.2 4H20l-1.6 7.2a2.5 2.5 0 0 1-2.4 1.8H9.4l-.5 2H6.5l.6-2.6L4 6H2V4h3z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                        <span>Kosárba</span>
+                      </button>
                     </div>
                   </article>
                 );
               })}
             </div>
 
-            {filteredProducts.length === 0 &&
-              !productsLoading &&
-              !productsError && (
-                <p className="webshop-status">
-                  {t("webshop.list.emptyFiltered")}
-                </p>
-              )}
-
-            {totalPages > 1 && (
-              <div className="webshop-pagination">
-                <button
-                  type="button"
-                  className="webshop-pagination__button"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={safePage === 1}
-                >
-                  ‹
-                </button>
-
-                {Array.from({ length: totalPages }).map((_, index) => {
-                  const page = index + 1;
-                  return (
-                    <button
-                      key={page}
-                      type="button"
-                      className={
-                        "webshop-pagination__button" +
-                        (page === safePage
-                          ? " webshop-pagination__button--active"
-                          : "")
-                      }
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </button>
-                  );
-                })}
-
-                <button
-                  type="button"
-                  className="webshop-pagination__button"
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={safePage === totalPages}
-                >
-                  ›
-                </button>
-              </div>
-            )}
+            {/* (Ha külön akarod, itt volt még egy második grid az összes products-szal – ezt most meghagytam szűrt listának.) */}
           </div>
 
-          {/* JOBB OLDAL: KOSÁR */}
+          {/* JOBB: KOSÁR */}
           <aside className="webshop-cart">
-            <div className="webshop-cart__head">
-              <h3 className="webshop-cart__title">
-                {t("webshop.cart.title")}
-              </h3>
-              <p className="webshop-cart__hint">
-                {t("webshop.cart.hint")}
-              </p>
-            </div>
+            <h3 className="webshop-cart__title">Kosár</h3>
 
             {cart.length === 0 && (
               <p className="webshop-cart__empty">
-                {t("webshop.cart.empty")}
+                A kosarad jelenleg üres. Válassz terméket a listából.
               </p>
             )}
 
@@ -921,57 +922,62 @@ const filteredProducts = useMemo(() => {
                       0;
                     const price =
                       typeof raw === "string"
-                        ? parseFloat(raw.replace(",", ".")) || 0
+                        ? parseFloat(raw.replace(",", "."))
                         : raw ?? 0;
-                    const displayPrice =
+                    const formatted =
                       !price || Number.isNaN(price)
-                        ? t("webshop.list.priceOnRequest")
+                        ? "-"
                         : `${price.toLocaleString("hu-HU")} ${currencyLabel}`;
 
                     return (
                       <li
                         key={item.product.id}
-                        className="webshop-cart-item"
+                        className="webshop-cart__item"
                       >
-                        <div className="webshop-cart-item__main">
-                          <h4 className="webshop-cart-item__title">
-                            {getProductName(item.product, lang)}
-                          </h4>
-                          <p className="webshop-cart-item__price">
-                            {displayPrice}
-                          </p>
+                        <div className="webshop-cart__item-main">
+                          <span className="webshop-cart__item-name">
+                            {item.product.name}
+                          </span>
+                          <span className="webshop-cart__item-price">
+                            {formatted}
+                          </span>
                         </div>
-
-                        <div className="webshop-cart-item__actions">
+                        <div className="webshop-cart__item-controls">
                           <button
                             type="button"
-                            className="webshop-cart-qty-btn"
+                            className="webshop-cart__qty-btn"
                             onClick={() =>
-                              handleUpdateQuantity(item.product.id, -1)
+                              handleChangeQuantity(
+                                item.product.id,
+                                item.quantity - 1
+                              )
                             }
                           >
-                            −
+                            -
                           </button>
-                          <span className="webshop-cart-qty">
-                            {item.quantity}
-                          </span>
+                          <input
+                            type="number"
+                            min={1}
+                            className="webshop-cart__qty-input"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleChangeQuantity(
+                                item.product.id,
+                                parseInt(e.target.value || "1", 10)
+                              )
+                            }
+                          />
                           <button
                             type="button"
-                            className="webshop-cart-qty-btn"
+                            className="webshop-cart__qty-btn"
                             onClick={() =>
-                              handleUpdateQuantity(item.product.id, +1)
+                              handleChangeQuantity(
+                                item.product.id,
+                                item.quantity + 1
+                              )
                             }
                           >
                             +
-                          </button>
-                          <button
-                            type="button"
-                            className="webshop-cart-qty-btn"
-                            onClick={() =>
-                              handleRemoveFromCart(item.product.id)
-                            }
-                          >
-                            ×
                           </button>
                         </div>
                       </li>
@@ -981,35 +987,42 @@ const filteredProducts = useMemo(() => {
 
                 <div className="webshop-cart__summary">
                   <div className="webshop-cart__total">
-                    <span>{t("webshop.cart.subtotal")}</span>
+                    <span>Részösszeg:</span>
                     <strong>
-                      {cartTotal.toLocaleString("hu-HU")} {currencyLabel}
+                      {cartSubtotal.toLocaleString("hu-HU")} {currencyLabel}
                     </strong>
                   </div>
 
-                  {cartTotalAfterCoupon !== cartTotal && (
+                  {appliedCouponCode && (
                     <div className="webshop-cart__total webshop-cart__total--discount">
-                      <span>{t("webshop.cart.totalDiscounted")}</span>
+                      <span>Kupon kedvezmény ({appliedCouponCode}):</span>
                       <strong>
-                        {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
+                        -{couponDiscount.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
                       </strong>
                     </div>
                   )}
+
+                  <div className="webshop-cart__total webshop-cart__total--final">
+                    <span>Fizetendő:</span>
+                    <strong>
+                      {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
+                      {currencyLabel}
+                    </strong>
+                  </div>
 
                   <button
                     type="button"
                     className="btn btn-ghost webshop-cart__clear"
                     onClick={handleClearCart}
                   >
-                    {t("webshop.cart.clear")}
+                    Kosár ürítése
                   </button>
-
                   <a
                     href="#webshop-checkout"
                     className="btn btn-primary btn-primary--magenta webshop-cart__checkout-link"
                   >
-                    {t("webshop.cart.gotoCheckout")}
+                    Tovább a fizetéshez
                   </a>
                 </div>
               </>
@@ -1018,26 +1031,26 @@ const filteredProducts = useMemo(() => {
         </div>
       </section>
 
-      {/* REGISZTRÁCIÓ + CHECKOUT BLOKK */}
+      {/* REGISZTRÁCIÓ + FIZETÉS + KUPONMEZŐ */}
       <section
         id="webshop-regisztracio"
         className="section section--webshop-alt"
       >
         <div className="container webshop-checkout-grid">
-          {/* BAL: REGISZTRÁCIÓ / FIÓK */}
+          {/* REGISZTRÁCIÓ – users tábla */}
           <div className="webshop-panel">
-            <p className="section-eyebrow">
-              {t("webshop.registration.eyebrow")}
-            </p>
-            <h2>{t("webshop.registration.title")}</h2>
+            <p className="section-eyebrow">Vendégprofil</p>
+            <h2>Regisztráció Kleopátra vendégként</h2>
             <p className="section-lead">
-              {t("webshop.registration.lead")}
+              Ha szeretnéd, hogy a Kleopátra rendszer vendégként ismerjen, hozz
+              létre webshop fiókot. Az adataid a{" "}
+              <strong>public.users</strong> táblába kerülnek.
             </p>
 
             <form className="webshop-form" onSubmit={handleRegistrationSubmit}>
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.registration.fullNameLabel")}</span>
+                  <span>Teljes név*</span>
                   <input
                     type="text"
                     value={regForm.fullName}
@@ -1047,10 +1060,11 @@ const filteredProducts = useMemo(() => {
                         fullName: e.target.value,
                       }))
                     }
+                    required
                   />
                 </label>
                 <label className="field">
-                  <span>{t("webshop.registration.emailLabel")}</span>
+                  <span>E-mail cím*</span>
                   <input
                     type="email"
                     value={regForm.email}
@@ -1060,12 +1074,14 @@ const filteredProducts = useMemo(() => {
                         email: e.target.value,
                       }))
                     }
+                    required
                   />
                 </label>
               </div>
+
               <div className="form-row">
                 <label className="field">
-                  <span>{t("webshop.registration.passwordLabel")}</span>
+                  <span>Jelszó*</span>
                   <input
                     type="password"
                     value={regForm.password}
@@ -1075,12 +1091,15 @@ const filteredProducts = useMemo(() => {
                         password: e.target.value,
                       }))
                     }
+                    required
                   />
                 </label>
               </div>
 
               {regError && (
-                <p className="form-msg--error webshop-form-msg">{regError}</p>
+                <p className="form-msg--error webshop-form-msg">
+                  {regError}
+                </p>
               )}
               {regMessage && (
                 <p className="form-msg--success webshop-form-msg">
@@ -1093,111 +1112,31 @@ const filteredProducts = useMemo(() => {
                 className="btn btn-primary btn-primary--magenta"
                 disabled={regLoading}
               >
-                {regLoading
-                  ? t("webshop.registration.submitLoading")
-                  : t("webshop.registration.submit")}
+                {regLoading ? "Feldolgozás…" : "Regisztráció"}
               </button>
             </form>
           </div>
 
-          {/* JOBB: SZÁLLÍTÁS + FIZETÉS + ÖSSZEFOGLALÓ */}
-          <div
-            id="webshop-checkout"
-            className="webshop-panel webshop-panel--checkout"
-          >
-            <p className="section-eyebrow">{t("webshop.checkout.eyebrow")}</p>
-            <h2>{t("webshop.checkout.title")}</h2>
-            <p className="section-lead">{t("webshop.checkout.lead")}</p>
+          {/* FIZETÉS / SZÁLLÍTÁSI ADATOK + KUPON */}
+          <div id="webshop-checkout" className="webshop-panel">
+            <p className="section-eyebrow">Fizetés és szállítás</p>
+            <h2>Rendelés véglegesítése</h2>
+            <p className="section-lead">
+              Add meg a számlázási és szállítási adatokat, válaszd ki a
+              fizetési módot, majd – ha van – írd be a kuponkódot is a
+              kedvezményhez.
+            </p>
 
-            <form className="webshop-form" onSubmit={handleOrderSubmit}>
+            {/* Kupon mező blokk */}
+            <div className="webshop-form webshop-form--coupon">
               <div className="form-row form-row--two">
                 <label className="field">
-                  <span>{t("webshop.checkout.fullNameLabel")}</span>
-                  <input
-                    type="text"
-                    value={checkoutForm.fullName}
-                    onChange={(e) =>
-                      setCheckoutForm((prev) => ({
-                        ...prev,
-                        fullName: e.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                <label className="field">
-                  <span>{t("webshop.checkout.emailLabel")}</span>
-                  <input
-                    type="email"
-                    value={checkoutForm.email}
-                    onChange={(e) =>
-                      setCheckoutForm((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-
-              <div className="form-row form-row--two">
-                <label className="field">
-                  <span>{t("webshop.checkout.phoneLabel")}</span>
-                  <input
-                    type="tel"
-                    value={checkoutForm.phone}
-                    onChange={(e) =>
-                      setCheckoutForm((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }))
-                    }
-                  />
-                </label>
-                <label className="field">
-                  <span>{t("webshop.checkout.paymentMethodLabel")}</span>
-                  <select
-                    value={checkoutForm.paymentMethod}
-                    onChange={(e) =>
-                      setCheckoutForm((prev) => ({
-                        ...prev,
-                        paymentMethod: e.target
-                          .value as CheckoutForm["paymentMethod"],
-                      }))
-                    }
-                  >
-                    <option value="card">
-                      {t("webshop.checkout.payment.card")}
-                    </option>
-                    <option value="cod">
-                      {t("webshop.checkout.payment.cod")}
-                    </option>
-                  </select>
-                </label>
-              </div>
-
-              <div className="form-row">
-                <label className="field">
-                  <span>{t("webshop.checkout.addressLabel")}</span>
-                  <textarea
-                    value={checkoutForm.address}
-                    onChange={(e) =>
-                      setCheckoutForm((prev) => ({
-                        ...prev,
-                        address: e.target.value,
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-
-              <div className="form-row form-row--two">
-                <label className="field">
-                  <span>{t("webshop.checkout.couponLabel")}</span>
+                  <span>Kuponkód</span>
                   <input
                     type="text"
                     value={couponInput}
                     onChange={(e) => setCouponInput(e.target.value)}
-                    placeholder={t("webshop.checkout.couponPlaceholder")}
+                    placeholder="Pl. KLEO10"
                   />
                 </label>
                 <div className="field field--button">
@@ -1207,9 +1146,7 @@ const filteredProducts = useMemo(() => {
                     onClick={handleApplyCoupon}
                     disabled={couponLoading || cart.length === 0}
                   >
-                    {couponLoading
-                      ? t("webshop.checkout.couponChecking")
-                      : t("webshop.checkout.couponApply")}
+                    {couponLoading ? "Ellenőrzés…" : "Kupon alkalmazása"}
                   </button>
                 </div>
               </div>
@@ -1224,13 +1161,94 @@ const filteredProducts = useMemo(() => {
                   {couponMessage}
                 </p>
               )}
+            </div>
+
+            <form className="webshop-form" onSubmit={handleOrderSubmit}>
+              <div className="form-row form-row--two">
+                <label className="field">
+                  <span>Teljes név*</span>
+                  <input
+                    type="text"
+                    value={checkoutForm.fullName}
+                    onChange={(e) =>
+                      setCheckoutForm((prev) => ({
+                        ...prev,
+                        fullName: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </label>
+                <label className="field">
+                  <span>E-mail cím*</span>
+                  <input
+                    type="email"
+                    value={checkoutForm.email}
+                    onChange={(e) =>
+                      setCheckoutForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="form-row form-row--two">
+                <label className="field">
+                  <span>Telefonszám</span>
+                  <input
+                    type="tel"
+                    value={checkoutForm.phone}
+                    onChange={(e) =>
+                      setCheckoutForm((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
+                  />
+                </label>
+                <label className="field">
+                  <span>Fizetési mód</span>
+                  <select
+                    value={checkoutForm.paymentMethod}
+                    onChange={(e) =>
+                      setCheckoutForm((prev) => ({
+                        ...prev,
+                        paymentMethod: e.target
+                          .value as CheckoutForm["paymentMethod"],
+                      }))
+                    }
+                  >
+                    <option value="card">Bankkártyás fizetés</option>
+                    <option value="cod">Utánvét (fizetés a futárnál)</option>
+                  </select>
+                </label>
+              </div>
 
               <div className="form-row">
                 <label className="field">
-                  <span>{t("webshop.checkout.noteLabel")}</span>
+                  <span>Számlázási / szállítási cím*</span>
+                  <textarea
+                    value={checkoutForm.address}
+                    onChange={(e) =>
+                      setCheckoutForm((prev) => ({
+                        ...prev,
+                        address: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label className="field">
+                  <span>Megjegyzés a rendeléshez</span>
                   <textarea
                     value={checkoutForm.note}
-                    placeholder={t("webshop.checkout.notePlaceholder")}
+                    placeholder="Pl. kinek szól az ajándékutalvány, külön kérés, üzenet a számlára…"
                     onChange={(e) =>
                       setCheckoutForm((prev) => ({
                         ...prev,
@@ -1255,16 +1273,14 @@ const filteredProducts = useMemo(() => {
               <div className="webshop-order-summary-row">
                 <div className="webshop-order-summary">
                   <div>
-                    <span>{t("webshop.checkout.subtotal")}</span>{" "}
+                    <span>Részösszeg:</span>{" "}
                     <strong>
                       {cartSubtotal.toLocaleString("hu-HU")} {currencyLabel}
                     </strong>
                   </div>
                   {appliedCouponCode && (
                     <div>
-                      <span>
-                        {t("webshop.checkout.discount")} ({appliedCouponCode}):{" "}
-                      </span>
+                      <span>Kupon kedvezmény ({appliedCouponCode}): </span>
                       <strong>
                         -{couponDiscount.toLocaleString("hu-HU")}{" "}
                         {currencyLabel}
@@ -1272,30 +1288,27 @@ const filteredProducts = useMemo(() => {
                     </div>
                   )}
                   <div>
-                    <span>{t("webshop.checkout.total")}</span>{" "}
+                    <span>Fizetendő:</span>{" "}
                     <strong>
                       {cartTotalAfterCoupon.toLocaleString("hu-HU")}{" "}
                       {currencyLabel}
                     </strong>
                   </div>
                 </div>
-
-                <div className="webshop-order-actions">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-primary--magenta btn--shine"
-                    disabled={orderLoading || cart.length === 0}
-                  >
-                    {orderLoading
-                      ? t("webshop.checkout.submitLoading")
-                      : t("webshop.checkout.submit")}
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-primary--magenta"
+                  disabled={orderLoading || cart.length === 0}
+                >
+                  {orderLoading
+                    ? "Rendelés küldése…"
+                    : "Rendelés elküldése"}
+                </button>
               </div>
 
               {cart.length === 0 && (
                 <p className="webshop-status webshop-status--hint">
-                  {t("webshop.checkout.emptyCartHint")}
+                  A rendelés leadásához először tegyél termékeket a kosárba.
                 </p>
               )}
             </form>

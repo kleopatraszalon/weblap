@@ -1,116 +1,84 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useI18n } from "../i18n";
 
 export const HomePage: React.FC = () => {
   const { t } = useI18n();
 
-  // Alteg központi foglaló script betöltése csak a HomePage-en
-  useEffect(() => {
-    const src = "https://w714308.alteg.io/widgetJS";
-
-    // ha már be lett húzva, ne töltsük be újra
-    if (document.querySelector(`script[src="${src}"]`)) {
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = src;
-    script.charset = "UTF-8";
-
-    document.body.appendChild(script);
-
-    // Ha nagyon szigorúan csak a HomePage-en akarod,
-    // akkor unmountkor le is vehetjük:
-    // return () => {
-    //   document.body.removeChild(script);
-    // };
-
-  }, []);
-
   return (
     <main>
-      {/* HERO – KEZDŐLAP (klasszikus .hero layout) */}
+      {/* HERO – KEZDŐLAP */}
       <section className="hero">
-        <div className="container">
-          <div className="hero-grid">
-            {/* BAL OLDAL – SZÖVEG */}
-            <div className="hero-content">
-              <div className="hero-kicker">{t("home.hero.kicker")}</div>
+        <div className="hero-bg" />
 
-              <h1 className="hero-title">
-                <span className="hero-part hero-part-default">
-                  {t("home.hero.title.prefix")}
-                </span>
-                <span className="hero-part hero-part-magenta">
-                  {t("home.hero.title.highlight")}
-                </span>
-                <span className="hero-part hero-part-gold">
-                  {t("home.hero.title.suffix")}
-                </span>
-              </h1>
+        <div className="container hero-grid">
+          {/* BAL: szöveg */}
+          <div className="hero-content">
+            <div className="hero-kicker">{t("home.hero.kicker")}</div>
 
-              {/* A kép melletti szöveg teljesen NAGYBETŰS */}
-              <p className="hero-lead">{t("home.hero.lead").toUpperCase()}</p>
+            <h1 className="hero-title">
+              <span className="hero-part hero-part-default">
+                {t("home.hero.title.prefix")}
+              </span>
+              <span className="hero-part hero-part-magenta">
+                {t("home.hero.title.highlight")}
+              </span>
+              <span className="hero-part hero-part-gold">
+                {t("home.hero.title.suffix")}
+              </span>
+            </h1>
 
-              {/* PILL-ek – közvetlenül a services blokkokra gördülnek */}
-              <div className="hero-pills">
-                <NavLink to="/services#hair" className="hero-pill">
-                  {t("home.hero.pill.hair")}
-                </NavLink>
-                <NavLink to="/services#beauty" className="hero-pill">
-                  {t("home.hero.pill.beauty")}
-                </NavLink>
-                <NavLink to="/services#handsfeet" className="hero-pill">
-                  {t("home.hero.pill.handsFeet")}
-                </NavLink>
-                <NavLink to="/services#solarium" className="hero-pill">
-                  {t("home.hero.pill.solarium")}
-                </NavLink>
-                <NavLink to="/services#massage" className="hero-pill">
-                  {t("home.hero.pill.massage")}
-                </NavLink>
-              </div>
+            <p className="hero-lead">{t("home.hero.lead")}</p>
 
-              {/* CTA GOMBOK – FOGLALÁS / SZOLGÁLTATÁSOK */}
-              <div className="hero-actions">
-                <NavLink
-                  to="/salons"
-                  className="btn btn-primary btn-primary--magenta"
-                >
-                  {t("home.hero.cta.book")}
-                </NavLink>
-                <NavLink to="/services" className="btn btn-outline">
-                  {t("home.hero.cta.services")}
-                </NavLink>
-              </div>
+            {/* PILL GOMBOK – ÁRLISTA / SZOLGÁLTATÁSOK OLDALRA MUTATNAK */}
+            <div className="hero-pills">
+              <NavLink to="/services#hair" className="hero-pill">
+                {t("home.hero.pill.hair")}
+              </NavLink>
+              <NavLink to="/services#beauty" className="hero-pill">
+                {t("home.hero.pill.beauty")}
+              </NavLink>
+              <NavLink to="/services#handsfeet" className="hero-pill">
+                {t("home.hero.pill.handsFeet")}
+              </NavLink>
+              <NavLink to="/services#solarium" className="hero-pill">
+                {t("home.hero.pill.solarium")}
+              </NavLink>
+              <NavLink to="/services#massage" className="hero-pill">
+                {t("home.hero.pill.massage")}
+              </NavLink>
             </div>
 
-            {/* JOBB OLDAL – KÉP + WEBSHOP / APP CHIP */}
-            <div className="hero-media">
-              <div className="hero-media-frame">
-                <img
-                  src="/images/home.png"
-                  alt="Kleopátra Szépségszalon – nyitó kép"
-                  className="hero-media-img"
-                />
+            {/* CTA GOMBOK – FOGLALÁS / SZOLGÁLTATÁSOK */}
+            <div className="hero-actions">
+              <NavLink
+                to="/salons"
+                className="btn btn-primary btn-primary--magenta"
+              >
+                {t("home.hero.cta.book")}
+              </NavLink>
+              <NavLink to="/services" className="btn btn-outline">
+                {t("home.hero.cta.services")}
+              </NavLink>
+            </div>
+          </div>
 
-                {/* +3 mozgó fekete kör */}
-                <div className="hero-media-bubbles">
-                  <span className="hero-media-bubble hero-media-bubble--1" />
-                  <span className="hero-media-bubble hero-media-bubble--2" />
-                  <span className="hero-media-bubble hero-media-bubble--3" />
-                </div>
+          {/* JOBB: kép + overlay webshop / app chip */}
+          <div className="hero-media">
+            <div className="hero-media-frame">
+              <img
+                src="/images/home.png"
+                alt="Kleopátra Szépségszalon – szépségszolgáltatások"
+                className="hero-media-img"
+              />
 
-                <div className="hero-media-overlay">
-                  <NavLink to="/webshop" className="hero-media-webshop">
-                    {t("home.hero.media.webshop")}
-                  </NavLink>
+              <div className="hero-media-overlay">
+                <NavLink to="/webshop" className="hero-media-webshop">
+                  {t("home.hero.media.webshop")}
+                </NavLink>
 
-                  <div className="hero-media-chip">
-                    {t("home.hero.media.appChip")}
-                  </div>
+                <div className="hero-media-chip">
+                  {t("home.hero.media.appChip")}
                 </div>
               </div>
             </div>
@@ -226,7 +194,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* HÍRLEVÉL / HŰSÉG BLOKK – KÉPPEL */}
+      {/* HÍRLEVÉL / HŰSÉG BLOKK */}
       <section className="section section--newsletter">
         <div className="container grid-two">
           <div>
@@ -237,16 +205,12 @@ export const HomePage: React.FC = () => {
               {t("home.newsletter.titleSuffix")}
             </h2>
             <p className="section-lead">{t("home.newsletter.lead")}</p>
-
-            <div className="newsletter-actions">
-              <NavLink to="/loyalty" className="btn btn-primary">
-                {t("home.newsletter.cta")}
-              </NavLink>
-            </div>
           </div>
 
-          <div className="newsletter-image">
-            <img src="/images/huseg.png" alt="Kleo Card hűségprogram" />
+          <div className="newsletter-actions">
+            <NavLink to="/loyalty" className="btn btn-primary">
+              {t("home.newsletter.cta")}
+            </NavLink>
           </div>
         </div>
       </section>

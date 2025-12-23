@@ -8,12 +8,6 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function Header() {
   const { lang, setLang, t } = useI18n();
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
-
   const handleLangClick = (value: "hu" | "en" | "ru") => {
     setLang(value);
   };
@@ -32,27 +26,22 @@ export function Header() {
           </div>
         </NavLink>
 
-        {/* KÖZÉP: KÉT SOROS MENÜ (DESKTOPON LÁTSZIK, MOBILON HAMBURGERREL NYÍLIK) */}
-        <nav
-          className={
-            "main-nav" + (isMobileMenuOpen ? " main-nav--mobile-open" : "")
-          }
-          aria-label="Fő navigáció"
-        >
+        {/* KÖZÉP: KÉT SOROS MENÜ */}
+        <nav className="main-nav" aria-label="Fő navigáció">
           <div className="main-nav-inner">
             <div className="main-nav-row">
               <NavLink to="/salons" className={navLinkClass}>
                 {t("menu.salons")}
               </NavLink>
+
               <NavLink to="/services" className={navLinkClass}>
                 {t("menu.pricesServices")}
               </NavLink>
-              <a href="/franchise" target="_blank" rel="noopener noreferrer" className="nav-link">
-                {t("menu.franchise")}
-              </a>
+
               <NavLink to="/webshop" className={navLinkClass}>
                 {t("menu.webshop")}
               </NavLink>
+
               <NavLink to="/contact" className={navLinkClass}>
                 {t("menu.contact")}
               </NavLink>
@@ -65,7 +54,10 @@ export function Header() {
               <NavLink to="/loyalty" className={navLinkClass}>
                 {t("menu.loyalty")}
               </NavLink>
-<NavLink to="/career" className={navLinkClass}>
+              <NavLink to="/franchise" className={navLinkClass}>
+                {t("menu.franchise")}
+              </NavLink>
+              <NavLink to="/career" className={navLinkClass}>
                 {t("menu.career")}
               </NavLink>
               <NavLink to="/education" className={navLinkClass}>
@@ -75,13 +67,22 @@ export function Header() {
           </div>
         </nav>
 
-        {/* JOBB: SOCIAL + NYELVVÁLASZTÓ (IDŐPONTFOGLALÁS NÉLKÜL) */}
+        {/* JOBB: IDŐPONTFOGLALÁS + SOCIAL + NYELVVÁLASZTÓ */}
         <div className="header-cta-block">
+          <NavLink
+            to="/salons"
+            className="btn header-cta-btn"
+            aria-label={t("header.booking")}
+          >
+            {t("header.booking")}
+          </NavLink>
+
           <div className="header-social">
-            <div className="header-social-label">{t("header.followUs")}</div>
+            <div className="header-social-label">
+              {t("header.followUs")}
+            </div>
 
             <div className="header-social-row">
-              {/* NYELVVÁLASZTÓ – 25×25 PX ZÁSZLÓKÉPEK */}
               <div
                 className="header-lang-switch"
                 aria-label={t("header.language.label")}
@@ -92,127 +93,46 @@ export function Header() {
                     "lang-btn" + (lang === "hu" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("hu")}
-                  aria-label="Magyar"
-                  title="Magyar"
                 >
-                  <img
-                    src="/images/hungary.png"
-                    alt="Magyar"
-                    className="lang-flag"
-                    width={25}
-                    height={25}
-                  />
+                  HU
                 </button>
-
                 <button
                   type="button"
                   className={
                     "lang-btn" + (lang === "en" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("en")}
-                  aria-label="English"
-                  title="English"
                 >
-                  <img
-                    src="/images/england.png"
-                    alt="English"
-                    className="lang-flag"
-                    width={25}
-                    height={25}
-                  />
+                  EN
                 </button>
-
                 <button
                   type="button"
                   className={
                     "lang-btn" + (lang === "ru" ? " lang-btn--active" : "")
                   }
                   onClick={() => handleLangClick("ru")}
-                  aria-label="Русский"
-                  title="Русский"
                 >
-                  <img
-                    src="/images/russia.png"
-                    alt="Русский"
-                    className="lang-flag"
-                    width={25}
-                    height={25}
-                  />
+                  RU
                 </button>
               </div>
 
-              {/* SOCIAL – MESSENGER TÖRÖLVE, YOUTUBE BE */}
               <div className="header-social-icons">
-                <a
-                  href="https://www.tiktok.com/@kleoszalon"
-                  aria-label="TikTok"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/images/tiktok.png"
-                    alt="TikTok"
-                    width={25}
-                    height={25}
-                  />
+                <a href="#" aria-label="Facebook">
+                  <img src="/images/facebook.png" alt="Facebook" />
                 </a>
-                <a
-                  href="https://www.youtube.com/channel/UC9GNInNzSznaxZkmaNnNTxA"
-                  aria-label="YouTube"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/images/youtube.png"
-                    alt="YouTube"
-                    width={25}
-                    height={25}
-                  />
+                <a href="#" aria-label="Instagram">
+                  <img src="/images/insta.png" alt="Instagram" />
                 </a>
-                <a
-                  href="https://www.facebook.com/kleoszalon/"
-                  aria-label="Facebook"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/images/facebook.png"
-                    alt="Facebook"
-                    width={25}
-                    height={25}
-                  />
+                <a href="#" aria-label="TikTok">
+                  <img src="/images/tiktok.png" alt="TikTok" />
                 </a>
-                <a
-                  href="https://www.instagram.com/kleoszalon/"
-                  aria-label="Instagram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/images/insta.png"
-                    alt="Instagram"
-                    width={25}
-                    height={25}
-                  />
+                <a href="#" aria-label="Messenger">
+                  <img src="/images/messenger.png" alt="Messenger" />
                 </a>
               </div>
             </div>
           </div>
         </div>
-
-        {/* ÚJ: HAMBURGER GOMB – csak markup, a pozicionálást a CSS csinálja */}
-        <button
-          type="button"
-          className={"hamburger" + (isMobileMenuOpen ? " is-open" : "")}
-          aria-label="Menü"
-          onClick={toggleMobileMenu}
-        >
-          <span className="hamburger-lines">
-            <span className="hamburger-line" />
-            <span className="hamburger-line" />
-            <span className="hamburger-line" />
-          </span>
-        </button>
       </div>
     </header>
   );
