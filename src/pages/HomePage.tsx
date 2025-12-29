@@ -77,6 +77,21 @@ export const HomePage: React.FC = () => {
                   {t("home.hero.media.webshop")}
                 </NavLink>
 
+                {/* Mobilon a referenciaképen látható mini nyelv + social sor */}
+                <div className="hero-media-miniicons" aria-label="Nyelvválasztó és közösségi ikonok">
+                  <div className="hero-mini-group" aria-label="Nyelv">
+                    <span className="mini-icon mini-flag">HU</span>
+                    <span className="mini-icon mini-flag">EN</span>
+                    <span className="mini-icon mini-flag">RU</span>
+                  </div>
+                  <div className="hero-mini-group" aria-label="Közösségi média">
+                    <span className="mini-icon mini-social" title="Facebook">F</span>
+                    <span className="mini-icon mini-social" title="Instagram">I</span>
+                    <span className="mini-icon mini-social" title="YouTube">Y</span>
+                    <span className="mini-icon mini-social" title="TikTok">T</span>
+                  </div>
+                </div>
+
                 <div className="hero-media-chip">
                   {t("home.hero.media.appChip")}
                 </div>

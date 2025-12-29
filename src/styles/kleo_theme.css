@@ -2003,6 +2003,132 @@ p {
   padding-block: 0.5rem;
 }
 
+/* Mobile hamburger + drawer */
+.hamburger-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 99px;
+}
+
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+  z-index: 60;
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: min(88vw, 360px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.20);
+  z-index: 61;
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 10px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.mobile-nav-title {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.mobile-nav-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 18px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.mobile-nav-links {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.70);
+  color: rgba(0, 0, 0, 0.78);
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.mobile-nav-link:hover {
+  border-color: rgba(0, 0, 0, 0.10);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.mobile-nav-subsection {
+  padding: 0 12px 14px 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-nav-subtitle {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.60);
+}
+
+.mobile-lang {
+  display: flex;
+  gap: 8px;
+}
+
+.mobile-social {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mobile-social .social-icon-btn {
+  width: 40px;
+  height: 40px;
+}
+
 /* LOGÓ */
 
 .header-logo-link {
@@ -2156,7 +2282,20 @@ p {
 .hero {
   position: relative;
   padding: 4.5rem 0 3rem;
-  background: radial-gradient(circle at top left, #f9c1d9 0, #fff 42%, #f5eee2 85%);
+  background: #ffffff;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 380px at 12% 8%, rgba(228, 24, 125, 0.14), transparent 60%),
+    radial-gradient(760px 340px at 88% 90%, rgba(212, 175, 55, 0.18), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 1.0));
+  opacity: 0.85;
+  z-index: 0;
 }
 
 .hero-bg {
@@ -2237,9 +2376,12 @@ p {
 
 .hero-media-frame {
   position: relative;
-  border-radius: 2rem;
+  border-radius: 2.2rem;
   overflow: hidden;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.75rem;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.16);
 }
 
 /* kép + finom "lélegzés" animáció */
@@ -2247,6 +2389,7 @@ p {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 1.7rem;
   transform-origin: center;
   animation: hero-image-breath 14s ease-in-out infinite;
 }
@@ -2313,8 +2456,8 @@ p {
 
 .hero-media-overlay {
   position: absolute;
-  inset: 0;
-  padding: 1.5rem;
+  inset: 0.75rem;
+  padding: 1.05rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2348,11 +2491,47 @@ p {
   pointer-events: auto;
   padding: 0.4rem 1.2rem;
   border-radius: 999px;
-  background: rgba(18, 12, 8, 0.95);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  color: #111111;
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* Mini ikon sor a hero kártyán (zászlók + social) */
+.hero-media-miniicons {
+  position: absolute;
+  left: 1.0rem;
+  bottom: 1.0rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  pointer-events: auto;
+}
+
+.mini-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  color: #111111;
+}
+
+.mini-icon.mini-social {
+  width: 30px;
+  height: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /* =====================
@@ -3017,6 +3196,14 @@ p {
 
   .main-nav {
     display: none; /* majd mobilmenünek jó alap */
+  }
+
+  .header-cta-block {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: inline-flex;
   }
 
   .hero {
