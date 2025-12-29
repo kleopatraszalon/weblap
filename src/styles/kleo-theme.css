@@ -4676,3 +4676,38 @@ der-cta-block {
   top:-4.5rem;        /* kicsit lejjebb a header tetejétől */
   left: 0rem;
   z-index: 50;
+
+
+/* === Mobile header refinements (logo + true 3-line hamburger) === */
+.hamburger-btn{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#ffffff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hamburger-lines{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+}
+
+.hamburger-lines span{
+  display:block;
+  width:22px;
+  height:2px;
+  border-radius:2px;
+  background:#1a1a1a;
+}
+
+@media (max-width: 768px){
+  /* Keep header minimal on mobile */
+  .header-cta-block{ display:none !important; }
+  .header-right{ gap:10px; }
+}

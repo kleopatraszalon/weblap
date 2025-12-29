@@ -16,7 +16,6 @@ export function Header() {
     };
   }, [mobileOpen]);
 
-
   const menuItems = useMemo(
     () => [
       { to: "/salons", label: t("menu.salons") },
