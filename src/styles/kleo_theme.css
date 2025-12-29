@@ -5298,3 +5298,18 @@ p {
   color: #ffffff;
   border-color: transparent;
 }
+
+
+/* Ensure social icons never scale up unexpectedly */
+.social-icon-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.mobile-social-fallback {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+}

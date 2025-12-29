@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {useMemo, useState, useEffect} from "react";
 import { NavLink } from "react-router-dom";
 import { useI18n } from "../i18n";
 
@@ -8,6 +8,14 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function Header() {
   const { lang, setLang, t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => {
+    // Prevent background scroll when the mobile drawer is open
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
 
   const menuItems = useMemo(
     () => [
@@ -168,14 +176,23 @@ export function Header() {
 
       {/* MOBIL MENÜ PANEL */}
       {mobileOpen && (
-        <div className="mobile-menu" role="dialog" aria-label={t("header.mobileMenu")}
-             onClick={() => setMobileOpen(false)}>
-          <div className="mobile-menu-panel" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-menu-top">
-              <div className="mobile-menu-title">{t("header.mobileMenu")}</div>
+        <>
+          <div
+            className="mobile-nav-overlay"
+            role="presentation"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div
+            className="mobile-nav-drawer"
+            role="dialog"
+            aria-label={t("header.mobileMenu")}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mobile-nav-header">
+              <div className="mobile-nav-title">{t("header.mobileMenu")}</div>
               <button
                 type="button"
-                className="mobile-menu-close"
+                className="mobile-nav-close"
                 aria-label={t("header.closeMenu")}
                 onClick={() => setMobileOpen(false)}
               >
@@ -183,82 +200,76 @@ export function Header() {
               </button>
             </div>
 
-            <div className="mobile-menu-section">
+            <div className="mobile-nav-links">
               <NavLink
                 to="/salons"
-                className="btn btn-primary btn-primary--magenta mobile-book-btn"
+                className="btn btn-primary btn-primary--magenta"
                 onClick={() => setMobileOpen(false)}
               >
                 {t("header.booking")}
               </NavLink>
-            </div>
 
-            <nav className="mobile-menu-nav" aria-label={t("header.mobileMenu")}
-                 onClick={(e) => e.stopPropagation()}>
               {menuItems.map((it) => (
                 <NavLink
                   key={it.to}
                   to={it.to}
-                  className={navLinkClass}
+                  className="mobile-nav-link"
                   onClick={() => setMobileOpen(false)}
                 >
                   {it.label}
+                  <span aria-hidden="true">›</span>
                 </NavLink>
               ))}
-            </nav>
-
-            <div className="mobile-menu-section">
-              <div className="mobile-menu-subtitle">{t("header.language.label")}</div>
-              <div className="mobile-lang-row">
-                <button
-                  type="button"
-                  className={
-                    "lang-btn" + (lang === "hu" ? " lang-btn--active" : "")
-                  }
-                  onClick={() => handleLangClick("hu")}
-                >
-                  HU
-                </button>
-                <button
-                  type="button"
-                  className={
-                    "lang-btn" + (lang === "en" ? " lang-btn--active" : "")
-                  }
-                  onClick={() => handleLangClick("en")}
-                >
-                  EN
-                </button>
-                <button
-                  type="button"
-                  className={
-                    "lang-btn" + (lang === "ru" ? " lang-btn--active" : "")
-                  }
-                  onClick={() => handleLangClick("ru")}
-                >
-                  RU
-                </button>
-              </div>
             </div>
 
-            <div className="mobile-menu-section">
-              <div className="mobile-menu-subtitle">{t("header.followUs")}</div>
-              <div className="mobile-social-row">
-                <a href="#" aria-label="Facebook">
-                  <img src="/images/facebook.png" alt="Facebook" />
-                </a>
-                <a href="#" aria-label="Instagram">
-                  <img src="/images/insta.png" alt="Instagram" />
-                </a>
-                <a href="#" aria-label="YouTube">
-                  <span className="mobile-social-fallback">YT</span>
-                </a>
-                <a href="#" aria-label="TikTok">
-                  <img src="/images/tiktok.png" alt="TikTok" />
-                </a>
+            <div className="mobile-nav-subsection">
+              <div>
+                <div className="mobile-nav-subtitle">{t("header.language.label")}</div>
+                <div className="mobile-lang">
+                  <button
+                    type="button"
+                    className={"lang-btn" + (lang === "hu" ? " lang-btn--active" : "")}
+                    onClick={() => handleLangClick("hu")}
+                  >
+                    HU
+                  </button>
+                  <button
+                    type="button"
+                    className={"lang-btn" + (lang === "en" ? " lang-btn--active" : "")}
+                    onClick={() => handleLangClick("en")}
+                  >
+                    EN
+                  </button>
+                  <button
+                    type="button"
+                    className={"lang-btn" + (lang === "ru" ? " lang-btn--active" : "")}
+                    onClick={() => handleLangClick("ru")}
+                  >
+                    RU
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div className="mobile-nav-subtitle">{t("header.followUs")}</div>
+                <div className="mobile-social">
+                  <a className="social-icon-btn" href="#" aria-label="Facebook">
+                    <img src="/images/facebook.png" alt="Facebook" />
+                  </a>
+                  <a className="social-icon-btn" href="#" aria-label="Instagram">
+                    <img src="/images/insta.png" alt="Instagram" />
+                  </a>
+                  <a className="social-icon-btn" href="#" aria-label="YouTube">
+                    <span className="mobile-social-fallback">YT</span>
+                  </a>
+                  <a className="social-icon-btn" href="#" aria-label="TikTok">
+                    <img src="/images/tiktok.png" alt="TikTok" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
