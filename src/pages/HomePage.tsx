@@ -77,8 +77,6 @@ export const HomePage: React.FC = () => {
                   {t("home.hero.media.webshop")}
                 </NavLink>
 
-                {/* Mobilon a referenciaképen látható mini nyelv + social sor */}
-
                 <div className="hero-media-chip">
                   {t("home.hero.media.appChip")}
                 </div>

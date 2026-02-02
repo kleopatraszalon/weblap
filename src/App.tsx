@@ -13,6 +13,7 @@ import { CareerPage } from "./pages/CareerPage";
 import { TrainingPage } from "./pages/TrainingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
+import { SignagePage } from "./pages/SignagePage";
 import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
@@ -77,9 +78,15 @@ const App: React.FC = () => {
       ? window.location.pathname
       : "/";
 
+  const isSignage = initialPath.startsWith("/signage");
+
   // URL mindig "/" maradjon a címsorban (Render / statikus host kompatibilitás)
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname !== "/" &&
+      !window.location.pathname.startsWith("/signage")
+    ) {
       window.history.replaceState(null, "", "/");
     }
   }, []);
@@ -87,10 +94,11 @@ const App: React.FC = () => {
   return (
     <LanguageProvider>
       <MemoryRouter initialEntries={[initialPath]}>
-        <Header />
-        <FloatingCartButton />
+        {!isSignage && <Header />}
+        {!isSignage && <FloatingCartButton />}
 
         <Routes>
+          <Route path="/signage" element={<SignagePage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/salons" element={<SalonsPage />} />
           <Route path="/salons/:id" element={<SalonDetailPage />} />
@@ -99,16 +107,13 @@ const App: React.FC = () => {
           <Route path="/loyalty" element={<LoyaltyPage />} />
           <Route path="/franchise" element={<FranchisePage />} />
           <Route path="/career" element={<CareerPage />} />
-          <Route path="/education" element={<TrainingPage />} />
+          <Route path="/training" element={<TrainingPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
 
           {/* Webshop listanézet + termék részletek */}
           <Route path="/webshop" element={<WebshopPage />} />
-          <Route
-            path="/webshop/:productId"
-            element={<WebshopProductDetailPage />}
-          />
+          <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
 
           {/* Külön kosár oldal */}
           <Route path="/cart" element={<CartPage />} />
