@@ -1,32 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./signage.css";
 
-type ServiceItem = {
-  id: string;
-  name: string;
-  category: string;
-  durationMin: number | null;
-  price_text: string;
-  priority: number;
-};
-
-type Deal = {
-  id: string;
-  title: string;
-  subtitle: string;
-  price_text: string;
-  valid_from: string | null;
-  valid_to: string | null;
-};
-
-type Professional = {
-  id: string;
-  name: string;
-  title: string;
-  note: string;
-  available: boolean;
-  priority: number;
-};
+type ServiceItem = { id: string; name: string; category: string; durationMin: number | null; price_text: string; priority: number; };
+type Deal = { id: string; title: string; subtitle: string; price_text: string; valid_from: string | null; valid_to: string | null; };
+type Professional = { id: string; name: string; title: string; note: string; available: boolean; priority: number; };
 
 function huDate(d: Date) {
   return d.toLocaleDateString("hu-HU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -42,10 +19,8 @@ const YT_EMBED_URL =
 
 export const SignagePage: React.FC = () => {
   const [clock, setClock] = useState(() => new Date());
-
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [servicesMeta, setServicesMeta] = useState<string>("");
-
   const [deals, setDeals] = useState<Deal[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [daily, setDaily] = useState<any>(null);
@@ -53,7 +28,6 @@ export const SignagePage: React.FC = () => {
 
   const svcPerPage = 10;
   const [svcPage, setSvcPage] = useState(0);
-
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -82,7 +56,6 @@ export const SignagePage: React.FC = () => {
   }, [services]);
 
   const currentServices = svcPages[svcPage] || [];
-
   const shownDeals = useMemo(() => {
     const slots = 4;
     const arr: (Deal | null)[] = [];
@@ -99,7 +72,6 @@ export const SignagePage: React.FC = () => {
         fetch("/api/signage/professionals", { cache: "no-store" }).then(r => r.json()),
         fetch("/api/signage/daily", { cache: "no-store" }).then(r => r.json()),
       ]);
-
       setServices(s.services || []);
       setServicesMeta(`Frissítve: ${new Date(s.fetchedAt).toLocaleString("hu-HU")}`);
       setDeals(d.deals || []);
@@ -111,7 +83,6 @@ export const SignagePage: React.FC = () => {
   }
 
   useEffect(() => { loadAll(); }, []);
-
   useEffect(() => {
     const tRefresh = setInterval(loadAll, 60_000);
     const tSvc = setInterval(() => setSvcPage(p => (p + 1) % svcPages.length), 12_000);
@@ -168,14 +139,7 @@ export const SignagePage: React.FC = () => {
               <div className="sgMeta">Videó</div>
             </div>
             <div className="sgVideoWrap">
-              <iframe
-                className="sgVideoFrame"
-                src={YT_EMBED_URL}
-                title="Kleo video"
-                allow="autoplay; encrypted-media; picture-in-picture"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen={false}
-              />
+              <iframe className="sgVideoFrame" src={YT_EMBED_URL} title="Kleo video" allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
             </div>
             <div className="sgVideoFooter">
               <div className="sgPill">Mai akciók: <b>{deals.length || 0}</b></div>
@@ -199,9 +163,7 @@ export const SignagePage: React.FC = () => {
                         <div className="sgDealTitle">{p.title}</div>
                         <div className="sgDealSub">{p.subtitle || ""}</div>
                         <div className="sgDealPrice">{p.price_text || ""}</div>
-                        <div className="sgDealValid">
-                          {p.valid_from || p.valid_to ? `Érv.: ${p.valid_from || "—"} – ${p.valid_to || "—"}` : "Érvényes: ma"}
-                        </div>
+                        <div className="sgDealValid">{p.valid_from || p.valid_to ? `Érv.: ${p.valid_from || "—"} – ${p.valid_to || "—"}` : "Érvényes: ma"}</div>
                       </>
                     ) : (
                       <>

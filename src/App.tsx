@@ -99,6 +99,7 @@ const App: React.FC = () => {
 
         <Routes>
           <Route path="/signage" element={<SignagePage />} />
+
           <Route path="/" element={<HomePage />} />
           <Route path="/salons" element={<SalonsPage />} />
           <Route path="/salons/:id" element={<SalonDetailPage />} />
@@ -111,17 +112,10 @@ const App: React.FC = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
 
-          {/* Webshop listanézet + termék részletek */}
           <Route path="/webshop" element={<WebshopPage />} />
           <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
-
-          {/* Külön kosár oldal */}
           <Route path="/cart" element={<CartPage />} />
-
-          {/* Külön számlázás / fizetés oldal */}
           <Route path="/checkout" element={<CheckoutPage />} />
-
-          {/* minden más URL menjen vissza a Home-ra */}
           <Route path="*" element={<HomePage />} />
         </Routes>
       </MemoryRouter>
