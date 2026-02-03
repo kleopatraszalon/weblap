@@ -1,0 +1,25 @@
+/* Napi akciók – egymás alatt (lista) */
+.sgDealList{
+  padding: 14px 18px 18px 18px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+.sgDealRow{
+  position:relative;
+  display:grid;
+  grid-template-columns: 1fr 260px;
+  gap: 14px;
+  align-items:center;
+  border:1px solid rgba(18,12,8,0.10);
+  border-radius:14px;
+  padding:16px;
+  background: var(--sg-offwhite);
+  overflow:hidden;
+  min-height: 110px;
+}
+.sgDealRowMain{ padding-left: 6px; }
+
+.sgDealsTitleBig{ font-size: 34px !important; }
+.sgDealTitleBig{ font-size: 24px !important; font-weight: 1000; }
+.sgDealRowPriceBig{ font-size: 30px !important; font-weight: 1000; }

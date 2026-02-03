@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./signage.css";
+import "./signageDeals.css";
+import "./signagePros.css";
+import "./signageLayout.css";
 
 type ServiceItem = { id: string; name: string; category: string; durationMin: number | null; price_text: string; priority: number; };
-type Deal = { id: string; title: string; subtitle: string; price_text: string; valid_from: string | null; valid_to: string | null; };
-type Professional = { id: string; name: string; title: string; note: string; available: boolean; priority: number; };
+type Deal = { id: string; title: string; subtitle: string; price_text: string; valid_from: string | null; valid_to: string | null; active?: boolean; priority?: number; };
+type Professional = { id: string; name: string; title: string; note: string; priority: number; is_free?: boolean; available?: boolean; };
 type VideoItem = { id: string; youtube_id: string; title: string; duration_sec: number; priority: number; };
 
 function huDate(d: Date) {
@@ -23,14 +26,20 @@ function shuffle<T>(arr: T[]): T[] {
   }
   return a;
 }
+function isFree(p: Professional): boolean {
+  // Új logika: ha van is_free, azt használjuk; különben fallback az available-re; ha az sincs, szabad
+  return (p.is_free ?? p.available ?? true) === true;
+}
 
 export const SignagePage: React.FC = () => {
   const [clock, setClock] = useState(() => new Date());
+
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [servicesMeta, setServicesMeta] = useState<string>("");
 
   const [deals, setDeals] = useState<Deal[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
+
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [playlist, setPlaylist] = useState<VideoItem[]>([]);
   const [videoIdx, setVideoIdx] = useState(0);
@@ -40,6 +49,7 @@ export const SignagePage: React.FC = () => {
 
   const svcPerPage = 10;
   const [svcPage, setSvcPage] = useState(0);
+
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -68,12 +78,15 @@ export const SignagePage: React.FC = () => {
   }, [services]);
 
   const currentServices = svcPages[svcPage] || [];
+
   const shownDeals = useMemo(() => {
     const slots = 4;
     const arr: (Deal | null)[] = [];
     for (let i = 0; i < slots; i++) arr.push(deals[i] || null);
     return arr;
   }, [deals]);
+
+  const freeCount = useMemo(() => professionals.filter(isFree).length, [professionals]);
 
   const currentVideo = useMemo(() => {
     const list = playlist.length ? playlist : videos;
@@ -92,6 +105,7 @@ export const SignagePage: React.FC = () => {
         fetch("/api/signage/daily", { cache: "no-store" }).then(r => r.json()),
         fetch("/api/signage/videos", { cache: "no-store" }).then(r => r.json()),
       ]);
+
       setServices(s.services || []);
       setServicesMeta(`Frissítve: ${new Date(s.fetchedAt).toLocaleString("hu-HU")}`);
       setDeals(d.deals || []);
@@ -140,7 +154,7 @@ export const SignagePage: React.FC = () => {
         <header className="sgTopbar">
           <div className="sgBrand">
             <img className="sgLogo" src="/images/kleo_logo@2x.png" alt="KLEO" />
-            
+            <div className="sgSubtitle">Szolgáltatások • Napi akciók • Szakemberek</div>
           </div>
           <div className="sgClock">
             <div className="sgDate">{huDate(clock)}</div>
@@ -182,74 +196,83 @@ export const SignagePage: React.FC = () => {
             </div>
             <div className="sgVideoWrap">
               {currentVideo ? (
-                <iframe className="sgVideoFrame" src={makeEmbedUrl(currentVideo.youtube_id)} title="Kleo video" allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
+                <iframe
+                  className="sgVideoFrame"
+                  src={makeEmbedUrl(currentVideo.youtube_id)}
+                  title="Kleo video"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
               ) : (
                 <div className="sgEmpty">Adj hozzá videót az admin felületen.</div>
               )}
             </div>
             <div className="sgVideoFooter">
               <div className="sgPill">Mai akciók: <b>{deals.length || 0}</b></div>
-              <div className="sgPill">Elérhető szakember: <b>{professionals.length || 0}</b></div>
+              <div className="sgPill">Szabad szakember: <b>{freeCount}</b></div>
             </div>
           </section>
 
-          <aside className="sgRight">
+          <aside className="sgRightGrid">
             <section className="sgPanel sgDeals">
               <div className="sgPanelHeader">
-                <h2>Napi akciók</h2>
+                <h2 className="sgDealsTitleBig">Napi akciók</h2>
                 <div className="sgMeta">4 kiemelt ajánlat</div>
               </div>
 
-              <div className="sgDealGrid">
+              <div className="sgDealList">
                 {shownDeals.map((p, idx) => (
-                  <div className="sgDealCard" key={idx}>
+                  <div className="sgDealRow" key={idx}>
                     <div className="sgStripe" />
-                    {p ? (
-                      <>
-                        <div className="sgDealTitle">{p.title}</div>
-                        <div className="sgDealSub">{p.subtitle || ""}</div>
-                        <div className="sgDealPrice">{p.price_text || ""}</div>
-                        <div className="sgDealValid">{p.valid_from || p.valid_to ? `Érv.: ${p.valid_from || "—"} – ${p.valid_to || "—"}` : "Érvényes: ma"}</div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="sgDealTitle">Hamarosan</div>
-                        <div className="sgDealSub">Új napi akció</div>
-                        <div className="sgDealPrice">—</div>
-                        <div className="sgDealValid">Kérdezz a pultnál</div>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="sgPanel sgPros">
-              <div className="sgPanelHeader">
-                <h2>Elérhető szakemberek</h2>
-                <div className="sgMeta">Ma</div>
-              </div>
-
-              <div className="sgProList">
-                {professionals.slice(0, 6).map((p) => (
-                  <div className="sgProRow" key={p.id}>
-                    <div className="sgProName">{p.name}</div>
-                    <div className="sgProMeta">
-                      <span className="sgChip">{p.title || "Szakember"}</span>
-                      {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                    <div className="sgDealRowMain">
+                      <div className="sgDealTitle sgDealTitleBig">{p ? p.title : "Hamarosan"}</div>
+                      <div className="sgDealSub">{p ? (p.subtitle || "") : "Új napi akció"}</div>
                     </div>
+                    <div className="sgDealRowPrice sgDealRowPriceBig">{p ? (p.price_text || "") : "—"}</div>
                   </div>
                 ))}
-                {!professionals.length && <div className="sgEmpty">Jelenleg nincs szabad szakember. Foglalj online.</div>}
               </div>
             </section>
+
+            <div className="sgRightCol">
+              <section className="sgPanel sgPros">
+                <div className="sgPanelHeader">
+                  <h2>Elérhető szakemberek</h2>
+                  <div className="sgMeta">Ma</div>
+                </div>
+
+                <div className="sgProList sgProBig">
+                  {professionals.slice(0, 6).map((p) => {
+                    const free = isFree(p);
+                    return (
+                      <div className="sgProRow sgProRowBig" key={p.id}>
+                        <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                        <div className="sgProMain">
+                          <div className="sgProName sgProNameBig">{p.name}</div>
+                          <div className="sgProMeta">
+                            <span className="sgChip">{p.title || "Szakember"}</span>
+                            {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                            <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
+                              {free ? "Szabad" : "Foglalt"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {!professionals.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
+                </div>
+              </section>
+
+              <div className="sgRightSpacer" />
+            </div>
           </aside>
         </main>
 
         <footer className="sgTicker">
           <div className="sgMarquee">
             Minden ami szépség, csak Neked! • Foglalás: online vagy a pultnál •
-            Testépítés: {daily?.fitness?.text || "A fegyelem az, ami akkor is dolgozik, amikor nincs kedved."}
+            Testépítés: {daily?.fitness?.text || "A fegyelem akkor is dolgozik, amikor a motiváció eltűnik."}
             • Szépségipar: {daily?.beauty?.text || "A konzisztens rutin többet ér, mint a ritka csodamegoldás."}
           </div>
         </footer>

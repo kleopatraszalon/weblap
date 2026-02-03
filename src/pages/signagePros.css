@@ -1,0 +1,39 @@
+/* Szakemberek: nagyobb sor + státusz pötty (zöld/piros) */
+.sgProBig{ gap: 14px; }
+.sgProRowBig{
+  display:flex;
+  gap: 14px;
+  align-items:flex-start;
+  padding: 16px 16px;
+}
+.sgProNameBig{
+  font-size: 22px;
+  font-weight: 1000;
+}
+.sgDot{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  margin-top: 4px;
+  border: 2px solid rgba(18,12,8,0.10);
+}
+.sgDotGreen{ background: #2ecc71; }
+.sgDotRed{ background: #e74c3c; }
+
+.sgStatus{
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 14px;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+.sgStatusFree{
+  color: #1c7c3a;
+  background: rgba(46, 204, 113, 0.10);
+  border-color: rgba(46, 204, 113, 0.35);
+}
+.sgStatusBusy{
+  color: #b00020;
+  background: rgba(231, 76, 60, 0.10);
+  border-color: rgba(231, 76, 60, 0.35);
+}

@@ -1,0 +1,19 @@
+/* Jobb oldal layout – mint a 2. képen */
+.sgRightGrid{
+  display:grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 22px;
+  min-height: 0;
+}
+.sgRightCol{
+  display:flex;
+  flex-direction:column;
+  gap: 22px;
+  min-height: 0;
+}
+.sgRightSpacer{
+  flex: 1;
+  border-radius: 18px;
+  background: #000;
+  box-shadow: var(--sg-shadow);
+}
