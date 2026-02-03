@@ -4,6 +4,7 @@ import "./signage.css";
 type ServiceItem = { id: string; name: string; category: string; durationMin: number | null; price_text: string; priority: number; };
 type Deal = { id: string; title: string; subtitle: string; price_text: string; valid_from: string | null; valid_to: string | null; };
 type Professional = { id: string; name: string; title: string; note: string; available: boolean; priority: number; };
+type VideoItem = { id: string; youtube_id: string; title: string; duration_sec: number; priority: number; };
 
 function huDate(d: Date) {
   return d.toLocaleDateString("hu-HU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -11,18 +12,29 @@ function huDate(d: Date) {
 function huTime(d: Date) {
   return d.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
-
-const YT_ID = "lIgxZbdsr-I";
-const YT_EMBED_URL =
-  `https://www.youtube.com/embed/${YT_ID}` +
-  `?autoplay=1&mute=1&loop=1&playlist=${YT_ID}&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`;
+function makeEmbedUrl(id: string) {
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`;
+}
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export const SignagePage: React.FC = () => {
   const [clock, setClock] = useState(() => new Date());
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [servicesMeta, setServicesMeta] = useState<string>("");
+
   const [deals, setDeals] = useState<Deal[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [playlist, setPlaylist] = useState<VideoItem[]>([]);
+  const [videoIdx, setVideoIdx] = useState(0);
+
   const [daily, setDaily] = useState<any>(null);
   const [err, setErr] = useState<string>("");
 
@@ -63,42 +75,72 @@ export const SignagePage: React.FC = () => {
     return arr;
   }, [deals]);
 
+  const currentVideo = useMemo(() => {
+    const list = playlist.length ? playlist : videos;
+    if (!list.length) return null;
+    const idx = Math.max(0, Math.min(videoIdx, list.length - 1));
+    return list[idx];
+  }, [playlist, videos, videoIdx]);
+
   async function loadAll() {
     try {
       setErr("");
-      const [s, d, p, da] = await Promise.all([
+      const [s, d, p, da, v] = await Promise.all([
         fetch("/api/signage/services", { cache: "no-store" }).then(r => r.json()),
         fetch("/api/signage/deals", { cache: "no-store" }).then(r => r.json()),
         fetch("/api/signage/professionals", { cache: "no-store" }).then(r => r.json()),
         fetch("/api/signage/daily", { cache: "no-store" }).then(r => r.json()),
+        fetch("/api/signage/videos", { cache: "no-store" }).then(r => r.json()),
       ]);
       setServices(s.services || []);
       setServicesMeta(`Frissítve: ${new Date(s.fetchedAt).toLocaleString("hu-HU")}`);
       setDeals(d.deals || []);
       setProfessionals(p.professionals || []);
       setDaily(da);
+      setVideos(v.videos || []);
     } catch (e: any) {
       setErr(String(e?.message || e));
     }
   }
 
   useEffect(() => { loadAll(); }, []);
+
   useEffect(() => {
     const tRefresh = setInterval(loadAll, 60_000);
     const tSvc = setInterval(() => setSvcPage(p => (p + 1) % svcPages.length), 12_000);
     return () => { clearInterval(tRefresh); clearInterval(tSvc); };
   }, [svcPages.length]);
 
+  useEffect(() => {
+    const enabled = (videos || []).filter(v => v.youtube_id);
+    if (!enabled.length) { setPlaylist([]); setVideoIdx(0); return; }
+    setPlaylist(shuffle(enabled));
+    setVideoIdx(0);
+  }, [videos]);
+
+  useEffect(() => {
+    if (!currentVideo) return;
+    const ms = Math.max(10, Number(currentVideo.duration_sec || 60)) * 1000;
+    const t = setTimeout(() => {
+      const list = playlist.length ? playlist : videos;
+      if (!list.length) return;
+      if (videoIdx + 1 >= list.length) {
+        setPlaylist(shuffle(list));
+        setVideoIdx(0);
+      } else {
+        setVideoIdx(videoIdx + 1);
+      }
+    }, ms);
+    return () => clearTimeout(t);
+  }, [currentVideo, playlist, videos, videoIdx]);
+
   return (
     <div className="sgViewport">
       <div className="sgCanvas" ref={rootRef}>
         <header className="sgTopbar">
           <div className="sgBrand">
-            <div className="sgWordmark">
-              <span className="sgWmMain">KLEOPÁTRA</span>
-              <span className="sgWmSub">SZÉPSÉGSZALONOK</span>
-            </div>
-            <div className="sgSubtitle">Szolgáltatások • Napi akciók • Szakemberek</div>
+            <img className="sgLogo" src="/images/kleo_logo@2x.png" alt="KLEO" />
+            
           </div>
           <div className="sgClock">
             <div className="sgDate">{huDate(clock)}</div>
@@ -136,10 +178,14 @@ export const SignagePage: React.FC = () => {
           <section className="sgPanel sgVideo">
             <div className="sgPanelHeader">
               <h2>Kleo Fitness</h2>
-              <div className="sgMeta">Videó</div>
+              <div className="sgMeta">{currentVideo ? (currentVideo.title || currentVideo.youtube_id) : "Nincs videó"}</div>
             </div>
             <div className="sgVideoWrap">
-              <iframe className="sgVideoFrame" src={YT_EMBED_URL} title="Kleo video" allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
+              {currentVideo ? (
+                <iframe className="sgVideoFrame" src={makeEmbedUrl(currentVideo.youtube_id)} title="Kleo video" allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" />
+              ) : (
+                <div className="sgEmpty">Adj hozzá videót az admin felületen.</div>
+              )}
             </div>
             <div className="sgVideoFooter">
               <div className="sgPill">Mai akciók: <b>{deals.length || 0}</b></div>

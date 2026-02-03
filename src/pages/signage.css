@@ -31,20 +31,20 @@
     linear-gradient(180deg, rgba(255,255,255,1), rgba(251,250,248,1));
 }
 
-.sgTopbar{ height:130px; padding:22px 40px; display:flex; justify-content:space-between; align-items:center; background: var(--sg-white); border-bottom: 3px solid var(--sg-gold3); position:relative; z-index:2; }
+.sgTopbar{ height:170px; padding:18px 40px; display:flex; justify-content:space-between; align-items:center; background: var(--sg-white); border-bottom: 3px solid var(--sg-gold3); position:relative; z-index:2; }
 .sgWordmark{ display:flex; flex-direction:column; line-height:1; }
-.sgWmMain{ font-size:52px; font-weight:900; letter-spacing:6px; }
+.sgWmMain{ font-size:72px; font-weight:900; letter-spacing:6px; }
 .sgWmSub{ margin-top:8px; font-size:18px; font-weight:800; letter-spacing:4px; color: var(--sg-gold); }
 .sgSubtitle{ margin-top:10px; font-size:20px; color: var(--sg-ink2); }
 .sgClock{ text-align:right; }
-.sgTime{ font-size:42px; font-weight:900; }
-.sgDate{ font-size:20px; color: var(--sg-ink2); margin-bottom:6px; }
+.sgTime{ font-size:50px; font-weight:900; }
+.sgDate{ font-size:30px; color: var(--sg-ink2); margin-bottom:6px; }
 
 .sgGrid{ flex:1; display:grid; grid-template-columns: 1.05fr 1.20fr 0.95fr; gap:22px; padding:22px 40px; position:relative; z-index:2; min-height:0; }
 .sgPanel{ background: var(--sg-white); border: 1px solid rgba(182,152,97,0.35); border-radius:18px; box-shadow: var(--sg-shadow); overflow:hidden; min-height:0; }
 .sgPanelHeader{ display:flex; justify-content:space-between; align-items:flex-end; gap:14px; padding:16px 18px 12px 18px; border-bottom:1px solid rgba(182,152,97,0.20); }
 .sgPanelHeader h2{ margin:0; font-size:28px; letter-spacing:0.4px; }
-.sgMeta{ font-size:18px; color: var(--sg-ink2); text-align:right; }
+.sgMeta{ font-size:30px; color: var(--sg-ink2); text-align:right; }
 
 .sgServices{ display:flex; flex-direction:column; }
 .sgSvcList{ padding:14px 18px 12px 18px; display:flex; flex-direction:column; gap:10px; overflow:hidden; }
@@ -84,3 +84,17 @@
 
 .sgEmpty{ color: var(--sg-ink2); font-size:18px; padding:12px 18px 16px 18px; }
 .sgError{ position:absolute; right:20px; bottom:86px; padding:10px 12px; border-radius:12px; border:1px solid rgba(236,0,140,0.45); background: rgba(255,255,255,0.88); color: var(--sg-magenta); font-weight:900; z-index:3; }
+.sgLogo{ height: 140px; width:auto; display:block; align-self:flex-end; margin-bottom:6px; }
+
+/* Remove small subtitles under the wordmark so logo stands alone */
+.sgWmSub, .sgSubtitle{ display:none !important; }
+
+/* v2 bigger fonts */
+
+.sgSubtitle{ font-size: 22px !important; }
+.sgPanelHeader h2{ font-size: 30px !important; }
+.sgSvcName{ font-size: 22px !important; font-weight: 900; }
+.sgSvcPrice{ font-size: 20px !important; font-weight: 1000; }
+.sgDealTitle{ font-size: 20px !important; }
+.sgDealPrice{ font-size: 26px !important; }
+.sgTime{ font-size: 44px !important; }
