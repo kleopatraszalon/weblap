@@ -31,6 +31,57 @@ function isFree(p: Professional): boolean {
   return (p.is_free ?? p.available ?? true) === true;
 }
 
+// --- API base (Render + local) ---
+// VITE_API_URL példa: http://localhost:5000  vagy  https://kleoszalon-api-jon.onrender.com
+const ENV_API =
+  (import.meta as any).env?.VITE_API_URL?.replace(/\/$/, "") ||
+  (import.meta as any).env?.VITE_BACKEND_URL?.replace(/\/$/, "") ||
+  "";
+
+function resolveApiOrigin(): string {
+  if (ENV_API) return ENV_API;
+
+  const host = window.location.hostname;
+
+  // Render deploy: frontend -> api (ha nincs env beállítva)
+  if (host === "kleoszalon-frontend.onrender.com") return "https://kleoszalon-api-jon.onrender.com";
+
+  // Local dev: ha a frontend nem proxyzza az /api-t, akkor a backend tipikusan :5000
+  if (host === "localhost" || host === "127.0.0.1") return "http://localhost:5000";
+
+  // Default: ugyanaz a host
+  return window.location.origin;
+}
+
+const API_ORIGIN = resolveApiOrigin().replace(/\/$/, "");
+
+function apiUrl(path: string) {
+  if (!path.startsWith("/")) path = "/" + path;
+  return `${API_ORIGIN}${path}`;
+}
+
+async function fetchJson(path: string) {
+  const url = apiUrl(path);
+  const res = await fetch(url, { cache: "no-store" });
+
+  const ct = (res.headers.get("content-type") || "").toLowerCase();
+  const bodyText = await res.text(); // így tudunk jó hibát írni HTML/üres válasz esetén is
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText} @ ${path} :: ${bodyText.slice(0, 220)}`);
+  }
+  if (!ct.includes("application/json")) {
+    throw new Error(`Non-JSON válasz @ ${path} (content-type: ${ct || "nincs"}) :: ${bodyText.slice(0, 220)}`);
+  }
+  if (!bodyText) return {};
+  try {
+    return JSON.parse(bodyText);
+  } catch (e: any) {
+    throw new Error(`JSON.parse hiba @ ${path} :: ${String(e)} :: ${bodyText.slice(0, 220)}`);
+  }
+}
+
+
 export const SignagePage: React.FC = () => {
   const [clock, setClock] = useState(() => new Date());
 
@@ -51,50 +102,6 @@ export const SignagePage: React.FC = () => {
   const [svcPage, setSvcPage] = useState(0);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
-
-  // API hívások:
-  // - Dev módban a React külön porton fut (pl. :3000/:3001), a backend pedig :5000-on.
-  // - Ha relatív /api/* URL-t hívsz proxy nélkül, a React dev szerver index.html-t (<!doctype ...>) ad vissza,
-  //   és ettől kapsz: "Unexpected token '<' ... not valid JSON".
-  //
-  // Megoldás: állíts be REACT_APP_API_ORIGIN-t (pl. http://localhost:5000),
-  // és minden API hívás ehhez az originhez menjen. Productionben hagyhatod üresen.
-  // 1) Build-time beállítás (Render / local): REACT_APP_API_ORIGIN=https://kleoszalon-api-jon.onrender.com
-  // 2) Fallback: ha a kijelző oldal a frontend domainen fut (onrender), automatikusan a backend onrender domainre megy.
-  const ENV_API_ORIGIN = (process.env.REACT_APP_API_ORIGIN ?? "").replace(/\/$/, "");
-  const AUTO_API_ORIGIN = (() => {
-    try {
-      const host = window.location.hostname;
-      // Frontend static site → backend service
-      if (host === "kleoszalon-frontend.onrender.com") return "https://kleoszalon-api-jon.onrender.com";
-      // Local dev: ha a frontend nem a :5000-on fut, de nincs env beállítva, próbáljuk a :5000-at
-      if ((host === "localhost" || host === "127.0.0.1") && window.location.port !== "5000") {
-        return "http://localhost:5000";
-      }
-    } catch {
-      // ignore
-    }
-    return "";
-  })();
-
-  const API_ORIGIN = ENV_API_ORIGIN || AUTO_API_ORIGIN;
-  const apiUrl = (path: string) => (API_ORIGIN ? `${API_ORIGIN}${path}` : path);
-
-  async function fetchJson(path: string) {
-    const url = apiUrl(path);
-    const res = await fetch(url, { cache: "no-store", credentials: "include" });
-    const text = await res.text();
-
-    if (!res.ok) {
-      throw new Error(`API ${res.status} @ ${url}: ${text.slice(0, 200)}`);
-    }
-    try {
-      return JSON.parse(text);
-    } catch {
-      // tipikusan itt látszik: "<!doctype html>..."
-      throw new Error(`API nem JSON @ ${url}. Első 200 karakter: ${text.slice(0, 200)}`);
-    }
-  }
 
   useEffect(() => {
     const applyScale = () => {
@@ -150,13 +157,12 @@ export const SignagePage: React.FC = () => {
         fetchJson("/api/signage/videos"),
       ]);
 
-      setServices(Array.isArray(s?.services) ? s.services : []);
-      const fetchedAt = s?.fetchedAt ? new Date(s.fetchedAt).toLocaleString("hu-HU") : "";
-      setServicesMeta(fetchedAt ? `Frissítve: ${fetchedAt}` : "");
-      setDeals(Array.isArray(d?.deals) ? d.deals : []);
-      setProfessionals(Array.isArray(p?.professionals) ? p.professionals : []);
+      setServices(s.services || []);
+      setServicesMeta(s?.fetchedAt ? `Frissítve: ${new Date(s.fetchedAt).toLocaleString("hu-HU")}` : "");
+      setDeals(d.deals || []);
+      setProfessionals(p.professionals || []);
       setDaily(da);
-      setVideos(Array.isArray(v?.videos) ? v.videos : []);
+      setVideos(v.videos || []);
     } catch (e: any) {
       setErr(String(e?.message || e));
     }
