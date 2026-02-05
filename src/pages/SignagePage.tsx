@@ -67,6 +67,10 @@ function isFree(p: Professional): boolean {
   return (p.is_free ?? p.available ?? true) === true;
 }
 
+function isAbsUrl(u: string) {
+  return /^https?:\/\//i.test(u);
+}
+
 function pickArray<T>(data: any, keys: string[]): T[] {
   if (Array.isArray(data)) return data as T[];
   for (const k of keys) {
@@ -253,7 +257,9 @@ export const SignagePage: React.FC = () => {
     return arr;
   }, [deals]);
 
-  const freeCount = useMemo(() => professionals.filter(isFree).length, [professionals]);
+  const visiblePros = useMemo(() => professionals.filter((p) => p.show !== false), [professionals]);
+
+  const freeCount = useMemo(() => visiblePros.filter(isFree).length, [visiblePros]);
 
   const currentVideo = useMemo(() => {
     const list = playlist.length ? playlist : videos;
@@ -354,7 +360,7 @@ export const SignagePage: React.FC = () => {
           </div>
         </header>
 
-        <main className="sgGrid">
+        <main className="sgGrid sgGrid5">
           <section className="sgPanel sgServices">
             <div className="sgPanelHeader">
               <h2>Szolgáltatások</h2>
@@ -380,6 +386,42 @@ export const SignagePage: React.FC = () => {
                 Oldal: {svcPage + 1}/{svcPages.length}
               </div>
               <div className="sgSite">kleoszalonok.hu</div>
+            </div>
+          </section>
+
+          {/* PROFESSIONALS (bal oszlop) */}
+          <section className="sgPanel sgPros">
+            <div className="sgPanelHeader">
+              <h2>Elérhető szakemberek</h2>
+              <div className="sgMeta">Ma</div>
+            </div>
+
+            <div className="sgProList sgProBig">
+              {visiblePros.slice(0, 4).map((p) => {
+                const free = isFree(p);
+                const raw = String(p.photo_url || "").trim();
+                const photoSrc = raw
+                  ? isAbsUrl(raw)
+                    ? raw
+                    : apiUrl(raw.startsWith("/") ? raw : `/${raw}`)
+                  : "";
+                return (
+                  <div className="sgProRow sgProRowBig" key={p.id}>
+                    <div className="sgProLeft">
+                      {photoSrc ? <img className="sgProPhoto" src={photoSrc} alt={p.name} /> : <div className="sgProPhoto sgProPhotoPh" />}
+                    </div>
+                    <div className="sgProMain">
+                      <div className="sgProName sgProNameBig">{p.name}</div>
+                      <div className="sgProMeta">
+                        <span className="sgChip">{p.title || "Szakember"}</span>
+                        {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>{free ? "Szabad" : "Foglalt"}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              {!visiblePros.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
             </div>
           </section>
 
@@ -411,60 +453,62 @@ export const SignagePage: React.FC = () => {
             </div>
           </section>
 
-          <aside className="sgRightGrid">
-            <section className="sgPanel sgDeals">
-              <div className="sgPanelHeader">
-                <h2 className="sgDealsTitleBig">Napi akciók</h2>
-                <div className="sgMeta">4 kiemelt ajánlat</div>
-              </div>
-
-              <div className="sgDealList">
-                {shownDeals.map((p, idx) => (
-                  <div className="sgDealRow" key={idx}>
-                    <div className="sgStripe" />
-                    <div className="sgDealRowMain">
-                      <div className="sgDealTitle sgDealTitleBig">{p ? p.title : "Hamarosan"}</div>
-                      <div className="sgDealSub">{p ? p.subtitle || "" : "Új napi akció"}</div>
-                    </div>
-                    <div className="sgDealRowPrice sgDealRowPriceBig">{p ? p.price_text || "" : "—"}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <div className="sgRightCol">
-              <section className="sgPanel sgPros">
-                <div className="sgPanelHeader">
-                  <h2>Elérhető szakemberek</h2>
-                  <div className="sgMeta">Ma</div>
-                </div>
-
-                <div className="sgProList sgProBig">
-                  {professionals.slice(0, 6).map((p) => {
-                    const free = isFree(p);
-                    return (
-                      <div className="sgProRow sgProRowBig" key={p.id}>
-                        <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
-                        <div className="sgProMain">
-                          <div className="sgProName sgProNameBig">{p.name}</div>
-                          <div className="sgProMeta">
-                            <span className="sgChip">{p.title || "Szakember"}</span>
-                            {p.note ? <span className="sgChipLite">{p.note}</span> : null}
-                            <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
-                              {free ? "Szabad" : "Foglalt"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {!professionals.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
-                </div>
-              </section>
-
-              <div className="sgRightSpacer" />
+          {/* DEALS */}
+          <section className="sgPanel sgDeals">
+            <div className="sgPanelHeader">
+              <h2 className="sgDealsTitleBig">Napi akciók</h2>
+              <div className="sgMeta">4 kiemelt ajánlat</div>
             </div>
-          </aside>
+
+            <div className="sgDealList">
+              {shownDeals.map((p, idx) => (
+                <div className="sgDealRow" key={idx}>
+                  <div className="sgStripe" />
+                  <div className="sgDealRowMain">
+                    <div className="sgDealTitle sgDealTitleBig">{p ? p.title : "Hamarosan"}</div>
+                    <div className="sgDealSub">{p ? p.subtitle || "" : "Új napi akció"}</div>
+                  </div>
+                  <div className="sgDealRowPrice sgDealRowPriceBig">{p ? p.price_text || "" : "—"}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* PROFESSIONALS (jobb oszlop) */}
+          <section className="sgPanel sgPros">
+            <div className="sgPanelHeader">
+              <h2>Elérhető szakemberek</h2>
+              <div className="sgMeta">Ma</div>
+            </div>
+
+            <div className="sgProList sgProBig">
+              {visiblePros.slice(4, 8).map((p) => {
+                const free = isFree(p);
+                const raw = String(p.photo_url || "").trim();
+                const photoSrc = raw
+                  ? isAbsUrl(raw)
+                    ? raw
+                    : apiUrl(raw.startsWith("/") ? raw : `/${raw}`)
+                  : "";
+                return (
+                  <div className="sgProRow sgProRowBig" key={p.id}>
+                    <div className="sgProLeft">
+                      {photoSrc ? <img className="sgProPhoto" src={photoSrc} alt={p.name} /> : <div className="sgProPhoto sgProPhotoPh" />}
+                    </div>
+                    <div className="sgProMain">
+                      <div className="sgProName sgProNameBig">{p.name}</div>
+                      <div className="sgProMeta">
+                        <span className="sgChip">{p.title || "Szakember"}</span>
+                        {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>{free ? "Szabad" : "Foglalt"}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              {!visiblePros.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
+            </div>
+          </section>
         </main>
 
         <footer className="sgTicker">
