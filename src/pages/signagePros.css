@@ -1,35 +1,32 @@
-/* Szakemberek: nagyobb sor + státusz pötty (zöld/piros) */
-.sgProBig{ gap: 14px; }
+/* Szakemberek: eredetibb (nagyobb) méret, 5-5 megjelenítéshez. */
+.sgProBig{ gap: 2px; }
+
 .sgProRowBig{
   display:flex;
-  gap: 14px;
-  align-items:flex-start;
-  padding: 16px 16px;
+  gap: 4px;
+  align-items:center; /* fotó legyen középen */
+  padding: 1px 1px;
 }
 
-.sgProLeft{ width: 92px; flex: 0 0 92px; }
-.sgProPhoto{
-  width: 92px;
-  height: 92px;
-  border-radius: 14px;
-  object-fit: cover;
-  border: 1px solid rgba(182,152,97,0.28);
-  box-shadow: 0 10px 18px rgba(18,12,8,0.10);
-  background: #fff;
-}
-.sgProPhotoPh{
-  background: linear-gradient(135deg, rgba(182,152,97,0.18), rgba(236,0,140,0.08));
-}
 .sgProNameBig{
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 1000;
+  line-height: 1.05;
 }
-/* régi pötty stílus (ha még használod máshol) */
+
+.sgProAvatar{
+  width: 130px;
+  height: 130px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
 .sgDot{
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  margin-top: 4px;
   border: 2px solid rgba(18,12,8,0.10);
 }
 .sgDotGreen{ background: #2ecc71; }
@@ -41,6 +38,7 @@
   font-weight: 900;
   font-size: 14px;
   border: 1px solid rgba(0,0,0,0.12);
+  white-space: nowrap;
 }
 .sgStatusFree{
   color: #1c7c3a;

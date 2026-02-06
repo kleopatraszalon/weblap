@@ -1,10 +1,19 @@
-/* 5 oszlopos signage layout – a minta kép szerint:
-   Szolgáltatások | Szakemberek | Videó | Napi akciók | Szakemberek
-*/
-
-.sgGrid5{
-  grid-template-columns: 1.05fr 0.85fr 2.10fr 1.05fr 0.85fr;
+/* Jobb oldal layout – mint a 2. képen */
+.sgRightGrid{
+  display:grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 22px;
+  min-height: 0;
 }
-
-/* A két szakember panel legyen kicsit sűrűbb, hogy 4-4 ember kényelmesen kiférjen */
-.sgPros .sgPanelHeader h2{ font-size: 28px; }
+.sgRightCol{
+  display:flex;
+  flex-direction:column;
+  gap: 22px;
+  min-height: 0;
+}
+.sgRightSpacer{
+  flex: 1;
+  border-radius: 18px;
+  background: #000;
+  box-shadow: var(--sg-shadow);
+}

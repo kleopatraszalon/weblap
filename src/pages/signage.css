@@ -40,7 +40,18 @@
 .sgTime{ font-size:50px; font-weight:900; }
 .sgDate{ font-size:30px; color: var(--sg-ink2); margin-bottom:6px; }
 
-.sgGrid{ flex:1; display:grid; grid-template-columns: 1.05fr 1.20fr 0.95fr; gap:22px; padding:22px 40px; position:relative; z-index:2; min-height:0; }
+.sgGrid{ flex:1; display:grid; grid-template-columns: 1fr 1fr 2.65fr 1fr 1fr; gap:22px; padding:22px 40px; position:relative; z-index:2; min-height:0; }
+
+/* Időjárás blokk a logó és az óra között */
+.sgWeather{ flex:1; display:flex; align-items:center; justify-content:center; min-width: 980px; }
+.sgWxRow{ display:flex; gap:18px; align-items:center; }
+.sgWxDay{ width: 150px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 12px 14px; border-radius: 20px; background: rgba(255,255,255,0.64); border: 1px solid rgba(0,0,0,0.06); }
+.sgWxDow{ font-weight: 1000; font-size: 20px; opacity:0.90; }
+.sgWxIcon{ font-size: 44px; line-height: 44px; margin: 4px 0; }
+.sgWxTemp{ display:flex; gap:12px; font-weight: 1000; font-size: 20px; }
+.sgWxMax{ opacity:0.95; }
+.sgWxMin{ opacity:0.55; }
+.sgWxEmpty{ opacity:0.6; font-weight: 800; }
 .sgPanel{ background: var(--sg-white); border: 1px solid rgba(182,152,97,0.35); border-radius:18px; box-shadow: var(--sg-shadow); overflow:hidden; min-height:0; }
 .sgPanelHeader{ display:flex; justify-content:space-between; align-items:flex-end; gap:14px; padding:16px 18px 12px 18px; border-bottom:1px solid rgba(182,152,97,0.20); }
 .sgPanelHeader h2{ margin:0; font-size:28px; letter-spacing:0.4px; }
@@ -91,7 +102,7 @@
 
 /* v2 bigger fonts */
 
-.sgSubtitle{ font-size: 22px !important; }
+.sgSubtitle{ font-size: 40px !important; }
 .sgPanelHeader h2{ font-size: 30px !important; }
 .sgSvcName{ font-size: 22px !important; font-weight: 900; }
 .sgSvcPrice{ font-size: 20px !important; font-weight: 1000; }

@@ -45,11 +45,39 @@ type VideoItem = {
   enabled?: boolean | null;
 };
 
+type ForecastDay = {
+  date: string;
+  tMax: number;
+  tMin: number;
+  code: number;
+};
+
+type TickerQuote = { text: string; author?: string };
+
 function huDate(d: Date) {
   return d.toLocaleDateString("hu-HU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 }
 function huTime(d: Date) {
   return d.toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+function huDowShort(isoDate: string) {
+  const d = new Date(isoDate + "T00:00:00");
+  return d.toLocaleDateString("hu-HU", { weekday: "short" });
+}
+
+function wxEmoji(code: number) {
+  // Open-Meteo weathercode (WMO) grouped very simply for signage.
+  if (code === 0) return "☀️";
+  if (code === 1 || code === 2) return "🌤️";
+  if (code === 3) return "☁️";
+  if (code === 45 || code === 48) return "🌫️";
+  if ([51, 53, 55, 56, 57].includes(code)) return "🌦️";
+  if ([61, 63, 65, 66, 67].includes(code)) return "🌧️";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "🌨️";
+  if ([80, 81, 82].includes(code)) return "🌧️";
+  if ([95, 96, 99].includes(code)) return "⛈️";
+  return "🌥️";
 }
 function makeEmbedUrl(id: string) {
   return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`;
@@ -68,7 +96,7 @@ function isFree(p: Professional): boolean {
 }
 
 function isAbsUrl(u: string) {
-  return /^https?:\/\//i.test(u);
+  return /^https?:\/\//i.test(String(u || ""));
 }
 
 function pickArray<T>(data: any, keys: string[]): T[] {
@@ -184,10 +212,19 @@ export const SignagePage: React.FC = () => {
   const [videoIdx, setVideoIdx] = useState(0);
 
   const [daily, setDaily] = useState<any>(null);
+  const [forecast, setForecast] = useState<ForecastDay[]>([]);
+  const [tickerQuotes, setTickerQuotes] = useState<TickerQuote[]>([]);
+  const [tickerIdx, setTickerIdx] = useState(0);
   const [err, setErr] = useState<string>("");
 
   const svcPerPage = 10;
   const [svcPage, setSvcPage] = useState(0);
+
+  // Szakemberek rotáció: mindig 5–5 látszik, 60 mp-enként léptetünk,
+  // hogy aki eddig nem volt képernyőn, az is sorra kerüljön.
+  const PRO_PER_COL = 5;
+  const PRO_PAGE_SIZE = PRO_PER_COL * 2; // 10
+  const [proStart, setProStart] = useState(0);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -257,9 +294,26 @@ export const SignagePage: React.FC = () => {
     return arr;
   }, [deals]);
 
+  const freeCount = useMemo(() => professionals.filter(isFree).length, [professionals]);
+
   const visiblePros = useMemo(() => professionals.filter((p) => p.show !== false), [professionals]);
 
-  const freeCount = useMemo(() => visiblePros.filter(isFree).length, [visiblePros]);
+  function takeWrap<T>(list: T[], start: number, count: number): T[] {
+    if (!list.length) return [];
+    const out: T[] = [];
+    for (let i = 0; i < count; i++) out.push(list[(start + i) % list.length]);
+    return out;
+  }
+
+  const proWindow = useMemo(() => {
+    // Mindig 10 fő (5 bal + 5 jobb). Ha kevesebb van, akkor annyit mutatunk, amennyi van.
+    const total = visiblePros.length;
+    const want = Math.min(PRO_PAGE_SIZE, total);
+    return takeWrap(visiblePros, proStart, want);
+  }, [visiblePros, proStart]);
+
+  const prosLeft = useMemo(() => proWindow.slice(0, Math.min(PRO_PER_COL, proWindow.length)), [proWindow]);
+  const prosRight = useMemo(() => proWindow.slice(Math.min(PRO_PER_COL, proWindow.length)), [proWindow]);
 
   const currentVideo = useMemo(() => {
     const list = playlist.length ? playlist : videos;
@@ -283,7 +337,18 @@ export const SignagePage: React.FC = () => {
 
       const svcArr = pickArray<any>(s, ["services", "items", "rows"]).map(mapService).filter((x) => x.name);
       const dealArr = pickArray<any>(d, ["deals", "items", "rows"]).map(mapDeal).filter((x) => x.title);
-      const proArr = pickArray<any>(p, ["professionals", "items", "rows"]).map(mapPro).filter((x) => x.name);
+      const proArrRaw = pickArray<any>(p, ["professionals", "items", "rows"]).map(mapPro).filter((x) => x.name);
+      // Fontos: a photo_url jellemzően "/uploads/..." -> ezt API originre kell feloldani,
+      // különben a kijelző (weblap) saját domainjén keresi a fájlt és nem fog megjelenni.
+      const proArr = proArrRaw.map((x) => {
+        const raw = String(x.photo_url || "").trim();
+        const photo_url = raw
+          ? isAbsUrl(raw)
+            ? raw
+            : apiUrl(raw.startsWith("/") ? raw : `/${raw}`)
+          : null;
+        return { ...x, photo_url };
+      });
       const vidArr = pickArray<any>(v, ["videos", "items", "rows"]).map(mapVideo).filter((x) => x.youtube_id);
 
       const fetchedAt = s?.fetchedAt ? new Date(s.fetchedAt).toLocaleString("hu-HU") : "";
@@ -310,14 +375,96 @@ export const SignagePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 5 napos időjárás (Magyarország – Budapest koordináták; átírható igény szerint)
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadWeather() {
+      try {
+        const lat = 47.4979;
+        const lon = 19.0402;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FBudapest&forecast_days=5`;
+        const r = await fetch(url);
+        if (!r.ok) throw new Error("Weather API hiba");
+        const j = await r.json();
+
+        const time: string[] = j?.daily?.time || [];
+        const w: number[] = j?.daily?.weathercode || [];
+        const tmax: number[] = j?.daily?.temperature_2m_max || [];
+        const tmin: number[] = j?.daily?.temperature_2m_min || [];
+
+        const out: ForecastDay[] = time.slice(0, 5).map((date, i) => ({
+          date,
+          code: Number(w[i] ?? 0),
+          tMax: Number(tmax[i] ?? 0),
+          tMin: Number(tmin[i] ?? 0),
+        }));
+
+        if (!cancelled) setForecast(out);
+      } catch {
+        // csendes hiba: a signage menjen akkor is, ha az időjárás nem elérhető
+        if (!cancelled) setForecast([]);
+      }
+    }
+
+    loadWeather();
+    const t = setInterval(loadWeather, 30 * 60_000); // 30 perc
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
+
+  // Citatum.hu (proxy) – idézetek a rózsaszín tickerbe
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTicker() {
+      try {
+        const q = "szépség,szépségipar,kozmetika,edzés,fitness,Arnold Schwarzenegger";
+        const j = await fetchJson(`/api/signage/citatum?topics=${encodeURIComponent(q)}&limit=18`);
+        const arr = pickArray<any>(j, ["quotes", "items", "rows"])
+          .map((x) => ({ text: String(x?.text ?? "").trim(), author: String(x?.author ?? "").trim() || undefined }))
+          .filter((x) => x.text.length >= 10);
+        if (!cancelled) setTickerQuotes(arr);
+      } catch {
+        if (!cancelled) setTickerQuotes([]);
+      }
+    }
+
+    loadTicker();
+    const t = setInterval(loadTicker, 60 * 60_000); // 60 perc
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!tickerQuotes.length) return;
+    const t = setInterval(() => setTickerIdx((i) => (i + 1) % tickerQuotes.length), 12_000);
+    return () => clearInterval(t);
+  }, [tickerQuotes.length]);
+
   useEffect(() => {
     const tRefresh = setInterval(loadAll, 60_000);
     const tSvc = setInterval(() => setSvcPage((p) => (p + 1) % svcPages.length), 12_000);
+
+    // 60 mp-enként léptetjük a szakembereket 10-es blokkokban (5 bal + 5 jobb).
+    const tPros = setInterval(() => {
+      setProStart((s) => {
+        const total = visiblePros.length;
+        if (total <= PRO_PAGE_SIZE) return 0; // nincs mit rotálni
+        return (s + PRO_PAGE_SIZE) % total;
+      });
+    }, 60_000);
+
     return () => {
       clearInterval(tRefresh);
       clearInterval(tSvc);
+      clearInterval(tPros);
     };
-  }, [svcPages.length]);
+  }, [svcPages.length, visiblePros.length]);
 
   useEffect(() => {
     const enabled = (videos || []).filter((v) => v.youtube_id);
@@ -354,13 +501,33 @@ export const SignagePage: React.FC = () => {
             <img className="sgLogo" src="/images/kleo_logo@2x.png" alt="KLEO" />
             <div className="sgSubtitle">Szolgáltatások • Napi akciók • Szakemberek</div>
           </div>
+
+          <div className="sgWeather" aria-label="Időjárás előrejelzés">
+            {forecast.length ? (
+              <div className="sgWxRow">
+                {forecast.map((d) => (
+                  <div className="sgWxDay" key={d.date}>
+                    <div className="sgWxDow">{huDowShort(d.date)}</div>
+                    <div className="sgWxIcon">{wxEmoji(d.code)}</div>
+                    <div className="sgWxTemp">
+                      <span className="sgWxMax">{Math.round(d.tMax)}°</span>
+                      <span className="sgWxMin">{Math.round(d.tMin)}°</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="sgWxEmpty">Időjárás: ...</div>
+            )}
+          </div>
+
           <div className="sgClock">
             <div className="sgDate">{huDate(clock)}</div>
             <div className="sgTime">{huTime(clock)}</div>
           </div>
         </header>
 
-        <main className="sgGrid sgGrid5">
+        <main className="sgGrid">
           <section className="sgPanel sgServices">
             <div className="sgPanelHeader">
               <h2>Szolgáltatások</h2>
@@ -389,33 +556,27 @@ export const SignagePage: React.FC = () => {
             </div>
           </section>
 
-          {/* PROFESSIONALS (bal oszlop) */}
-          <section className="sgPanel sgPros">
+          <section className="sgPanel sgPros sgProsLeft">
             <div className="sgPanelHeader">
               <h2>Elérhető szakemberek</h2>
               <div className="sgMeta">Ma</div>
             </div>
 
             <div className="sgProList sgProBig">
-              {visiblePros.slice(0, 4).map((p) => {
+              {prosLeft.map((p) => {
                 const free = isFree(p);
-                const raw = String(p.photo_url || "").trim();
-                const photoSrc = raw
-                  ? isAbsUrl(raw)
-                    ? raw
-                    : apiUrl(raw.startsWith("/") ? raw : `/${raw}`)
-                  : "";
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    <div className="sgProLeft">
-                      {photoSrc ? <img className="sgProPhoto" src={photoSrc} alt={p.name} /> : <div className="sgProPhoto sgProPhotoPh" />}
-                    </div>
+                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
+                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
                         <span className="sgChip">{p.title || "Szakember"}</span>
                         {p.note ? <span className="sgChipLite">{p.note}</span> : null}
-                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>{free ? "Szabad" : "Foglalt"}</span>
+                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
+                          {free ? "Szabad" : "Foglalt"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -453,7 +614,6 @@ export const SignagePage: React.FC = () => {
             </div>
           </section>
 
-          {/* DEALS */}
           <section className="sgPanel sgDeals">
             <div className="sgPanelHeader">
               <h2 className="sgDealsTitleBig">Napi akciók</h2>
@@ -474,33 +634,27 @@ export const SignagePage: React.FC = () => {
             </div>
           </section>
 
-          {/* PROFESSIONALS (jobb oszlop) */}
-          <section className="sgPanel sgPros">
+          <section className="sgPanel sgPros sgProsRight">
             <div className="sgPanelHeader">
               <h2>Elérhető szakemberek</h2>
               <div className="sgMeta">Ma</div>
             </div>
 
             <div className="sgProList sgProBig">
-              {visiblePros.slice(4, 8).map((p) => {
+              {prosRight.map((p) => {
                 const free = isFree(p);
-                const raw = String(p.photo_url || "").trim();
-                const photoSrc = raw
-                  ? isAbsUrl(raw)
-                    ? raw
-                    : apiUrl(raw.startsWith("/") ? raw : `/${raw}`)
-                  : "";
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    <div className="sgProLeft">
-                      {photoSrc ? <img className="sgProPhoto" src={photoSrc} alt={p.name} /> : <div className="sgProPhoto sgProPhotoPh" />}
-                    </div>
+                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
+                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
                         <span className="sgChip">{p.title || "Szakember"}</span>
                         {p.note ? <span className="sgChipLite">{p.note}</span> : null}
-                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>{free ? "Szabad" : "Foglalt"}</span>
+                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
+                          {free ? "Szabad" : "Foglalt"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -513,9 +667,22 @@ export const SignagePage: React.FC = () => {
 
         <footer className="sgTicker">
           <div className="sgMarquee">
-            Minden ami szépség, csak Neked! • Foglalás: online vagy a pultnál • Testépítés:{" "}
-            {daily?.fitness?.text || "A fegyelem akkor is dolgozik, amikor a motiváció eltűnik."} • Szépségipar:{" "}
-            {daily?.beauty?.text || "A konzisztens rutin többet ér, mint a ritka csodamegoldás."}
+            {tickerQuotes.length ? (
+              <>
+                {tickerQuotes[tickerIdx]?.text}
+                {tickerQuotes[tickerIdx]?.author ? ` — ${tickerQuotes[tickerIdx]?.author}` : ""}
+                {"  •  "}
+                {tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.text}
+                {tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.author
+                  ? ` — ${tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.author}`
+                  : ""}
+              </>
+            ) : (
+              <>
+                Szépség • Kozmetika • Edzés • Motiváció • {daily?.fitness?.text || "A fegyelem akkor is dolgozik, amikor a motiváció eltűnik."} •{" "}
+                {daily?.beauty?.text || "A konzisztens rutin többet ér, mint a ritka csodamegoldás."}
+              </>
+            )}
           </div>
         </footer>
 
