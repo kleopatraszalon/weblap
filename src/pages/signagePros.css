@@ -1,9 +1,9 @@
 /* Szakemberek: eredetibb (nagyobb) méret, 5-5 megjelenítéshez. */
-.sgProBig{ gap: 2px; }
+.sgProBig{ gap: 1px; }
 
 .sgProRowBig{
   display:flex;
-  gap: 4px;
+  gap: 15px;
   align-items:center; /* fotó legyen középen */
   padding: 1px 1px;
 }

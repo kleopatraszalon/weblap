@@ -45,6 +45,27 @@ type VideoItem = {
   enabled?: boolean | null;
 };
 
+
+type FlashPromo = {
+  id: string;
+  title: string;
+  body: string;
+  start_at?: string | null;
+  end_at?: string | null;
+  priority?: number | null;
+};
+
+type NamedayPayload = {
+  ok?: boolean;
+  date: string;
+  names: string[];
+  template?: string;
+  message: string;
+  fetchedAt?: string;
+  source?: string;
+};
+
+
 type ForecastDay = {
   date: string;
   tMax: number;
@@ -171,7 +192,10 @@ function resolveApiOrigin(): string {
   // Renderen a signage kijelző (weblap) általában MÁS domainen fut, mint az API,
   // ezért itt az ENV a legbiztosabb megoldás: VITE_API_ORIGIN=https://<api-host>
   const env: any = (import.meta as any).env || {};
-  const fromEnv = normalizeOrigin(env.VITE_API_ORIGIN || env.VITE_API_URL || env.VITE_BACKEND_URL || "");
+  const envRaw = normalizeOrigin(env.VITE_API_ORIGIN || env.VITE_API_URL || env.VITE_BACKEND_URL || "");
+  const fromEnv = envRaw.includes("kleoszalon-api-jon.onrender.com")
+    ? "https://kleoszalon-api-1.onrender.com"
+    : envRaw;
   if (fromEnv) return fromEnv;
 
   // Auto fallback:
@@ -182,7 +206,7 @@ function resolveApiOrigin(): string {
     // és NEM az API service vagyunk, akkor alapértelmezett API hostra menjünk.
     // (Ha nálad nem ez az API domain, állítsd be VITE_API_ORIGIN-t Renderen!)
     if (host.endsWith(".onrender.com") && !host.startsWith("kleoszalon-api")) {
-      return "https://kleoszalon-api-jon.onrender.com";
+      return "https://kleoszalon-api-1.onrender.com";
     }
 
     // 2) Local dev: a backend tipikusan :5000
@@ -216,6 +240,8 @@ export const SignagePage: React.FC = () => {
   const [tickerQuotes, setTickerQuotes] = useState<TickerQuote[]>([]);
   const [tickerIdx, setTickerIdx] = useState(0);
   const [err, setErr] = useState<string>("");
+  const [flash, setFlash] = useState<FlashPromo | null>(null);
+  const [nameday, setNameday] = useState<NamedayPayload | null>(null);
 
   const svcPerPage = 10;
   const [svcPage, setSvcPage] = useState(0);
@@ -259,6 +285,101 @@ export const SignagePage: React.FC = () => {
       throw new Error(`API JSON parse hiba @ ${url}. Első 220 karakter: ${text.slice(0, 220)}`);
     }
   }
+
+  function AutoScrollY(props: { text: string; height: number; className?: string }) {
+  const { text, height, className } = props;
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [vars, setVars] = useState<{ overflow: number; dur: number } | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const inner = el.firstElementChild as HTMLElement | null;
+    if (!inner) return;
+
+    const measure = () => {
+      const overflow = Math.max(0, inner.scrollHeight - el.clientHeight);
+      // ~10 px/sec, olvashatóan lassú
+      const dur = overflow > 0 ? Math.max(6, overflow / 10) : 0;
+      setVars(overflow > 0 ? { overflow, dur } : null);
+    };
+
+    const t = window.setTimeout(measure, 30);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("resize", measure);
+    };
+  }, [text, height]);
+
+  return (
+    <div
+      ref={ref}
+      className={`sgAutoScrollY ${vars ? "isOverflow" : ""} ${className || ""}`}
+      style={{ height }}
+    >
+      <div
+        className="sgAutoScrollY__inner"
+        style={
+          vars
+            ? ({
+                ["--sgScrollY" as any]: `${vars.overflow}px`,
+                ["--sgScrollDur" as any]: `${vars.dur}s`,
+              } as any)
+            : undefined
+        }
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
+
+
+  function AutoMarqueeX(props: { text: string; className?: string }) {
+  const { text, className } = props;
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [vars, setVars] = useState<{ overflow: number; dur: number } | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const inner = el.firstElementChild as HTMLElement | null;
+    if (!inner) return;
+
+    const measure = () => {
+      const overflow = Math.max(0, inner.scrollWidth - el.clientWidth);
+      // ~60 px/sec
+      const dur = overflow > 0 ? Math.max(10, overflow / 60) : 0;
+      setVars(overflow > 0 ? { overflow, dur } : null);
+    };
+
+    const t = window.setTimeout(measure, 30);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("resize", measure);
+    };
+  }, [text]);
+
+  return (
+    <div ref={ref} className={`sgMarqueeX ${vars ? "isOverflow" : ""} ${className || ""}`}>
+      <div
+        className="sgMarqueeX__inner"
+        style={
+          vars
+            ? ({
+                ["--sgMarqueeX" as any]: `${vars.overflow}px`,
+                ["--sgMarqueeDur" as any]: `${vars.dur}s`,
+              } as any)
+            : undefined
+        }
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
 
   useEffect(() => {
     const applyScale = () => {
@@ -365,6 +486,22 @@ export const SignagePage: React.FC = () => {
 
       // videos: enabled
       setVideos(vidArr.filter((x) => x.enabled !== false).sort((a, b) => Number(a.priority ?? 0) - Number(b.priority ?? 0)));
+
+      // Extra: villám akció + névnap (hibára toleráns)
+      try {
+        const r = await fetchJson("/api/signage/flash");
+        setFlash(r?.flash ?? null);
+      } catch {
+        setFlash(null);
+      }
+
+      try {
+        const r = await fetchJson("/api/signage/nameday");
+        if (r?.message) setNameday(r);
+      } catch {
+        setNameday(null);
+      }
+
     } catch (e: any) {
       setErr(String(e?.message || e));
     }
@@ -502,6 +639,18 @@ export const SignagePage: React.FC = () => {
             <div className="sgSubtitle">Szolgáltatások • Napi akciók • Szakemberek</div>
           </div>
 
+          <div className="sgInfoBox sgFlashBox">
+            <div className="sgInfoLabel">⚡ Villám akció</div>
+            {flash ? (
+              <>
+                <div className="sgInfoTitle">{flash.title}</div>
+                <AutoMarqueeX className="sgInfoBody" text={flash.body} />
+              </>
+            ) : (
+              <div className="sgInfoBody sgInfoBody--muted">Nincs aktív villám akció.</div>
+            )}
+          </div>
+
           <div className="sgWeather" aria-label="Időjárás előrejelzés">
             {forecast.length ? (
               <div className="sgWxRow">
@@ -521,6 +670,15 @@ export const SignagePage: React.FC = () => {
             )}
           </div>
 
+          <div className="sgInfoBox sgNamedayBox">
+            <div className="sgInfoLabel">🎉 Névnap</div>
+            {nameday?.message ? (
+              <AutoMarqueeX className="sgInfoBody" text={nameday.message} />
+            ) : (
+              <div className="sgInfoBody sgInfoBody--muted">Névnap: ...</div>
+            )}
+          </div>
+
           <div className="sgClock">
             <div className="sgDate">{huDate(clock)}</div>
             <div className="sgTime">{huTime(clock)}</div>
@@ -530,25 +688,30 @@ export const SignagePage: React.FC = () => {
         <main className="sgGrid">
           <section className="sgPanel sgServices">
             <div className="sgPanelHeader">
-              <h2>Szolgáltatások</h2>
+              <h2>HETI AKCIÓINK</h2>
               <div className="sgMeta">{servicesMeta}</div>
             </div>
 
-            <div className="sgSvcList">
-              {currentServices.map((s) => (
-                <div className="sgSvcRow" key={s.id}>
-                  <div className="sgSvcName">{s.name}</div>
-                  <div className="sgSvcMeta">
-                    <span className="sgChip">{s.category || ""}</span>
-                    {s.durationMin ? <span className="sgChipLite">{s.durationMin} perc</span> : null}
-                  </div>
-                  <div className="sgSvcPrice">{s.price_text || ""}</div>
-                </div>
-              ))}
-              {!services.length && <div className="sgEmpty">Nincs megjeleníthető szolgáltatás.</div>}
-            </div>
+            
+<div className="sgSvcList">
+  {currentServices.map((s) => (
+    <div className="sgSvcItem" key={s.id}>
+      <div className="sgSvcTitleRow">
+        <div className="sgSvcTitle">{s.name}</div>
+        {s.price_text ? <div className="sgSvcPrice">{s.price_text}</div> : null}
+      </div>
 
-            <div className="sgFooter">
+      {s.category ? (
+        <AutoScrollY className="sgSvcDesc" height={54} text={String(s.category)} />
+      ) : (
+        <div className="sgSvcDesc sgSvcDesc--muted">—</div>
+      )}
+    </div>
+  ))}
+  {!services.length && <div className="sgEmpty">Nincs megjeleníthető szolgáltatás.</div>}
+</div>
+
+<div className="sgFooter">
               <div className="sgHint">
                 Oldal: {svcPage + 1}/{svcPages.length}
               </div>
@@ -558,7 +721,7 @@ export const SignagePage: React.FC = () => {
 
           <section className="sgPanel sgPros sgProsLeft">
             <div className="sgPanelHeader">
-              <h2>Elérhető szakemberek</h2>
+              <h2>Elérhető szakembereink</h2>
               <div className="sgMeta">Ma</div>
             </div>
 
@@ -573,10 +736,8 @@ export const SignagePage: React.FC = () => {
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
                         <span className="sgChip">{p.title || "Szakember"}</span>
-                        {p.note ? <span className="sgChipLite">{p.note}</span> : null}
-                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
-                          {free ? "Szabad" : "Foglalt"}
-                        </span>
+                           {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                       
                       </div>
                     </div>
                   </div>
@@ -613,6 +774,35 @@ export const SignagePage: React.FC = () => {
               </div>
             </div>
           </section>
+<section className="sgPanel sgPros sgProsRight">
+            <div className="sgPanelHeader">
+              <h2>Elérhető szakembereink</h2>
+              <div className="sgMeta">Ma</div>
+            </div>
+
+            <div className="sgProList sgProBig">
+              {prosRight.map((p) => {
+                const free = isFree(p);
+                return (
+                  <div className="sgProRow sgProRowBig" key={p.id}>
+                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
+                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                    <div className="sgProMain">
+                      <div className="sgProName sgProNameBig">{p.name}</div>
+                      <div className="sgProMeta">
+                        <span className="sgChip">{p.title || "Szakember"}</span>
+                        {p.note ? <span className="sgChipLite">{p.note}</span> : null}
+                        
+                         
+                      
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              {!visiblePros.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
+            </div>
+          </section>
 
           <section className="sgPanel sgDeals">
             <div className="sgPanelHeader">
@@ -634,35 +824,8 @@ export const SignagePage: React.FC = () => {
             </div>
           </section>
 
-          <section className="sgPanel sgPros sgProsRight">
-            <div className="sgPanelHeader">
-              <h2>Elérhető szakemberek</h2>
-              <div className="sgMeta">Ma</div>
-            </div>
 
-            <div className="sgProList sgProBig">
-              {prosRight.map((p) => {
-                const free = isFree(p);
-                return (
-                  <div className="sgProRow sgProRowBig" key={p.id}>
-                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
-                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
-                    <div className="sgProMain">
-                      <div className="sgProName sgProNameBig">{p.name}</div>
-                      <div className="sgProMeta">
-                        <span className="sgChip">{p.title || "Szakember"}</span>
-                        {p.note ? <span className="sgChipLite">{p.note}</span> : null}
-                        <span className={`sgStatus ${free ? "sgStatusFree" : "sgStatusBusy"}`}>
-                          {free ? "Szabad" : "Foglalt"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-              {!visiblePros.length && <div className="sgEmpty">Nincs rögzített szakember.</div>}
-            </div>
-          </section>
+          
         </main>
 
         <footer className="sgTicker">

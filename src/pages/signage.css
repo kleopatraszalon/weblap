@@ -55,7 +55,7 @@
 .sgPanel{ background: var(--sg-white); border: 1px solid rgba(182,152,97,0.35); border-radius:18px; box-shadow: var(--sg-shadow); overflow:hidden; min-height:0; }
 .sgPanelHeader{ display:flex; justify-content:space-between; align-items:flex-end; gap:14px; padding:16px 18px 12px 18px; border-bottom:1px solid rgba(182,152,97,0.20); }
 .sgPanelHeader h2{ margin:0; font-size:28px; letter-spacing:0.4px; }
-.sgMeta{ font-size:30px; color: var(--sg-ink2); text-align:right; }
+.sgMeta{ font-size:16px; color: var(--sg-ink2); text-align:right; }
 
 .sgServices{ display:flex; flex-direction:column; }
 .sgSvcList{ padding:14px 18px 12px 18px; display:flex; flex-direction:column; gap:10px; overflow:hidden; }
@@ -64,7 +64,7 @@
 .sgSvcMeta{ display:flex; gap:10px; align-items:center; color: var(--sg-ink2); font-size:14px; }
 .sgSvcPrice{ text-align:right; font-size:20px; font-weight:1000; }
 .sgChip{ padding:4px 10px; border-radius:999px; border:1px solid rgba(182,152,97,0.25); background: rgba(227,216,195,0.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 420px; }
-.sgChipLite{ padding:4px 10px; border-radius:999px; border:1px solid rgba(18,12,8,0.10); background: rgba(255,255,255,0.70); }
+.sgChipLite{ padding:4px 20px; border-radius:0px; border:2px solid rgba(18,12,8,0.10); background: rgba(255,255,255,0.70); }
 .sgFooter{ margin-top:auto; display:flex; justify-content:space-between; padding:10px 18px 14px 18px; border-top:1px solid rgba(182,152,97,0.20); color: var(--sg-ink2); font-size:16px; }
 .sgSite{ color: var(--sg-gold); font-weight:900; letter-spacing:1px; }
 
@@ -87,7 +87,7 @@
 .sgProList{ padding:14px 18px 18px 18px; display:flex; flex-direction:column; gap:10px; overflow:hidden; }
 .sgProRow{ padding:12px 14px; border-radius:14px; border:1px solid rgba(182,152,97,0.22); background: var(--sg-white); }
 .sgProName{ font-size:18px; font-weight:900; }
-.sgProMeta{ margin-top:6px; display:flex; gap:10px; align-items:center; color: var(--sg-ink2); font-size:14px; }
+.sgProMeta{ margin-top:10px;   align-items:center; color: var(--sg-ink2); font-size:22px;font-weight:900;  }
 
 .sgTicker{ height:70px; background: var(--sg-magenta); display:flex; align-items:center; padding:0 20px; overflow:hidden; position:relative; z-index:2; }
 .sgMarquee{ white-space:nowrap; font-size:22px; color: var(--sg-white); animation: sgMove 26s linear infinite; letter-spacing:0.2px; }
@@ -104,8 +104,62 @@
 
 .sgSubtitle{ font-size: 40px !important; }
 .sgPanelHeader h2{ font-size: 30px !important; }
-.sgSvcName{ font-size: 22px !important; font-weight: 900; }
+.sgSvcName{ font-size: 22px !important; font-weight: 1000; }
 .sgSvcPrice{ font-size: 20px !important; font-weight: 1000; }
 .sgDealTitle{ font-size: 20px !important; }
 .sgDealPrice{ font-size: 26px !important; }
 .sgTime{ font-size: 44px !important; }
+
+
+/* ---------------- Topbar extras (flash + nameday) ---------------- */
+.sgBrand{ display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+.sgInfoBox{
+  width: 720px;
+  height: 132px;
+  border-radius: 18px;
+  border: 1px solid rgba(182,152,97,0.35);
+  background: rgba(255,255,255,0.70);
+  box-shadow: var(--sg-shadow);
+  padding: 12px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+}
+.sgFlashBox{ margin: 0 18px; }
+.sgNamedayBox{ margin: 0 18px; }
+.sgInfoLabel{ font-size:18px; font-weight:1000; color: var(--sg-gold); letter-spacing:1px; }
+.sgInfoTitle{ font-size:26px; font-weight:1000; margin-top:2px; }
+.sgInfoBody{ font-size:22px; font-weight:900; color: var(--sg-ink2); margin-top:6px; }
+.sgInfoBody--muted{ opacity:0.55; }
+
+/* ---------------- Weekly deals list: title + auto-scroll description ---------------- */
+.sgSvcItem{ padding:12px 14px; border-radius:14px; border:1px solid rgba(182,152,97,0.22); background: var(--sg-white); }
+.sgSvcTitleRow{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.sgSvcTitle{ font-size:26px; font-weight:1000; letter-spacing:0.2px; }
+.sgSvcDesc{ margin-top:6px; font-size:20px; color: var(--sg-ink2); line-height:1.25; }
+.sgSvcDesc--muted{ opacity:0.45; }
+
+/* Auto scroll (Y) */
+.sgAutoScrollY{ position:relative; overflow:hidden; }
+.sgAutoScrollY__inner{ white-space:pre-wrap; }
+.sgAutoScrollY.isOverflow .sgAutoScrollY__inner{
+  animation: sgScrollY var(--sgScrollDur) ease-in-out infinite;
+}
+@keyframes sgScrollY{
+  0%, 15% { transform: translateY(0); }
+  50%, 65% { transform: translateY(calc(-1 * var(--sgScrollY))); }
+  100% { transform: translateY(0); }
+}
+
+/* Auto marquee (X) */
+.sgMarqueeX{ position:relative; overflow:hidden; white-space:nowrap; }
+.sgMarqueeX__inner{ display:inline-block; white-space:nowrap; padding-right: 40px; }
+.sgMarqueeX.isOverflow .sgMarqueeX__inner{
+  animation: sgMarqueeX var(--sgMarqueeDur) ease-in-out infinite;
+}
+@keyframes sgMarqueeX{
+  0%, 10% { transform: translateX(0); }
+  50%, 60% { transform: translateX(calc(-1 * var(--sgMarqueeX))); }
+  100% { transform: translateX(0); }
+}
