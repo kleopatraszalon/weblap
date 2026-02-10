@@ -673,7 +673,7 @@ export const SignagePage: React.FC = () => {
           <div className="sgInfoBox sgNamedayBox">
             <div className="sgInfoLabel">🎉 Névnap</div>
             {nameday?.message ? (
-              <AutoMarqueeX className="sgInfoBody" text={nameday.message} />
+              <div className="sgInfoBody sgNamedayText">{nameday.message}</div>
             ) : (
               <div className="sgInfoBody sgInfoBody--muted">Névnap: ...</div>
             )}
