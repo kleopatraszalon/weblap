@@ -4,6 +4,16 @@ import "./signageDeals.css";
 import "./signagePros.css";
 import "./signageLayout.css";
 
+const initials = (fullName: string) => {
+  const parts = String(fullName || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const a = parts[0]?.[0] || "?";
+  const b = parts.length > 1 ? parts[parts.length - 1]?.[0] : "";
+  return (a + b).toUpperCase();
+};
+
 type ServiceItem = {
   id: string;
   name: string;
@@ -43,6 +53,33 @@ type VideoItem = {
   duration_sec?: number | null;
   priority?: number | null;
   enabled?: boolean | null;
+};
+
+// Kijelzőn a szakemberek listájához: fix méretű avatar + stabil státusz pötty.
+const ProAvatar: React.FC<{ name: string; photoUrl?: string | null; free: boolean }> = ({
+  name,
+  photoUrl,
+  free,
+}) => {
+  const [src, setSrc] = useState<string | null>(photoUrl || null);
+  return (
+    <div className="sgAvatarWrap" aria-label={name}>
+      {src ? (
+        <img
+          className="sgProAvatar"
+          src={src}
+          alt={name}
+          loading="lazy"
+          onError={() => setSrc(null)}
+        />
+      ) : (
+        <div className="sgAvatarFallback" aria-hidden="true">
+          {initials(name)}
+        </div>
+      )}
+      <span className={`sgDot sgDotOnAvatar ${free ? "sgDotGreen" : "sgDotRed"}`} />
+    </div>
+  );
 };
 
 
@@ -673,7 +710,8 @@ export const SignagePage: React.FC = () => {
           <div className="sgInfoBox sgNamedayBox">
             <div className="sgInfoLabel">🎉 Névnap</div>
             {nameday?.message ? (
-              <AutoMarqueeX className="sgInfoBody" text={nameday.message} />
+              // Névnap: ne marquee, hanem max. 2 sorba tördelve.
+              <div className="sgInfoBody sgNamedayBody">{nameday.message}</div>
             ) : (
               <div className="sgInfoBody sgInfoBody--muted">Névnap: ...</div>
             )}
@@ -702,7 +740,8 @@ export const SignagePage: React.FC = () => {
       </div>
 
       {s.category ? (
-        <AutoScrollY className="sgSvcDesc" height={54} text={String(s.category)} />
+        // Heti akció leírás: alapból több sor látszódjon, ha még így sem fér ki, akkor lassan görgesse.
+        <AutoScrollY className="sgSvcDesc" height={210} text={String(s.category)} />
       ) : (
         <div className="sgSvcDesc sgSvcDesc--muted">—</div>
       )}
@@ -728,34 +767,9 @@ export const SignagePage: React.FC = () => {
             <div className="sgProList sgProBig">
               {prosLeft.map((p) => {
                 const free = isFree(p);
-                const initials = String(p.name || "?")
-                  .trim()
-                  .split(/\s+/)
-                  .slice(0, 2)
-                  .map((x) => x[0] || "")
-                  .join("")
-                  .toUpperCase();
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    <div className="sgAvatarWrap" aria-label={p.name}>
-                      {p.photo_url ? (
-                        <img
-                          className="sgProAvatar"
-                          src={p.photo_url}
-                          alt={p.name}
-                          onError={(e) => {
-                            const img = e.currentTarget;
-                            img.style.display = "none";
-                            const ph = img.parentElement?.querySelector<HTMLElement>(".sgAvatarPlaceholder");
-                            if (ph) ph.style.display = "flex";
-                          }}
-                        />
-                      ) : null}
-                      <div className="sgAvatarPlaceholder" style={{ display: p.photo_url ? "none" : "flex" }}>
-                        {initials}
-                      </div>
-                      <span className={`sgDot sgDotOnAvatar ${free ? "sgDotGreen" : "sgDotRed"}`} />
-                    </div>
+                    <ProAvatar name={p.name} photoUrl={p.photo_url} free={free} />
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
@@ -807,34 +821,9 @@ export const SignagePage: React.FC = () => {
             <div className="sgProList sgProBig">
               {prosRight.map((p) => {
                 const free = isFree(p);
-                const initials = String(p.name || "?")
-                  .trim()
-                  .split(/\s+/)
-                  .slice(0, 2)
-                  .map((x) => x[0] || "")
-                  .join("")
-                  .toUpperCase();
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    <div className="sgAvatarWrap" aria-label={p.name}>
-                      {p.photo_url ? (
-                        <img
-                          className="sgProAvatar"
-                          src={p.photo_url}
-                          alt={p.name}
-                          onError={(e) => {
-                            const img = e.currentTarget;
-                            img.style.display = "none";
-                            const ph = img.parentElement?.querySelector<HTMLElement>(".sgAvatarPlaceholder");
-                            if (ph) ph.style.display = "flex";
-                          }}
-                        />
-                      ) : null}
-                      <div className="sgAvatarPlaceholder" style={{ display: p.photo_url ? "none" : "flex" }}>
-                        {initials}
-                      </div>
-                      <span className={`sgDot sgDotOnAvatar ${free ? "sgDotGreen" : "sgDotRed"}`} />
-                    </div>
+                    <ProAvatar name={p.name} photoUrl={p.photo_url} free={free} />
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">

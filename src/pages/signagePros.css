@@ -3,9 +3,9 @@
 
 .sgProRowBig{
   display:flex;
-  gap: 15px;
-  align-items:center; /* fotó legyen középen */
-  padding: 1px 1px;
+  gap: 14px;
+  align-items:center;
+  padding: 10px 12px;
 }
 
 .sgProNameBig{
@@ -14,37 +14,37 @@
   line-height: 1.05;
 }
 
+/* Fix méretű avatar keret (hibás kép esetén is stabil) */
+.sgAvatarWrap{
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  flex: 0 0 auto;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.03);
+}
+
 .sgProAvatar{
   width: 100%;
   height: 100%;
-  border-radius: 16px;
   object-fit: cover;
-  border: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  display: block;
 }
 
-/* Fix méretű avatar keret (akkor is, ha nincs kép / törött a kép) */
-.sgAvatarWrap{
-  position: relative;
-  width: 130px;
-  height: 130px;
-  flex: 0 0 130px;
-  border-radius: 16px;
-}
-
-.sgAvatarPlaceholder{
-  width: 130px;
-  height: 130px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.sgAvatarFallback{
+  width: 100%;
+  height: 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 34px;
   font-weight: 1000;
-  font-size: 36px;
   letter-spacing: 1px;
-  background: rgba(227,216,195,0.55);
-  border: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  color: rgba(18,12,8,0.55);
+  background: linear-gradient(180deg, rgba(227,216,195,0.70), rgba(255,255,255,0.95));
 }
 
 .sgDot{
@@ -54,12 +54,13 @@
   border: 2px solid rgba(18,12,8,0.10);
 }
 
-/* Pötty az avatar sarkában (stabil hely, nem csúszik el Mizseinél sem) */
+/* Pötty fixen az avatar sarkában, ne tolja szét a sort */
 .sgDotOnAvatar{
   position: absolute;
-  top: 8px;
-  right: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.20);
 }
 .sgDotGreen{ background: #2ecc71; }
 .sgDotRed{ background: #e74c3c; }
@@ -82,3 +83,18 @@
   background: rgba(231, 76, 60, 0.10);
   border-color: rgba(231, 76, 60, 0.35);
 }
+
+/* A szakma chip max 2 sor; ha túl hosszú, szépen vág */
+.sgChip2Line{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  line-height: 1.15;
+  max-width: 100%;
+}
+
+/* A meta sor legyen szép és tördelhető */
+.sgProMain{ flex: 1 1 auto; min-width: 0; }
+.sgProMeta{ display:flex; flex-wrap:wrap; gap: 8px; align-items:center; margin-top: 8px; }
