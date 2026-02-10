@@ -673,7 +673,7 @@ export const SignagePage: React.FC = () => {
           <div className="sgInfoBox sgNamedayBox">
             <div className="sgInfoLabel">🎉 Névnap</div>
             {nameday?.message ? (
-              <div className="sgInfoBody sgNamedayText">{nameday.message}</div>
+              <AutoMarqueeX className="sgInfoBody" text={nameday.message} />
             ) : (
               <div className="sgInfoBody sgInfoBody--muted">Névnap: ...</div>
             )}
@@ -728,14 +728,38 @@ export const SignagePage: React.FC = () => {
             <div className="sgProList sgProBig">
               {prosLeft.map((p) => {
                 const free = isFree(p);
+                const initials = String(p.name || "?")
+                  .trim()
+                  .split(/\s+/)
+                  .slice(0, 2)
+                  .map((x) => x[0] || "")
+                  .join("")
+                  .toUpperCase();
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
-                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                    <div className="sgAvatarWrap" aria-label={p.name}>
+                      {p.photo_url ? (
+                        <img
+                          className="sgProAvatar"
+                          src={p.photo_url}
+                          alt={p.name}
+                          onError={(e) => {
+                            const img = e.currentTarget;
+                            img.style.display = "none";
+                            const ph = img.parentElement?.querySelector<HTMLElement>(".sgAvatarPlaceholder");
+                            if (ph) ph.style.display = "flex";
+                          }}
+                        />
+                      ) : null}
+                      <div className="sgAvatarPlaceholder" style={{ display: p.photo_url ? "none" : "flex" }}>
+                        {initials}
+                      </div>
+                      <span className={`sgDot sgDotOnAvatar ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                    </div>
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
-                        <span className="sgChip">{p.title || "Szakember"}</span>
+                        <span className="sgChip sgChip2Line">{p.title || "Szakember"}</span>
                            {p.note ? <span className="sgChipLite">{p.note}</span> : null}
                        
                       </div>
@@ -783,14 +807,38 @@ export const SignagePage: React.FC = () => {
             <div className="sgProList sgProBig">
               {prosRight.map((p) => {
                 const free = isFree(p);
+                const initials = String(p.name || "?")
+                  .trim()
+                  .split(/\s+/)
+                  .slice(0, 2)
+                  .map((x) => x[0] || "")
+                  .join("")
+                  .toUpperCase();
                 return (
                   <div className="sgProRow sgProRowBig" key={p.id}>
-                    {p.photo_url ? <img className="sgProAvatar" src={p.photo_url} alt={p.name} /> : null}
-                    <span className={`sgDot ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                    <div className="sgAvatarWrap" aria-label={p.name}>
+                      {p.photo_url ? (
+                        <img
+                          className="sgProAvatar"
+                          src={p.photo_url}
+                          alt={p.name}
+                          onError={(e) => {
+                            const img = e.currentTarget;
+                            img.style.display = "none";
+                            const ph = img.parentElement?.querySelector<HTMLElement>(".sgAvatarPlaceholder");
+                            if (ph) ph.style.display = "flex";
+                          }}
+                        />
+                      ) : null}
+                      <div className="sgAvatarPlaceholder" style={{ display: p.photo_url ? "none" : "flex" }}>
+                        {initials}
+                      </div>
+                      <span className={`sgDot sgDotOnAvatar ${free ? "sgDotGreen" : "sgDotRed"}`} />
+                    </div>
                     <div className="sgProMain">
                       <div className="sgProName sgProNameBig">{p.name}</div>
                       <div className="sgProMeta">
-                        <span className="sgChip">{p.title || "Szakember"}</span>
+                        <span className="sgChip sgChip2Line">{p.title || "Szakember"}</span>
                         {p.note ? <span className="sgChipLite">{p.note}</span> : null}
                         
                          
