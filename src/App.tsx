@@ -14,6 +14,7 @@ import { TrainingPage } from "./pages/TrainingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { SignagePage } from "./pages/SignagePage";
+import { KioskPage } from "./pages/KioskPage";
 import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
@@ -78,14 +79,14 @@ const App: React.FC = () => {
       ? window.location.pathname
       : "/";
 
-  const isSignage = initialPath.startsWith("/signage");
+  const isSignage = initialPath.startsWith("/signage") || initialPath.startsWith("/kiosk");
 
   // URL mindig "/" maradjon a címsorban (Render / statikus host kompatibilitás)
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
       window.location.pathname !== "/" &&
-      !window.location.pathname.startsWith("/signage")
+      !window.location.pathname.startsWith("/signage") && !window.location.pathname.startsWith("/kiosk")
     ) {
       window.history.replaceState(null, "", "/");
     }
@@ -99,6 +100,7 @@ const App: React.FC = () => {
 
         <Routes>
           <Route path="/signage" element={<SignagePage />} />
+          <Route path="/kiosk" element={<KioskPage />} />
 
           <Route path="/" element={<HomePage />} />
           <Route path="/salons" element={<SalonsPage />} />

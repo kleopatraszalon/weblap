@@ -1,0 +1,425 @@
+.kioskFirstRoot {
+  width: 1080px;
+  height: 1920px;
+  margin: 0 auto;
+  background: #f6efe7;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #1f1f1f;
+  display: flex;
+  flex-direction: column;
+}
+
+.kioskTop {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 22px;
+}
+
+.kioskBrand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f6efe7;
+}
+
+.kioskBrandLogo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.kioskBrandText {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.kioskBrandText span {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.kioskDailyDeals {
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.kioskDailyDealsTitle {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.kioskDailyDealsSub {
+  margin-top: 4px;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.kioskSteps {
+  display: flex;
+  gap: 10px;
+}
+
+.kioskStep {
+  background: #efe7df;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.kioskStep.active {
+  background: #fff;
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.kioskBody {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 265px 1fr 325px;
+  gap: 18px;
+  padding: 0 18px 18px;
+}
+
+/* LEFT */
+.kioskLeft {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.kioskSideTitle {
+  font-weight: 800;
+  font-size: 16px;
+  margin: 4px 0 12px;
+}
+
+.kioskCatList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.kioskCatCard {
+  height: 165px;
+  background: linear-gradient(180deg, #caa25a, #b48b43);
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.kioskCatIcon {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
+}
+
+.kioskCatName {
+  color: #fff;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-align: center;
+  text-shadow: 0 10px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* CENTER */
+.kioskCenter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kioskCard {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.kioskHero {
+  height: 330px;
+}
+
+.kioskHeroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kioskCardTitle {
+  padding: 14px 16px 0;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.kioskCardSub {
+  padding: 2px 16px 12px;
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+.kioskIframeWrap {
+  padding: 0 12px 12px;
+}
+
+.kioskIframe {
+  width: 100%;
+  height: 240px;
+  border: 0;
+  border-radius: 12px;
+  background: #f3f3f3;
+}
+
+.kioskSlideRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.kioskSlideItem {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.kioskSlideImg {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.kioskSlideText {
+  padding: 8px 10px;
+}
+
+.kioskSlideName {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.kioskSlidePrice {
+  margin-top: 2px;
+  font-weight: 900;
+  font-size: 12px;
+  color: #c3006a;
+}
+
+.kioskWeeklyRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.kioskWeeklyItem {
+  border-radius: 12px;
+  background: #f8f2ef;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 12px;
+}
+
+.kioskWeeklyH {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.kioskWeeklyS {
+  margin-top: 4px;
+  opacity: 0.75;
+  font-size: 12px;
+}
+
+/* RIGHT */
+.kioskRight {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kioskCart {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+}
+
+.kioskCartTitle {
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.kioskCartEmpty {
+  margin-top: 6px;
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+.kioskCartTotal {
+  margin-top: 10px;
+  font-weight: 900;
+}
+
+.kioskCartActions {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.kioskCartBtn {
+  height: 46px;
+  border-radius: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+}
+
+.kioskCartBtn.primary {
+  border: 0;
+  background: linear-gradient(135deg, #e6007e, #c3006a);
+  color: #fff;
+}
+
+.kioskPros {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+}
+
+.kioskProRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 12px;
+}
+
+.kioskProRow + .kioskProRow {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.kioskProAvatarWrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.kioskProAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kioskProDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  bottom: 6px;
+  right: 6px;
+  background: #d23;
+  box-shadow: 0 0 0 3px #fff;
+}
+
+.kioskProDot.ok {
+  background: #22c55e;
+}
+
+.kioskProDot.no {
+  background: #ef4444;
+}
+
+.kioskProText {
+  flex: 1;
+  min-width: 0;
+}
+
+.kioskProName {
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kioskProTitle {
+  margin-top: 2px;
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.kioskWebshopCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.kioskWebshopTitle {
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.kioskWebshopBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.kioskWebshopImg {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: #f3f3f3;
+}
+
+.kioskWebshopName {
+  margin-top: 10px;
+  font-weight: 900;
+}
+
+.kioskWebshopDesc {
+  margin-top: 6px;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.kioskWebshopPrice {
+  margin-top: auto;
+  padding-top: 10px;
+  font-weight: 900;
+  color: #1f1f1f;
+}
