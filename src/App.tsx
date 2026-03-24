@@ -100,7 +100,7 @@ const App: React.FC = () => {
 
         <Routes>
           <Route path="/signage" element={<SignagePage />} />
-          <Route path="/kiosk" element={<KioskPage />} />
+          <Route path="/kiosk/*" element={<KioskPage />} />
 
           <Route path="/" element={<HomePage />} />
           <Route path="/salons" element={<SalonsPage />} />
