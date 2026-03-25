@@ -7,8 +7,8 @@ import { KioskCategory } from "./kiosk/KioskCategory";
 import { KioskPay } from "./kiosk/KioskPay";
 import { KioskTicket } from "./kiosk/KioskTicket";
 
-// App.tsx named exportként importálja: `import { KioskPage } from "./pages/KioskPage"`
-// Ezért itt legyen named + default export is.
+// NOTE: App.tsx imports this as a *named* export: `import { KioskPage } ...`
+// Keep both named + default exports to avoid future regressions.
 export function KioskPage() {
   return (
     <KioskShell>
