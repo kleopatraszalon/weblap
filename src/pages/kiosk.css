@@ -87,6 +87,37 @@ body {
   font-weight: 800;
 }
 
+.kioskCategoryStackOneCol {
+  padding-right: 4px;
+}
+
+.kioskLangFlags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.kioskFlagBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.9);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+}
+
+.kioskFlagBtn.isActive {
+  outline: 2px solid rgba(230,0,126,0.35);
+  transform: translateY(-1px);
+}
+
+
 .kioskBody {
   height: calc(1920px - 120px);
   padding: 12px 16px 18px;
@@ -95,7 +126,7 @@ body {
 .kioskGrid {
   height: 100%;
   display: grid;
-  grid-template-columns: 260px 1fr 260px;
+  grid-template-columns: 182px 1fr 172px;
   gap: 16px;
 }
 
@@ -116,7 +147,11 @@ body {
   gap: 12px;
   height: calc(100% - 40px);
   overflow-y: auto;
-  padding-right: 6px;}
+  overflow-x: hidden;
+  align-content: start;
+  padding-right: 6px;
+  padding-bottom: 6px;
+}
 
 .kioskCategoryTile {
   position: relative;
@@ -127,8 +162,10 @@ body {
   box-shadow: 0 10px 22px rgba(0,0,0,0.06);
   cursor: pointer;
   transition: transform 0.12s ease;
-  /* A PNG képek négyzetesek – a csempe is legyen 1:1 */
-  aspect-ratio: 1 / 1;}
+  aspect-ratio: 1 / 1.08;
+  min-height: 168px;
+  width: 100%;
+}
 
 
 .kioskCategoryImgWrap {
@@ -656,4 +693,47 @@ body {
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
+}
+
+
+.kioskCategoryStack::-webkit-scrollbar,
+.kioskCategoryScroll::-webkit-scrollbar,
+.kioskCartList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.kioskCategoryStack::-webkit-scrollbar-thumb,
+.kioskCategoryScroll::-webkit-scrollbar-thumb,
+.kioskCartList::-webkit-scrollbar-thumb {
+  background: rgba(230,0,126,0.28);
+  border-radius: 999px;
+}
+
+.kioskCategoryPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+}
+
+.kioskCategoryScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+}
+
+.kioskSectionMiniTitle {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.kioskServiceDesc {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
 }

@@ -1,4 +1,4 @@
-import type { KioskCategory, KioskService } from "./types";
+import type { KioskCategory, KioskProduct, KioskService } from "./types";
 
 function getApiBase() {
   // Vite dev: /api proxy -> backend
@@ -16,4 +16,30 @@ export async function fetchKioskServices(lang: string, locationId?: string | nul
   const data = await r.json();
   if (!data?.ok) throw new Error(data?.error || "kiosk_services_failed");
   return data as { ok: true; categories: KioskCategory[]; services: KioskService[] };
+}
+
+
+async function safeJson<T>(r: Response): Promise<T> {
+  return r.json().catch(() => ([] as unknown as T));
+}
+
+export async function fetchKioskProducts() {
+  const candidates = [
+    `${getApiBase()}/public/webshop/products`,
+    `${getApiBase()}/webshop/products`,
+  ];
+
+  for (const url of candidates) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) continue;
+      const data = await safeJson<any>(r);
+      const items = Array.isArray(data) ? data : Array.isArray(data?.items) ? data.items : [];
+      return items as KioskProduct[];
+    } catch {
+      // try next endpoint
+    }
+  }
+
+  return [] as KioskProduct[];
 }

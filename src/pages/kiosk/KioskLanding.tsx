@@ -1,28 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-// NOTE: These images are served from `weblap/public/kiosk/tiles/*.png`
-// (we include them in the ZIP below so it works out-of-the-box).
 const MENU = [
   { slug: "beauty-plus", title: "BEAUTY+", img: "/kiosk/tiles/beauty_plus.png" },
   { slug: "vendegszamla", title: "VENDÉGSZÁMLA", img: "/kiosk/tiles/vendegszamla.png" },
   { slug: "ajandekutalvany", title: "AJÁNDÉKUTALVÁNYOK", img: "/kiosk/tiles/ajandekutalvanyok.png" },
-
   { slug: "fodraszat", title: "Fodrászat", img: "/kiosk/tiles/fodraszat.png" },
   { slug: "kezlab", title: "Kéz- és lábápolás", img: "/kiosk/tiles/kez_es_labapolas.png" },
   { slug: "kozmetika", title: "Kozmetika", img: "/kiosk/tiles/kozmetika.png" },
-
   { slug: "ferfiaknak", title: "FÉRFIAKNAK", img: "/kiosk/tiles/ferfiaknak.png" },
   { slug: "masszazs", title: "Masszázs", img: "/kiosk/tiles/masszazs.png" },
   { slug: "testkezeles", title: "Testkezelés", img: "/kiosk/tiles/testkezeles.png" },
-
   { slug: "tinik", title: "Tinik és Gyerekek", img: "/kiosk/tiles/tinik_es_gyerekek.png" },
   { slug: "kids", title: "Gyerekeknek – Kids Project (8 éves korig)", img: "/kiosk/tiles/gyerekeknek_kids_project.png" },
   { slug: "wellness-fitness", title: "Wellness / Fitness / Szolárium", img: "/kiosk/tiles/wellness_fitness_szolarium.png" },
 ];
 
-// A "Szolgáltatások" blokkban most a kategória-csempék váltakoznak.
-// (A szalon fotókat később ide/egy külön sliderbe vissza tudjuk tenni.)
 const SERVICE_SLIDES = MENU.map((m) => m.img);
 
 export function KioskLanding() {
@@ -38,13 +31,9 @@ export function KioskLanding() {
     <div className="kioskGrid">
       <div className="kioskColLeft">
         <div className="kioskPanelTitle">Kategóriák</div>
-        <div className="kioskCategoryStack">
+        <div className="kioskCategoryStack kioskCategoryStackOneCol">
           {MENU.map((m) => (
-            <button
-              key={m.slug}
-              className="kioskCategoryTile"
-              onClick={() => nav(`/kiosk/cat/${m.slug}`)}
-            >
+            <button key={m.slug} className="kioskCategoryTile" onClick={() => nav(`/kiosk/cat/${m.slug}`)}>
               <div className="kioskCategoryImgWrap">
                 <img src={m.img} alt={m.title} className="kioskCategoryImg" />
                 <div className="kioskCategoryLabel">{m.title}</div>
@@ -66,11 +55,7 @@ export function KioskLanding() {
             <div className="kioskEmbedTitle">Weboldal</div>
             <div className="kioskBadge">WEBSHOP</div>
           </div>
-          <iframe
-            title="kleoszalon"
-            src="https://kleoszalon.hu"
-            className="kioskEmbed"
-          />
+          <iframe title="kleoszalon" src="https://kleoszalon.hu" className="kioskEmbed" />
         </div>
 
         <div className="kioskRow">
