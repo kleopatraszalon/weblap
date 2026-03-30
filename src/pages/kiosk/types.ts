@@ -4,11 +4,11 @@ export type KioskService = {
   name_hu?: string | null;
   name_en?: string | null;
   name_ru?: string | null;
-  base_price: number | null;
   list_price?: number | null;
+  base_price: number | null;
   duration_minutes: number | null;
-  category_id: string;
-  category_name: string;
+  category_id: string | number | null;
+  category_name: string | null;
   category_name_hu?: string | null;
   category_name_en?: string | null;
   category_name_ru?: string | null;

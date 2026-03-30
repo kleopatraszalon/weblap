@@ -166,17 +166,37 @@ export function KioskCategory() {
         ]);
 
         const filteredServices = serviceData.services.filter((s) =>
-          matchesSlug(currentSlug, s.category_name, s.category_name_hu, s.category_name_en, s.category_name_ru, s.name, s.name_hu, s.name_en, s.name_ru)
+          matchesSlug(
+            currentSlug,
+            s.category_name,
+            s.category_name_hu,
+            s.category_name_en,
+            s.category_name_ru,
+            s.name,
+            s.name_hu,
+            s.name_en,
+            s.name_ru
+          )
         );
 
         const filteredProducts = productData.filter((p) =>
-          matchesSlug(currentSlug, p.name, p.name_hu, p.name_en, p.name_ru, p.main_category, p.sub_category, p.service_category, p.web_description)
+          matchesSlug(
+            currentSlug,
+            p.name,
+            p.name_hu,
+            p.name_en,
+            p.name_ru,
+            p.main_category,
+            p.sub_category,
+            p.service_category,
+            p.web_description
+          )
         );
 
         setServices(filteredServices);
         setProducts(filteredProducts);
       } catch (e: any) {
-        setErr(String(e?.message || e));
+        setErr(String(e?.message || e || "API hiba"));
       } finally {
         setLoading(false);
       }
@@ -184,7 +204,15 @@ export function KioskCategory() {
   }, [currentSlug, langTick]);
 
   function onPickService(s: KioskService) {
-    addToCart({ id: s.id, title: getServiceName(s), price: Number(getDisplayPrice(s) || 0), meta: { duration: s.duration_minutes } }, 1);
+    addToCart(
+      {
+        id: s.id,
+        title: getServiceName(s),
+        price: Number(getDisplayPrice(s) || 0),
+        meta: { duration: s.duration_minutes },
+      },
+      1
+    );
     if (upsellCfg) setUpsellOpen(true);
   }
 
@@ -203,51 +231,66 @@ export function KioskCategory() {
   const hasResults = services.length > 0 || products.length > 0;
 
   return (
-    <div className="kioskCategoryPage">
-      <div className="kioskBackRow">
-        <button className="kioskBtn" onClick={() => nav("/kiosk")}>{text.back}</button>
-        <button className="kioskBtn kioskPrimaryBtn" onClick={() => nav("/kiosk/pay")}>{text.pay}</button>
+    <>
+      <div className="kioskCategoryPage">
+        <div className="kioskBackRow">
+          <button className="kioskBtn" onClick={() => nav("/kiosk")}>
+            {text.back}
+          </button>
+          <button className="kioskBtn kioskPrimaryBtn" onClick={() => nav("/kiosk/pay")}>
+            {text.pay}
+          </button>
+        </div>
+
+        <div className="kioskPanelTitle">{title}</div>
+
+        {loading ? <div className="kioskInfo">{text.loading}</div> : null}
+        {err ? <div className="kioskError">Hiba: {err}</div> : null}
+        {!loading && !err && !hasResults ? <div className="kioskInfo">{text.noData}</div> : null}
+
+        <div className="kioskCategoryScroll">
+          {services.length > 0 ? (
+            <>
+              <div className="kioskSectionMiniTitle">{text.services}</div>
+              <div className="kioskServicesGrid">
+                {services.map((s) => (
+                  <button key={s.id} className="kioskServiceCard" onClick={() => onPickService(s)}>
+                    <div className="kioskServiceName">{getServiceName(s)}</div>
+                    <div className="kioskServiceMeta">
+                      <span>{Number(getDisplayPrice(s) || 0).toLocaleString("hu-HU")} Ft</span>
+                      {s.duration_minutes != null ? (
+                        <span>
+                          {" "}
+                          • {s.duration_minutes} {text.minutes}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="kioskServiceCta">{text.add}</div>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          {products.length > 0 ? (
+            <>
+              <div className="kioskSectionMiniTitle">{text.products}</div>
+              <div className="kioskServicesGrid">
+                {products.map((p) => (
+                  <button key={p.id} className="kioskServiceCard" onClick={() => onPickProduct(p)}>
+                    <div className="kioskServiceName">{getProductName(p)}</div>
+                    <div className="kioskServiceMeta">
+                      <span>{Number(getDisplayPrice(p) || 0).toLocaleString("hu-HU")} Ft</span>
+                    </div>
+                    <div className="kioskServiceDesc">{getProductDescription(p)}</div>
+                    <div className="kioskServiceCta">{text.add}</div>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
-
-      <div className="kioskPanelTitle">{title}</div>
-
-      {loading ? <div className="kioskInfo">{text.loading}</div> : null}
-      {err ? <div className="kioskError">Hiba: {err}</div> : null}
-      {!loading && !err && !hasResults ? <div className="kioskInfo">{text.noData}</div> : null}
-
-      {services.length > 0 ? (
-        <>
-          <div className="kioskSectionMiniTitle">{text.services}</div>
-          <div className="kioskServicesGrid">
-            {services.map((s) => (
-              <button key={s.id} className="kioskServiceCard" onClick={() => onPickService(s)}>
-                <div className="kioskServiceName">{getServiceName(s)}</div>
-                <div className="kioskServiceMeta">
-                  <span>{Number(getDisplayPrice(s) || 0).toLocaleString("hu-HU")} Ft</span>
-                  {s.duration_minutes != null ? <span> • {s.duration_minutes} {text.minutes}</span> : null}
-                </div>
-                <div className="kioskServiceCta">{text.add}</div>
-              </button>
-            ))}
-          </div>
-        </>
-      ) : null}
-
-      {products.length > 0 ? (
-        <>
-          <div className="kioskSectionMiniTitle">{text.products}</div>
-          <div className="kioskServicesGrid">
-            {products.map((p) => (
-              <button key={p.id} className="kioskServiceCard" onClick={() => onPickProduct(p)}>
-                <div className="kioskServiceName">{getProductName(p)}</div>
-                <div className="kioskServiceMeta"><span>{Number(getDisplayPrice(p) || 0).toLocaleString("hu-HU")} Ft</span></div>
-                <div className="kioskServiceDesc">{getProductDescription(p)}</div>
-                <div className="kioskServiceCta">{text.add}</div>
-              </button>
-            ))}
-          </div>
-        </>
-      ) : null}
 
       <UpsellModal
         open={upsellOpen}
@@ -256,6 +299,6 @@ export function KioskCategory() {
         onAdd={addUpsell}
         onClose={() => setUpsellOpen(false)}
       />
-    </div>
+    </>
   );
 }

@@ -737,3 +737,9 @@ body {
   font-size: 13px;
   line-height: 1.35;
 }
+.kioskCategoryScroll {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+}
