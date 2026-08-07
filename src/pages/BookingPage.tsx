@@ -7,6 +7,7 @@ type Location = { id: string; name: string };
 type Service = { id: string; name: string; duration_minutes: number; price: number | string; category_name?: string };
 type Employee = { id: string; full_name: string; photo_url?: string | null };
 type Slot = { employee_id: string; employee_name: string; start: string; end: string };
+type SearchSelection = { locationId?: string; serviceIds?: string[]; employeeId?: string; date?: string };
 
 const api = (path: string, init?: RequestInit) =>
   fetch(`${API_BASE}${path}`, { headers: { "Content-Type": "application/json", ...(init?.headers || {}) }, ...init }).then(async (r) => {
@@ -45,6 +46,7 @@ export function BookingPage() {
   const [voiceMessage, setVoiceMessage] = useState("Mondja el például: Jövő kedden délután arckezelést szeretnék Annánál.");
   const [voiceUnderstood, setVoiceUnderstood] = useState<string[]>([]);
   const [voicePreference, setVoicePreference] = useState<VoiceTimePreference | undefined>();
+  const [voiceDateChosen, setVoiceDateChosen] = useState(false);
   const [pendingVoiceTranscript, setPendingVoiceTranscript] = useState("");
   const [voiceUsed, setVoiceUsed] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -109,14 +111,19 @@ export function BookingPage() {
     } catch { /* optional browser feature */ }
   }
 
-  async function searchAvailability(preference = voicePreference, forceVoice = false) {
-    if (!locationId || !serviceIds.length) return;
+  async function searchAvailability(preference = voicePreference, forceVoice = false, selection?: SearchSelection) {
+    const loc = selection?.locationId ?? locationId;
+    const svcIds = selection?.serviceIds ?? serviceIds;
+    const emp = selection?.employeeId ?? employeeId;
+    const targetDate = selection?.date ?? date;
+    if (!loc || !svcIds.length) return;
+
     setLoading(true);
     setError("");
     setSlot(null);
     try {
-      const q = new URLSearchParams({ location_id: locationId, date, service_ids: serviceIds.join(",") });
-      if (employeeId) q.set("employee_id", employeeId);
+      const q = new URLSearchParams({ location_id: loc, date: targetDate, service_ids: svcIds.join(",") });
+      if (emp) q.set("employee_id", emp);
       const d = await api(`/api/public/booking/availability?${q}`);
       const found: Slot[] = d.slots || [];
       setSlots(found);
@@ -223,8 +230,22 @@ export function BookingPage() {
 
     const intent = interpretVoiceBooking(cleaned, { locations, services, employees });
     setVoiceUnderstood(intent.understood);
-    if (intent.date) setDate(intent.date);
+    if (intent.date) {
+      setDate(intent.date);
+      setVoiceDateChosen(true);
+    }
     if (intent.timePreference) setVoicePreference(intent.timePreference);
+
+    if (intent.timePreference && slots.length && !intent.locationId && !intent.serviceIds.length && !intent.date && !intent.employeeId) {
+      const preferred = slots.filter((s) => slotMatchesPreference(s.start, intent.timePreference));
+      const best = preferred[0] || null;
+      if (best) {
+        setSlot(best);
+        const when = new Date(best.start).toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" });
+        const msg = `${when} kiválasztva ${best.employee_name} szakembernél. Ha megfelel, adja meg a nevét és elérhetőségét, majd mondja: megerősítem.`;
+        setVoiceMessage(msg); speak(msg); return;
+      }
+    }
 
     if (intent.locationId && intent.locationId !== locationId) {
       setLocationId(intent.locationId);
@@ -241,6 +262,7 @@ export function BookingPage() {
 
     const effectiveServices = intent.serviceIds.length ? intent.serviceIds : serviceIds;
     const effectiveLocation = intent.locationId || locationId;
+    const effectiveEmployee = intent.employeeId || employeeId;
     const effectiveDate = intent.date || date;
 
     if (!effectiveLocation) {
@@ -255,7 +277,7 @@ export function BookingPage() {
       const msg = "Milyen szolgáltatást szeretne? Mondja ki a szolgáltatás nevét.";
       setVoiceMessage(msg); speak(msg); return;
     }
-    if (!intent.date && !effectiveDate) {
+    if (!intent.date && !voiceDateChosen) {
       const msg = "Melyik napra szeretne jönni? Például: holnap délután vagy jövő kedden.";
       setVoiceMessage(msg); speak(msg); return;
     }
@@ -263,7 +285,12 @@ export function BookingPage() {
     const msg = `Értettem: ${intent.understood.join(", ") || "a megadott feltételek"}. Megkeresem a szabad időpontokat.`;
     setVoiceMessage(msg);
     speak(msg);
-    window.setTimeout(() => void searchAvailability(intent.timePreference || voicePreference, true), 120);
+    void searchAvailability(intent.timePreference || voicePreference, true, {
+      locationId: effectiveLocation,
+      serviceIds: effectiveServices,
+      employeeId: effectiveEmployee,
+      date: effectiveDate,
+    });
   }
 
   function startListening() {
