@@ -19,12 +19,26 @@ export type VoiceBookingIntent = {
   understood: string[];
 };
 
-const strip = (value: string) =>
+export type VoiceContact = {
+  name?: string;
+  phone?: string;
+  email?: string;
+};
+
+export type VoiceSlotCommand =
+  | { type: "index"; index: number }
+  | { type: "later" }
+  | { type: "earlier" }
+  | { type: "other_employee" }
+  | { type: "other_day" }
+  | { type: "none" };
+
+export const stripVoiceText = (value: string) =>
   String(value || "")
     .toLocaleLowerCase("hu-HU")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9+ ]/g, " ")
+    .replace(/[^a-z0-9+@. ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -49,7 +63,7 @@ const weekdays: Array<[string[], number]> = [
 ];
 
 function parseDate(text: string, now = new Date()): string | undefined {
-  const t = strip(text);
+  const t = stripVoiceText(text);
   if (t.includes("holnaputan")) return ymd(addDays(now, 2));
   if (t.includes("holnap")) return ymd(addDays(now, 1));
   if (/\bma\b/.test(t)) return ymd(now);
@@ -83,13 +97,13 @@ const hourWords: Record<string, number> = {
 };
 
 function normalizeHourByPeriod(hour: number, text: string) {
-  const t = strip(text);
+  const t = stripVoiceText(text);
   if ((t.includes("delutan") || t.includes("este")) && hour < 12) return hour + 12;
   return hour;
 }
 
 function parseTimePreference(text: string): VoiceTimePreference | undefined {
-  const t = strip(text);
+  const t = stripVoiceText(text);
   const numeric = t.match(/\b(\d{1,2})(?::|\.| ora | orakor)(\d{2})?\b/);
   if (numeric) {
     let hour = Number(numeric[1]);
@@ -116,8 +130,8 @@ function parseTimePreference(text: string): VoiceTimePreference | undefined {
 }
 
 function scoreEntity(text: string, candidate: string) {
-  const t = strip(text);
-  const c = strip(candidate);
+  const t = stripVoiceText(text);
+  const c = stripVoiceText(candidate);
   if (!c) return 0;
   if (t.includes(c)) return 1000 + c.length;
   const tokens = c.split(" ").filter((x) => x.length >= 3);
@@ -178,4 +192,85 @@ export function slotMatchesPreference(startIso: string, preference?: VoiceTimePr
   if (preference.fromMinutes != null && minutes < preference.fromMinutes) return false;
   if (preference.toMinutes != null && minutes >= preference.toMinutes) return false;
   return true;
+}
+
+const digitWords: Record<string, string> = {
+  nulla: "0", zero: "0", egy: "1", ketto: "2", ket: "2", harom: "3", negy: "4",
+  ot: "5", hat: "6", het: "7", nyolc: "8", kilenc: "9",
+};
+
+function spokenDigits(value: string) {
+  const tokens = stripVoiceText(value).split(" ");
+  let out = "";
+  for (const token of tokens) {
+    if (/^\d+$/.test(token)) out += token;
+    else if (digitWords[token]) out += digitWords[token];
+  }
+  return out;
+}
+
+export function parseVoiceContact(text: string): VoiceContact {
+  const raw = String(text || "").trim();
+  const normalized = stripVoiceText(raw);
+  const contact: VoiceContact = {};
+
+  const emailish = raw
+    .toLocaleLowerCase("hu-HU")
+    .replace(/\s+kukac\s+/gi, "@")
+    .replace(/\s+pont\s+/gi, ".")
+    .replace(/\s+/g, "");
+  const emailMatch = emailish.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+  if (emailMatch) contact.email = emailMatch[0];
+
+  const directPhone = raw.match(/\+?\d[\d\s()-]{7,}/);
+  if (directPhone) {
+    const cleaned = directPhone[0].replace(/[^0-9+]/g, "");
+    if (cleaned.replace(/\D/g, "").length >= 8) contact.phone = cleaned;
+  } else {
+    const digits = spokenDigits(raw);
+    if (digits.length >= 8) contact.phone = digits.startsWith("36") ? `+${digits}` : digits;
+  }
+
+  const namePatterns = [
+    /(?:a nevem|nevem|en vagyok|nevem az hogy)\s+(.+)/i,
+    /(?:foglalas neve|foglalasi nev)\s+(.+)/i,
+  ];
+  for (const pattern of namePatterns) {
+    const match = raw.match(pattern);
+    if (match?.[1]) {
+      const candidate = match[1].replace(/\b(?:a telefonszamom|telefonszamom|az email cimem|email cimem).*$/i, "").trim();
+      if (candidate.length >= 2 && candidate.length <= 80) contact.name = candidate;
+      break;
+    }
+  }
+
+  if (!contact.name && normalized && !contact.email && !contact.phone && normalized.split(" ").length >= 2 && normalized.split(" ").length <= 5) {
+    if (!/(masik|elso|masodik|harmadik|kesobb|korabban|megerosit|foglal|szalon|szolgaltatas|holnap|pentek|kedd|szerda|csutortok|szombat|vasarnap)/.test(normalized)) {
+      contact.name = raw;
+    }
+  }
+
+  return contact;
+}
+
+export function parseSlotCommand(text: string): VoiceSlotCommand {
+  const t = stripVoiceText(text);
+  if (/\b(elso|az elso|elso jo)\b/.test(t)) return { type: "index", index: 0 };
+  if (/\b(masodik|a masodik)\b/.test(t)) return { type: "index", index: 1 };
+  if (/\b(harmadik|a harmadik)\b/.test(t)) return { type: "index", index: 2 };
+  if (t.includes("kesobb") || t.includes("kesobbi")) return { type: "later" };
+  if (t.includes("korabban") || t.includes("korabbi")) return { type: "earlier" };
+  if (t.includes("masik szakember") || t.includes("mas szakember")) return { type: "other_employee" };
+  if (t.includes("masik nap") || t.includes("mas nap")) return { type: "other_day" };
+  return { type: "none" };
+}
+
+export function isVoiceConfirmation(text: string) {
+  const t = stripVoiceText(text);
+  return ["megerositem", "foglalom", "igen ezt", "jo lesz", "rendben foglalja", "igen foglalja"].some((x) => t.includes(x));
+}
+
+export function isVoiceReset(text: string) {
+  const t = stripVoiceText(text);
+  return ["kezdjuk ujra", "ujrakezdes", "toroljuk", "megsem", "uj foglalas"].some((x) => t.includes(x));
 }
