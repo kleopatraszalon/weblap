@@ -21,6 +21,7 @@ export function Header() {
         <nav className="main-nav" aria-label="Fő navigáció">
           <div className="main-nav-inner">
             <div className="main-nav-row">
+              <NavLink to="/booking" className={navLinkClass}>Időpontfoglalás</NavLink>
               <NavLink to="/salons" className={navLinkClass}>{t("menu.salons")}</NavLink>
               <NavLink to="/services" className={navLinkClass}>{t("menu.pricesServices")}</NavLink>
               <NavLink to="/webshop" className={navLinkClass}>{t("menu.webshop")}</NavLink>
