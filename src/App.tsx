@@ -19,110 +19,51 @@ import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
+import { BookingPage } from "./pages/BookingPage";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
 
-/**
- * Lebegő kosár gomb a jobb felső sarokban.
- * - Mindig látszik, bármelyik oldalon vagyunk
- * - A badge-ben mutatja a kosárban lévő tételek számát
- * - Kattintásra a /cart oldalra navigál
- */
 const FloatingCartButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
-
-  // Kosár darabszám kiolvasása a localStorage-ből
   const updateCountFromStorage = () => {
     try {
       const raw = localStorage.getItem("kleoCart");
-      if (!raw) {
-        setCount(0);
-        return;
-      }
+      if (!raw) return setCount(0);
       const items = JSON.parse(raw) as CartItem[];
-      const total = items.reduce(
-        (sum, item) => sum + (item.quantity || 0),
-        0
-      );
-      setCount(total);
-    } catch {
-      setCount(0);
-    }
+      setCount(items.reduce((sum, item) => sum + (item.quantity || 0), 0));
+    } catch { setCount(0); }
   };
-
   useEffect(() => {
     updateCountFromStorage();
-
-    // Ha máshol módosul a kosár (pl. termékkártyán), frissítjük a gombot is
     const handler = () => updateCountFromStorage();
     window.addEventListener("storage", handler);
     window.addEventListener("kleo-cart-updated", handler as EventListener);
-
-    return () => {
-      window.removeEventListener("storage", handler);
-      window.removeEventListener("kleo-cart-updated", handler as EventListener);
-    };
+    return () => { window.removeEventListener("storage", handler); window.removeEventListener("kleo-cart-updated", handler as EventListener); };
   }, []);
-
-  return (
-    <Link to="/cart" className="kleo-cart-fab">
-      <span className="kleo-cart-fab__icon">🛒</span>
-      <span className="kleo-cart-fab__label">Kosár</span>
-      <span className="kleo-cart-fab__badge">{count}</span>
-    </Link>
-  );
+  return <Link to="/cart" className="kleo-cart-fab"><span className="kleo-cart-fab__icon">🛒</span><span className="kleo-cart-fab__label">Kosár</span><span className="kleo-cart-fab__badge">{count}</span></Link>;
 };
 
 const App: React.FC = () => {
-  const initialPath =
-    typeof window !== "undefined" && window.location.pathname
-      ? window.location.pathname
-      : "/";
-
+  const initialPath = typeof window !== "undefined" && window.location.pathname ? window.location.pathname : "/";
   const isSignage = initialPath.startsWith("/signage") || initialPath.startsWith("/kiosk");
-
-  // URL mindig "/" maradjon a címsorban (Render / statikus host kompatibilitás)
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.location.pathname !== "/" &&
-      !window.location.pathname.startsWith("/signage") && !window.location.pathname.startsWith("/kiosk")
-    ) {
+    if (typeof window !== "undefined" && window.location.pathname !== "/" && !window.location.pathname.startsWith("/signage") && !window.location.pathname.startsWith("/kiosk")) {
       window.history.replaceState(null, "", "/");
     }
   }, []);
-
-  return (
-    <LanguageProvider>
-      <MemoryRouter initialEntries={[initialPath]}>
-        {!isSignage && <Header />}
-        {!isSignage && <FloatingCartButton />}
-
-        <Routes>
-          <Route path="/signage" element={<SignagePage />} />
-          <Route path="/kiosk/*" element={<KioskPage />} />
-
-          <Route path="/" element={<HomePage />} />
-          <Route path="/salons" element={<SalonsPage />} />
-          <Route path="/salons/:id" element={<SalonDetailPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/prices" element={<PriceListPage />} />
-          <Route path="/loyalty" element={<LoyaltyPage />} />
-          <Route path="/franchise" element={<FranchisePage />} />
-          <Route path="/career" element={<CareerPage />} />
-          <Route path="/training" element={<TrainingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-
-          <Route path="/webshop" element={<WebshopPage />} />
-          <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="*" element={<HomePage />} />
-        </Routes>
-      </MemoryRouter>
-    </LanguageProvider>
-  );
+  return <LanguageProvider><MemoryRouter initialEntries={[initialPath]}>
+    {!isSignage && <Header />}{!isSignage && <FloatingCartButton />}
+    <Routes>
+      <Route path="/signage" element={<SignagePage />} /><Route path="/kiosk/*" element={<KioskPage />} />
+      <Route path="/" element={<HomePage />} /><Route path="/booking" element={<BookingPage />} />
+      <Route path="/salons" element={<SalonsPage />} /><Route path="/salons/:id" element={<SalonDetailPage />} />
+      <Route path="/services" element={<ServicesPage />} /><Route path="/prices" element={<PriceListPage />} />
+      <Route path="/loyalty" element={<LoyaltyPage />} /><Route path="/franchise" element={<FranchisePage />} />
+      <Route path="/career" element={<CareerPage />} /><Route path="/training" element={<TrainingPage />} /><Route path="/about" element={<AboutPage />} /><Route path="/contact" element={<ContactPage />} />
+      <Route path="/webshop" element={<WebshopPage />} /><Route path="/webshop/:productId" element={<WebshopProductDetailPage />} /><Route path="/cart" element={<CartPage />} /><Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="*" element={<HomePage />} />
+    </Routes>
+  </MemoryRouter></LanguageProvider>;
 };
 
 export default App;
