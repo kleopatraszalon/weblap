@@ -1,22 +1,60 @@
-/* Modern public-site layer inspired by the approved Kleopátra visual concept. */
+/*
+  Kleopátra public website – isolated modern design layer.
+  All layout selectors are namespaced so legacy VIR/public CSS cannot collapse the page.
+*/
 
 :root {
-  --kleo-modern-gold: var(--cms-gold, #b69861);
-  --kleo-modern-gold-soft: var(--cms-gold-soft, #e3d8c3);
-  --kleo-modern-pink: var(--cms-magenta, #ec008c);
-  --kleo-modern-pink-soft: var(--cms-magenta-soft, #f9c1d9);
-  --kleo-modern-ink: var(--cms-text, #120c08);
-  --kleo-modern-muted: var(--cms-muted, #5d5a55);
-  --kleo-modern-line: #eee8df;
-  --kleo-modern-cream: #fbf8f3;
-  --kleo-modern-radius: 22px;
-  --kleo-modern-shadow: 0 18px 46px rgba(18, 12, 8, 0.08);
-  --kleo-modern-shadow-hover: 0 24px 60px rgba(18, 12, 8, 0.13);
+  --km-gold: var(--cms-gold, #b69861);
+  --km-gold-2: #c8b187;
+  --km-gold-soft: var(--cms-gold-soft, #e3d8c3);
+  --km-pink: var(--cms-magenta, #ec008c);
+  --km-pink-soft: var(--cms-magenta-soft, #f9c1d9);
+  --km-ink: var(--cms-text, #120c08);
+  --km-muted: var(--cms-muted, #5d5a55);
+  --km-cream: #fbf8f3;
+  --km-line: #ece5dc;
+  --km-white: #ffffff;
+  --km-radius: 18px;
+  --km-shadow: 0 16px 46px rgba(18, 12, 8, 0.09);
+  --km-shadow-hover: 0 24px 58px rgba(18, 12, 8, 0.14);
+}
+
+html {
+  font-size: 16px !important;
+  background: #fff;
 }
 
 body {
+  min-width: 320px;
+  margin: 0 !important;
   background: #fff !important;
-  color: var(--kleo-modern-ink);
+  color: var(--km-ink) !important;
+  font-family: var(--cms-body-font, "Open Sans"), Arial, sans-serif !important;
+  line-height: 1.5 !important;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.kleo-modern-container {
+  width: calc(100% - 48px) !important;
+  max-width: 1240px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.kleo-home-modern,
+.kleo-modern-header,
+.kleo-modern-footer {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .kleo-home-modern {
@@ -24,63 +62,84 @@ body {
   background: #fff;
 }
 
-/* Header */
+.kleo-home-modern *,
+.kleo-modern-header *,
+.kleo-modern-footer * {
+  box-sizing: border-box;
+}
+
+.kleo-home-modern img,
+.kleo-modern-header img,
+.kleo-modern-footer img {
+  max-width: 100%;
+}
+
+/* ------------------------------ HEADER ------------------------------ */
 .kleo-modern-header {
-  position: sticky;
+  position: sticky !important;
   top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border-bottom: 1px solid rgba(182, 152, 97, 0.18);
-  box-shadow: 0 7px 24px rgba(18, 12, 8, 0.045);
-  backdrop-filter: blur(18px);
+  z-index: 1000 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-bottom: 1px solid rgba(182, 152, 97, 0.22) !important;
+  box-shadow: 0 7px 24px rgba(18, 12, 8, 0.05) !important;
+  backdrop-filter: blur(16px);
 }
 
 .kleo-modern-header__inner {
-  min-height: 86px;
-  display: grid;
-  grid-template-columns: minmax(180px, 240px) 1fr;
-  align-items: center;
-  gap: 30px;
+  min-height: 88px !important;
+  display: grid !important;
+  grid-template-columns: 230px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 28px !important;
 }
 
 .kleo-modern-header__brand {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
+  width: 220px !important;
+  max-width: 220px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
 }
 
 .kleo-modern-header__brand img {
-  display: block;
-  width: auto;
-  height: 58px;
-  max-width: 220px;
-  object-fit: contain;
+  display: block !important;
+  width: 100% !important;
+  height: 68px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
 }
 
 .kleo-modern-header__nav-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 28px;
+  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 24px !important;
 }
 
 .kleo-modern-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: clamp(14px, 1.7vw, 28px);
+  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: clamp(14px, 1.55vw, 25px) !important;
 }
 
 .kleo-modern-nav__link {
   position: relative;
-  padding: 31px 0 28px;
-  color: #2b2825;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: color 0.18s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 44px !important;
+  padding: 4px 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #302b27 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.055em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
 }
 
 .kleo-modern-nav__link::after {
@@ -88,15 +147,15 @@ body {
   position: absolute;
   left: 0;
   right: 100%;
-  bottom: 20px;
+  bottom: 4px;
   height: 2px;
-  background: var(--kleo-modern-pink);
+  background: var(--km-pink);
   transition: right 0.2s ease;
 }
 
 .kleo-modern-nav__link:hover,
 .kleo-modern-nav__link.is-active {
-  color: var(--kleo-modern-pink);
+  color: var(--km-pink) !important;
 }
 
 .kleo-modern-nav__link:hover::after,
@@ -105,98 +164,93 @@ body {
 }
 
 .kleo-modern-header__tools {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  flex: 0 0 auto;
 }
 
 .kleo-modern-header__cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 22px;
-  border-radius: 8px;
-  background: var(--kleo-modern-pink);
-  color: #fff;
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  box-shadow: 0 10px 24px rgba(236, 0, 140, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 20px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--km-pink) !important;
+  background: var(--km-pink) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(236, 0, 140, 0.18) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap;
 }
 
 .kleo-modern-header__cta:hover {
-  color: #fff;
-  background: #cf007b;
+  background: #ce007a !important;
+  color: #fff !important;
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(236, 0, 140, 0.24);
 }
 
 .kleo-modern-lang {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px;
-  border: 1px solid var(--kleo-modern-line);
-  border-radius: 999px;
-  background: #fff;
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  padding: 3px !important;
+  border: 1px solid var(--km-line) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
 }
 
 .kleo-modern-lang button {
-  border: 0;
-  border-radius: 999px;
-  padding: 5px 7px;
-  background: transparent;
-  color: #81796f;
-  font: 700 0.62rem/1 var(--cms-body-font, "Open Sans"), sans-serif;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  padding: 0 5px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: #827a72 !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
   cursor: pointer;
 }
 
 .kleo-modern-lang button.is-active {
-  background: var(--kleo-modern-ink);
-  color: #fff;
+  background: var(--km-ink) !important;
+  color: #fff !important;
 }
 
 .kleo-modern-header__menu-btn {
-  display: none;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--kleo-modern-line);
-  border-radius: 10px;
-  background: #fff;
-  padding: 10px;
+  display: none !important;
 }
 
-.kleo-modern-header__menu-btn span {
-  display: block;
-  height: 2px;
-  margin: 5px 0;
-  background: var(--kleo-modern-ink);
-}
-
-/* Shared */
+/* ------------------------------ SHARED ------------------------------ */
 .kleo-modern-eyebrow {
-  margin: 0 0 12px;
-  color: var(--kleo-modern-gold);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  margin: 0 0 11px !important;
+  color: var(--km-gold) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
 }
 
 .kleo-modern-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 46px;
-  padding: 0 22px;
-  border-radius: 8px;
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
+  min-height: 46px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 22px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.055em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
@@ -205,87 +259,96 @@ body {
 }
 
 .kleo-modern-btn--primary {
-  background: var(--kleo-modern-pink);
-  color: #fff;
-  box-shadow: 0 11px 24px rgba(236, 0, 140, 0.18);
+  border: 1px solid var(--km-pink) !important;
+  background: var(--km-pink) !important;
+  color: #fff !important;
+  box-shadow: 0 11px 24px rgba(236, 0, 140, 0.18) !important;
 }
 
 .kleo-modern-btn--primary:hover {
-  color: #fff;
-  background: #cc0078;
-  box-shadow: 0 15px 32px rgba(236, 0, 140, 0.24);
+  background: #cc0078 !important;
+  color: #fff !important;
 }
 
 .kleo-modern-btn--outline {
-  border: 1px solid var(--kleo-modern-gold);
-  background: #fff;
-  color: var(--kleo-modern-gold);
+  border: 1px solid var(--km-gold) !important;
+  background: #fff !important;
+  color: #977743 !important;
 }
 
 .kleo-modern-btn--outline:hover {
-  background: var(--kleo-modern-gold);
-  color: #fff;
+  background: var(--km-gold) !important;
+  color: #fff !important;
 }
 
 .kleo-modern-btn--light {
-  background: #fff;
-  color: var(--kleo-modern-pink);
-  box-shadow: 0 10px 25px rgba(18, 12, 8, 0.12);
+  border: 1px solid #fff !important;
+  background: #fff !important;
+  color: var(--km-pink) !important;
+  box-shadow: 0 10px 25px rgba(18, 12, 8, 0.12) !important;
 }
 
 .kleo-modern-section {
-  padding: 76px 0;
+  width: 100%;
+  padding: 72px 0 !important;
+  background: #fff;
 }
 
 .kleo-modern-section--soft {
-  background: linear-gradient(180deg, #fff 0%, #fcfaf7 100%);
+  background: linear-gradient(180deg, #fff 0%, #fbf8f3 100%) !important;
 }
 
 .kleo-modern-section-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 30px;
+  width: 100%;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  margin: 0 0 28px !important;
 }
 
 .kleo-modern-section-head h2,
-.kleo-modern-shop__copy h2,
-.kleo-modern-promo__copy h2 {
-  margin: 0;
-  color: var(--kleo-modern-ink);
-  font-family: var(--cms-heading-font, "Montserrat"), sans-serif;
-  font-size: clamp(2rem, 3.2vw, 3.2rem);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  line-height: 1.04;
+.kleo-modern-promo__copy h2,
+.kleo-modern-shop__copy h2 {
+  margin: 0 !important;
+  color: var(--km-ink) !important;
+  font-family: var(--cms-heading-font, "Montserrat"), Arial, sans-serif !important;
+  font-size: clamp(30px, 3vw, 48px) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.05 !important;
+  text-transform: none !important;
 }
 
 .kleo-modern-text-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--kleo-modern-ink);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding-bottom: 4px;
+  color: var(--km-ink) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.3 !important;
+  text-transform: uppercase !important;
   white-space: nowrap;
 }
 
 .kleo-modern-text-link span,
 .kleo-modern-card-arrow {
-  color: var(--kleo-modern-pink);
+  color: var(--km-pink) !important;
 }
 
-/* Hero */
+/* ------------------------------ HERO ------------------------------ */
 .kleo-modern-hero {
   position: relative;
-  min-height: 620px;
+  width: 100%;
+  min-height: 610px;
+  overflow: hidden;
   border-bottom: 1px solid rgba(182, 152, 97, 0.28);
   background:
-    radial-gradient(circle at 72% 20%, rgba(227, 216, 195, 0.42), transparent 33%),
-    linear-gradient(115deg, #fff 0%, #fff 48%, #f8f2ea 100%);
+    radial-gradient(circle at 70% 15%, rgba(227, 216, 195, 0.46), transparent 32%),
+    linear-gradient(110deg, #fff 0%, #fff 48%, #f7f0e8 100%) !important;
 }
 
 .kleo-modern-hero__shape {
@@ -296,896 +359,1082 @@ body {
 .kleo-modern-hero__shape--gold {
   width: 430px;
   height: 430px;
-  top: -220px;
-  left: -150px;
-  border: 1px solid rgba(182, 152, 97, 0.16);
+  top: -225px;
+  left: -170px;
+  border: 1px solid rgba(182, 152, 97, 0.18);
   border-radius: 50%;
 }
 
 .kleo-modern-hero__shape--pink {
-  right: -170px;
-  bottom: -200px;
-  width: 560px;
-  height: 400px;
-  border-radius: 55% 0 0 0;
-  background: linear-gradient(135deg, rgba(236, 0, 140, 0.95), rgba(236, 0, 140, 0.82));
-  transform: rotate(-9deg);
-  transform-origin: right bottom;
+  right: -160px;
+  bottom: -215px;
+  width: 580px;
+  height: 430px;
+  border-radius: 60% 0 0 0;
+  background: linear-gradient(135deg, rgba(236, 0, 140, 0.98), rgba(236, 0, 140, 0.82));
+  transform: rotate(-8deg);
 }
 
 .kleo-modern-hero__grid {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(380px, 1.05fr);
-  gap: 58px;
-  align-items: center;
-  min-height: 620px;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  min-height: 610px;
+  display: grid !important;
+  grid-template-columns: minmax(0, 0.96fr) minmax(430px, 1.04fr) !important;
+  gap: 54px !important;
+  align-items: center !important;
+  padding-top: 38px !important;
+  padding-bottom: 38px !important;
 }
 
 .kleo-modern-hero__copy {
-  max-width: 650px;
-  padding: 20px 0;
+  width: 100% !important;
+  max-width: 640px !important;
+  padding: 14px 0 !important;
 }
 
 .kleo-modern-hero__title {
-  margin: 0;
-  max-width: 690px;
-  font-family: var(--cms-heading-font, "Montserrat"), sans-serif;
-  font-size: clamp(3.25rem, 5.5vw, 5.9rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-  color: var(--kleo-modern-ink);
+  margin: 0 !important;
+  max-width: 650px !important;
+  color: var(--km-ink) !important;
+  font-family: var(--cms-heading-font, "Montserrat"), Arial, sans-serif !important;
+  font-size: clamp(48px, 5vw, 82px) !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.055em !important;
+  line-height: 0.98 !important;
+  text-transform: none !important;
 }
 
 .kleo-modern-hero__title span {
-  color: var(--kleo-modern-pink);
+  color: var(--km-pink) !important;
 }
 
 .kleo-modern-hero__lead {
-  max-width: 590px;
-  margin: 26px 0 0;
-  color: #675f58;
-  font-size: 1.02rem;
-  line-height: 1.7;
+  max-width: 570px !important;
+  margin: 24px 0 0 !important;
+  color: #675f58 !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
 }
 
 .kleo-modern-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 30px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 28px !important;
 }
 
 .kleo-modern-benefits {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 38px;
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 15px !important;
+  margin-top: 34px !important;
 }
 
 .kleo-modern-benefits > div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
 }
 
 .kleo-modern-benefits b {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  border: 1px solid rgba(182, 152, 97, 0.46);
-  border-radius: 50%;
-  color: var(--kleo-modern-gold);
-  font-size: 1.1rem;
+  width: 38px !important;
+  height: 38px !important;
+  flex: 0 0 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(182, 152, 97, 0.48) !important;
+  border-radius: 50% !important;
+  color: var(--km-gold) !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
 }
 
 .kleo-modern-benefits span,
 .kleo-modern-benefits strong,
 .kleo-modern-benefits small {
-  display: block;
+  display: block !important;
 }
 
 .kleo-modern-benefits strong {
-  color: var(--kleo-modern-ink);
-  font-size: 0.75rem;
+  color: var(--km-ink) !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
 }
 
 .kleo-modern-benefits small {
-  margin-top: 2px;
-  color: #817970;
-  font-size: 0.67rem;
+  margin-top: 3px !important;
+  color: #817970 !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
 }
 
 .kleo-modern-hero__visual {
   position: relative;
-  align-self: stretch;
-  display: flex;
-  align-items: flex-end;
-  min-height: 520px;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 530px !important;
+  align-self: stretch !important;
+  display: flex !important;
+  align-items: flex-end !important;
 }
 
 .kleo-modern-hero__image-wrap {
-  position: absolute;
-  inset: 0 -5vw 0 0;
-  overflow: hidden;
-  border-radius: 48% 0 0 44%;
-  background: #f7efe7;
+  position: absolute !important;
+  inset: 0 -60px 0 0 !important;
+  overflow: hidden !important;
+  border-radius: 48% 0 0 44% !important;
+  background: #f6eee7 !important;
+  box-shadow: inset 0 0 0 1px rgba(182, 152, 97, 0.08);
 }
 
 .kleo-modern-hero__image-wrap::before {
   content: "";
   position: absolute;
   z-index: 2;
-  inset: 11% auto auto 6%;
-  width: 170px;
-  height: 270px;
-  border: 3px solid rgba(182, 152, 97, 0.62);
-  border-radius: 52% 44% 62% 38%;
-  transform: rotate(18deg);
-  opacity: 0.58;
+  left: 8%;
+  top: 11%;
+  width: 155px;
+  height: 250px;
+  border: 3px solid rgba(182, 152, 97, 0.55);
+  border-radius: 50% 44% 58% 40%;
+  transform: rotate(17deg);
+  opacity: 0.55;
   pointer-events: none;
 }
 
 .kleo-modern-hero__image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 530px !important;
+  object-fit: cover !important;
+  object-position: center center !important;
 }
 
 .kleo-modern-loyalty-card {
   position: relative;
   z-index: 4;
-  margin: 0 26px 28px auto;
-  width: min(290px, 70%);
-  min-height: 122px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 20px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(236, 0, 140, 0.97), rgba(215, 0, 126, 0.96));
-  color: #fff;
-  box-shadow: 0 18px 40px rgba(236, 0, 140, 0.23);
-}
-
-.kleo-modern-loyalty-card:hover {
-  color: #fff;
-  transform: translateY(-2px);
+  width: min(290px, 72%) !important;
+  min-height: 118px !important;
+  margin: 0 24px 26px auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 18px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #ec008c, #d4007d) !important;
+  color: #fff !important;
+  box-shadow: 0 18px 40px rgba(236, 0, 140, 0.24) !important;
 }
 
 .kleo-modern-loyalty-card__icon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
-  border: 1px solid rgba(255, 255, 255, 0.56);
-  border-radius: 12px;
-  font-size: 1.45rem;
+  width: 46px !important;
+  height: 46px !important;
+  flex: 0 0 46px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-radius: 12px !important;
+  font-size: 20px !important;
 }
 
 .kleo-modern-loyalty-card strong,
 .kleo-modern-loyalty-card small {
-  display: block;
+  display: block !important;
+  color: #fff !important;
 }
 
 .kleo-modern-loyalty-card strong {
-  font-size: 0.86rem;
-  text-transform: uppercase;
-  letter-spacing: 0.055em;
+  font-size: 13px !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
 }
 
 .kleo-modern-loyalty-card small {
-  margin-top: 5px;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.45;
+  margin-top: 5px !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
 }
 
-/* Services */
+/* ------------------------------ SERVICES ------------------------------ */
+.kleo-modern-services {
+  background: #fff !important;
+}
+
 .kleo-modern-service-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 14px;
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 14px !important;
 }
 
 .kleo-modern-service-card {
-  position: relative;
-  min-height: 235px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 27px 22px 22px;
-  border: 1px solid var(--kleo-modern-line);
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 12px 30px rgba(18, 12, 8, 0.055);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  min-width: 0 !important;
+  min-height: 230px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  padding: 22px 18px !important;
+  border: 1px solid #eee9e3 !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: var(--km-ink) !important;
+  box-shadow: 0 10px 28px rgba(18, 12, 8, 0.055) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .kleo-modern-service-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(182, 152, 97, 0.55);
-  box-shadow: var(--kleo-modern-shadow-hover);
+  border-color: rgba(182, 152, 97, 0.6) !important;
+  box-shadow: var(--km-shadow-hover) !important;
 }
 
 .kleo-modern-service-card__icon {
-  display: grid;
-  place-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(182, 152, 97, 0.44);
-  border-radius: 50%;
-  color: var(--kleo-modern-gold);
-  font-size: 1.45rem;
+  width: 50px !important;
+  height: 50px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(182, 152, 97, 0.42) !important;
+  border-radius: 50% !important;
+  color: var(--km-gold) !important;
+  font-size: 22px !important;
 }
 
 .kleo-modern-service-card h3 {
-  margin: 0 0 10px;
-  color: var(--kleo-modern-ink);
-  font-size: 0.94rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  margin: 18px 0 9px !important;
+  color: var(--km-ink) !important;
+  font-family: var(--cms-heading-font, "Montserrat"), sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.25 !important;
+  text-transform: none !important;
 }
 
 .kleo-modern-service-card p {
-  margin: 0;
-  color: #756e67;
-  font-size: 0.77rem;
-  line-height: 1.55;
+  margin: 0 !important;
+  color: #716960 !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
 }
 
 .kleo-modern-card-arrow {
-  margin-top: auto;
-  padding-top: 14px;
-  font-size: 1.2rem;
-  font-weight: 700;
+  margin-top: auto !important;
+  padding-top: 14px !important;
+  font-size: 18px !important;
 }
 
-/* Salons */
+/* ------------------------------ SALONS ------------------------------ */
 .kleo-modern-salon-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
 }
 
 .kleo-modern-salon-card {
-  overflow: hidden;
-  border: 1px solid var(--kleo-modern-line);
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 13px 32px rgba(18, 12, 8, 0.06);
+  min-width: 0 !important;
+  overflow: hidden !important;
+  display: block !important;
+  border: 1px solid #ebe4dc !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: var(--km-ink) !important;
+  box-shadow: 0 10px 28px rgba(18, 12, 8, 0.06) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .kleo-modern-salon-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--kleo-modern-shadow-hover);
+  transform: translateY(-5px);
+  box-shadow: var(--km-shadow-hover) !important;
 }
 
-.kleo-modern-salon-card img {
-  display: block;
-  width: 100%;
-  height: 176px;
-  object-fit: cover;
+.kleo-modern-salon-card > img {
+  display: block !important;
+  width: 100% !important;
+  height: 190px !important;
+  object-fit: cover !important;
 }
 
 .kleo-modern-salon-card__body {
-  padding: 18px 18px 20px;
+  padding: 17px 18px 19px !important;
 }
 
 .kleo-modern-salon-card__body small {
-  color: var(--kleo-modern-gold);
-  font-size: 0.63rem;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  display: block !important;
+  color: var(--km-gold) !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
 }
 
 .kleo-modern-salon-card__body h3 {
-  margin: 7px 0 3px;
-  font-size: 1rem;
-  letter-spacing: 0;
+  margin: 7px 0 3px !important;
+  color: var(--km-ink) !important;
+  font-size: 16px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.25 !important;
+  text-transform: none !important;
 }
 
 .kleo-modern-salon-card__body p {
-  margin: 0 0 12px;
-  color: #777069;
-  font-size: 0.8rem;
+  margin: 0 !important;
+  color: #756e67 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
 }
 
 .kleo-modern-salon-card__body span {
-  color: var(--kleo-modern-pink);
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  display: inline-block !important;
+  margin-top: 11px !important;
+  color: var(--km-pink) !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
 }
 
-/* Promo */
+/* ------------------------------ PROMO ------------------------------ */
 .kleo-modern-promo-wrap {
-  padding: 12px 0 52px;
-  background: linear-gradient(180deg, #fcfaf7 0%, #fff 100%);
+  width: 100%;
+  padding: 26px 0 48px !important;
+  background: #fbf8f3 !important;
 }
 
 .kleo-modern-promo {
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  align-items: center;
-  min-height: 260px;
-  border: 1px solid rgba(182, 152, 97, 0.55);
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at 88% 55%, rgba(249, 193, 217, 0.62), transparent 31%),
-    linear-gradient(110deg, #fffaf4 0%, #fff 53%, #fff1f7 100%);
-  box-shadow: var(--kleo-modern-shadow);
+  min-height: 270px !important;
+  overflow: hidden !important;
+  display: grid !important;
+  grid-template-columns: 1.05fr 0.95fr !important;
+  align-items: stretch !important;
+  border: 1px solid rgba(182, 152, 97, 0.5) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(105deg, #fffaf4 0%, #fff 48%, #fbe3ef 100%) !important;
+  box-shadow: 0 12px 34px rgba(18, 12, 8, 0.065) !important;
 }
 
 .kleo-modern-promo__copy {
-  z-index: 2;
-  padding: 36px 42px;
-}
-
-.kleo-modern-promo__copy h2 {
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  padding: 36px 38px !important;
 }
 
 .kleo-modern-promo__copy p:not(.kleo-modern-eyebrow) {
-  max-width: 570px;
-  margin: 14px 0 22px;
-  color: #6f6861;
-  line-height: 1.62;
+  max-width: 650px !important;
+  margin: 14px 0 22px !important;
+  color: #6d665f !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
 }
 
 .kleo-modern-promo__image {
-  align-self: stretch;
-  min-height: 260px;
+  min-height: 270px !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  background: linear-gradient(120deg, rgba(255,255,255,0), rgba(249,193,217,.25));
 }
 
 .kleo-modern-promo__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: multiply;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 270px !important;
+  object-fit: cover !important;
 }
 
-/* Trust */
+/* ------------------------------ TRUST ------------------------------ */
 .kleo-modern-trust {
-  padding: 35px 0 44px;
-  border-top: 1px solid rgba(182, 152, 97, 0.16);
-  border-bottom: 1px solid rgba(182, 152, 97, 0.16);
-  background: #fff;
+  width: 100%;
+  padding: 32px 0 !important;
+  background: #fff !important;
+  border-top: 1px solid #f0ebe5;
+  border-bottom: 1px solid #f0ebe5;
 }
 
 .kleo-modern-trust__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
 }
 
 .kleo-modern-trust__item {
-  display: flex;
-  align-items: center;
-  gap: 13px;
+  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
 }
 
 .kleo-modern-trust__icon {
-  display: grid;
-  place-items: center;
-  width: 45px;
-  height: 45px;
-  flex: 0 0 45px;
-  color: var(--kleo-modern-gold);
-  font-size: 1.45rem;
+  width: 42px !important;
+  height: 42px !important;
+  flex: 0 0 42px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--km-gold) !important;
+  font-size: 21px !important;
 }
 
 .kleo-modern-trust__item strong,
 .kleo-modern-trust__item b,
 .kleo-modern-trust__item small {
-  display: block;
+  display: block !important;
 }
 
 .kleo-modern-trust__item strong {
-  color: var(--kleo-modern-ink);
-  font-size: 1.1rem;
-  line-height: 1;
+  color: var(--km-ink) !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
 }
 
 .kleo-modern-trust__item b {
-  margin-top: 2px;
-  color: var(--kleo-modern-ink);
-  font-size: 0.78rem;
+  margin-top: 2px !important;
+  color: var(--km-ink) !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
 }
 
 .kleo-modern-trust__item small {
-  margin-top: 3px;
-  color: #827a72;
-  font-size: 0.68rem;
+  margin-top: 3px !important;
+  color: #7c746c !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
 }
 
-/* Shop */
+/* ------------------------------ SHOP ------------------------------ */
 .kleo-modern-shop {
-  background: #fff;
+  background: #fff !important;
 }
 
 .kleo-modern-shop__grid {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.7fr) minmax(0, 1.3fr);
-  gap: 46px;
-  align-items: center;
-  padding: 30px;
-  border-radius: 22px;
-  background: linear-gradient(110deg, #fff 0%, #fbf8f3 100%);
-  border: 1px solid var(--kleo-modern-line);
-  box-shadow: var(--kleo-modern-shadow);
+  display: grid !important;
+  grid-template-columns: minmax(300px, 0.72fr) minmax(0, 1.28fr) !important;
+  align-items: center !important;
+  gap: 48px !important;
 }
 
-.kleo-modern-shop__copy p:not(.kleo-modern-eyebrow) {
-  margin: 18px 0 24px;
-  color: #6e665f;
-  line-height: 1.65;
+.kleo-modern-shop__copy > p:not(.kleo-modern-eyebrow) {
+  margin: 16px 0 22px !important;
+  color: #70685f !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
 }
 
 .kleo-modern-shop__visual {
-  position: relative;
-  min-height: 300px;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #fff;
+  overflow: hidden !important;
+  border: 1px solid #ece5dd !important;
+  border-radius: 18px !important;
+  background: #fbfaf8 !important;
+  box-shadow: var(--km-shadow) !important;
 }
 
-.kleo-modern-shop__visual img {
-  display: block;
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
+.kleo-modern-shop__visual > img {
+  display: block !important;
+  width: 100% !important;
+  height: 350px !important;
+  object-fit: cover !important;
 }
 
 .kleo-modern-shop__chips {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 16px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  border-top: 1px solid #eee8e1;
 }
 
 .kleo-modern-shop__chips span {
-  padding: 9px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.64);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.88);
-  color: #2d2925;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-align: center;
-  backdrop-filter: blur(8px);
+  min-height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 10px !important;
+  border-right: 1px solid #eee8e1;
+  color: #514a44 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  text-align: center !important;
 }
 
-/* Booking strip */
+.kleo-modern-shop__chips span:last-child {
+  border-right: 0;
+}
+
+/* ------------------------------ BOOKING STRIP ------------------------------ */
 .kleo-modern-booking-strip {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(90deg, #e70089, var(--kleo-modern-pink));
-  color: #fff;
-}
-
-.kleo-modern-booking-strip::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.1;
-  background-image: radial-gradient(circle at 20px 20px, #fff 0 1px, transparent 2px);
-  background-size: 34px 34px;
+  width: 100%;
+  padding: 22px 0 !important;
+  background: linear-gradient(100deg, #dc0081, #ec008c 60%, #f0279f) !important;
+  color: #fff !important;
 }
 
 .kleo-modern-booking-strip__inner {
-  position: relative;
-  z-index: 2;
-  min-height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
 }
 
 .kleo-modern-booking-strip__copy {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
 }
 
 .kleo-modern-booking-strip__icon {
-  display: grid;
-  place-items: center;
-  width: 45px;
-  height: 45px;
-  border: 1px solid rgba(255, 255, 255, 0.58);
-  border-radius: 10px;
-  font-size: 1.35rem;
+  width: 46px !important;
+  height: 46px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255,255,255,.6) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-size: 18px !important;
 }
 
 .kleo-modern-booking-strip__copy strong,
 .kleo-modern-booking-strip__copy small {
-  display: block;
+  display: block !important;
+  color: #fff !important;
 }
 
 .kleo-modern-booking-strip__copy strong {
-  font-size: 1.2rem;
+  font-family: var(--cms-heading-font, "Montserrat"), sans-serif !important;
+  font-size: 20px !important;
+  line-height: 1.2 !important;
 }
 
 .kleo-modern-booking-strip__copy small {
-  margin-top: 4px;
-  color: rgba(255, 255, 255, 0.86);
+  margin-top: 3px !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  opacity: .9;
 }
 
-/* Footer */
-.kleo-modern-footer {
-  padding: 0 !important;
-  background: #120f0d !important;
+/* ------------------------------ FLOATING CART ------------------------------ */
+.kleo-cart-fab {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 1200 !important;
+  min-height: 46px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(182,152,97,.35) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: var(--km-ink) !important;
+  box-shadow: 0 12px 32px rgba(18,12,8,.14) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.kleo-cart-fab__badge {
+  min-width: 21px !important;
+  height: 21px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 5px !important;
+  border-radius: 999px !important;
+  background: var(--km-pink) !important;
   color: #fff !important;
-  border-top: 0 !important;
+  font-size: 9px !important;
+}
+
+/* ------------------------------ FOOTER ------------------------------ */
+.kleo-modern-footer {
+  background: #120c08 !important;
+  color: #fff !important;
+  border-top: 1px solid rgba(182, 152, 97, 0.5) !important;
+  padding: 48px 0 0 !important;
 }
 
 .kleo-modern-footer__grid {
-  display: grid;
-  grid-template-columns: minmax(220px, 1.45fr) repeat(3, minmax(140px, 0.75fr)) minmax(180px, 0.9fr);
-  gap: 34px;
-  padding-top: 54px;
-  padding-bottom: 48px;
+  display: grid !important;
+  grid-template-columns: 1.35fr repeat(4, minmax(0, 0.8fr)) !important;
+  gap: 34px !important;
+  align-items: start !important;
 }
 
 .kleo-modern-footer__brand img {
-  width: auto;
-  height: 72px;
-  max-width: 240px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.96;
+  display: block !important;
+  width: 210px !important;
+  height: 90px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  background: #fff !important;
 }
 
 .kleo-modern-footer__brand p {
-  max-width: 270px;
-  margin: 16px 0 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.78rem;
-  line-height: 1.6;
-}
-
-.kleo-modern-footer h3 {
-  margin: 0 0 17px;
-  color: var(--kleo-modern-gold);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  max-width: 280px !important;
+  margin: 14px 0 0 !important;
+  color: rgba(255,255,255,.68) !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
 }
 
 .kleo-modern-footer__col,
 .kleo-modern-footer__contact {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 9px !important;
 }
 
-.kleo-modern-footer__col a,
-.kleo-modern-footer__contact a,
+.kleo-modern-footer h3 {
+  margin: 0 0 7px !important;
+  color: var(--km-gold) !important;
+  font-family: var(--cms-heading-font, "Montserrat"), sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.09em !important;
+  line-height: 1.3 !important;
+  text-transform: uppercase !important;
+}
+
+.kleo-modern-footer a,
 .kleo-modern-footer__contact p {
-  margin: 0 0 8px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.76rem;
-  line-height: 1.4;
+  margin: 0 !important;
+  color: rgba(255,255,255,.78) !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
 }
 
-.kleo-modern-footer__col a:hover,
-.kleo-modern-footer__contact a:hover {
-  color: #fff;
+.kleo-modern-footer a:hover {
+  color: var(--km-gold) !important;
 }
 
 .kleo-modern-footer__social {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
+  display: flex !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
 }
 
 .kleo-modern-footer__social a {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  margin: 0;
-  border: 1px solid rgba(182, 152, 97, 0.38);
-  border-radius: 50%;
+  width: 32px !important;
+  height: 32px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(182,152,97,.38) !important;
+  border-radius: 50% !important;
 }
 
 .kleo-modern-footer__social img {
-  width: 17px;
-  height: 17px;
-  object-fit: contain;
-  filter: grayscale(1) brightness(2.3);
+  width: 17px !important;
+  height: 17px !important;
+  object-fit: contain !important;
 }
 
 .kleo-modern-footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 38px !important;
+  border-top: 1px solid rgba(255,255,255,.1) !important;
 }
 
-.kleo-modern-footer__bottom .container {
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 0.68rem;
+.kleo-modern-footer__bottom-inner {
+  min-height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  color: rgba(255,255,255,.52) !important;
+  font-size: 10px !important;
 }
 
-/* Neutralize legacy floating-cart styling so it fits the redesign. */
-.kleo-cart-fab {
-  right: 20px !important;
-  bottom: 20px !important;
-  border: 1px solid rgba(182, 152, 97, 0.34) !important;
-  border-radius: 999px !important;
-  background: #fff !important;
-  color: var(--kleo-modern-ink) !important;
-  box-shadow: 0 14px 35px rgba(18, 12, 8, 0.12) !important;
-}
-
-.kleo-cart-fab__badge {
-  background: var(--kleo-modern-pink) !important;
-  color: #fff !important;
-}
-
+/* ------------------------------ RESPONSIVE ------------------------------ */
 @media (max-width: 1180px) {
   .kleo-modern-header__inner {
-    grid-template-columns: 185px 1fr;
-    gap: 16px;
+    grid-template-columns: 190px minmax(0, 1fr) !important;
+    gap: 18px !important;
   }
 
-  .kleo-modern-header__brand img {
-    height: 50px;
-  }
-
-  .kleo-modern-header__nav-wrap {
-    gap: 15px;
+  .kleo-modern-header__brand {
+    width: 185px !important;
   }
 
   .kleo-modern-nav {
-    gap: 13px;
+    gap: 12px !important;
   }
 
   .kleo-modern-nav__link {
-    font-size: 0.69rem;
-  }
-
-  .kleo-modern-lang {
-    display: none;
-  }
-
-  .kleo-modern-service-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .kleo-modern-footer__grid {
-    grid-template-columns: 1.4fr repeat(2, 0.8fr) 0.9fr;
-  }
-
-  .kleo-modern-footer__col:nth-of-type(3) {
-    display: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .kleo-modern-header__inner {
-    position: relative;
-    min-height: 76px;
-    grid-template-columns: 1fr auto;
-  }
-
-  .kleo-modern-header__menu-btn {
-    display: block;
-  }
-
-  .kleo-modern-header__nav-wrap {
-    display: none;
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    top: calc(100% - 2px);
-    padding: 20px;
-    border: 1px solid var(--kleo-modern-line);
-    border-radius: 16px;
-    background: #fff;
-    box-shadow: 0 20px 45px rgba(18, 12, 8, 0.14);
-  }
-
-  .kleo-modern-header__nav-wrap.is-open {
-    display: block;
-  }
-
-  .kleo-modern-nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px 18px;
-  }
-
-  .kleo-modern-nav__link {
-    padding: 12px 0;
-  }
-
-  .kleo-modern-nav__link::after {
-    bottom: 7px;
-  }
-
-  .kleo-modern-header__tools {
-    justify-content: space-between;
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--kleo-modern-line);
-  }
-
-  .kleo-modern-lang {
-    display: inline-flex;
-  }
-
-  .kleo-modern-hero__grid {
-    grid-template-columns: 1fr;
-    min-height: 0;
-    gap: 22px;
-    padding-top: 58px;
-  }
-
-  .kleo-modern-hero__copy {
-    max-width: 760px;
-  }
-
-  .kleo-modern-hero__visual {
-    min-height: 520px;
-  }
-
-  .kleo-modern-hero__image-wrap {
-    inset: 0;
-    border-radius: 28px 28px 0 0;
-  }
-
-  .kleo-modern-hero__shape--pink {
-    right: -250px;
-  }
-
-  .kleo-modern-salon-grid,
-  .kleo-modern-trust__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .kleo-modern-promo,
-  .kleo-modern-shop__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .kleo-modern-promo__image {
-    min-height: 300px;
-  }
-
-  .kleo-modern-footer__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .kleo-modern-footer__brand {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 640px) {
-  .kleo-modern-header__brand img {
-    height: 44px;
-    max-width: 175px;
-  }
-
-  .kleo-modern-nav {
-    grid-template-columns: 1fr;
-  }
-
-  .kleo-modern-header__tools {
-    align-items: stretch;
-    flex-direction: column;
+    font-size: 10px !important;
   }
 
   .kleo-modern-header__cta {
-    width: 100%;
+    padding-inline: 14px !important;
+    font-size: 10px !important;
+  }
+
+  .kleo-modern-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .kleo-modern-footer__grid {
+    grid-template-columns: 1.2fr repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .kleo-modern-footer__contact {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 980px) {
+  .kleo-modern-header {
+    position: sticky !important;
+  }
+
+  .kleo-modern-header__inner {
+    min-height: 76px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+  }
+
+  .kleo-modern-header__brand {
+    width: 190px !important;
+    max-width: 190px !important;
+  }
+
+  .kleo-modern-header__brand img {
+    height: 58px !important;
+  }
+
+  .kleo-modern-header__menu-btn {
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 44px !important;
+    display: inline-flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 10px !important;
+    border: 1px solid #e8e0d7 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    cursor: pointer;
+  }
+
+  .kleo-modern-header__menu-btn span {
+    display: block !important;
+    width: 100% !important;
+    height: 2px !important;
+    margin: 0 !important;
+    background: var(--km-ink) !important;
+  }
+
+  .kleo-modern-header__nav-wrap {
+    position: absolute !important;
+    top: 76px !important;
+    left: 0 !important;
+    right: 0 !important;
+    display: none !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    padding: 22px 24px 24px !important;
+    border-top: 1px solid #eee7df !important;
+    border-bottom: 1px solid #eee7df !important;
+    background: rgba(255,255,255,.99) !important;
+    box-shadow: 0 18px 36px rgba(18,12,8,.12) !important;
+  }
+
+  .kleo-modern-header__nav-wrap.is-open {
+    display: flex !important;
+  }
+
+  .kleo-modern-nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 4px 18px !important;
+  }
+
+  .kleo-modern-nav__link {
+    min-height: 38px !important;
+    font-size: 12px !important;
+  }
+
+  .kleo-modern-header__tools {
+    justify-content: space-between !important;
   }
 
   .kleo-modern-hero__grid {
-    padding-top: 40px;
-    padding-bottom: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 0.9fr) !important;
+    gap: 30px !important;
   }
 
   .kleo-modern-hero__title {
-    font-size: clamp(2.8rem, 14vw, 4.3rem);
-  }
-
-  .kleo-modern-hero__lead {
-    font-size: 0.95rem;
+    font-size: clamp(44px, 6vw, 64px) !important;
   }
 
   .kleo-modern-benefits {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
 
-  .kleo-modern-hero__visual {
-    min-height: 430px;
+  .kleo-modern-salon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  .kleo-modern-loyalty-card {
-    width: calc(100% - 24px);
-    margin: 0 12px 16px;
+  .kleo-modern-trust__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .kleo-modern-shop__grid {
+    grid-template-columns: 1fr 1.2fr !important;
+    gap: 30px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .kleo-modern-container {
+    width: calc(100% - 28px) !important;
   }
 
   .kleo-modern-section {
-    padding: 56px 0;
+    padding: 54px 0 !important;
   }
 
   .kleo-modern-section-head {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .kleo-modern-section-head h2,
+  .kleo-modern-promo__copy h2,
+  .kleo-modern-shop__copy h2 {
+    font-size: 34px !important;
+  }
+
+  .kleo-modern-hero {
+    min-height: 0 !important;
+  }
+
+  .kleo-modern-hero__grid {
+    min-height: 0 !important;
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding-top: 34px !important;
+    padding-bottom: 34px !important;
+  }
+
+  .kleo-modern-hero__copy {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .kleo-modern-hero__title {
+    max-width: 600px !important;
+    font-size: clamp(42px, 11vw, 62px) !important;
+    line-height: 1 !important;
+  }
+
+  .kleo-modern-hero__lead {
+    font-size: 15px !important;
+  }
+
+  .kleo-modern-benefits {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .kleo-modern-benefits > div {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .kleo-modern-hero__visual {
+    min-height: 410px !important;
+  }
+
+  .kleo-modern-hero__image-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 24px !important;
+  }
+
+  .kleo-modern-hero__image-wrap img {
+    min-height: 410px !important;
+  }
+
+  .kleo-modern-loyalty-card {
+    width: min(290px, calc(100% - 30px)) !important;
+    margin: 0 16px 16px auto !important;
+  }
+
+  .kleo-modern-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .kleo-modern-service-card {
+    min-height: 210px !important;
+  }
+
+  .kleo-modern-promo {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kleo-modern-promo__copy {
+    padding: 30px 26px !important;
+  }
+
+  .kleo-modern-promo__image {
+    min-height: 230px !important;
+  }
+
+  .kleo-modern-promo__image img {
+    min-height: 230px !important;
+  }
+
+  .kleo-modern-shop__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kleo-modern-shop__visual > img {
+    height: 310px !important;
+  }
+
+  .kleo-modern-booking-strip__inner {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .kleo-modern-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px 22px !important;
+  }
+
+  .kleo-modern-footer__brand {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .kleo-modern-container {
+    width: calc(100% - 24px) !important;
+  }
+
+  .kleo-modern-header__inner {
+    min-height: 70px !important;
+  }
+
+  .kleo-modern-header__brand {
+    width: 165px !important;
+  }
+
+  .kleo-modern-header__brand img {
+    height: 52px !important;
+  }
+
+  .kleo-modern-header__nav-wrap {
+    top: 70px !important;
+    padding: 18px 18px 22px !important;
+  }
+
+  .kleo-modern-nav {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kleo-modern-header__tools {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .kleo-modern-header__cta {
+    width: 100% !important;
+  }
+
+  .kleo-modern-hero__grid {
+    padding-top: 28px !important;
+  }
+
+  .kleo-modern-hero__title {
+    font-size: 43px !important;
+  }
+
+  .kleo-modern-benefits {
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+  }
+
+  .kleo-modern-benefits > div {
+    flex-direction: row !important;
+  }
+
+  .kleo-modern-hero__visual {
+    min-height: 340px !important;
+  }
+
+  .kleo-modern-hero__image-wrap img {
+    min-height: 340px !important;
+  }
+
+  .kleo-modern-loyalty-card {
+    min-height: 100px !important;
+    padding: 14px !important;
   }
 
   .kleo-modern-service-grid,
   .kleo-modern-salon-grid,
   .kleo-modern-trust__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .kleo-modern-service-card {
-    min-height: 190px;
+    min-height: 190px !important;
   }
 
-  .kleo-modern-promo__copy {
-    padding: 28px 24px;
-  }
-
-  .kleo-modern-promo__image {
-    min-height: 220px;
-  }
-
-  .kleo-modern-shop__grid {
-    padding: 20px;
+  .kleo-modern-salon-card > img {
+    height: 210px !important;
   }
 
   .kleo-modern-shop__chips {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  .kleo-modern-booking-strip__inner {
-    align-items: stretch;
-    flex-direction: column;
-    padding-top: 24px;
-    padding-bottom: 24px;
+  .kleo-modern-shop__chips span:nth-child(2) {
+    border-right: 0;
   }
 
-  .kleo-modern-btn--light {
-    width: 100%;
+  .kleo-modern-shop__chips span:nth-child(-n+2) {
+    border-bottom: 1px solid #eee8e1;
+  }
+
+  .kleo-modern-booking-strip__copy strong {
+    font-size: 18px !important;
   }
 
   .kleo-modern-footer__grid {
-    grid-template-columns: 1fr;
-    gap: 26px;
+    grid-template-columns: 1fr !important;
   }
 
-  .kleo-modern-footer__bottom .container {
-    align-items: flex-start;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 14px;
-    padding-bottom: 14px;
+  .kleo-modern-footer__brand {
+    grid-column: auto !important;
+  }
+
+  .kleo-modern-footer__bottom-inner {
+    min-height: 66px !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .kleo-cart-fab {
+    right: 12px !important;
+    bottom: 12px !important;
   }
 }
