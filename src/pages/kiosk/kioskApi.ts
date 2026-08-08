@@ -13,11 +13,20 @@ export async function fetchKioskContext(locationId?: string | null) {
   }>;
 }
 
+export async function fetchKioskConfig(locationId?: string | null) {
+  const qs = locationId ? `?location_id=${encodeURIComponent(locationId)}` : "";
+  return json(await fetch(`${base()}/api/kiosk/config${qs}`, { credentials: "include" })) as Promise<{
+    ok: true;
+    location_id: string | null;
+    menu: null | { id: string; name: string; is_active: boolean; theme: Record<string, any>; updated_at?: string };
+  }>;
+}
+
 export async function fetchKioskServices(lang: string, locationId?: string | null) {
   const qs = new URLSearchParams({ lang: lang || "hu" });
   if (locationId) qs.set("locationId", locationId);
   const data = await json(await fetch(`${base()}/api/kiosk/services?${qs}`, { credentials: "include" }));
-  return data as { ok: true; categories: KioskCategory[]; services: KioskService[] };
+  return data as { ok: true; categories: KioskCategory[]; services: KioskService[]; menu?: { id: string; name: string; is_active: boolean; theme: Record<string, any> } | null };
 }
 
 export async function fetchKioskProducts() {
