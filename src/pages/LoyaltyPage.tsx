@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import PublicPageHero from "../components/PublicPageHero";
+import { useWebsiteCms } from "../websiteCms";
 
 const BENEFITS = [
   { title: "Kleo Card", text: "Regisztrált vendégeink számára elérhető hűség- és kedvezményrendszer, amelyhez időszakos ajánlatok kapcsolódhatnak." },
@@ -11,44 +12,12 @@ const BENEFITS = [
   { title: "Webshop", text: "Ajándékutalványok, bérletek, szépségcsomagok és Kleo termékek online eléréssel." },
 ];
 
-export const LoyaltyPage: React.FC = () => (
-  <main>
-    <PublicPageHero
-      eyebrow="Hűségprogram"
-      title={<>Több előny a <span className="highlight">visszatérő vendégeknek</span></>}
-      lead={<p>A Kleopátra hűségvilága nem egyetlen kedvezményből áll: kártyák, kuponok, bérletek, vendégszámla és időszakos ajánlatok kapcsolódhatnak a regisztrált vendégfiókhoz.</p>}
-      image="/images/husegprogram.png"
-      imageAlt="Kleopátra hűségprogram"
-      actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/webshop" className="btn btn-outline">Webshop</NavLink></>}
-    />
-
-    <section className="public-section">
-      <div className="container">
-        <header className="public-section__header">
-          <p className="section-eyebrow">Előnyök</p>
-          <h2>Egy rendszerben a kedvezmények és vendégelőnyök</h2>
-          <p>Az egyes kedvezmények feltételei, időtartama és összevonhatósága kampányonként eltérhetnek; mindig az adott ajánlat aktuális feltétele az irányadó.</p>
-        </header>
-        <div className="feature-grid">
-          {BENEFITS.map((item) => <article className="feature-card" key={item.title}><span className="feature-card__kicker">Kleo előny</span><h2>{item.title}</h2><p>{item.text}</p></article>)}
-        </div>
-      </div>
-    </section>
-
-    <section className="public-section public-section--soft">
-      <div className="container split-feature split-feature--reverse">
-        <div className="split-feature__media"><img src="/images/app.png" alt="Kleopátra mobilalkalmazás" /></div>
-        <div className="split-feature__copy">
-          <p className="section-eyebrow">Mobilalkalmazás</p>
-          <h2>A foglalásaid és ajánlataid mindig kéznél lehetnek</h2>
-          <p>A mobilalkalmazás segít a foglalások követésében, a gyors időpontválasztásban, valamint a vendéghez kapcsolódó bérletek és ajánlatok áttekintésében.</p>
-          <ul className="public-list"><li>gyors időpontfoglalás;</li><li>foglalások követése;</li><li>bérletek és vendégszámla áttekintése;</li><li>személyre szabott ajánlatok.</li></ul>
-        </div>
-      </div>
-    </section>
-
-    <section className="public-section">
-      <div className="container"><div className="notice-card"><strong>Fontos:</strong> akciók, kuponok és egyéb kedvezmények nem minden esetben vonhatók össze. A pontos felhasználási feltételeket az adott ajánlatnál jelenítjük meg.</div></div>
-    </section>
-  </main>
-);
+export const LoyaltyPage: React.FC = () => {
+  const { pages } = useWebsiteCms(); const p = pages.loyalty;
+  return <main>
+    <PublicPageHero eyebrow={p.eyebrow} title={<>{p.titlePrefix}<span className="highlight">{p.titleHighlight}</span>{p.titleSuffix}</>} lead={<p>{p.lead}</p>} image={p.imageUrl} imageAlt="Kleopátra hűségprogram" actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/webshop" className="btn btn-outline">Webshop</NavLink></>} />
+    <section className="public-section"><div className="container"><header className="public-section__header"><p className="section-eyebrow">Előnyök</p><h2>{p.sectionTitle}</h2><p>{p.sectionLead}</p></header><div className="feature-grid">{BENEFITS.map(item=><article className="feature-card" key={item.title}><span className="feature-card__kicker">Kleo előny</span><h2>{item.title}</h2><p>{item.text}</p></article>)}</div></div></section>
+    <section className="public-section public-section--soft"><div className="container split-feature split-feature--reverse"><div className="split-feature__media"><img src="/images/app.png" alt="Kleopátra mobilalkalmazás"/></div><div className="split-feature__copy"><p className="section-eyebrow">Mobilalkalmazás</p><h2>A foglalásaid és ajánlataid mindig kéznél lehetnek</h2><p>A mobilalkalmazás segít a foglalások követésében, a gyors időpontválasztásban, valamint a vendéghez kapcsolódó bérletek és ajánlatok áttekintésében.</p><ul className="public-list"><li>gyors időpontfoglalás;</li><li>foglalások követése;</li><li>bérletek és vendégszámla áttekintése;</li><li>személyre szabott ajánlatok.</li></ul></div></div></section>
+    <section className="public-section"><div className="container"><div className="notice-card"><strong>Fontos:</strong> akciók, kuponok és egyéb kedvezmények nem minden esetben vonhatók össze. A pontos felhasználási feltételeket az adott ajánlatnál jelenítjük meg.</div></div></section>
+  </main>;
+};
