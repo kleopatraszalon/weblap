@@ -1,8 +1,8 @@
-// src/pages/PriceListPage.tsx
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { getPublicServices, PublicService } from "../apiClient";
+import PublicPageHero from "../components/PublicPageHero";
 
-// Telephelyek – location_id -> cím
 const LOCATIONS = [
   { id: null as number | null, label: "Összes szalon" },
   { id: 1, label: "Budapest IX. – Mester u. 1." },
@@ -16,36 +16,26 @@ const LOCATIONS = [
 
 export const PriceListPage: React.FC = () => {
   const [allServices, setAllServices] = useState<PublicService[]>([]);
-  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
-    null
-  );
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ÖSSZES SZOLGÁLTATÁS LEKÉRÉSE
   useEffect(() => {
     setLoading(true);
     setError(null);
-
     getPublicServices()
-      .then((data) => {
-        console.log("Szolgáltatások betöltve:", data);
-        setAllServices(data);
-      })
+      .then(setAllServices)
       .catch((err) => {
         console.error(err);
-        setError("Nem sikerült betölteni a szolgáltatásokat.");
+        setError("Nem sikerült betölteni a szolgáltatásokat. Kérjük, próbáld meg később.");
       })
       .finally(() => setLoading(false));
   }, []);
 
-  // SZŰRÉS TELEPHELY SZERINT (location_id alapján)
-  const filteredServices =
-    selectedLocationId == null
-      ? allServices
-      : allServices.filter((s) => s.location_id === selectedLocationId);
+  const filteredServices = selectedLocationId == null
+    ? allServices
+    : allServices.filter((s) => s.location_id === selectedLocationId);
 
-  // KATEGÓRIÁKRA BONTVA (category_id alapján)
   const groupedByCategory: Record<string, PublicService[]> = {};
   filteredServices.forEach((s) => {
     const key = s.category_id?.toString() ?? "egyéb";
@@ -53,90 +43,54 @@ export const PriceListPage: React.FC = () => {
     groupedByCategory[key].push(s);
   });
 
-  const locationLabel =
-    LOCATIONS.find((l) => l.id === selectedLocationId)?.label ||
-    "Összes szalon";
+  const locationLabel = LOCATIONS.find((l) => l.id === selectedLocationId)?.label || "Összes szalon";
 
   return (
     <main>
-      <section className="section section--pricelist">
-        <div className="container pricelist-block">
-          {/* FEJLÉC */}
-          <header className="pricelist-header">
-            <p className="section-eyebrow">Szolgáltatásaink</p>
-            <h1>Árlista és szolgáltatások</h1>
-            <p className="hero-lead hero-lead--narrow">
-              Válaszd ki a hozzád legközelebb eső Kleopátra Szépségszalont, és
-              nézd meg az ott elérhető szolgáltatásokat.
-            </p>
-          </header>
+      <PublicPageHero
+        eyebrow="Árlista"
+        title={<>Aktuális szolgáltatások és <span className="highlight">árak</span></>}
+        lead={<p>Válaszd ki a szalont, és nézd meg az ott elérhető szolgáltatásokat, időtartamokat és árakat. A lista a központi rendszer aktuális adataiból töltődik.</p>}
+        image="/images/szolgaltatasok.jpg"
+        imageAlt="Kleopátra árlista és szolgáltatások"
+        actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/salons" className="btn btn-outline">Szalonjaink</NavLink></>}
+      />
 
-          {/* HERO KÉP – szolgaltatasok.png, finoman animálva */}
-          <div className="services-hero-image">
-            <img
-              src="/images/szolgaltatasok.png"
-              alt="Kleopátra Szépségszalon – Szolgáltatások"
-              className="services-hero-image__img"
-            />
+      <section className="public-section">
+        <div className="container pricelist-block">
+          <div className="notice-card">
+            Az árak forintban értendők. Az időszakos kedvezmények, kuponok, bérletek és egyéb promóciók feltételei eltérhetnek, ezért a foglaláskor és a szalonban megjelenő aktuális információ az irányadó.
           </div>
 
-          {/* TELEPHELYVÁLASZTÓ */}
           <div className="pricelist-location-filter">
-            <label htmlFor="location-select">Telephely kiválasztása:</label>
-            <select
-              id="location-select"
-              value={selectedLocationId ?? ""}
-              onChange={(e) => {
-                const v = e.target.value;
-                setSelectedLocationId(v === "" ? null : Number(v));
-              }}
-            >
-              {LOCATIONS.map((loc) => (
-                <option key={loc.id ?? "all"} value={loc.id ?? ""}>
-                  {loc.label}
-                </option>
-              ))}
+            <label htmlFor="location-select">Szalon kiválasztása</label>
+            <select id="location-select" value={selectedLocationId ?? ""} onChange={(e) => {
+              const v = e.target.value;
+              setSelectedLocationId(v === "" ? null : Number(v));
+            }}>
+              {LOCATIONS.map((loc) => <option key={loc.id ?? "all"} value={loc.id ?? ""}>{loc.label}</option>)}
             </select>
           </div>
 
-          {/* ÁLLAPOT ÜZENETEK */}
-          {loading && <p>Betöltés...</p>}
-          {error && <p className="form-msg form-msg--error">{error}</p>}
+          {loading && <div className="notice-card">Szolgáltatások betöltése…</div>}
+          {error && <div className="notice-card form-msg--error">{error}</div>}
 
-          {/* SZOLGÁLTATÁS LISTA */}
           {!loading && !error && (
             <div className="pricelist-content">
-              <p className="pricelist-location-label">
-                Jelenleg: <strong>{locationLabel}</strong>
-              </p>
-
-              {Object.keys(groupedByCategory).length === 0 && (
-                <p>Nincs megjeleníthető szolgáltatás.</p>
-              )}
-
+              <p className="pricelist-location-label">Megjelenített árlista: <strong>{locationLabel}</strong></p>
+              {Object.keys(groupedByCategory).length === 0 && <div className="notice-card">Ehhez a szűréshez jelenleg nincs megjeleníthető szolgáltatás.</div>}
               {Object.keys(groupedByCategory).map((catKey) => {
                 const items = groupedByCategory[catKey];
-                if (!items || items.length === 0) return null;
-
+                if (!items?.length) return null;
                 return (
                   <section key={catKey} className="pricelist-category">
-                    <h2 className="pricelist-category__title">
-                      {categoryLabelFromId(catKey)}
-                    </h2>
+                    <h2 className="pricelist-category__title">{categoryLabelFromId(catKey)}</h2>
                     <div className="pricelist-category__table">
                       {items.map((s) => (
                         <div key={s.id} className="pricelist-row">
                           <div className="pricelist-row__name">{s.name}</div>
-                          <div className="pricelist-row__duration">
-                            {s.duration_min
-                              ? `${s.duration_min} perc`
-                              : "\u00A0"}
-                          </div>
-                          <div className="pricelist-row__price">
-                            {s.price != null
-                              ? `${s.price.toLocaleString("hu-HU")} Ft`
-                              : "egyedi ár"}
-                          </div>
+                          <div className="pricelist-row__duration">{s.duration_min ? `${s.duration_min} perc` : ""}</div>
+                          <div className="pricelist-row__price">{s.price != null ? `${Number(s.price).toLocaleString("hu-HU")} Ft` : "egyedi ár"}</div>
                         </div>
                       ))}
                     </div>
@@ -147,28 +101,26 @@ export const PriceListPage: React.FC = () => {
           )}
         </div>
       </section>
+
+      <section className="public-section public-section--soft">
+        <div className="container public-cta">
+          <div><h2>Megtaláltad a szolgáltatást?</h2><p>A foglalóban kiválaszthatod a szalont, a szolgáltatást, a szakembert és a szabad időpontot.</p></div>
+          <NavLink to="/booking" className="btn btn-primary">Foglalás indítása</NavLink>
+        </div>
+      </section>
     </main>
   );
 };
 
-// Kategória címkék – az első oszlopodban lévő számok szerint
 function categoryLabelFromId(id: string): string {
   switch (id) {
-    case "1":
-      return "Fodrászat";
-    case "2":
-      return "Kozmetika";
-    case "3":
-      return "Manikűr / műköröm";
-    case "4":
-      return "Pedikűr";
-    case "5":
-      return "Szolárium";
-    case "6":
-      return "Masszázs";
-    case "7":
-      return "Egyéb / kiegészítők";
-    default:
-      return "Egyéb szolgáltatások";
+    case "1": return "Fodrászat";
+    case "2": return "Kozmetika";
+    case "3": return "Manikűr / műköröm";
+    case "4": return "Pedikűr";
+    case "5": return "Szolárium";
+    case "6": return "Masszázs";
+    case "7": return "Egyéb / kiegészítők";
+    default: return "Egyéb szolgáltatások";
   }
 }
