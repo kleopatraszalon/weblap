@@ -1,113 +1,41 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+import { useWebsiteCms } from "../websiteCms";
 
 export function Footer() {
+  const cms = useWebsiteCms();
+  const social = [
+    ["TikTok", cms.header.tiktokUrl, "/images/tiktok.png"],
+    ["Facebook", cms.header.facebookUrl, "/images/facebook.png"],
+    ["Instagram", cms.header.instagramUrl, "/images/insta.png"],
+    ["Messenger", cms.header.messengerUrl, "/images/messenger.png"],
+  ].filter(([,url])=>Boolean(url));
+
   return (
-    <footer className="footer">
-      {/* Felső sor – jogi linkek */}
-      <div className="container footer-inner footer-top">
-        <nav className="footer-links" aria-label="Jogi és információs oldalak">
-          <a href="#" className="footer-link">
-            ADATVÉDELEM
-          </a>
-          <span className="footer-separator">•</span>
-          <a href="#" className="footer-link">
-            COOKIE TÁJÉKOZTATÓ
-          </a>
-          <span className="footer-separator">•</span>
-          <a href="#" className="footer-link">
-            PANASZKEZELÉSI SZABÁLYZAT
-          </a>
-          <span className="footer-separator">•</span>
-          <a href="#" className="footer-link">
-            HÍRLEVÉL
-          </a>
-          <span className="footer-separator">•</span>
-          <a href="#" className="footer-link">
-            FIZETÉSI LEHETŐSÉGEK
-          </a>
-          <span className="footer-separator">•</span>
-          <a href="#" className="footer-link">
-            IMPRESSZUM
-          </a>
+    <footer className="site-footer">
+      <div className="container site-footer-grid">
+        <div className="site-footer-brand">
+          <img src={cms.brand.logoUrl} alt="Kleopátra Szépségszalonok" />
+          <p>{cms.brand.slogan}</p>
+        </div>
+        <nav className="site-footer-links" aria-label="Gyorslinkek">
+          <NavLink to="/salons">Szalonjaink</NavLink>
+          <NavLink to="/services">Szolgáltatások</NavLink>
+          <NavLink to="/booking">Időpontfoglalás</NavLink>
+          <NavLink to="/career">Karrier</NavLink>
+          <NavLink to="/contact">Kapcsolat</NavLink>
+        </nav>
+        <nav className="site-footer-legal" aria-label="Jogi információk">
+          <a href={cms.footer.privacyUrl} target="_blank" rel="noreferrer">{cms.footer.privacyLabel}</a>
+          <a href={cms.footer.cookieUrl} target="_blank" rel="noreferrer">{cms.footer.cookieLabel}</a>
+          <a href={cms.footer.complaintsUrl} target="_blank" rel="noreferrer">{cms.footer.complaintsLabel}</a>
+          <a href={cms.footer.imprintUrl} target="_blank" rel="noreferrer">{cms.footer.imprintLabel}</a>
         </nav>
       </div>
-
-      {/* Középső sor – social ikonok */}
-      <div className="footer-social-block">
-        <p className="footer-follow-label">Kövess minket!</p>
-        <div className="footer-social-icons">
-          <a
-            href="https://www.tiktok.com/@kleoszalon"
-            aria-label="TikTok"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/tiktok.png"
-              alt="TikTok"
-              className="footer-social-icon"
-              width={30}
-              height={30}
-            />
-          </a>
-          <a
-            href="https://www.youtube.com/channel/UC9GNInNzSznaxZkmaNnNTxA"
-            aria-label="YouTube"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/youtube.png"
-              alt="YouTube"
-              className="footer-social-icon"
-              width={30}
-              height={30}
-            />
-          </a>
-          <a
-            href="https://www.facebook.com/kleoszalon/"
-            aria-label="Facebook"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/facebook.png"
-              alt="Facebook"
-              className="footer-social-icon"
-              width={30}
-              height={30}
-            />
-          </a>
-          <a
-            href="https://www.instagram.com/kleoszalon/"
-            aria-label="Instagram"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/insta.png"
-              alt="Instagram"
-              className="footer-social-icon"
-              width={30}
-              height={30}
-            />
-          </a>
-        </div>
-      </div>
-
-      {/* Alsó sor – cookie sáv */}
-      <div className="footer-cookie">
-        <span className="footer-cookie-text">
-          A weboldal sütiket használ a teljes funkcionalitás érdekében.
-          <a href="#" className="footer-cookie-link">
-            {" "}
-            Részletek
-          </a>
-        </span>
-        <button type="button" className="btn footer-cookie-btn">
-          Értem!
-        </button>
-      </div>
+      {social.length>0 && <div className="site-footer-social" aria-label="Közösségi oldalak">
+        {social.map(([label,url,img])=><a key={String(label)} href={String(url)} target="_blank" rel="noreferrer" aria-label={String(label)}><img src={String(img)} alt="" /></a>)}
+      </div>}
+      <div className="site-footer-bottom">© {new Date().getFullYear()} Kleopátra Szépségszalonok</div>
     </footer>
   );
 }
