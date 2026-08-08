@@ -1,135 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { cartTotal, readCart } from "./cartStore";
+import { fetchKioskContext, fetchKioskServices } from "./kioskApi";
 
-const MENU = [
-  { slug: "beauty-plus", title: "BEAUTY+", img: "/kiosk/tiles/beauty_plus.png" },
-  { slug: "vendegszamla", title: "VENDÉGSZÁMLA", img: "/kiosk/tiles/vendegszamla.png" },
-  { slug: "ajandekutalvany", title: "AJÁNDÉKUTALVÁNYOK", img: "/kiosk/tiles/ajandekutalvanyok.png" },
-  { slug: "fodraszat", title: "Fodrászat", img: "/kiosk/tiles/fodraszat.png" },
-  { slug: "kezlab", title: "Kéz- és lábápolás", img: "/kiosk/tiles/kez_es_labapolas.png" },
-  { slug: "kozmetika", title: "Kozmetika", img: "/kiosk/tiles/kozmetika.png" },
-  { slug: "ferfiaknak", title: "FÉRFIAKNAK", img: "/kiosk/tiles/ferfiaknak.png" },
-  { slug: "masszazs", title: "Masszázs", img: "/kiosk/tiles/masszazs.png" },
-  { slug: "testkezeles", title: "Testkezelés", img: "/kiosk/tiles/testkezeles.png" },
-  { slug: "tinik", title: "Tinik és Gyerekek", img: "/kiosk/tiles/tinik_es_gyerekek.png" },
-  { slug: "kids", title: "Gyerekeknek – Kids Project (8 éves korig)", img: "/kiosk/tiles/gyerekeknek_kids_project.png" },
-  { slug: "wellness-fitness", title: "Wellness / Fitness / Szolárium", img: "/kiosk/tiles/wellness_fitness_szolarium.png" },
-];
+const TILE_IMAGES=["/kiosk/tiles/fodraszat.png","/kiosk/tiles/kez_es_labapolas.png","/kiosk/tiles/kozmetika.png","/kiosk/tiles/masszazs.png","/kiosk/tiles/testkezeles.png","/kiosk/tiles/wellness_fitness_szolarium.png"];
+const slugify=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 
-const SERVICE_SLIDES = MENU.map((m) => m.img);
-
-export function KioskLanding() {
-  const nav = useNavigate();
-  const [slide, setSlide] = React.useState(0);
-
-  React.useEffect(() => {
-    const t = window.setInterval(() => setSlide((i) => (i + 1) % SERVICE_SLIDES.length), 3500);
-    return () => window.clearInterval(t);
-  }, []);
-
-  return (
-    <div className="kioskGrid">
-      <div className="kioskColLeft">
-        <div className="kioskPanelTitle">Kategóriák</div>
-        <div className="kioskCategoryStack kioskCategoryStackOneCol">
-          {MENU.map((m) => (
-            <button key={m.slug} className="kioskCategoryTile" onClick={() => nav(`/kiosk/cat/${m.slug}`)}>
-              <div className="kioskCategoryImgWrap">
-                <img src={m.img} alt={m.title} className="kioskCategoryImg" />
-                <div className="kioskCategoryLabel">{m.title}</div>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="kioskColCenter">
-        <div className="kioskCenterHero">
-          <img className="kioskHeroImg" src={SERVICE_SLIDES[slide]} alt="Kategóriák" />
-          <div className="kioskHeroCaption">Szolgáltatások</div>
-          <div className="kioskHeroSub">Válassz kategóriát.</div>
-        </div>
-
-        <div className="kioskEmbedCard">
-          <div className="kioskEmbedHeader">
-            <div className="kioskEmbedTitle">Weboldal</div>
-            <div className="kioskBadge">WEBSHOP</div>
-          </div>
-          <iframe title="kleoszalon" src="https://kleoszalon.hu" className="kioskEmbed" />
-        </div>
-
-        <div className="kioskRow">
-          <div className="kioskSlideCard">
-            <div className="kioskSlideTitle">Büfé ajánlataink</div>
-            <div className="kioskSlideSub">Fogyassz várakozás közben – egy kattintás a kosárba.</div>
-            <div className="kioskSlideRail">
-              <div className="kioskSlideItem">
-                <img src="/kiosk/buffet/shake.jpg" alt="Protein shake" />
-                <div>
-                  <div className="kioskSlideItemName">Protein shake</div>
-                  <div className="kioskSlideItemDesc">Scitec/Biotech – gyors energia.</div>
-                </div>
-              </div>
-              <div className="kioskSlideItem">
-                <img src="/kiosk/buffet/coffee.jpg" alt="Kávé" />
-                <div>
-                  <div className="kioskSlideItemName">Kávé</div>
-                  <div className="kioskSlideItemDesc">Friss espresso / latte.</div>
-                </div>
-              </div>
-              <div className="kioskSlideItem">
-                <img src="/kiosk/buffet/water.jpg" alt="Víz" />
-                <div>
-                  <div className="kioskSlideItemName">Ásványvíz</div>
-                  <div className="kioskSlideItemDesc">Citromos / mentes.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="kioskSlideCard">
-            <div className="kioskSlideTitle">Heti akciók</div>
-            <div className="kioskWeeklyBox">
-              <div className="kioskWeeklyTitle">Valentin napi ajánlataink</div>
-              <div className="kioskWeeklyText">Február 14-ig – kérdezd a recepciót a részletekért.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="kioskColRight">
-        <div className="kioskCartCard">
-          <div className="kioskCartTitle">Kosár</div>
-          <div className="kioskCartSub">Válassz szolgáltatást.</div>
-          <button className="kioskPayBtn" onClick={() => nav("/kiosk/pay")}>Tovább a fizetéshez</button>
-        </div>
-
-        <div className="kioskStaffCard">
-          <div className="kioskStaffTitle">Elérhető szakembereink</div>
-          <div className="kioskStaffList">
-            {[
-              { n: "Szöke Noémi", r: "Fodrász", img: "/kiosk/staff/1.jpg" },
-              { n: "Viktor Renátó", r: "Gyógymasszőr", img: "/kiosk/staff/2.jpg" },
-              { n: "Besenyei Szilvia", r: "TOP Gyógymasszőr", img: "/kiosk/staff/3.jpg" },
-            ].map((p) => (
-              <div key={p.n} className="kioskStaffRow">
-                <img src={p.img} alt={p.n} className="kioskStaffImg" />
-                <div>
-                  <div className="kioskStaffName">{p.n}</div>
-                  <div className="kioskStaffRole">{p.r}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="kioskShopCard">
-          <img className="kioskShopImg" src="/kiosk/shop/gift.jpg" alt="Webshop" />
-          <div className="kioskShopTitle">Szépségcsomag Egyedi</div>
-          <div className="kioskShopText">Ajándékutalvány – állítsd össze a csomagot saját igény szerint.</div>
-          <div className="kioskShopPrice">39 640 Ft</div>
-        </div>
-      </div>
-    </div>
-  );
+export function KioskLanding(){
+ const nav=useNavigate();const[locations,setLocations]=React.useState<{id:string;name:string}[]>([]);const[employees,setEmployees]=React.useState<any[]>([]);const[categories,setCategories]=React.useState<{id:string;name:string}[]>([]);const[locationId,setLocationId]=React.useState(()=>localStorage.getItem("kiosk_location_id")||"");const[error,setError]=React.useState("");const[cartTick,setCartTick]=React.useState(0);
+ React.useEffect(()=>{const h=()=>setCartTick(x=>x+1);window.addEventListener("kiosk-cart-change",h);return()=>window.removeEventListener("kiosk-cart-change",h)},[]);
+ React.useEffect(()=>{fetchKioskContext(locationId||undefined).then(d=>{setLocations(d.locations||[]);setEmployees(d.employees||[]);if(!locationId&&d.locations?.[0]?.id){setLocationId(d.locations[0].id);localStorage.setItem("kiosk_location_id",d.locations[0].id)}}).catch(e=>setError(e.message))},[]);
+ React.useEffect(()=>{if(!locationId)return;localStorage.setItem("kiosk_location_id",locationId);Promise.all([fetchKioskContext(locationId),fetchKioskServices(localStorage.getItem("kiosk_lang")||"hu",locationId)]).then(([ctx,svc])=>{setEmployees(ctx.employees||[]);setCategories((svc.categories||[]).map(x=>({id:String(x.id),name:x.name})));setError("")}).catch(e=>setError(e.message))},[locationId]);
+ const cart=readCart(),total=cartTotal(cart);
+ function openCategory(c:{id:string;name:string}){localStorage.setItem("kiosk_category_id",c.id);localStorage.setItem("kiosk_category_name",c.name);nav(`/kiosk/cat/${slugify(c.name)||c.id}`)}
+ return <div className="kioskGrid">
+  <div className="kioskColLeft"><div className="kioskPanelTitle">Szalon és kategóriák</div><div style={{padding:"0 0 14px"}}><select value={locationId} onChange={e=>setLocationId(e.target.value)} style={{width:"100%",padding:"12px",borderRadius:12,border:"1px solid #d9cdbd",fontWeight:700}}><option value="">Válasszon szalont</option>{locations.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></div>{error&&<div className="kioskError">{error}</div>}<div className="kioskCategoryStack kioskCategoryStackOneCol">{categories.map((c,i)=><button key={c.id} className="kioskCategoryTile" onClick={()=>openCategory(c)}><div className="kioskCategoryImgWrap"><img src={TILE_IMAGES[i%TILE_IMAGES.length]} alt={c.name} className="kioskCategoryImg"/><div className="kioskCategoryLabel">{c.name}</div></div></button>)}{!categories.length&&!error&&<div className="kioskInfo">A szolgáltatáskategóriák betöltése folyamatban…</div>}</div></div>
+  <div className="kioskColCenter"><div className="kioskCenterHero"><img className="kioskHeroImg" src={TILE_IMAGES[0]} alt="Szolgáltatások"/><div className="kioskHeroCaption">Kleopátra Kiosk</div><div className="kioskHeroSub">A szolgáltatások és munkatársak közvetlenül a VIR adatbázisából érkeznek.</div></div><div className="kioskEmbedCard"><div className="kioskEmbedHeader"><div className="kioskEmbedTitle">Weboldal</div><div className="kioskBadge">WEBSHOP</div></div><iframe title="kleoszalon" src="https://kleoszalon.hu" className="kioskEmbed"/></div></div>
+  <div className="kioskColRight"><div className="kioskCartCard"><div className="kioskCartTitle">Kosár</div><div className="kioskCartSub">{cart.length} tétel · {total.toLocaleString("hu-HU")} Ft</div><button className="kioskPayBtn" disabled={!cart.length} onClick={()=>nav("/kiosk/pay")}>Tovább · munkalap létrehozása</button></div><div className="kioskStaffCard"><div className="kioskStaffTitle">Aktív munkatársak</div><div className="kioskStaffList">{employees.slice(0,8).map((p:any)=><div key={p.id} className="kioskStaffRow">{p.photo_url?<img src={p.photo_url} alt={p.full_name} className="kioskStaffImg"/>:<div className="kioskStaffImg" style={{display:"grid",placeItems:"center",background:"#eee5d9",fontWeight:900}}>{String(p.full_name||"?").charAt(0)}</div>}<div><div className="kioskStaffName">{p.full_name}</div><div className="kioskStaffRole">Elérhető a kiválasztott szalonban</div></div></div>)}{!employees.length&&<div className="kioskInfo">Nincs betöltött aktív munkatárs.</div>}</div></div><div className="kioskShopCard"><div className="kioskShopTitle">VIR-integrált kiosk</div><div className="kioskShopText">A véglegesített kiosk kosár automatikusan „Új” munkalapként kerül a fő rendszerbe.</div></div></div>
+ </div>
 }
