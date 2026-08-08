@@ -1,0 +1,95 @@
+/* Public subpages – unified Kleopátra visual system */
+:root{
+  --public-shadow:0 20px 55px rgba(18,12,8,.10);
+  --public-shadow-soft:0 10px 30px rgba(18,12,8,.065);
+  --public-border:color-mix(in srgb,var(--cms-gold) 28%,transparent);
+}
+
+main{overflow:hidden}
+.section-eyebrow{margin:0 0 12px;color:var(--cms-gold);font-weight:800;font-size:.75rem;letter-spacing:.19em;text-transform:uppercase}
+.public-page-hero{position:relative;padding:72px 0 60px;background:linear-gradient(135deg,#fff 0%,color-mix(in srgb,var(--cms-gold-soft) 28%,#fff) 58%,color-mix(in srgb,var(--cms-magenta-soft) 18%,#fff) 100%);border-bottom:1px solid var(--public-border)}
+.public-page-hero:before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;left:-140px;top:-170px;background:color-mix(in srgb,var(--cms-gold) 10%,transparent);filter:blur(3px)}
+.public-page-hero--compact{padding-block:54px}
+.public-page-hero__grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:56px;align-items:center}
+.public-page-hero__content{max-width:680px}
+.public-page-hero h1,.page-hero h1,.section--salons-page h1,.section--services-hero h1,.section--pricelist h1{margin:0 0 20px!important;font-size:clamp(2.45rem,5vw,4.8rem)!important;line-height:1.02!important;font-weight:700!important;letter-spacing:-.025em!important;text-transform:none!important}
+.public-page-hero__lead,.public-page-hero__lead p{font-size:clamp(1rem,1.35vw,1.2rem);line-height:1.65;color:var(--cms-muted);margin:0}
+.public-page-hero__actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
+.public-page-hero__media{border-radius:var(--cms-radius);overflow:hidden;min-height:360px;box-shadow:var(--public-shadow);border:1px solid var(--public-border);background:#fff}
+.public-page-hero__media img{display:block;width:100%;height:100%;min-height:360px;max-height:500px;object-fit:cover}
+.public-page-hero__mark{width:min(330px,70vw);aspect-ratio:1;justify-self:center;display:grid;place-items:center;border-radius:50%;font-family:var(--cms-heading-font);font-size:clamp(7rem,14vw,12rem);font-weight:800;color:var(--cms-gold);border:1px solid var(--public-border);background:radial-gradient(circle at 35% 30%,#fff,color-mix(in srgb,var(--cms-gold-soft) 48%,#fff));box-shadow:var(--public-shadow)}
+
+.public-section{padding:72px 0;background:#fff}
+.public-section--soft{background:color-mix(in srgb,var(--cms-gold-soft) 15%,#fff)}
+.public-section--dark{background:var(--cms-text);color:#fff}
+.public-section--dark h2,.public-section--dark h3{color:#fff}
+.public-section__header{max-width:800px;margin-bottom:30px}
+.public-section__header h2{font-size:clamp(1.9rem,3.5vw,3.15rem)!important;letter-spacing:-.02em!important;margin:0 0 14px!important}
+.public-section__header p{margin:0;color:var(--cms-muted);line-height:1.65}
+.public-section--dark .public-section__header p{color:rgba(255,255,255,.72)}
+
+.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.feature-grid--four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.feature-card{position:relative;padding:26px;border-radius:var(--cms-radius);border:1px solid var(--public-border);background:#fff;box-shadow:var(--public-shadow-soft);overflow:hidden}
+.feature-card:before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(var(--cms-gold),var(--cms-magenta))}
+.feature-card h2,.feature-card h3{margin:0 0 12px!important;font-size:1.15rem!important;letter-spacing:0!important}
+.feature-card p{margin:0;color:var(--cms-muted);line-height:1.62}
+.feature-card__kicker{display:block;margin-bottom:10px;color:var(--cms-magenta);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.feature-card__meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.feature-card__meta span,.tag{display:inline-flex;align-items:center;min-height:28px;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--cms-gold-soft) 42%,#fff);font-size:.76rem;color:var(--cms-text)}
+
+.split-feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.88fr);gap:42px;align-items:center}
+.split-feature--reverse .split-feature__media{order:-1}
+.split-feature__copy h2{font-size:clamp(2rem,3.6vw,3.2rem)!important;letter-spacing:-.02em!important;margin:0 0 16px!important}
+.split-feature__copy p{color:var(--cms-muted);line-height:1.68}
+.split-feature__media{border-radius:var(--cms-radius);overflow:hidden;border:1px solid var(--public-border);box-shadow:var(--public-shadow)}
+.split-feature__media img{display:block;width:100%;height:420px;object-fit:cover}
+
+.public-list{display:grid;gap:10px;padding:0;margin:22px 0;list-style:none}
+.public-list li{position:relative;padding-left:25px;line-height:1.55;color:var(--cms-muted)}
+.public-list li:before{content:"✦";position:absolute;left:0;top:.02em;color:var(--cms-gold)}
+.public-cta{padding:30px;border-radius:var(--cms-radius);background:linear-gradient(135deg,var(--cms-text),#31251d);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:26px;box-shadow:var(--public-shadow)}
+.public-cta h2{color:#fff!important;margin:0 0 8px!important;font-size:clamp(1.6rem,3vw,2.5rem)!important}.public-cta p{margin:0;color:rgba(255,255,255,.72);line-height:1.55}.public-cta .btn-outline{border-color:#fff!important;background:transparent!important;color:#fff!important}
+
+/* Legacy page heroes converted to the same rhythm */
+.page-hero,.section--salons-page,.section--services-hero,.section--pricelist{padding:64px 0!important;background:linear-gradient(135deg,#fff,color-mix(in srgb,var(--cms-gold-soft) 22%,#fff))!important}
+.page-hero .container,.services-intro,.pricelist-header,.salons-block__header{text-align:left!important;max-width:1180px;margin-inline:auto}
+.page-hero .hero-lead--narrow,.services-intro .hero-lead--narrow,.pricelist-header .hero-lead--narrow,.salons-block__header .hero-lead--narrow{max-width:760px!important}
+
+/* Salon list */
+.salons-block{width:min(1180px,calc(100% - 40px));margin-inline:auto}.salons-hero-image,.services-hero-image{margin:34px auto;max-width:1180px;border-radius:var(--cms-radius);overflow:hidden;box-shadow:var(--public-shadow);border:1px solid var(--public-border)}
+.salons-hero-image__img,.services-hero-image__img{display:block;width:100%;height:clamp(280px,38vw,470px);object-fit:cover}
+.salons-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px!important;margin-top:26px!important}
+.salon-pill{display:flex!important;flex-direction:column;gap:5px;padding:20px!important;border-radius:var(--cms-radius)!important;background:#fff!important;border:1px solid var(--public-border)!important;box-shadow:var(--public-shadow-soft)!important;transition:.2s ease}.salon-pill:hover{transform:translateY(-3px);border-color:var(--cms-gold)!important}.salon-pill__city{font-weight:800!important;color:var(--cms-text)!important}.salon-pill__address{color:var(--cms-muted)!important;font-size:.9rem!important}
+
+/* Services */
+.section--services-page-cards{padding-top:28px!important}.card--service{min-height:210px;display:flex!important;flex-direction:column;justify-content:space-between}.card--service .card-title{font-size:1.25rem!important}
+
+/* Price list */
+.pricelist-block{max-width:1180px!important}.pricelist-location-filter{display:flex!important;align-items:center;gap:14px;flex-wrap:wrap;margin:26px 0;padding:18px 20px;border-radius:var(--cms-radius);background:#fff;border:1px solid var(--public-border);box-shadow:var(--public-shadow-soft)}
+.pricelist-location-filter label{font-weight:800}.pricelist-location-filter select{min-width:min(100%,380px);border:1px solid var(--public-border);border-radius:12px;padding:11px 14px;background:#fff;color:var(--cms-text)}
+.pricelist-location-label{padding:10px 0;color:var(--cms-muted)}.pricelist-category{margin:24px 0 34px}.pricelist-category__title{padding-bottom:12px;border-bottom:2px solid var(--cms-gold);font-size:1.55rem!important}.pricelist-category__table{border:1px solid var(--public-border);border-radius:var(--cms-radius);overflow:hidden;background:#fff;box-shadow:var(--public-shadow-soft)}
+.pricelist-row{display:grid!important;grid-template-columns:minmax(0,1fr) 130px 140px;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid color-mix(in srgb,var(--cms-gold) 16%,transparent)}.pricelist-row:last-child{border-bottom:0}.pricelist-row__name{font-weight:700}.pricelist-row__duration{color:var(--cms-muted);font-size:.86rem}.pricelist-row__price{text-align:right;font-weight:800;color:var(--cms-magenta)}
+
+/* Forms, contact and generic controls */
+.form-card,.beauty-form,.contact-aside{border-radius:var(--cms-radius)!important;border:1px solid var(--public-border)!important;box-shadow:var(--public-shadow-soft)!important;background:#fff!important}.form-card{padding:28px!important}.contact-layout{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr)!important;gap:28px!important;align-items:start}.beauty-fieldset{border:0!important;border-top:1px solid color-mix(in srgb,var(--cms-gold) 18%,transparent)!important;margin:24px 0 0!important;padding:24px 0 0!important}.beauty-legend{font-family:var(--cms-heading-font);font-weight:800;color:var(--cms-text);padding-right:10px}.field span{display:block;margin-bottom:7px;font-size:.82rem;font-weight:700;color:var(--cms-muted)}
+input,select,textarea{max-width:100%;border:1px solid color-mix(in srgb,var(--cms-gold) 34%,#d9d9d9)!important;border-radius:12px!important;background:#fff!important;color:var(--cms-text)!important;outline:none;transition:border-color .18s ease,box-shadow .18s ease}input:focus,select:focus,textarea:focus{border-color:var(--cms-magenta)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--cms-magenta) 12%,transparent)!important}.choice-pill{border-radius:999px!important}.choice-pill span{border-radius:999px!important}
+
+/* Webshop: bring legacy cards into the same system without changing logic */
+.webshop-page,.webshop-shell,.webshop-layout,.webshop-main{font-family:var(--cms-body-font)}
+[class*="webshop"] .card,[class*="product-card"],[class*="shop-card"]{border-color:var(--public-border)!important;border-radius:var(--cms-radius)!important;box-shadow:var(--public-shadow-soft)!important}
+
+/* Booking page – visual normalization only, logic stays intact */
+.booking-page,.booking-shell,.booking-card{font-family:var(--cms-body-font)}
+.booking-page button,.booking-shell button{border-radius:999px}
+.booking-page input,.booking-page select,.booking-page textarea,.booking-shell input,.booking-shell select,.booking-shell textarea{border-radius:12px!important}
+
+/* Small utility layouts used by refreshed pages */
+.media-card{border:1px solid var(--public-border);border-radius:var(--cms-radius);overflow:hidden;background:#fff;box-shadow:var(--public-shadow)}.media-card img{display:block;width:100%;height:100%;object-fit:cover}
+.value-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.value-item{padding:18px 20px;border-radius:14px;background:#fff;border:1px solid var(--public-border);font-weight:700;color:var(--cms-text)}
+.course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.course-card{display:flex;flex-direction:column;min-height:220px}.course-card .btn{margin-top:auto;align-self:flex-start}
+.job-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.job-card{display:flex;flex-direction:column;gap:10px}.job-card h3{margin:0!important}.job-card p{margin:0;color:var(--cms-muted);line-height:1.55}
+.notice-card{padding:18px 20px;border-radius:14px;background:color-mix(in srgb,var(--cms-magenta-soft) 24%,#fff);border:1px solid color-mix(in srgb,var(--cms-magenta) 20%,transparent);color:var(--cms-text);line-height:1.55}
+
+@media(max-width:980px){.public-page-hero__grid,.split-feature{grid-template-columns:1fr}.public-page-hero__media{order:-1;min-height:300px}.public-page-hero__media img{min-height:300px;max-height:410px}.feature-grid,.feature-grid--four,.course-grid,.job-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.salons-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.contact-layout{grid-template-columns:1fr!important}.public-cta{align-items:flex-start;flex-direction:column}}
+@media(max-width:680px){.public-page-hero{padding:42px 0}.public-page-hero h1,.page-hero h1,.section--salons-page h1,.section--services-hero h1,.section--pricelist h1{font-size:clamp(2.1rem,11vw,3.35rem)!important}.public-section{padding:52px 0}.feature-grid,.feature-grid--four,.course-grid,.job-grid,.salons-grid,.value-grid{grid-template-columns:1fr}.pricelist-row{grid-template-columns:1fr auto;gap:6px 12px}.pricelist-row__duration{grid-column:1/2}.pricelist-row__price{grid-column:2/3;grid-row:1/3;align-self:center}.split-feature__media img{height:310px}.public-page-hero__media img{min-height:260px;height:300px}.salons-block{width:min(100% - 28px,1180px)}}
