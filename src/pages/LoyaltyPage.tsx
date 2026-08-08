@@ -1,37 +1,54 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+import PublicPageHero from "../components/PublicPageHero";
+
+const BENEFITS = [
+  { title: "Kleo Card", text: "Regisztrált vendégeink számára elérhető hűség- és kedvezményrendszer, amelyhez időszakos ajánlatok kapcsolódhatnak." },
+  { title: "Hírlevél kedvezmények", text: "Akciók, kuponok és fontos újdonságok közvetlenül a feliratkozóknak." },
+  { title: "Vendégszámla", text: "A vendéghez kapcsolódó egyenlegek és jóváírások kezelése a Kleopátra rendszerben." },
+  { title: "Bérletek", text: "Rendszeresen igénybe vett szolgáltatásokhoz kedvezőbb, előre tervezhető konstrukciók." },
+  { title: "Céges kedvezmények", text: "Kijelölt partneri és vállalati konstrukciók a mindenkori feltételek szerint." },
+  { title: "Webshop", text: "Ajándékutalványok, bérletek, szépségcsomagok és Kleo termékek online eléréssel." },
+];
 
 export const LoyaltyPage: React.FC = () => (
   <main>
-    <section className="page-hero">
+    <PublicPageHero
+      eyebrow="Hűségprogram"
+      title={<>Több előny a <span className="highlight">visszatérő vendégeknek</span></>}
+      lead={<p>A Kleopátra hűségvilága nem egyetlen kedvezményből áll: kártyák, kuponok, bérletek, vendégszámla és időszakos ajánlatok kapcsolódhatnak a regisztrált vendégfiókhoz.</p>}
+      image="/images/husegprogram.png"
+      imageAlt="Kleopátra hűségprogram"
+      actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/webshop" className="btn btn-outline">Webshop</NavLink></>}
+    />
+
+    <section className="public-section">
       <div className="container">
-        <p className="section-eyebrow">Hűségprogram</p>
-        <h1>Extra kedvezmények regisztrált vendégeinknek</h1>
-        <p className="hero-lead hero-lead--narrow">
-          Hűségprogramunkban pontgyűjtés, kuponok és személyre szabott ajánlatok
-          várnak, hogy minden alkalommal egy kicsit többet kapj a
-          szépségápolásból.
-        </p>
+        <header className="public-section__header">
+          <p className="section-eyebrow">Előnyök</p>
+          <h2>Egy rendszerben a kedvezmények és vendégelőnyök</h2>
+          <p>Az egyes kedvezmények feltételei, időtartama és összevonhatósága kampányonként eltérhetnek; mindig az adott ajánlat aktuális feltétele az irányadó.</p>
+        </header>
+        <div className="feature-grid">
+          {BENEFITS.map((item) => <article className="feature-card" key={item.title}><span className="feature-card__kicker">Kleo előny</span><h2>{item.title}</h2><p>{item.text}</p></article>)}
+        </div>
       </div>
     </section>
 
-    <section className="section">
-      <div className="container grid-two">
-        <article className="card">
-          <h2 className="card-title">Pontgyűjtés</h2>
-          <p className="card-text">
-            Minden igénybe vett szolgáltatás után pontokat írunk jóvá,
-            amelyeket később kedvezményekre válthatsz be a kijelölt
-            szolgáltatásoknál.
-          </p>
-        </article>
-        <article className="card">
-          <h2 className="card-title">Szolgáltatások kedvezménnyel</h2>
-          <p className="card-text">
-            A hűségprogram szintjeihez és akcióihoz igazodva időszakos
-            ajánlatokat, extra szolgáltatásokat és ajándékokat biztosítunk.
-          </p>
-        </article>
+    <section className="public-section public-section--soft">
+      <div className="container split-feature split-feature--reverse">
+        <div className="split-feature__media"><img src="/images/app.png" alt="Kleopátra mobilalkalmazás" /></div>
+        <div className="split-feature__copy">
+          <p className="section-eyebrow">Mobilalkalmazás</p>
+          <h2>A foglalásaid és ajánlataid mindig kéznél lehetnek</h2>
+          <p>A mobilalkalmazás segít a foglalások követésében, a gyors időpontválasztásban, valamint a vendéghez kapcsolódó bérletek és ajánlatok áttekintésében.</p>
+          <ul className="public-list"><li>gyors időpontfoglalás;</li><li>foglalások követése;</li><li>bérletek és vendégszámla áttekintése;</li><li>személyre szabott ajánlatok.</li></ul>
+        </div>
       </div>
+    </section>
+
+    <section className="public-section">
+      <div className="container"><div className="notice-card"><strong>Fontos:</strong> akciók, kuponok és egyéb kedvezmények nem minden esetben vonhatók össze. A pontos felhasználási feltételeket az adott ajánlatnál jelenítjük meg.</div></div>
     </section>
   </main>
 );
