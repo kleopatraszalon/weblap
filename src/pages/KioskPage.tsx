@@ -1,14 +1,13 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./kiosk.css";
+import "./kiosk/kiosk-gyongyos.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";
 import { KioskPay } from "./kiosk/KioskPay";
 import { KioskTicket } from "./kiosk/KioskTicket";
 
-// NOTE: App.tsx imports this as a *named* export: `import { KioskPage } ...`
-// Keep both named + default exports to avoid future regressions.
 export function KioskPage() {
   return (
     <KioskShell>
