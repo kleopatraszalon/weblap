@@ -6,6 +6,7 @@ import "./styles/website-cms.css";
 import "./styles/public-pages.css";
 import "./styles/commerce-pages.css";
 import "./styles/home-modern.css";
+import "./styles/booking-modern.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
