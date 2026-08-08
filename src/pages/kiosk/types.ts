@@ -25,6 +25,7 @@ export type KioskCategory = {
   name: string;
   subtitle?: string | null;
   image_path: string | null;
+  type?: "service" | "product";
 };
 
 export type KioskProduct = {
@@ -40,6 +41,12 @@ export type KioskProduct = {
   main_category?: string | null;
   sub_category?: string | null;
   service_category?: string | null;
+  category_id?: string | null;
+  category_name?: string | null;
+  category_subtitle?: string | null;
+  category_image?: string | null;
+  badge_text?: string | null;
+  featured?: boolean;
 };
 
 export type CartItem = {
