@@ -1,150 +1,69 @@
-import React, { useState, FormEvent } from "react";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import PublicPageHero from "../components/PublicPageHero";
 
-export const TrainingPage: React.FC = () => {
-  const [q1, setQ1] = useState("");
-  const [q2, setQ2] = useState("");
-  const [result, setResult] = useState<string | null>(null);
+const COURSES = [
+  { title: "Füllyukasztás", text: "Gyakorlatorientált képzés a higiénikus és professzionális szolgáltatás elsajátításához." },
+  { title: "Fogfehérítés", text: "Esztétikai fogfehérítési szolgáltatáshoz kapcsolódó elméleti és gyakorlati ismeretek." },
+  { title: "Cukorpasztás szőrtelenítés", text: "A sugar technika alapjai, anyaghasználat, mozdulatok és kezelési területek." },
+  { title: "Intim sugar", text: "Haladó, speciális cukorpasztás szőrtelenítési technika megfelelő előkészítéssel és higiéniával." },
+  { title: "1D classic műszempilla", text: "A klasszikus 1D szempillaépítés alapjai, előkészítés, izolálás, styling és utóápolás." },
+  { title: "Hajhosszabbítás", text: "Gyakorlati képzés a kiválasztott hajhosszabbítási technológiák biztonságos alkalmazásához." },
+];
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    let correct = 0;
-    if (q1 === "c") correct++;
-    if (q2 === "c") correct++;
-    setResult(`Eredmény: ${correct} / 2 helyes válasz.`);
-  };
+export const TrainingPage: React.FC = () => (
+  <main>
+    <PublicPageHero
+      eyebrow="KLEO ACADEMY"
+      title={<>Tanulj, fejlődj, építs <span className="highlight">szépségipari karriert</span></>}
+      lead={<p>A KLEO ACADEMY célja a gyakorlatban is használható tudás átadása. A képzési kínálatban rövid, célzott szakmai tanfolyamok és tanulói gyakorlati lehetőségek is megjelennek.</p>}
+      image="/images/oktatas.jpg"
+      imageAlt="KLEO ACADEMY oktatás"
+      actions={<><a className="btn btn-primary" href="#kepzesek">Képzések</a><NavLink to="/contact" className="btn btn-outline">Érdeklődés</NavLink></>}
+    />
 
-  return (
-    <main>
-      <section className="page-hero">
-        <div className="container">
-          <p className="section-eyebrow">Oktatás</p>
-          <h1>Kleopátra Akadémia</h1>
-          <p className="hero-lead hero-lead--narrow">
-            Belső képzési rendszerünk a szakmai fejlődést, az egységes
-            vendégélményt és a márkaérték hosszú távú építését szolgálja.
-          </p>
+    <section id="kepzesek" className="public-section">
+      <div className="container">
+        <header className="public-section__header">
+          <p className="section-eyebrow">2026-os képzési kínálat</p>
+          <h2>Gyakorlatorientált szakmai tanfolyamok</h2>
+          <p>A pontos indulási időpontok, helyszínek, részvételi díjak és feltételek képzésenként változhatnak. Jelentkezés előtt mindig az aktuális kiírás az irányadó.</p>
+        </header>
+        <div className="course-grid">
+          {COURSES.map(course => (
+            <article className="feature-card course-card" key={course.title}>
+              <span className="feature-card__kicker">KLEO ACADEMY</span>
+              <h3>{course.title}</h3>
+              <p>{course.text}</p>
+              <NavLink to="/contact" className="btn btn-outline">Érdeklődöm</NavLink>
+            </article>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section className="section">
-        <div className="container grid-two">
-          <article className="card">
-            <h2 className="card-title">Belső képzések</h2>
-            <p className="card-text">
-              Folyamatos tréningek fodrász, kozmetikus és kéz- és lábápoló
-              kollégáink számára, hogy mindig naprakész technikákkal dolgozhassanak.
-            </p>
-          </article>
-
-          <article className="card">
-            <h2 className="card-title">Mini teszt – alap kozmetikai tudás</h2>
-            <form className="quiz-form" onSubmit={handleSubmit}>
-              <div className="quiz-question">
-                <p>
-                  <strong>
-                    1. Melyik bőrtípusra jellemző a zsíros T-vonal, szárazabb
-                    orcákkal?
-                  </strong>
-                </p>
-                <label>
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="a"
-                    checked={q1 === "a"}
-                    onChange={(e) => setQ1(e.target.value)}
-                  />{" "}
-                  Száraz bőr
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="b"
-                    checked={q1 === "b"}
-                    onChange={(e) => setQ1(e.target.value)}
-                  />{" "}
-                  Normál bőr
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="c"
-                    checked={q1 === "c"}
-                    onChange={(e) => setQ1(e.target.value)}
-                  />{" "}
-                  Kombinált bőr
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="d"
-                    checked={q1 === "d"}
-                    onChange={(e) => setQ1(e.target.value)}
-                  />{" "}
-                  Érzékeny bőr
-                </label>
-              </div>
-
-              <div className="quiz-question">
-                <p>
-                  <strong>
-                    2. Milyen gyakran ajánlott az arcbőr kíméletes radírozása
-                    normál bőrtípusnál?
-                  </strong>
-                </p>
-                <label>
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="a"
-                    checked={q2 === "a"}
-                    onChange={(e) => setQ2(e.target.value)}
-                  />{" "}
-                  Naponta
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="b"
-                    checked={q2 === "b"}
-                    onChange={(e) => setQ2(e.target.value)}
-                  />{" "}
-                  Hetente 2–3 alkalommal
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="c"
-                    checked={q2 === "c"}
-                    onChange={(e) => setQ2(e.target.value)}
-                  />{" "}
-                  Hetente egyszer
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="d"
-                    checked={q2 === "d"}
-                    onChange={(e) => setQ2(e.target.value)}
-                  />{" "}
-                  Soha
-                </label>
-              </div>
-
-              <button type="submit" className="btn btn-primary quiz-submit">
-                Teszt kiértékelése
-              </button>
-              {result && <p className="form-msg">{result}</p>}
-            </form>
-          </article>
+    <section className="public-section public-section--soft">
+      <div className="container split-feature split-feature--reverse">
+        <div className="split-feature__media"><img src="/images/values.png" alt="Kleopátra szakmai értékek" /></div>
+        <div className="split-feature__copy">
+          <p className="section-eyebrow">Tanulói gyakorlat</p>
+          <h2>Valódi szalonkörnyezetben szerzett tapasztalat</h2>
+          <p>A szakmai gyakorlat akkor értékes, ha a technikai tudás mellett a vendégkezelést, a munkaszervezést, a higiéniai folyamatokat és a szalon mindennapi működését is meg lehet ismerni.</p>
+          <ul className="public-list">
+            <li>gyakorlati szemlélet és szakmai mentorálás;</li>
+            <li>szalonkultúra és vendégkommunikáció;</li>
+            <li>egységes minőségi és higiéniai elvárások;</li>
+            <li>betekintés egy országos hálózat működésébe.</li>
+          </ul>
         </div>
-      </section>
-    </main>
-  );
-};
+      </div>
+    </section>
+
+    <section className="public-section">
+      <div className="container public-cta">
+        <div><h2>Képzésre jelentkeznél?</h2><p>Írd meg, melyik tanfolyam érdekel, és a kapcsolatfelvétel során egyeztetjük az aktuális lehetőségeket.</p></div>
+        <NavLink to="/contact" className="btn btn-primary">Kapcsolatfelvétel</NavLink>
+      </div>
+    </section>
+  </main>
+);
