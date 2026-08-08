@@ -1,44 +1,252 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useI18n } from "../i18n";
 import { useWebsiteCms } from "../websiteCms";
 
+type ServiceCard = {
+  title: string;
+  text: string;
+  to: string;
+  icon: string;
+};
+
+type SalonCard = {
+  title: string;
+  address: string;
+  image: string;
+  to: string;
+};
+
+const SERVICES: ServiceCard[] = [
+  {
+    title: "Fodrászat",
+    text: "Hajvágás, festés, balayage és professzionális hajápolás.",
+    to: "/services#hair",
+    icon: "✦",
+  },
+  {
+    title: "Körömápolás",
+    text: "Géllakk, műköröm, manikűr és pedikűr a részletekig.",
+    to: "/services#handsfeet",
+    icon: "◇",
+  },
+  {
+    title: "Arckezelések",
+    text: "Személyre szabott kozmetikai kezelések a ragyogó bőrért.",
+    to: "/services#beauty",
+    icon: "○",
+  },
+  {
+    title: "Szempilla stylist",
+    text: "Szempillahosszabbítás, lifting és laminálás a kifejező tekintetért.",
+    to: "/services#beauty",
+    icon: "⌁",
+  },
+  {
+    title: "Testkezelések",
+    text: "Masszázsok, alakformáló és kényeztető kezelések.",
+    to: "/services#massage",
+    icon: "♢",
+  },
+  {
+    title: "Smink és beauty",
+    text: "Alkalmi megjelenés, professzionális termékek és beauty szolgáltatások.",
+    to: "/services#beauty",
+    icon: "✧",
+  },
+];
+
+const SALONS: SalonCard[] = [
+  {
+    title: "Budapest IX.",
+    address: "Mester u. 1.",
+    image: "/images/mester.jpg",
+    to: "/salons/budapest-ix",
+  },
+  {
+    title: "Budapest VIII.",
+    address: "Rákóczi u. 63.",
+    image: "/images/rakoczi.jpg",
+    to: "/salons/budapest-viii",
+  },
+  {
+    title: "Budapest XII.",
+    address: "Krisztina krt. 23.",
+    image: "/images/krisztina.jpg",
+    to: "/salons/budapest-xii",
+  },
+  {
+    title: "Budapest XIII.",
+    address: "Visegrádi u. 3.",
+    image: "/images/visegradi.jpg",
+    to: "/salons/budapest-xiii",
+  },
+];
+
+const TRUST_ITEMS = [
+  ["7", "szalon", "Budapesten és vidéken"],
+  ["Online", "időpontfoglalás", "Gyorsan, néhány lépésben"],
+  ["Képzett", "szakemberek", "Folyamatos szakmai fejlődés"],
+  ["KLEO", "élmény", "Minden ami szépség, csak Neked!"],
+];
+
 export const HomePage: React.FC = () => {
-  const { t } = useI18n();
   const cms = useWebsiteCms();
   const h = cms.home;
-  return <main>
-    <section className="hero"><div className="hero-bg"/><div className="container hero-grid">
-      <div className="hero-content">
-        <div className="hero-kicker">{h.heroKicker}</div>
-        <h1 className="hero-title"><span className="hero-part hero-part-default">{h.heroTitlePrefix}</span><span className="hero-part hero-part-magenta">{h.heroTitleHighlight}</span><span className="hero-part hero-part-gold">{h.heroTitleSuffix}</span></h1>
-        <p className="hero-lead">{h.heroLead}</p>
-        <div className="hero-pills">
-          <NavLink to="/services#hair" className="hero-pill">{t("home.hero.pill.hair")}</NavLink><NavLink to="/services#beauty" className="hero-pill">{t("home.hero.pill.beauty")}</NavLink><NavLink to="/services#handsfeet" className="hero-pill">{t("home.hero.pill.handsFeet")}</NavLink><NavLink to="/services#solarium" className="hero-pill">{t("home.hero.pill.solarium")}</NavLink><NavLink to="/services#massage" className="hero-pill">{t("home.hero.pill.massage")}</NavLink>
+
+  return (
+    <main className="kleo-home-modern">
+      <section className="kleo-modern-hero">
+        <div className="kleo-modern-hero__shape kleo-modern-hero__shape--gold" />
+        <div className="kleo-modern-hero__shape kleo-modern-hero__shape--pink" />
+        <div className="container kleo-modern-hero__grid">
+          <div className="kleo-modern-hero__copy">
+            <p className="kleo-modern-eyebrow">{h.heroKicker}</p>
+            <h1 className="kleo-modern-hero__title">
+              {h.heroTitlePrefix}
+              <span>{h.heroTitleHighlight}</span>
+              {h.heroTitleSuffix}
+            </h1>
+            <p className="kleo-modern-hero__lead">{h.heroLead}</p>
+
+            <div className="kleo-modern-hero__actions">
+              <NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--primary">
+                {cms.header.bookingLabel}
+              </NavLink>
+              <NavLink to="/services" className="kleo-modern-btn kleo-modern-btn--outline">
+                Szolgáltatásaink
+              </NavLink>
+            </div>
+
+            <div className="kleo-modern-benefits" aria-label="Kleopátra előnyök">
+              <div><b>♕</b><span><strong>Prémium minőség</strong><small>Minőségi alapanyagok</small></span></div>
+              <div><b>♡</b><span><strong>Szakértő kezek</strong><small>Tapasztalt csapat</small></span></div>
+              <div><b>◇</b><span><strong>Higiénia & biztonság</strong><small>A te nyugalmadért</small></span></div>
+            </div>
+          </div>
+
+          <div className="kleo-modern-hero__visual">
+            <div className="kleo-modern-hero__image-wrap">
+              <img src={h.heroImageUrl || "/images/home.png"} alt="Kleopátra Szépségszalonok" />
+            </div>
+            <NavLink to="/loyalty" className="kleo-modern-loyalty-card">
+              <span className="kleo-modern-loyalty-card__icon">♧</span>
+              <span><strong>Hűségprogram</strong><small>Gyűjts pontokat és élvezd az előnyöket!</small></span>
+            </NavLink>
+          </div>
         </div>
-        <div className="hero-actions"><NavLink to="/booking" className="btn btn-primary btn-primary--magenta">{cms.header.bookingLabel}</NavLink><NavLink to="/services" className="btn btn-outline">{t("home.hero.cta.services")}</NavLink></div>
-      </div>
-      <div className="hero-media"><div className="hero-media-frame"><img src={h.heroImageUrl} alt="Kleopátra Szépségszalon" className="hero-media-img"/><div className="hero-media-overlay"><NavLink to="/webshop" className="hero-media-webshop">{t("home.hero.media.webshop")}</NavLink><div className="hero-media-chip">{t("home.hero.media.appChip")}</div></div></div></div>
-    </div></section>
+      </section>
 
-    <section className="hero-strips"><div className="container hero-strips-row"><NavLink to="/franchise" className="hero-strip">{t("home.strips.franchise")}</NavLink><NavLink to="/training" className="hero-strip">{t("home.strips.app")}</NavLink><NavLink to="/loyalty" className="hero-strip">{t("home.strips.newsletter")}</NavLink><NavLink to="/contact" className="hero-strip">{t("home.strips.contact")}</NavLink></div></section>
+      {h.showServices && (
+        <section className="kleo-modern-section kleo-modern-services">
+          <div className="container">
+            <div className="kleo-modern-section-head">
+              <div>
+                <p className="kleo-modern-eyebrow">Szolgáltatásaink</p>
+                <h2>Szépségápolás felsőfokon</h2>
+              </div>
+              <NavLink to="/services" className="kleo-modern-text-link">Összes szolgáltatás <span>→</span></NavLink>
+            </div>
 
-    {h.showFranchise && <section className="section section--franchise"><div className="container grid-two"><div><p className="section-kicker">{t("home.franchise.kicker")}</p><h2>{t("home.franchise.title")}</h2><p className="section-lead">{t("home.franchise.lead")}</p><ul className="bullet-list"><li>{t("home.franchise.bullet1")}</li><li>{t("home.franchise.bullet2")}</li><li>{t("home.franchise.bullet3")}</li><li>{t("home.franchise.bullet4")}</li><li>{t("home.franchise.bullet5")}</li></ul><NavLink to="/franchise" className="btn btn-outline">{t("home.franchise.cta")}</NavLink></div><div className="franchise-image"><img src="/images/franchise.png" alt={t("home.franchise.imageAlt")}/></div></div></section>}
+            <div className="kleo-modern-service-grid">
+              {SERVICES.map((service) => (
+                <NavLink key={service.title} to={service.to} className="kleo-modern-service-card">
+                  <span className="kleo-modern-service-card__icon" aria-hidden="true">{service.icon}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.text}</p>
+                  <span className="kleo-modern-card-arrow">→</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-    {h.showApp && <section id="app" className="section section--app"><div className="container grid-two"><div className="app-image"><img src="/images/app.png" alt={t("home.app.imageAlt")}/></div><div><p className="section-kicker">MOBILALKALMAZÁS</p><h2>{h.appTitle}</h2><p className="section-lead">{h.appLead}</p><ul className="bullet-list"><li>{t("home.app.bullet1")}</li><li>{t("home.app.bullet2")}</li><li>{t("home.app.bullet3")}</li><li>{t("home.app.bullet4")}</li></ul><div className="app-buttons"><a href="https://apps.apple.com/us/app/id1492246806" target="_blank" rel="noreferrer" className="btn btn-primary btn-primary--magenta">iPhone</a><a href="https://play.google.com/store/apps/details?id=com.yclients.mobile.s206313" target="_blank" rel="noreferrer" className="btn btn-outline">Android</a></div></div></div></section>}
+      <section className="kleo-modern-section kleo-modern-section--soft">
+        <div className="container">
+          <div className="kleo-modern-section-head">
+            <div>
+              <p className="kleo-modern-eyebrow">Szalonjaink</p>
+              <h2>Találj ránk a közeledben!</h2>
+            </div>
+            <NavLink to="/salons" className="kleo-modern-text-link">Összes szalon megtekintése <span>→</span></NavLink>
+          </div>
 
-    {h.showVouchers && <section className="section section--vouchers"><div className="container grid-two"><div><p className="section-kicker">AJÁNDÉK</p><h2>{h.voucherTitle}</h2><p className="section-lead">{h.voucherLead}</p><NavLink to="/webshop" className="btn btn-outline">{t("home.vouchers.cta")}</NavLink></div><div className="vouchers-image"><img src="/images/vouchers.png" alt={t("home.vouchers.imageAlt")}/></div></div></section>}
+          <div className="kleo-modern-salon-grid">
+            {SALONS.map((salon) => (
+              <NavLink key={salon.to} to={salon.to} className="kleo-modern-salon-card">
+                <img src={salon.image} alt={`Kleopátra Szépségszalon – ${salon.title}`} />
+                <div className="kleo-modern-salon-card__body">
+                  <small>Kleopátra Szépségszalon</small>
+                  <h3>{salon.title}</h3>
+                  <p>{salon.address}</p>
+                  <span>Részletek →</span>
+                </div>
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </section>
 
-    {h.showNewsletter && <section className="section section--newsletter"><div className="container grid-two"><div><p className="section-kicker">HÍRLEVÉL</p><h2>{h.newsletterTitle}</h2><p className="section-lead">{h.newsletterLead}</p></div><div className="newsletter-actions"><NavLink to="/loyalty" className="btn btn-primary">{t("home.newsletter.cta")}</NavLink></div></div></section>}
+      {h.showVouchers && (
+        <section className="kleo-modern-promo-wrap">
+          <div className="container">
+            <div className="kleo-modern-promo">
+              <div className="kleo-modern-promo__copy">
+                <p className="kleo-modern-eyebrow">Ajándékötlet</p>
+                <h2>{h.voucherTitle || "Ajándékozz Kleopátra élményt"}</h2>
+                <p>{h.voucherLead}</p>
+                <NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Megnézem az utalványokat</NavLink>
+              </div>
+              <div className="kleo-modern-promo__image">
+                <img src="/images/vouchers.png" alt="Kleopátra ajándékutalványok" />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
-    {h.showProducts && <section className="section section--products"><div className="container grid-two"><div><p className="section-kicker">KLEOS</p><h2>{h.productsTitle}</h2><p className="section-lead">{h.productsLead}</p><NavLink to="/webshop" className="btn btn-outline">{t("home.products.cta")}</NavLink></div><div className="products-image"><img src="/images/products.png" alt={t("home.products.imageAlt")}/></div></div></section>}
+      <section className="kleo-modern-trust">
+        <div className="container kleo-modern-trust__grid">
+          {TRUST_ITEMS.map(([value, label, note]) => (
+            <div className="kleo-modern-trust__item" key={`${value}-${label}`}>
+              <span className="kleo-modern-trust__icon">✦</span>
+              <div><strong>{value}</strong><b>{label}</b><small>{note}</small></div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-    <section className="kleo-why"><div className="container"><p className="section-kicker">KLEOPÁTRA ÉLMÉNY</p><h2>{h.whyTitle}</h2><div className="kleo-why-grid">{(h.whyItems || []).map((item,i)=><div className="kleo-why-card" key={`${i}-${item}`}>{item}</div>)}</div></div></section>
+      {h.showProducts && (
+        <section className="kleo-modern-section kleo-modern-shop">
+          <div className="container kleo-modern-shop__grid">
+            <div className="kleo-modern-shop__copy">
+              <p className="kleo-modern-eyebrow">Kleopátra webshop</p>
+              <h2>{h.productsTitle || "Prémium termékek a szépségedért"}</h2>
+              <p>{h.productsLead}</p>
+              <NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Webshop megtekintése</NavLink>
+            </div>
 
-    {h.showServices && <section className="section section--services-overview"><div className="container"><header className="section-header"><p className="section-kicker">{t("home.services.kicker")}</p><h2>{t("home.services.title")}</h2><p className="section-lead">{t("home.services.lead")}</p></header><div className="grid-three">
-      {[["hair","/services#hair"],["beauty","/services#beauty"],["handsFeet","/services#handsfeet"],["solarium","/services#solarium"],["massage","/services#massage"],["fitness","/services#fitness"]].map(([key,to])=><NavLink key={key} to={to} className="card"><h3 className="card-title">{t(`services.cards.${key}.title`)}</h3><p className="card-text">{t(`services.cards.${key}.text`)}</p><span className="link-btn">{t(`services.cards.${key}.cta`)}</span></NavLink>)}
-    </div></div></section>}
-  </main>;
+            <div className="kleo-modern-shop__visual">
+              <img src="/images/products.png" alt="KLEOS termékek" />
+              <div className="kleo-modern-shop__chips">
+                <span>Hajápolás</span><span>Bőrápolás</span><span>Kéz- és körömápolás</span><span>Beauty</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="kleo-modern-booking-strip">
+        <div className="container kleo-modern-booking-strip__inner">
+          <div className="kleo-modern-booking-strip__copy">
+            <span className="kleo-modern-booking-strip__icon">▣</span>
+            <div><strong>Foglalj időpontot online!</strong><small>Gyorsan és egyszerűen, néhány kattintással.</small></div>
+          </div>
+          <NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--light">Időpontfoglalás</NavLink>
+        </div>
+      </section>
+    </main>
+  );
 };
 
 export default HomePage;
