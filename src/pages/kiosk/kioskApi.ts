@@ -19,6 +19,7 @@ export async function fetchKioskConfig(locationId?: string | null) {
     ok: true;
     location_id: string | null;
     menu: null | { id: string; name: string; is_active: boolean; theme: Record<string, any>; updated_at?: string };
+    sections?: { id: string; title: string; subtitle?: string; image_url?: string; enabled?: boolean; display_order?: number }[];
   }>;
 }
 
