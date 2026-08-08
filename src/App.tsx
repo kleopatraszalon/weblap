@@ -21,7 +21,8 @@ import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
-import { BookingPage } from "./pages/BookingPage";
+import { BookingPage as VoiceBookingPage } from "./pages/BookingPage";
+import { BookingPageV2 } from "./pages/BookingPageV2";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
 import { WebsiteCmsProvider } from "./websiteCms";
@@ -58,8 +59,9 @@ function AppShell() {
       <Route path="/kiosk/*" element={<KioskPage />} />
       <Route path="/" element={<HomePage />} />
 
-      <Route path="/booking" element={<BookingPage />} />
-      <Route path="/idopontfoglalas" element={<BookingPage />} />
+      <Route path="/booking" element={<BookingPageV2 />} />
+      <Route path="/idopontfoglalas" element={<BookingPageV2 />} />
+      <Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
 
       <Route path="/salons" element={<SalonsPage />} />
       <Route path="/salons/:id" element={<SalonDetailPage />} />
