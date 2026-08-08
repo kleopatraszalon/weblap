@@ -55,22 +55,41 @@ function AppShell() {
       <Route path="/signage" element={<SignagePage />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
       <Route path="/" element={<HomePage />} />
+
       <Route path="/booking" element={<BookingPage />} />
+      <Route path="/idopontfoglalas" element={<BookingPage />} />
+
       <Route path="/salons" element={<SalonsPage />} />
       <Route path="/salons/:id" element={<SalonDetailPage />} />
+      <Route path="/szalonok" element={<SalonsPage />} />
+      <Route path="/szalonok/:id" element={<SalonDetailPage />} />
+
       <Route path="/services" element={<ServicesPage />} />
+      <Route path="/szolgaltatasok" element={<ServicesPage />} />
+      <Route path="/szolgaltatasok/*" element={<ServicesPage />} />
       <Route path="/prices" element={<PriceListPage />} />
+      <Route path="/araink" element={<PriceListPage />} />
+
       <Route path="/loyalty" element={<LoyaltyPage />} />
+      <Route path="/husegprogram" element={<LoyaltyPage />} />
       <Route path="/franchise" element={<FranchisePage />} />
       <Route path="/career" element={<CareerPage />} />
+      <Route path="/karrier" element={<CareerPage />} />
       <Route path="/training" element={<TrainingPage />} />
       <Route path="/education" element={<TrainingPage />} />
+      <Route path="/oktatas" element={<TrainingPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/rolunk" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/kapcsolat" element={<ContactPage />} />
+
       <Route path="/webshop" element={<WebshopPage />} />
       <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route path="/kosar" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/fizetes" element={<CheckoutPage />} />
+
       <Route path="*" element={<HomePage />} />
     </Routes>
     {!isSignage && <Footer />}
