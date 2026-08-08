@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import ModernPublicStyles from "./components/ModernPublicStyles";
 import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
@@ -49,6 +50,7 @@ function AppShell() {
   const location = useLocation();
   const isSignage = location.pathname.startsWith("/signage") || location.pathname.startsWith("/kiosk");
   return <>
+    {!isSignage && <ModernPublicStyles />}
     {!isSignage && <Header />}
     {!isSignage && <FloatingCartButton />}
     <Routes>
