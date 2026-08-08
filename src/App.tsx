@@ -15,7 +15,7 @@ import { CareerPage } from "./pages/CareerPage";
 import { TrainingPage } from "./pages/TrainingPage";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
-import { SignagePage } from "./pages/SignagePage";
+import { SignageExperience } from "./pages/signage/SignageExperience";
 import { KioskPage } from "./pages/KioskPage";
 import { WebshopPage } from "./pages/WebshopPage";
 import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
@@ -55,7 +55,7 @@ function AppShell() {
     {!isSignage && <Header />}
     {!isSignage && <FloatingCartButton />}
     <Routes>
-      <Route path="/signage" element={<SignagePage />} />
+      <Route path="/signage" element={<SignageExperience />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
       <Route path="/" element={<HomePage />} />
 
