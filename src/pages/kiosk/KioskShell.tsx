@@ -1,23 +1,26 @@
 import React from "react";
-import { cartTotal, readCart } from "./cartStore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { cartCount, cartTotal, readCart } from "./cartStore";
 import { fetchKioskConfig } from "./kioskApi";
 
 const LANGS = [
-  { code: "hu", label: "Magyar", flag: "🇭🇺" },
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "ru", label: "Русский", flag: "🇷🇺" },
+  { code: "hu", label: "Magyar", flag: "HU" },
+  { code: "en", label: "English", flag: "EN" },
+  { code: "ru", label: "Русский", flag: "RU" },
 ] as const;
-
 type LangCode = (typeof LANGS)[number]["code"];
 function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
-const COPY: Record<LangCode, { daily: string; dailySub: string; total: string; step1: string; step2: string; step3: string }> = {
-  hu: { daily: "Kleopátra Kiosk", dailySub: "Válasszon szolgáltatást néhány érintéssel.", total: "Összesen", step1: "1. Menü", step2: "2. Fizetés", step3: "3. Sorszám" },
-  en: { daily: "Kleopátra Kiosk", dailySub: "Choose your service in a few taps.", total: "Total", step1: "1. Menu", step2: "2. Payment", step3: "3. Ticket" },
-  ru: { daily: "Kleopátra Kiosk", dailySub: "Выберите услугу в несколько касаний.", total: "Итого", step1: "1. Меню", step2: "2. Оплата", step3: "3. Талон" },
+
+const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string }> = {
+  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü" },
+  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home" },
+  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная" },
 };
 
 export function KioskShell({ children }: { children: React.ReactNode }) {
-  const [total, setTotal] = React.useState(() => cartTotal(readCart()));
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
@@ -28,35 +31,62 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   React.useEffect(() => {
-    const onStorage = () => { setTotal(cartTotal(readCart())); setLang(getStoredLang()); };
+    const refresh = () => setCart(readCart());
     const onLang = () => setLang(getStoredLang());
     const onLocation = () => loadConfig();
-    window.addEventListener("storage", onStorage);
+    window.addEventListener("storage", refresh);
+    window.addEventListener("kiosk-cart-change", refresh as EventListener);
     window.addEventListener("kiosk-lang-change", onLang as EventListener);
     window.addEventListener("kiosk-location-change", onLocation as EventListener);
-    const t = window.setInterval(onStorage, 400);
     loadConfig();
-    return () => { window.removeEventListener("storage", onStorage); window.removeEventListener("kiosk-lang-change", onLang as EventListener); window.removeEventListener("kiosk-location-change", onLocation as EventListener); window.clearInterval(t); };
+    return () => {
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("kiosk-cart-change", refresh as EventListener);
+      window.removeEventListener("kiosk-lang-change", onLang as EventListener);
+      window.removeEventListener("kiosk-location-change", onLocation as EventListener);
+    };
   }, [loadConfig]);
 
-  function changeLang(next: LangCode) { localStorage.setItem("kiosk_lang", next); setLang(next); window.dispatchEvent(new Event("kiosk-lang-change")); }
+  function changeLang(next: LangCode) {
+    localStorage.setItem("kiosk_lang", next);
+    setLang(next);
+    window.dispatchEvent(new Event("kiosk-lang-change"));
+  }
+
   const copy = COPY[lang];
+  const step = location.pathname.includes("/ticket") ? 3 : location.pathname.includes("/pay") ? 2 : 1;
+  const total = cartTotal(cart);
+  const count = cartCount(cart);
+  const radius = Math.max(12, Math.min(38, Number(theme.cardRadius || 24)));
   const shellStyle = {
-    "--bg": theme.backgroundColor || "#f6efe7",
-    "--magenta": theme.accentColor || "#e6007e",
-    "--magenta2": theme.accentColor || "#c3006a",
+    "--kiosk-bg": theme.backgroundColor || "#f4efe7",
+    "--kiosk-surface": theme.surfaceColor || "#ffffff",
+    "--kiosk-ink": theme.textColor || "#181310",
     "--kiosk-gold": theme.primaryColor || "#b69861",
-    background: theme.backgroundColor || "#f6efe7",
+    "--kiosk-accent": theme.accentColor || "#ec008c",
+    "--kiosk-radius": `${radius}px`,
+    background: theme.backgroundColor || "#f4efe7",
   } as React.CSSProperties;
 
   return <div className="kioskScreen" style={shellStyle}>
-    <div className="kioskTop" style={{borderBottom:`3px solid ${theme.primaryColor||"#b69861"}`}}>
-      <div className="kioskBrand"><img src={theme.logoUrl || "/images/kleo_logo@2x.png"} className="kioskBrandLogo" alt="Kleopatra" /></div>
-      <div className="kioskTopCard"><div className="kioskTopCardTitle">{copy.daily}</div><div className="kioskTopCardSub">{theme.welcomeText || copy.dailySub}</div></div>
-      <div className="kioskSteps"><div className="kioskStep">{copy.step1}</div><div className="kioskStep">{copy.step2}</div><div className="kioskStep">{copy.step3}</div></div>
-      <div className="kioskLangFlags" aria-label="Language selector">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)} title={item.label} aria-label={item.label}><span>{item.flag}</span></button>)}</div>
-      <div className="kioskTopSpacer"/><div className="kioskMiniTotal" style={{color:theme.accentColor||"#e6007e"}}>{copy.total}: {total.toLocaleString("hu-HU")} Ft</div>
-    </div>
-    <div className="kioskBody">{children}</div>
+    <header className="kioskTop">
+      <button className="kiosk-home-button" onClick={() => navigate("/kiosk")} aria-label={copy.home}>
+        <img src={theme.logoUrl || "/images/kleo_logo@2x.png"} className="kioskBrandLogo" alt="Kleopátra" />
+      </button>
+      <div className="kiosk-progress" aria-label="Kiosk folyamat">
+        {[copy.menu, copy.pay, copy.ticket].map((label, index) => {
+          const n = index + 1; return <div key={label} className={`kiosk-progress-step ${n === step ? "active" : n < step ? "done" : ""}`}>
+            <span>{n < step ? "✓" : n}</span><b>{label}</b>
+          </div>;
+        })}
+      </div>
+      <div className="kiosk-utilities">
+        <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
+        <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
+          <span>{copy.total}</span><b>{count} · {total.toLocaleString("hu-HU")} Ft</b>
+        </button>
+      </div>
+    </header>
+    <main className="kioskBody">{children}</main>
   </div>;
 }
