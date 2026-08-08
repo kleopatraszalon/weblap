@@ -1,17 +1,37 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchKioskConfig } from "./kioskApi";
 
 export function KioskTicket() {
   const nav = useNavigate();
   const workOrder = React.useMemo(() => { try { return JSON.parse(sessionStorage.getItem("kiosk_last_workorder") || "null"); } catch { return null; } }, []);
-  return <div className="kioskTicketPage">
-    <div className="kioskPanelTitle">Munkalap létrehozva</div>
-    <div className="kioskTicketBox">
-      <div className="kioskTicketLabel">Köszönjük! A VIR munkalapszáma:</div>
-      <div className="kioskTicketNo" style={{fontSize:"clamp(34px,5vw,64px)"}}>{workOrder?.work_order_number || "Rögzítve"}</div>
-      <div className="kioskTicketSub">A rendelés/szolgáltatás új munkalapként bekerült a szalon rendszerébe. A recepció innen folytathatja és zárhatja le.</div>
-      {workOrder?.status && <div className="kioskInfo" style={{marginTop:14}}>Állapot: Új / várakozik</div>}
+  const [seconds,setSeconds]=React.useState(30);
+  const [theme,setTheme]=React.useState<Record<string,any>>({});
+
+  const reset=React.useCallback(()=>{
+    sessionStorage.removeItem("kiosk_last_workorder");
+    sessionStorage.removeItem("kiosk_started");
+    nav("/kiosk");
+  },[nav]);
+
+  React.useEffect(()=>{
+    const locationId=localStorage.getItem("kiosk_location_id");
+    fetchKioskConfig(locationId).then(cfg=>{const t=cfg.menu?.theme||{};setTheme(t);setSeconds(Math.max(10,Math.min(120,Number(t.autoResetSeconds||30))) )}).catch(()=>undefined);
+  },[]);
+  React.useEffect(()=>{const t=window.setInterval(()=>setSeconds(v=>{if(v<=1){window.clearInterval(t);window.setTimeout(reset,0);return 0}return v-1}),1000);return()=>window.clearInterval(t)},[reset]);
+
+  return <section className="kiosk-success-page">
+    <div className="kiosk-success-card">
+      <div className="kiosk-success-mark">✓</div>
+      <span className="kiosk-success-kicker">SIKERES RÖGZÍTÉS</span>
+      <h1>Köszönjük!</h1>
+      <p>A rendelésed bekerült a szalon VIR rendszerébe új munkalapként.</p>
+      <div className="kiosk-ticket-number"><span>Munkalapszám</span><strong>{workOrder?.work_order_number || "Rögzítve"}</strong></div>
+      <div className="kiosk-ticket-status"><span>Állapot</span><b>Új · várakozik</b></div>
+      <p className="kiosk-ticket-help">Kérjük, jelezd a recepción a munkalapszámot. A recepció innen folytatja a kiszolgálást és a pénzügyi lezárást.</p>
+      <button className="kiosk-new-order-button" onClick={reset}>Új rendelés <span>→</span></button>
+      <small className="kiosk-reset-note">A képernyő {seconds} másodperc múlva automatikusan visszaáll.</small>
+      {theme.logoUrl&&<img className="kiosk-success-logo" src={theme.logoUrl} alt="Kleopátra"/>}
     </div>
-    <button className="kioskBtn kioskPrimaryBtn" onClick={() => { sessionStorage.removeItem("kiosk_last_workorder"); nav("/kiosk"); }}>Új rendelés</button>
-  </div>;
+  </section>;
 }
