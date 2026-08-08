@@ -15,64 +15,24 @@ function productPrice(x:KioskProduct){return Number(x.sale_price??x.retail_price
 const slugify=(s:string)=>normalize(s);
 
 export function KioskCategory(){
-  const nav=useNavigate();
-  const{slug=""}=useParams();
-  const[loading,setLoading]=React.useState(true);
-  const[err,setErr]=React.useState("");
-  const[allServices,setAllServices]=React.useState<KioskService[]>([]);
-  const[categories,setCategories]=React.useState<KioskCategory[]>([]);
-  const[products,setProducts]=React.useState<KioskProduct[]>([]);
-  const[menu,setMenu]=React.useState<any>(null);
-  const[langTick,setLangTick]=React.useState(0);
-  const[addedId,setAddedId]=React.useState("");
-  const storedId=localStorage.getItem("kiosk_category_id")||"";
-  const storedName=localStorage.getItem("kiosk_category_name")||"";
-
-  React.useEffect(()=>{const h=()=>setLangTick(x=>x+1);window.addEventListener("kiosk-lang-change",h);return()=>window.removeEventListener("kiosk-lang-change",h)},[]);
-  React.useEffect(()=>{(async()=>{try{
-    setLoading(true);setErr("");const locationId=localStorage.getItem("kiosk_location_id");
-    const svc=await fetchKioskServices(lang(),locationId);setAllServices(svc.services||[]);setCategories(svc.categories||[]);setMenu(svc.menu||null);
-    if(svc.menu?.theme?.showProducts){const prod=await fetchKioskProducts();setProducts(prod||[])}else setProducts([]);
-  }catch(e:any){setErr(e?.message||"API hiba")}finally{setLoading(false)}})()},[slug,langTick]);
-
-  const activeCategory=React.useMemo(()=>{
-    const wanted=normalize(storedName||slug);
-    return categories.find(c=>(storedId&&String(c.id)===storedId)||normalize(c.name)===wanted)||categories[0]||null;
-  },[categories,storedId,storedName,slug]);
-  const services=React.useMemo(()=>activeCategory?allServices.filter(s=>String(s.category_id||"")===String(activeCategory.id)||normalize(s.category_name)===normalize(activeCategory.name)):[],[allServices,activeCategory]);
-  const theme=menu?.theme||{};
-  const showPrice=theme.showPrices!==false,showDuration=theme.showDuration!==false;
-  const categoryImage=activeCategory?.image_path||FALLBACK_IMAGES[Math.max(0,categories.findIndex(x=>x.id===activeCategory?.id))%FALLBACK_IMAGES.length];
-
-  function selectCategory(c:KioskCategory){localStorage.setItem("kiosk_category_id",String(c.id));localStorage.setItem("kiosk_category_name",c.name);nav(`/kiosk/cat/${slugify(c.name)||c.id}`)}
-  function addService(s:KioskService){addToCart({id:s.id,title:serviceName(s),price:servicePrice(s),meta:{kind:"service",duration:s.duration_minutes,category_id:s.category_id,image_url:s.image_url||categoryImage}},1);setAddedId(s.id);window.setTimeout(()=>setAddedId(""),800)}
-  function addProduct(p:KioskProduct){addToCart({id:p.id,title:productName(p),price:productPrice(p),meta:{kind:"product",image_url:p.image_url}},1);setAddedId(p.id);window.setTimeout(()=>setAddedId(""),800)}
-
-  return <div className="kiosk-order-layout">
-    <aside className="kiosk-category-rail">
-      <button className="kiosk-back-home" onClick={()=>nav("/kiosk")}>← Főmenü</button>
-      <div className="kiosk-rail-title">Kategóriák</div>
-      <div className="kiosk-rail-list">{categories.map((c,i)=><button key={c.id} className={activeCategory?.id===c.id?"active":""} onClick={()=>selectCategory(c)}><img src={c.image_path||FALLBACK_IMAGES[i%FALLBACK_IMAGES.length]} alt=""/><span>{c.name}</span></button>)}</div>
-    </aside>
-
-    <section className="kiosk-catalog-page">
-      <div className="kiosk-category-banner" style={{backgroundImage:`linear-gradient(90deg,rgba(18,12,8,.82),rgba(18,12,8,.15)),url(${categoryImage})`}}>
-        <span>2. LÉPÉS</span><h1>{activeCategory?.name||storedName||"Szolgáltatások"}</h1><p>{activeCategory?.subtitle||"Válassz a szolgáltatások közül, majd add a kosárhoz."}</p>
-      </div>
-      {loading&&<div className="kioskInfo">Adatok betöltése a VIR adatbázisból…</div>}{err&&<div className="kioskError">{err}</div>}
-      {!loading&&!err&&!services.length&&<div className="kioskInfo">Ebben a kategóriában jelenleg nincs aktív szolgáltatás.</div>}
-      <div className="kiosk-service-grid">{services.map((s,index)=>{
-        const image=s.image_url||s.category_image||categoryImage||FALLBACK_IMAGES[index%FALLBACK_IMAGES.length];
-        return <article key={s.id} className={`kiosk-service-tile ${s.featured?"featured":""}`}>
-          <button className="kiosk-service-touch" onClick={()=>addService(s)}>
-            <div className="kiosk-service-image"><img src={image} alt={serviceName(s)}/>{s.badge_text&&<span className="kiosk-service-badge">{s.badge_text}</span>}{s.featured&&<span className="kiosk-service-featured">AJÁNLOTT</span>}</div>
-            <div className="kiosk-service-content"><h3>{serviceName(s)}</h3>{s.description&&<p>{s.description}</p>}<div className="kiosk-service-facts">{showPrice&&<strong>{servicePrice(s).toLocaleString("hu-HU")} Ft</strong>}{showDuration&&s.duration_minutes!=null&&<span>{s.duration_minutes} perc</span>}</div></div>
-          </button>
-          <button className={`kiosk-add-button ${addedId===s.id?"added":""}`} onClick={()=>addService(s)}>{addedId===s.id?"✓ Hozzáadva":"+ Kosárba"}</button>
-        </article>})}</div>
-
-      {theme.showProducts&&products.length>0&&<section className="kiosk-upsell-section"><div className="kiosk-section-heading"><div><span>MÉG VALAMI?</span><h2>Kleoshop ajánlatok</h2></div></div><div className="kiosk-upsell-row">{products.slice(0,6).map(p=><article key={p.id}><img src={p.image_url||"/images/Logo.jpg"} alt={productName(p)}/><div><b>{productName(p)}</b><span>{productPrice(p).toLocaleString("hu-HU")} Ft</span></div><button onClick={()=>addProduct(p)}>{addedId===p.id?"✓":"+"}</button></article>)}</div></section>}
-    </section>
-    <KioskCartPanel/>
-  </div>;
+ const nav=useNavigate();const{slug=""}=useParams();const[loading,setLoading]=React.useState(true);const[err,setErr]=React.useState("");
+ const[services,setServices]=React.useState<KioskService[]>([]);const[serviceCats,setServiceCats]=React.useState<KioskCategory[]>([]);const[products,setProducts]=React.useState<KioskProduct[]>([]);const[productCats,setProductCats]=React.useState<KioskCategory[]>([]);const[menu,setMenu]=React.useState<any>(null);const[addedId,setAddedId]=React.useState("");const[langTick,setLangTick]=React.useState(0);
+ const catalogType=(localStorage.getItem("kiosk_catalog_type")==="product"?"product":"service") as "product"|"service";const storedId=localStorage.getItem("kiosk_category_id")||"";const storedName=localStorage.getItem("kiosk_category_name")||"";
+ React.useEffect(()=>{const h=()=>setLangTick(x=>x+1);window.addEventListener("kiosk-lang-change",h);return()=>window.removeEventListener("kiosk-lang-change",h)},[]);
+ React.useEffect(()=>{(async()=>{try{setLoading(true);setErr("");const locationId=localStorage.getItem("kiosk_location_id");const[svc,prod]=await Promise.all([fetchKioskServices(lang(),locationId),fetchKioskProducts(locationId)]);setServices(svc.services||[]);setServiceCats(svc.categories||[]);setProducts(prod.products||[]);setProductCats(prod.categories||[]);setMenu(svc.menu||prod.menu||null)}catch(e:any){setErr(e?.message||"API hiba")}finally{setLoading(false)}})()},[slug,langTick]);
+ const cats=catalogType==="product"?productCats:serviceCats;const wanted=normalize(storedName||slug);const activeCategory=cats.find(c=>(storedId&&String(c.id)===storedId)||normalize(c.name)===wanted)||cats[0]||null;
+ const activeServices=catalogType==="service"&&activeCategory?services.filter(s=>String(s.category_id||"")===String(activeCategory.id)||normalize(s.category_name)===normalize(activeCategory.name)):[];
+ const activeProducts=catalogType==="product"&&activeCategory?products.filter(p=>String(p.category_id||"")===String(activeCategory.id)||normalize(p.category_name)===normalize(activeCategory.name)):[];
+ const theme=menu?.theme||{};const showPrice=theme.showPrices!==false,showDuration=theme.showDuration!==false;const allCats=[...serviceCats.map(c=>({...c,type:"service" as const})),...(theme.showProducts!==false?productCats.map(c=>({...c,type:"product" as const})):[])];
+ const categoryImage=activeCategory?.image_path||FALLBACK_IMAGES[Math.max(0,cats.findIndex(x=>x.id===activeCategory?.id))%FALLBACK_IMAGES.length];
+ function selectCategory(c:KioskCategory,type:"service"|"product"){localStorage.setItem("kiosk_catalog_type",type);localStorage.setItem("kiosk_category_id",String(c.id));localStorage.setItem("kiosk_category_name",c.name);nav(`/kiosk/cat/${slugify(c.name)||c.id}`)}
+ function flash(id:string){setAddedId(id);window.setTimeout(()=>setAddedId(""),700)}
+ function addService(s:KioskService){addToCart({id:s.id,title:serviceName(s),price:servicePrice(s),meta:{kind:"service",duration:s.duration_minutes,category_id:s.category_id,image_url:s.image_url||categoryImage}},1);flash(s.id)}
+ function addProduct(p:KioskProduct){addToCart({id:p.id,title:productName(p),price:productPrice(p),meta:{kind:"product",category_id:p.category_id,image_url:p.image_url||p.category_image}},1);flash(p.id)}
+ return <div className="kiosk-order-layout">
+  <aside className="kiosk-category-rail"><button className="kiosk-back-home" onClick={()=>nav("/kiosk")}>← Főmenü</button><div className="kiosk-rail-title">Menü</div><div className="kiosk-rail-list">{allCats.map((c,i)=><button key={`${c.type}-${c.id}`} className={catalogType===c.type&&activeCategory?.id===c.id?"active":""} onClick={()=>selectCategory(c,c.type)}><img src={c.image_path||FALLBACK_IMAGES[i%FALLBACK_IMAGES.length]} alt=""/><span>{c.name}</span><small>{c.type==="product"?"TERMÉK":"SZOLGÁLTATÁS"}</small></button>)}</div></aside>
+  <section className="kiosk-catalog-page"><div className="kiosk-category-banner" style={{backgroundImage:`linear-gradient(90deg,rgba(18,12,8,.82),rgba(18,12,8,.15)),url(${categoryImage})`}}><span>{catalogType==="product"?"KLEOSHOP":"SZOLGÁLTATÁS"}</span><h1>{activeCategory?.name||storedName||"Kategória"}</h1><p>{activeCategory?.subtitle||"Válassz a kártyák közül, majd add a kosárhoz."}</p></div>{loading&&<div className="kioskInfo">Adatok betöltése a VIR adatbázisból…</div>}{err&&<div className="kioskError">{err}</div>}
+  {catalogType==="service"?<div className="kiosk-service-grid">{activeServices.map((s,index)=>{const image=s.image_url||s.category_image||categoryImage||FALLBACK_IMAGES[index%FALLBACK_IMAGES.length];return <article key={s.id} className={`kiosk-service-tile ${s.featured?"featured":""}`}><button className="kiosk-service-touch" onClick={()=>addService(s)}><div className="kiosk-service-image"><img src={image} alt={serviceName(s)}/>{s.badge_text&&<span className="kiosk-service-badge">{s.badge_text}</span>}{s.featured&&<span className="kiosk-service-featured">AJÁNLOTT</span>}</div><div className="kiosk-service-content"><h3>{serviceName(s)}</h3>{s.description&&<p>{s.description}</p>}<div className="kiosk-service-facts">{showPrice&&<strong>{servicePrice(s).toLocaleString("hu-HU")} Ft</strong>}{showDuration&&s.duration_minutes!=null&&<span>{s.duration_minutes} perc</span>}</div></div></button><button className={`kiosk-add-button ${addedId===s.id?"added":""}`} onClick={()=>addService(s)}>{addedId===s.id?"✓ Hozzáadva":"+ Kosárba"}</button></article>})}{!loading&&!activeServices.length&&<div className="kioskInfo">Ebben a csoportban jelenleg nincs aktív szolgáltatás.</div>}</div>:<div className="kiosk-service-grid kiosk-product-grid">{activeProducts.map((p,index)=>{const image=p.image_url||p.category_image||categoryImage||FALLBACK_IMAGES[index%FALLBACK_IMAGES.length];return <article key={p.id} className={`kiosk-service-tile ${p.featured?"featured":""}`}><button className="kiosk-service-touch" onClick={()=>addProduct(p)}><div className="kiosk-service-image"><img src={image} alt={productName(p)}/>{p.badge_text&&<span className="kiosk-service-badge">{p.badge_text}</span>}{p.featured&&<span className="kiosk-service-featured">KIEMELT</span>}</div><div className="kiosk-service-content"><h3>{productName(p)}</h3>{p.web_description&&<p>{p.web_description}</p>}<div className="kiosk-service-facts">{showPrice&&<strong>{productPrice(p).toLocaleString("hu-HU")} Ft</strong>}</div></div></button><button className={`kiosk-add-button ${addedId===p.id?"added":""}`} onClick={()=>addProduct(p)}>{addedId===p.id?"✓ Hozzáadva":"+ Kosárba"}</button></article>})}{!loading&&!activeProducts.length&&<div className="kioskInfo">Ebben a csoportban jelenleg nincs aktív termék.</div>}</div>}
+  </section><KioskCartPanel/>
+ </div>
 }
