@@ -17,69 +17,19 @@ type SalonCard = {
 };
 
 const SERVICES: ServiceCard[] = [
-  {
-    title: "Fodrászat",
-    text: "Hajvágás, festés, balayage és professzionális hajápolás.",
-    to: "/services#hair",
-    icon: "✦",
-  },
-  {
-    title: "Körömápolás",
-    text: "Géllakk, műköröm, manikűr és pedikűr a részletekig.",
-    to: "/services#handsfeet",
-    icon: "◇",
-  },
-  {
-    title: "Arckezelések",
-    text: "Személyre szabott kozmetikai kezelések a ragyogó bőrért.",
-    to: "/services#beauty",
-    icon: "○",
-  },
-  {
-    title: "Szempilla stylist",
-    text: "Szempillahosszabbítás, lifting és laminálás a kifejező tekintetért.",
-    to: "/services#beauty",
-    icon: "⌁",
-  },
-  {
-    title: "Testkezelések",
-    text: "Masszázsok, alakformáló és kényeztető kezelések.",
-    to: "/services#massage",
-    icon: "♢",
-  },
-  {
-    title: "Smink és beauty",
-    text: "Alkalmi megjelenés, professzionális termékek és beauty szolgáltatások.",
-    to: "/services#beauty",
-    icon: "✧",
-  },
+  { title: "Fodrászat", text: "Hajvágás, festés, balayage és professzionális hajápolás.", to: "/services#hair", icon: "✦" },
+  { title: "Körömápolás", text: "Géllakk, műköröm, manikűr és pedikűr a részletekig.", to: "/services#handsfeet", icon: "◇" },
+  { title: "Arckezelések", text: "Személyre szabott kozmetikai kezelések a ragyogó bőrért.", to: "/services#beauty", icon: "○" },
+  { title: "Szempilla stylist", text: "Szempillahosszabbítás, lifting és laminálás a kifejező tekintetért.", to: "/services#beauty", icon: "⌁" },
+  { title: "Testkezelések", text: "Masszázsok, alakformáló és kényeztető kezelések.", to: "/services#massage", icon: "♢" },
+  { title: "Smink és beauty", text: "Alkalmi megjelenés, professzionális termékek és beauty szolgáltatások.", to: "/services#beauty", icon: "✧" },
 ];
 
 const SALONS: SalonCard[] = [
-  {
-    title: "Budapest IX.",
-    address: "Mester u. 1.",
-    image: "/images/mester.jpg",
-    to: "/salons/budapest-ix",
-  },
-  {
-    title: "Budapest VIII.",
-    address: "Rákóczi u. 63.",
-    image: "/images/rakoczi.jpg",
-    to: "/salons/budapest-viii",
-  },
-  {
-    title: "Budapest XII.",
-    address: "Krisztina krt. 23.",
-    image: "/images/krisztina.jpg",
-    to: "/salons/budapest-xii",
-  },
-  {
-    title: "Budapest XIII.",
-    address: "Visegrádi u. 3.",
-    image: "/images/visegradi.jpg",
-    to: "/salons/budapest-xiii",
-  },
+  { title: "Budapest IX.", address: "Mester u. 1.", image: "/images/mester.jpg", to: "/salons/budapest-ix" },
+  { title: "Budapest VIII.", address: "Rákóczi u. 63.", image: "/images/rakoczi.jpg", to: "/salons/budapest-viii" },
+  { title: "Budapest XII.", address: "Krisztina krt. 23.", image: "/images/krisztina.jpg", to: "/salons/budapest-xii" },
+  { title: "Budapest XIII.", address: "Visegrádi u. 3.", image: "/images/visegradi.jpg", to: "/salons/budapest-xiii" },
 ];
 
 const TRUST_ITEMS = [
@@ -98,23 +48,17 @@ export const HomePage: React.FC = () => {
       <section className="kleo-modern-hero">
         <div className="kleo-modern-hero__shape kleo-modern-hero__shape--gold" />
         <div className="kleo-modern-hero__shape kleo-modern-hero__shape--pink" />
-        <div className="container kleo-modern-hero__grid">
+        <div className="kleo-modern-container kleo-modern-hero__grid">
           <div className="kleo-modern-hero__copy">
             <p className="kleo-modern-eyebrow">{h.heroKicker}</p>
             <h1 className="kleo-modern-hero__title">
-              {h.heroTitlePrefix}
-              <span>{h.heroTitleHighlight}</span>
-              {h.heroTitleSuffix}
+              {h.heroTitlePrefix}<span>{h.heroTitleHighlight}</span>{h.heroTitleSuffix}
             </h1>
             <p className="kleo-modern-hero__lead">{h.heroLead}</p>
 
             <div className="kleo-modern-hero__actions">
-              <NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--primary">
-                {cms.header.bookingLabel}
-              </NavLink>
-              <NavLink to="/services" className="kleo-modern-btn kleo-modern-btn--outline">
-                Szolgáltatásaink
-              </NavLink>
+              <NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--primary">{cms.header.bookingLabel}</NavLink>
+              <NavLink to="/services" className="kleo-modern-btn kleo-modern-btn--outline">Szolgáltatásaink</NavLink>
             </div>
 
             <div className="kleo-modern-benefits" aria-label="Kleopátra előnyök">
@@ -138,15 +82,11 @@ export const HomePage: React.FC = () => {
 
       {h.showServices && (
         <section className="kleo-modern-section kleo-modern-services">
-          <div className="container">
+          <div className="kleo-modern-container">
             <div className="kleo-modern-section-head">
-              <div>
-                <p className="kleo-modern-eyebrow">Szolgáltatásaink</p>
-                <h2>Szépségápolás felsőfokon</h2>
-              </div>
+              <div><p className="kleo-modern-eyebrow">Szolgáltatásaink</p><h2>Szépségápolás felsőfokon</h2></div>
               <NavLink to="/services" className="kleo-modern-text-link">Összes szolgáltatás <span>→</span></NavLink>
             </div>
-
             <div className="kleo-modern-service-grid">
               {SERVICES.map((service) => (
                 <NavLink key={service.title} to={service.to} className="kleo-modern-service-card">
@@ -162,15 +102,11 @@ export const HomePage: React.FC = () => {
       )}
 
       <section className="kleo-modern-section kleo-modern-section--soft">
-        <div className="container">
+        <div className="kleo-modern-container">
           <div className="kleo-modern-section-head">
-            <div>
-              <p className="kleo-modern-eyebrow">Szalonjaink</p>
-              <h2>Találj ránk a közeledben!</h2>
-            </div>
+            <div><p className="kleo-modern-eyebrow">Szalonjaink</p><h2>Találj ránk a közeledben!</h2></div>
             <NavLink to="/salons" className="kleo-modern-text-link">Összes szalon megtekintése <span>→</span></NavLink>
           </div>
-
           <div className="kleo-modern-salon-grid">
             {SALONS.map((salon) => (
               <NavLink key={salon.to} to={salon.to} className="kleo-modern-salon-card">
@@ -189,7 +125,7 @@ export const HomePage: React.FC = () => {
 
       {h.showVouchers && (
         <section className="kleo-modern-promo-wrap">
-          <div className="container">
+          <div className="kleo-modern-container">
             <div className="kleo-modern-promo">
               <div className="kleo-modern-promo__copy">
                 <p className="kleo-modern-eyebrow">Ajándékötlet</p>
@@ -197,16 +133,14 @@ export const HomePage: React.FC = () => {
                 <p>{h.voucherLead}</p>
                 <NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Megnézem az utalványokat</NavLink>
               </div>
-              <div className="kleo-modern-promo__image">
-                <img src="/images/vouchers.png" alt="Kleopátra ajándékutalványok" />
-              </div>
+              <div className="kleo-modern-promo__image"><img src="/images/vouchers.png" alt="Kleopátra ajándékutalványok" /></div>
             </div>
           </div>
         </section>
       )}
 
       <section className="kleo-modern-trust">
-        <div className="container kleo-modern-trust__grid">
+        <div className="kleo-modern-container kleo-modern-trust__grid">
           {TRUST_ITEMS.map(([value, label, note]) => (
             <div className="kleo-modern-trust__item" key={`${value}-${label}`}>
               <span className="kleo-modern-trust__icon">✦</span>
@@ -218,26 +152,23 @@ export const HomePage: React.FC = () => {
 
       {h.showProducts && (
         <section className="kleo-modern-section kleo-modern-shop">
-          <div className="container kleo-modern-shop__grid">
+          <div className="kleo-modern-container kleo-modern-shop__grid">
             <div className="kleo-modern-shop__copy">
               <p className="kleo-modern-eyebrow">Kleopátra webshop</p>
               <h2>{h.productsTitle || "Prémium termékek a szépségedért"}</h2>
               <p>{h.productsLead}</p>
               <NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Webshop megtekintése</NavLink>
             </div>
-
             <div className="kleo-modern-shop__visual">
               <img src="/images/products.png" alt="KLEOS termékek" />
-              <div className="kleo-modern-shop__chips">
-                <span>Hajápolás</span><span>Bőrápolás</span><span>Kéz- és körömápolás</span><span>Beauty</span>
-              </div>
+              <div className="kleo-modern-shop__chips"><span>Hajápolás</span><span>Bőrápolás</span><span>Kéz- és körömápolás</span><span>Beauty</span></div>
             </div>
           </div>
         </section>
       )}
 
       <section className="kleo-modern-booking-strip">
-        <div className="container kleo-modern-booking-strip__inner">
+        <div className="kleo-modern-container kleo-modern-booking-strip__inner">
           <div className="kleo-modern-booking-strip__copy">
             <span className="kleo-modern-booking-strip__icon">▣</span>
             <div><strong>Foglalj időpontot online!</strong><small>Gyorsan és egyszerűen, néhány kattintással.</small></div>
