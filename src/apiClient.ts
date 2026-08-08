@@ -29,7 +29,13 @@ const STATIC_SALONS: PublicSalon[] = [
 ];
 
 function normalizeBase(value: unknown) {
-  return String(value || "").trim().replace(/\/$/, "");
+  // A frontend minden végpontot /api/... formában hív. Ha Renderben a
+  // VITE_API_BASE véletlenül már /api végződésű, korábban /api/api/... lett,
+  // ami 404-et okozott. Itt mindig a host gyökerére normalizálunk.
+  return String(value || "")
+    .trim()
+    .replace(/\/+$/, "")
+    .replace(/\/api$/i, "");
 }
 
 const ENV_API_BASE = normalizeBase(
