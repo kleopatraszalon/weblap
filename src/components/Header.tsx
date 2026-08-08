@@ -10,20 +10,24 @@ export function Header() {
   const { lang, setLang, t } = useI18n();
   const cms = useWebsiteCms();
   const [open, setOpen] = useState(false);
-
   const close = () => setOpen(false);
 
   return (
-    <header className="site-header kleo-modern-header">
-      <div className="container kleo-modern-header__inner">
-        <NavLink to="/" className="kleo-modern-header__brand" aria-label="Kleopátra főoldal" onClick={close}>
+    <header className="kleo-modern-header">
+      <div className="kleo-modern-container kleo-modern-header__inner">
+        <NavLink
+          to="/"
+          className="kleo-modern-header__brand"
+          aria-label="Kleopátra főoldal"
+          onClick={close}
+        >
           <img src={cms.brand.logoUrl} alt="Kleopátra Szépségszalonok" />
         </NavLink>
 
         <button
           type="button"
           className="kleo-modern-header__menu-btn"
-          aria-label="Menü megnyitása"
+          aria-label={open ? "Menü bezárása" : "Menü megnyitása"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
