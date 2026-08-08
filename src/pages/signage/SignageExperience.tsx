@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { API_BASE } from "../../apiClient";
 import { SignagePage } from "../SignagePage";
 import "./signageExperience.css";
+import "./signageThemeBridge.css";
 
 type Appearance = {
   template:string;
@@ -49,6 +50,7 @@ export function SignageExperience(){
     "--sgx-radius":`${appearance.effects.radius}px`,
     "--sgx-glow":`${appearance.effects.glow}px`,
     "--sgx-blur":`${appearance.effects.blur}px`,
+    "--sgx-contrast":String(appearance.effects.contrast||1),
     "--sg-white":appearance.colors.surface,
     "--sg-offwhite":appearance.colors.background,
     "--sg-ink":appearance.colors.text,
