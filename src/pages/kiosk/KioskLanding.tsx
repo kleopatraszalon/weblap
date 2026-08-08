@@ -1,23 +1,85 @@
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { cartTotal, readCart } from "./cartStore";
 import { fetchKioskContext, fetchKioskServices } from "./kioskApi";
+import { KioskCartPanel } from "./KioskCartPanel";
+import type { KioskCategory } from "./types";
 
-const TILE_IMAGES=["/kiosk/tiles/fodraszat.png","/kiosk/tiles/kez_es_labapolas.png","/kiosk/tiles/kozmetika.png","/kiosk/tiles/masszazs.png","/kiosk/tiles/testkezeles.png","/kiosk/tiles/wellness_fitness_szolarium.png"];
+const FALLBACK_IMAGES=["/kiosk/tiles/fodraszat.png","/kiosk/tiles/kez_es_labapolas.png","/kiosk/tiles/kozmetika.png","/kiosk/tiles/masszazs.png","/kiosk/tiles/testkezeles.png","/kiosk/tiles/wellness_fitness_szolarium.png"];
 const slugify=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 
 export function KioskLanding(){
- const nav=useNavigate();const[params]=useSearchParams();
- const queryLocation=params.get("location_id")||params.get("locationId")||"";
- const[locations,setLocations]=React.useState<{id:string;name:string}[]>([]);const[employees,setEmployees]=React.useState<any[]>([]);const[categories,setCategories]=React.useState<{id:string;name:string}[]>([]);const[locationId,setLocationId]=React.useState(()=>queryLocation||localStorage.getItem("kiosk_location_id")||"");const[menu,setMenu]=React.useState<any>(null);const[error,setError]=React.useState("");const[cartTick,setCartTick]=React.useState(0);
- React.useEffect(()=>{const h=()=>setCartTick(x=>x+1);window.addEventListener("kiosk-cart-change",h);return()=>window.removeEventListener("kiosk-cart-change",h)},[]);
- React.useEffect(()=>{fetchKioskContext(locationId||undefined).then(d=>{setLocations(d.locations||[]);setEmployees(d.employees||[]);if(!locationId&&d.locations?.[0]?.id){setLocationId(d.locations[0].id);localStorage.setItem("kiosk_location_id",d.locations[0].id);window.dispatchEvent(new Event("kiosk-location-change"))}}).catch(e=>setError(e.message))},[]);
- React.useEffect(()=>{if(!locationId)return;localStorage.setItem("kiosk_location_id",locationId);window.dispatchEvent(new Event("kiosk-location-change"));Promise.all([fetchKioskContext(locationId),fetchKioskServices(localStorage.getItem("kiosk_lang")||"hu",locationId)]).then(([ctx,svc])=>{setEmployees(ctx.employees||[]);setCategories((svc.categories||[]).map(x=>({id:String(x.id),name:x.name})));setMenu(svc.menu||null);setError("")}).catch(e=>setError(e.message))},[locationId]);
- const cart=readCart(),total=cartTotal(cart),theme=menu?.theme||{},showEmployees=theme.showEmployees!==false,showWebEmbed=theme.showWebEmbed!==false;
- function openCategory(c:{id:string;name:string}){localStorage.setItem("kiosk_category_id",c.id);localStorage.setItem("kiosk_category_name",c.name);nav(`/kiosk/cat/${slugify(c.name)||c.id}`)}
- return <div className="kioskGrid">
-  <div className="kioskColLeft"><div className="kioskPanelTitle">Szalon és kategóriák</div><div style={{padding:"0 0 14px"}}><select value={locationId} onChange={e=>setLocationId(e.target.value)} style={{width:"100%",padding:"12px",borderRadius:12,border:"1px solid #d9cdbd",fontWeight:700}}><option value="">Válasszon szalont</option>{locations.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></div>{error&&<div className="kioskError">{error}</div>}{menu&&menu.is_active===false&&<div className="kioskError">Ennek a szalonnak a kiosk menüje jelenleg ki van kapcsolva.</div>}<div className="kioskCategoryStack kioskCategoryStackOneCol">{categories.map((c,i)=><button key={c.id} className="kioskCategoryTile" onClick={()=>openCategory(c)}><div className="kioskCategoryImgWrap"><img src={TILE_IMAGES[i%TILE_IMAGES.length]} alt={c.name} className="kioskCategoryImg"/><div className="kioskCategoryLabel">{c.name}</div></div></button>)}{!categories.length&&!error&&menu?.is_active!==false&&<div className="kioskInfo">A kioskban jelenleg nincs engedélyezett szolgáltatás.</div>}</div></div>
-  <div className="kioskColCenter"><div className="kioskCenterHero"><img className="kioskHeroImg" src={TILE_IMAGES[0]} alt="Szolgáltatások"/><div className="kioskHeroCaption">{menu?.name||"Kleopátra Kiosk"}</div><div className="kioskHeroSub">{theme.welcomeText||"A szolgáltatások és munkatársak közvetlenül a VIR adatbázisából érkeznek."}</div></div>{showWebEmbed&&<div className="kioskEmbedCard"><div className="kioskEmbedHeader"><div className="kioskEmbedTitle">Weboldal</div><div className="kioskBadge">WEBSHOP</div></div><iframe title="kleoszalon" src="https://kleoszalon.hu" className="kioskEmbed"/></div>}</div>
-  <div className="kioskColRight"><div className="kioskCartCard"><div className="kioskCartTitle">Kosár</div><div className="kioskCartSub">{cart.length} tétel · {total.toLocaleString("hu-HU")} Ft</div><button className="kioskPayBtn" disabled={!cart.length} onClick={()=>nav("/kiosk/pay")}>Tovább · munkalap létrehozása</button></div>{showEmployees&&<div className="kioskStaffCard"><div className="kioskStaffTitle">Aktív munkatársak</div><div className="kioskStaffList">{employees.slice(0,8).map((p:any)=><div key={p.id} className="kioskStaffRow">{p.photo_url?<img src={p.photo_url} alt={p.full_name} className="kioskStaffImg"/>:<div className="kioskStaffImg" style={{display:"grid",placeItems:"center",background:"#eee5d9",fontWeight:900}}>{String(p.full_name||"?").charAt(0)}</div>}<div><div className="kioskStaffName">{p.full_name}</div><div className="kioskStaffRole">Elérhető a kiválasztott szalonban</div></div></div>)}{!employees.length&&<div className="kioskInfo">Nincs betöltött aktív munkatárs.</div>}</div></div>}<div className="kioskShopCard"><div className="kioskShopTitle">VIR-integrált kiosk</div><div className="kioskShopText">A véglegesített kiosk kosár automatikusan „Új” munkalapként kerül a fő rendszerbe.</div></div></div>
- </div>
+  const nav=useNavigate();
+  const[params]=useSearchParams();
+  const queryLocation=params.get("location_id")||params.get("locationId")||"";
+  const[locations,setLocations]=React.useState<{id:string;name:string}[]>([]);
+  const[categories,setCategories]=React.useState<KioskCategory[]>([]);
+  const[locationId,setLocationId]=React.useState(()=>queryLocation||localStorage.getItem("kiosk_location_id")||"");
+  const[menu,setMenu]=React.useState<any>(null);
+  const[loading,setLoading]=React.useState(true);
+  const[error,setError]=React.useState("");
+  const[started,setStarted]=React.useState(()=>sessionStorage.getItem("kiosk_started")==="1");
+
+  React.useEffect(()=>{
+    fetchKioskContext(locationId||undefined).then(d=>{
+      setLocations(d.locations||[]);
+      if(!locationId&&d.locations?.[0]?.id){
+        setLocationId(d.locations[0].id);
+        localStorage.setItem("kiosk_location_id",d.locations[0].id);
+        window.dispatchEvent(new Event("kiosk-location-change"));
+      }
+    }).catch(e=>setError(e.message));
+  },[]);
+
+  React.useEffect(()=>{
+    if(!locationId)return;
+    setLoading(true);setError("");
+    localStorage.setItem("kiosk_location_id",locationId);
+    window.dispatchEvent(new Event("kiosk-location-change"));
+    fetchKioskServices(localStorage.getItem("kiosk_lang")||"hu",locationId).then(svc=>{
+      setCategories(svc.categories||[]);setMenu(svc.menu||null);
+      if(svc.menu?.theme?.showStartScreen===false){sessionStorage.setItem("kiosk_started","1");setStarted(true)}
+    }).catch(e=>setError(e.message)).finally(()=>setLoading(false));
+  },[locationId]);
+
+  const theme=menu?.theme||{};
+  const selectedLocation=locations.find(x=>x.id===locationId)?.name||"Kleopátra Szépségszalon";
+  const start=()=>{sessionStorage.setItem("kiosk_started","1");setStarted(true)};
+  function changeLocation(id:string){setLocationId(id);sessionStorage.removeItem("kiosk_started");setStarted(theme.showStartScreen===false)}
+  function openCategory(c:KioskCategory){localStorage.setItem("kiosk_category_id",String(c.id));localStorage.setItem("kiosk_category_name",c.name);nav(`/kiosk/cat/${slugify(c.name)||c.id}`)}
+
+  if(theme.showStartScreen!==false&&!started){return <section className="kiosk-start-screen">
+    <div className="kiosk-start-media" style={{backgroundImage:`linear-gradient(180deg,rgba(18,12,8,.08),rgba(18,12,8,.62)),url(${theme.heroImageUrl||"/images/szolgaltatasok.jpg"})`}}>
+      <div className="kiosk-start-brand"><img src={theme.logoUrl||"/images/kleo_logo@2x.png"} alt="Kleopátra"/><span>{selectedLocation}</span></div>
+      <div className="kiosk-start-copy"><span className="kiosk-start-kicker">ÖNKISZOLGÁLÓ KIOSK</span><h1>{theme.startTitle||"Üdvözlünk a Kleopátra Szépségszalonban!"}</h1><p>{theme.startSubtitle||"Érintsd meg a képernyőt a szolgáltatás kiválasztásához."}</p></div>
+      <div className="kiosk-start-actions">
+        <label><span>Szalon</span><select value={locationId} onChange={e=>changeLocation(e.target.value)}>{locations.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+        <button className="kiosk-start-button" onClick={start}>{theme.startButtonText||"Kezdés"}<span>→</span></button>
+      </div>
+    </div>
+  </section>}
+
+  return <div className="kiosk-order-layout">
+    <aside className="kiosk-category-rail">
+      <div className="kiosk-location-card"><span>AKTUÁLIS SZALON</span><select value={locationId} onChange={e=>changeLocation(e.target.value)}>{locations.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></div>
+      <div className="kiosk-rail-title">Kategóriák</div>
+      <div className="kiosk-rail-list">{categories.map((c,i)=><button key={c.id} onClick={()=>openCategory(c)}><img src={c.image_path||FALLBACK_IMAGES[i%FALLBACK_IMAGES.length]} alt=""/><span>{c.name}</span></button>)}</div>
+    </aside>
+
+    <section className="kiosk-catalog-home">
+      <div className="kiosk-catalog-hero" style={{backgroundImage:`linear-gradient(90deg,rgba(18,12,8,.82),rgba(18,12,8,.12)),url(${theme.heroImageUrl||"/images/szolgaltatasok.jpg"})`}}>
+        <span>{selectedLocation}</span><h1>{theme.heroTitle||"Mit szeretnél ma?"}</h1><p>{theme.heroSubtitle||theme.welcomeText||"Válassz kategóriát, majd szolgáltatást néhány érintéssel."}</p>
+      </div>
+      {error&&<div className="kioskError">{error}</div>}
+      {menu&&menu.is_active===false&&<div className="kioskError">Ennek a szalonnak a kiosk menüje jelenleg ki van kapcsolva.</div>}
+      <div className="kiosk-section-heading"><div><span>1. LÉPÉS</span><h2>Válassz kategóriát</h2></div><p>Nagy érintőfelületek, gyors választás.</p></div>
+      {loading?<div className="kioskInfo">Kiosk menü betöltése…</div>:<div className="kiosk-category-grid">
+        {categories.map((c,i)=><button key={c.id} className="kiosk-category-card" onClick={()=>openCategory(c)}>
+          <div className="kiosk-category-card-image"><img src={c.image_path||FALLBACK_IMAGES[i%FALLBACK_IMAGES.length]} alt={c.name}/></div>
+          <div className="kiosk-category-card-copy"><h3>{c.name}</h3>{c.subtitle&&<p>{c.subtitle}</p>}<span>Megnézem <b>→</b></span></div>
+        </button>)}
+        {!categories.length&&menu?.is_active!==false&&<div className="kioskInfo">A kioskban jelenleg nincs engedélyezett szolgáltatás.</div>}
+      </div>}
+    </section>
+    <KioskCartPanel/>
+  </div>;
 }
