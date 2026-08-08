@@ -1,745 +1,103 @@
-/* KLEO KIOSK – 27" portrait 1080×1920
-   Arculat: signage bézs + magenta akcentus, kártyás layout
-*/
-
-:root {
-  --bg: #f6efe7;
-  --card: #ffffff;
-  --ink: #1f1f1f;
-  --muted: #6b6b6b;
-  --stroke: rgba(0,0,0,0.08);
-  --shadow: 0 10px 24px rgba(0,0,0,0.08);
-  --magenta: #e6007e;
-  --magenta2: #c3006a;
-}
-
-body {
-  background: #111;
-}
-
-.kioskScreen {
-  width: 1080px;
-  height: 1920px;
-  margin: 0 auto;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  overflow: hidden;
-}
-
-.kioskTop {
-  height: 120px;
-  display: flex;
-  align-items: center;
-  padding: 16px 16px 10px;
-  gap: 10px;
-}
-
-.kioskBrand {
-  width: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.kioskBrandLogo {
-  max-width: 220px;
-  max-height: 90px;
-  object-fit: contain;
-}
-
-.kioskTopCard {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 16px;
-  padding: 12px 16px;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-}
-
-.kioskTopCardTitle {
-  font-weight: 800;
-  font-size: 22px;
-}
-
-.kioskTopCardSub {
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.kioskSteps {
-  display: flex;
-  gap: 10px;
-}
-
-.kioskStep {
-  background: rgba(255,255,255,0.7);
-  border: 1px solid var(--stroke);
-  padding: 8px 10px;
-  border-radius: 14px;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.kioskMiniTotal {
-  width: 210px;
-  text-align: right;
-  font-weight: 800;
-}
-
-.kioskCategoryStackOneCol {
-  padding-right: 4px;
-}
-
-.kioskLangFlags {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.kioskFlagBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(255,255,255,0.9);
-  cursor: pointer;
-  font-size: 22px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
-}
-
-.kioskFlagBtn.isActive {
-  outline: 2px solid rgba(230,0,126,0.35);
-  transform: translateY(-1px);
-}
-
-
-.kioskBody {
-  height: calc(1920px - 120px);
-  padding: 12px 16px 18px;
-}
-
-.kioskGrid {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 182px 1fr 172px;
-  gap: 16px;
-}
-
-.kioskColLeft, .kioskColCenter, .kioskColRight {
-  height: 100%;
-}
-
-.kioskPanelTitle {
-  font-weight: 800;
-  font-size: 18px;
-  margin: 6px 0 10px;
-}
-
-/* Left categories */
-.kioskCategoryStack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: calc(100% - 40px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  align-content: start;
-  padding-right: 6px;
-  padding-bottom: 6px;
-}
-
-.kioskCategoryTile {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.06);
-  cursor: pointer;
-  transition: transform 0.12s ease;
-  aspect-ratio: 1 / 1.08;
-  min-height: 168px;
-  width: 100%;
-}
-
-
-.kioskCategoryImgWrap {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 10px 18px rgba(0,0,0,0.10);
-}
-
-.kioskCategoryImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* a teljes kép látszódjon */
-  object-position: center;
-  background: #fff;
-}
-
-
-.kioskCategoryLabel {
-  display: none; /* a PNG-ben már rajta van a felirat */
-}
-
-
-/* Center column */
-.kioskCenterHero {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-
-.kioskHeroImg {
-  width: 100%;
-  height: 220px;
-  object-fit: contain;
-  display: block;
-}
-
-.kioskHeroCaption {
-  padding: 10px 16px 0;
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.kioskHeroSub {
-  padding: 2px 16px 12px;
-  color: var(--muted);
-}
-
-.kioskEmbedCard {
-  margin-top: 14px;
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.kioskEmbedHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-}
-
-.kioskEmbedTitle {
-  font-weight: 900;
-}
-
-.kioskBadge {
-  font-size: 12px;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(230,0,126,0.10);
-  border: 1px solid rgba(230,0,126,0.25);
-  color: var(--magenta);
-}
-
-.kioskEmbed {
-  width: 100%;
-  height: 520px;
-  border: 0;
-}
-
-.kioskRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.kioskSlideCard {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 12px 14px;
-}
-
-.kioskSlideTitle {
-  font-weight: 900;
-}
-
-.kioskSlideSub {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 2px;
-}
-
-.kioskSlideRail {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.kioskSlideItem {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 14px;
-  padding: 10px;
-}
-
-.kioskSlideItem img {
-  width: 60px;
-  height: 44px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.kioskSlideItemName {
-  font-weight: 800;
-}
-
-.kioskSlideItemDesc {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.kioskWeeklyBox {
-  margin-top: 10px;
-  border-radius: 14px;
-  padding: 12px;
-  border: 1px dashed rgba(230,0,126,0.35);
-  background: rgba(230,0,126,0.05);
-}
-
-.kioskWeeklyTitle {
-  font-weight: 900;
-}
-
-.kioskWeeklyText {
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-/* Right column */
-.kioskCartCard, .kioskStaffCard, .kioskShopCard {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 14px;
-}
-
-.kioskCartCard {
-  margin-bottom: 14px;
-}
-
-.kioskCartTitle {
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.kioskCartSub {
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.kioskPayBtn {
-  margin-top: 14px;
-  width: 100%;
-  border: 0;
-  border-radius: 14px;
-  padding: 14px 12px;
-  font-weight: 900;
-  color: white;
-  background: linear-gradient(135deg, var(--magenta), var(--magenta2));
-  cursor: pointer;
-}
-
-.kioskStaffTitle {
-  font-weight: 900;
-  margin-bottom: 10px;
-}
-
-.kioskStaffList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.kioskStaffRow {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 14px;
-  padding: 10px;
-}
-
-.kioskStaffImg {
-  width: 54px;
-  height: 54px;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.kioskStaffName {
-  font-weight: 900;
-}
-
-.kioskStaffRole {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.kioskShopCard {
-  margin-top: 14px;
-  overflow: hidden;
-}
-
-.kioskShopImg {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  border-radius: 14px;
-}
-
-.kioskShopTitle {
-  font-weight: 900;
-  margin-top: 10px;
-}
-
-.kioskShopText {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.kioskShopPrice {
-  margin-top: 8px;
-  font-weight: 900;
-}
-
-/* Generic buttons */
-.kioskBtn {
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.85);
-  border-radius: 14px;
-  padding: 12px 14px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.kioskPrimaryBtn {
-  border: 0;
-  background: linear-gradient(135deg, var(--magenta), var(--magenta2));
-  color: #fff;
-}
-
-.kioskIconBtn {
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.9);
-  border-radius: 12px;
-  padding: 10px 12px;
-  cursor: pointer;
-}
-
-/* Category page */
-.kioskCategoryPage {
-  height: 100%;
-}
-
-.kioskBackRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.kioskInfo {
-  padding: 14px;
-  color: var(--muted);
-}
-
-.kioskError {
-  padding: 14px;
-  background: rgba(255,0,0,0.06);
-  border: 1px solid rgba(255,0,0,0.15);
-  border-radius: 16px;
-  color: #b00020;
-}
-
-.kioskServicesGrid {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.kioskServiceCard {
-  text-align: left;
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 16px;
-  cursor: pointer;
-}
-
-.kioskServiceName {
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.kioskServiceMeta {
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.kioskServiceCta {
-  margin-top: 10px;
-  font-weight: 900;
-  color: var(--magenta);
-}
-
-/* Pay */
-.kioskPayPage {
-  height: 100%;
-}
-
-.kioskPayGrid {
-  display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.kioskPayLeft, .kioskPayRight {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 14px;
-}
-
-.kioskCartList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 760px;
-  overflow: auto;
-}
-
-.kioskCartRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 14px;
-  padding: 12px;
-}
-
-.kioskCartRowTitle {
-  font-weight: 900;
-}
-
-.kioskCartRowSub {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.kioskTotalRow {
-  margin-top: 12px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.kioskTotalValue {
-  color: var(--magenta);
-}
-
-.kioskPayMethods {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.kioskPayMethod {
-  border: 0;
-  border-radius: 16px;
-  padding: 16px 14px;
-  font-weight: 900;
-  cursor: pointer;
-  background: linear-gradient(135deg, rgba(230,0,126,0.12), rgba(230,0,126,0.02));
-  border: 1px solid rgba(230,0,126,0.18);
-}
-
-/* Ticket */
-.kioskTicketPage {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-}
-
-.kioskTicketBox {
-  width: 720px;
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  padding: 30px;
-  text-align: center;
-}
-
-.kioskTicketLabel {
-  color: var(--muted);
-  font-weight: 800;
-}
-
-.kioskTicketNo {
-  font-size: 120px;
-  font-weight: 1000;
-  margin-top: 8px;
-  color: var(--magenta);
-}
-
-.kioskTicketSub {
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-/* Modal */
-.kioskModalBackdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.kioskModal {
-  width: 860px;
-  max-width: 92vw;
-  background: var(--card);
-  border-radius: 22px;
-  box-shadow: 0 26px 60px rgba(0,0,0,0.35);
-  border: 1px solid rgba(0,0,0,0.10);
-  padding: 16px;
-}
-
-.kioskModalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 6px 12px;
-}
-
-.kioskModalTitle {
-  font-weight: 1000;
-  font-size: 18px;
-}
-
-.kioskUpsellGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.kioskUpsellCard {
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 18px;
-  padding: 12px;
-  text-align: left;
-  background: white;
-  cursor: pointer;
-}
-
-.kioskUpsellImg {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 14px;
-}
-
-.kioskUpsellName {
-  font-weight: 900;
-  margin-top: 10px;
-}
-
-.kioskUpsellPrice {
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.kioskUpsellCta {
-  margin-top: 10px;
-  font-weight: 900;
-  color: var(--magenta);
-}
-
-.kioskModalFooter {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-
-.kioskCategoryStack::-webkit-scrollbar,
-.kioskCategoryScroll::-webkit-scrollbar,
-.kioskCartList::-webkit-scrollbar {
-  width: 10px;
-}
-
-.kioskCategoryStack::-webkit-scrollbar-thumb,
-.kioskCategoryScroll::-webkit-scrollbar-thumb,
-.kioskCartList::-webkit-scrollbar-thumb {
-  background: rgba(230,0,126,0.28);
-  border-radius: 999px;
-}
-
-.kioskCategoryPage {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
-}
-
-.kioskCategoryScroll {
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
-}
-
-.kioskSectionMiniTitle {
-  margin-top: 14px;
-  margin-bottom: 8px;
-  font-weight: 900;
-  font-size: 16px;
-}
-
-.kioskServiceDesc {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.35;
-}
-.kioskCategoryScroll {
-  max-height: calc(100vh - 220px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
+/* Kleopátra self-service kiosk
+   Touch-first, portrait friendly, quick-service inspired UX.
+   The styling is scoped to the kiosk only so it cannot disturb the public website. */
+
+.kioskScreen{
+  --kiosk-bg:#f4efe7;
+  --kiosk-surface:#fff;
+  --kiosk-ink:#181310;
+  --kiosk-gold:#b69861;
+  --kiosk-accent:#ec008c;
+  --kiosk-radius:24px;
+  width:min(1080px,100vw);
+  height:100dvh;
+  min-height:720px;
+  margin:0 auto;
+  overflow:hidden;
+  background:var(--kiosk-bg);
+  color:var(--kiosk-ink);
+  font-family:Inter,Montserrat,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  box-shadow:0 0 60px rgba(18,12,8,.28);
+}
+.kioskScreen *{box-sizing:border-box}
+.kioskScreen button,.kioskScreen select,.kioskScreen input,.kioskScreen textarea{font:inherit}
+.kioskScreen button{touch-action:manipulation}
+
+.kioskTop{
+  height:106px;
+  display:grid;
+  grid-template-columns:210px 1fr 290px;
+  align-items:center;
+  gap:16px;
+  padding:14px 18px;
+  background:rgba(255,255,255,.97);
+  border-bottom:1px solid rgba(18,12,8,.09);
+  box-shadow:0 8px 28px rgba(18,12,8,.06);
+  position:relative;
+  z-index:20;
+}
+.kiosk-home-button{border:0;background:transparent;padding:4px 8px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer}
+.kioskBrandLogo{max-width:185px;max-height:70px;object-fit:contain}
+.kiosk-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:center}
+.kiosk-progress-step{display:flex;align-items:center;gap:8px;color:#9d938a;font-size:12px;font-weight:800;min-width:0}
+.kiosk-progress-step span{width:32px;height:32px;border-radius:999px;border:2px solid #ded8d2;display:grid;place-items:center;background:#fff;flex:0 0 auto}
+.kiosk-progress-step b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kiosk-progress-step.active{color:var(--kiosk-ink)}
+.kiosk-progress-step.active span{background:var(--kiosk-accent);border-color:var(--kiosk-accent);color:#fff;box-shadow:0 6px 16px rgba(236,0,140,.24)}
+.kiosk-progress-step.done{color:#5b4c3e}.kiosk-progress-step.done span{background:var(--kiosk-gold);border-color:var(--kiosk-gold);color:#fff}
+.kiosk-utilities{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.kioskLangFlags{display:flex;gap:5px}
+.kioskFlagBtn{width:37px;height:37px;border-radius:12px;border:1px solid #ddd5cc;background:#fff;font-size:11px;font-weight:900;cursor:pointer;color:#72675d}
+.kioskFlagBtn.isActive{background:var(--kiosk-ink);border-color:var(--kiosk-ink);color:#fff}
+.kiosk-mini-cart{border:0;background:#17110d;color:#fff;border-radius:15px;padding:8px 12px;min-width:150px;text-align:left;cursor:pointer}
+.kiosk-mini-cart span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#d8cfc8}.kiosk-mini-cart b{display:block;font-size:13px;margin-top:2px}.kiosk-mini-cart:disabled{opacity:.42;cursor:default}
+.kioskBody{height:calc(100dvh - 106px);min-height:0;overflow:hidden;padding:16px}
+
+/* Start screen */
+.kiosk-start-screen{height:100%;padding:0}
+.kiosk-start-media{height:100%;border-radius:30px;background-size:cover;background-position:center;position:relative;overflow:hidden;padding:38px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;box-shadow:0 18px 50px rgba(18,12,8,.18)}
+.kiosk-start-media:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(236,0,140,.22),transparent 32%);pointer-events:none}
+.kiosk-start-brand,.kiosk-start-copy,.kiosk-start-actions{position:relative;z-index:1}
+.kiosk-start-brand{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.kiosk-start-brand img{max-width:250px;max-height:90px;background:rgba(255,255,255,.94);padding:8px 14px;border-radius:18px}.kiosk-start-brand span{font-size:14px;font-weight:800;padding:10px 16px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:rgba(0,0,0,.22);backdrop-filter:blur(12px)}
+.kiosk-start-copy{max-width:720px;margin-top:auto;margin-bottom:38px}.kiosk-start-kicker{display:inline-block;color:#fff;font-size:12px;font-weight:900;letter-spacing:.18em;margin-bottom:14px}.kiosk-start-copy h1{font-size:clamp(42px,6vw,74px);line-height:.98;letter-spacing:-.045em;margin:0 0 20px}.kiosk-start-copy p{font-size:22px;line-height:1.45;margin:0;color:rgba(255,255,255,.9);max-width:650px}
+.kiosk-start-actions{display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:end}.kiosk-start-actions label{display:grid;gap:8px;font-weight:800}.kiosk-start-actions label span{font-size:12px;letter-spacing:.08em;text-transform:uppercase}.kiosk-start-actions select{height:64px;border-radius:18px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.94);padding:0 18px;font-size:17px;font-weight:800;color:#241b15}.kiosk-start-button{height:64px;border:0;border-radius:18px;background:var(--kiosk-accent);color:#fff;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:space-between;padding:0 24px;cursor:pointer;box-shadow:0 16px 36px rgba(236,0,140,.28)}
+
+/* Shared order layout */
+.kiosk-order-layout{height:100%;display:grid;grid-template-columns:178px minmax(0,1fr) 270px;gap:14px;min-height:0}
+.kiosk-category-rail,.kiosk-order-panel,.kiosk-catalog-home,.kiosk-catalog-page{min-height:0}
+.kiosk-category-rail{background:var(--kiosk-surface);border-radius:var(--kiosk-radius);padding:12px;box-shadow:0 8px 28px rgba(18,12,8,.07);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(18,12,8,.06)}
+.kiosk-location-card{padding:10px;border-radius:16px;background:#f7f3ee;margin-bottom:10px}.kiosk-location-card span{display:block;font-size:9px;letter-spacing:.14em;font-weight:900;color:#8b7c6f;margin-bottom:6px}.kiosk-location-card select{width:100%;border:0;background:transparent;font-size:12px;font-weight:900;color:#281f19;outline:none}
+.kiosk-back-home{border:0;background:#f5efe8;border-radius:14px;padding:12px;font-weight:900;color:#3a2d24;cursor:pointer;margin-bottom:10px;text-align:left}
+.kiosk-rail-title{font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:#8b7c6f;padding:8px 4px}
+.kiosk-rail-list{display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-right:3px}.kiosk-rail-list::-webkit-scrollbar{width:5px}.kiosk-rail-list::-webkit-scrollbar-thumb{background:#d8cdc2;border-radius:99px}
+.kiosk-rail-list button{border:1px solid transparent;background:#fff;border-radius:16px;padding:6px;display:grid;grid-template-columns:50px 1fr;align-items:center;gap:8px;text-align:left;cursor:pointer;color:#2c211a;font-size:11px;font-weight:900;transition:.15s}.kiosk-rail-list button:hover,.kiosk-rail-list button.active{background:#fff6fb;border-color:rgba(236,0,140,.28);box-shadow:0 8px 18px rgba(236,0,140,.08)}.kiosk-rail-list img{width:50px;height:50px;object-fit:cover;border-radius:12px;background:#f2ece6}
+
+.kiosk-catalog-home,.kiosk-catalog-page{overflow-y:auto;padding-right:3px}.kiosk-catalog-home::-webkit-scrollbar,.kiosk-catalog-page::-webkit-scrollbar{width:5px}.kiosk-catalog-home::-webkit-scrollbar-thumb,.kiosk-catalog-page::-webkit-scrollbar-thumb{background:#d8cdc2;border-radius:99px}
+.kiosk-catalog-hero,.kiosk-category-banner{border-radius:var(--kiosk-radius);min-height:205px;background-size:cover;background-position:center;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;color:#fff;box-shadow:0 12px 32px rgba(18,12,8,.14);margin-bottom:14px;overflow:hidden}.kiosk-catalog-hero span,.kiosk-category-banner span{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#f1d7e6}.kiosk-catalog-hero h1,.kiosk-category-banner h1{font-size:38px;line-height:1;margin:7px 0 10px;letter-spacing:-.035em}.kiosk-catalog-hero p,.kiosk-category-banner p{font-size:14px;line-height:1.45;margin:0;max-width:520px;color:rgba(255,255,255,.9)}
+.kiosk-section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:10px 4px 12px}.kiosk-section-heading span{font-size:9px;letter-spacing:.14em;font-weight:900;color:var(--kiosk-accent)}.kiosk-section-heading h2{margin:3px 0 0;font-size:24px;letter-spacing:-.025em}.kiosk-section-heading p{margin:0;color:#85776b;font-size:12px}
+.kiosk-category-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-bottom:14px}.kiosk-category-card{padding:0;border:0;background:var(--kiosk-surface);border-radius:var(--kiosk-radius);overflow:hidden;text-align:left;cursor:pointer;box-shadow:0 8px 26px rgba(18,12,8,.08);border:1px solid rgba(18,12,8,.06);transition:transform .15s,box-shadow .15s}.kiosk-category-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(18,12,8,.12)}.kiosk-category-card-image{height:168px;background:#eee7df;overflow:hidden}.kiosk-category-card-image img{width:100%;height:100%;object-fit:cover}.kiosk-category-card-copy{padding:16px}.kiosk-category-card-copy h3{margin:0 0 5px;font-size:20px;letter-spacing:-.02em}.kiosk-category-card-copy p{margin:0 0 10px;font-size:12px;line-height:1.4;color:#786b60;min-height:34px}.kiosk-category-card-copy span{color:var(--kiosk-accent);font-weight:900;font-size:12px}.kiosk-category-card-copy span b{font-size:16px}
+
+/* Service cards */
+.kiosk-service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-bottom:16px}.kiosk-service-tile{background:var(--kiosk-surface);border-radius:var(--kiosk-radius);border:1px solid rgba(18,12,8,.07);box-shadow:0 8px 26px rgba(18,12,8,.08);overflow:hidden;display:flex;flex-direction:column;min-height:322px}.kiosk-service-tile.featured{border-color:rgba(236,0,140,.28);box-shadow:0 12px 30px rgba(236,0,140,.1)}.kiosk-service-touch{border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;flex:1;color:inherit}.kiosk-service-image{height:160px;position:relative;overflow:hidden;background:#efe7df}.kiosk-service-image img{width:100%;height:100%;object-fit:cover;transition:transform .2s}.kiosk-service-touch:hover .kiosk-service-image img{transform:scale(1.02)}.kiosk-service-badge,.kiosk-service-featured{position:absolute;top:10px;left:10px;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;letter-spacing:.06em;background:#fff;color:#3b2d24;box-shadow:0 4px 12px rgba(0,0,0,.12)}.kiosk-service-featured{left:auto;right:10px;background:var(--kiosk-accent);color:#fff}.kiosk-service-content{padding:14px 14px 10px;display:flex;flex-direction:column;flex:1}.kiosk-service-content h3{margin:0 0 6px;font-size:17px;line-height:1.15;letter-spacing:-.015em}.kiosk-service-content p{margin:0 0 10px;font-size:11px;color:#796d63;line-height:1.42;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.kiosk-service-facts{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.kiosk-service-facts strong{font-size:17px}.kiosk-service-facts span{font-size:10px;font-weight:800;color:#85776c;background:#f4efe9;border-radius:999px;padding:5px 8px}.kiosk-add-button{margin:0 12px 12px;height:44px;border:0;border-radius:14px;background:#17110d;color:#fff;font-weight:900;cursor:pointer;transition:.15s}.kiosk-add-button:hover{background:var(--kiosk-accent)}.kiosk-add-button.added{background:#1e8a55}
+
+/* Cart */
+.kiosk-order-panel{background:var(--kiosk-surface);border-radius:var(--kiosk-radius);box-shadow:0 8px 28px rgba(18,12,8,.08);border:1px solid rgba(18,12,8,.06);display:flex;flex-direction:column;overflow:hidden}.kiosk-order-head{display:flex;justify-content:space-between;align-items:center;padding:17px 16px;border-bottom:1px solid #eee8e2}.kiosk-order-kicker{font-size:9px;font-weight:900;letter-spacing:.14em;color:#8b7c6f}.kiosk-order-head h2{margin:2px 0 0;font-size:22px}.kiosk-order-count{width:34px;height:34px;border-radius:999px;background:var(--kiosk-accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:900}.kiosk-order-lines{flex:1;overflow-y:auto;padding:8px 12px}.kiosk-order-line{padding:11px 2px;border-bottom:1px solid #eee8e2}.kiosk-order-line-main{display:flex;justify-content:space-between;gap:8px}.kiosk-order-line-main b{font-size:11px;line-height:1.25}.kiosk-order-line-main span{font-size:10px;white-space:nowrap;color:#76695e}.kiosk-qty-control{display:flex;align-items:center;gap:8px;margin-top:8px}.kiosk-qty-control button{width:30px;height:30px;border-radius:10px;border:1px solid #ded5cc;background:#fff;font-weight:900;cursor:pointer}.kiosk-qty-control strong{min-width:20px;text-align:center;font-size:12px}.kiosk-empty-cart{height:100%;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#85796f;padding:20px}.kiosk-empty-cart span{font-size:30px;margin-bottom:8px}.kiosk-empty-cart b{font-size:14px;color:#493b31}.kiosk-empty-cart small{font-size:10px;margin-top:5px;line-height:1.4}.kiosk-order-footer{padding:14px;border-top:1px solid #eee8e2;background:#fff}.kiosk-order-total{display:flex;justify-content:space-between;align-items:end;margin-bottom:12px}.kiosk-order-total span{font-size:11px;color:#75685d}.kiosk-order-total strong{font-size:22px;letter-spacing:-.03em}.kiosk-checkout-btn{width:100%;height:50px;border:0;border-radius:15px;background:var(--kiosk-accent);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:space-between;padding:0 14px;cursor:pointer;box-shadow:0 10px 20px rgba(236,0,140,.2)}.kiosk-checkout-btn:disabled{opacity:.35;box-shadow:none}.kiosk-order-footer small{display:block;margin-top:8px;font-size:8px;line-height:1.35;color:#94887e;text-align:center}
+
+/* Optional product upsell */
+.kiosk-upsell-section{margin-top:8px;padding-bottom:20px}.kiosk-upsell-row{display:flex;gap:10px;overflow-x:auto;padding:2px}.kiosk-upsell-row article{min-width:180px;background:#fff;border-radius:18px;padding:10px;border:1px solid #ebe4dd;display:grid;grid-template-columns:52px 1fr 34px;gap:8px;align-items:center}.kiosk-upsell-row img{width:52px;height:52px;border-radius:12px;object-fit:cover}.kiosk-upsell-row b{display:block;font-size:10px}.kiosk-upsell-row span{display:block;font-size:10px;color:#76695f;margin-top:3px}.kiosk-upsell-row button{width:32px;height:32px;border-radius:10px;border:0;background:var(--kiosk-accent);color:#fff;font-weight:900;cursor:pointer}
+
+/* Checkout */
+.kiosk-checkout-page{height:100%;overflow-y:auto;padding:0 4px 22px}.kiosk-checkout-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.kiosk-checkout-toolbar button{border:0;background:#fff;border-radius:14px;padding:11px 14px;font-weight:900;color:#3f332a;cursor:pointer;box-shadow:0 5px 16px rgba(18,12,8,.06)}.kiosk-checkout-toolbar span{font-size:11px;font-weight:800;color:#796c61}.kiosk-checkout-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:14px}.kiosk-review-card,.kiosk-customer-card,.kiosk-payment-card{background:#fff;border-radius:var(--kiosk-radius);border:1px solid rgba(18,12,8,.06);box-shadow:0 8px 28px rgba(18,12,8,.07);padding:18px}.kiosk-checkout-title>span{font-size:9px;color:var(--kiosk-accent);font-weight:900;letter-spacing:.14em}.kiosk-checkout-title h1,.kiosk-checkout-title h2{margin:4px 0 5px;font-size:24px;letter-spacing:-.025em}.kiosk-checkout-title p{margin:0 0 14px;font-size:11px;line-height:1.4;color:#7e7167}.kiosk-review-list{display:grid;gap:8px}.kiosk-review-list article{display:grid;grid-template-columns:48px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:9px;border-radius:15px;background:#f8f4ef}.kiosk-review-thumb{width:48px;height:48px;border-radius:12px;background:#ebe3da;display:grid;place-items:center;overflow:hidden;color:var(--kiosk-gold);font-size:20px}.kiosk-review-thumb img{width:100%;height:100%;object-fit:cover}.kiosk-review-copy b{display:block;font-size:11px}.kiosk-review-copy span{display:block;font-size:9px;color:#7d7065;margin-top:3px}.kiosk-review-line-total{font-size:10px;white-space:nowrap}.kiosk-review-list .kiosk-qty-control{margin:0;gap:4px}.kiosk-review-list .kiosk-qty-control button{width:28px;height:28px}.kiosk-review-total{margin-top:12px;border-top:1px solid #ebe4dc;padding-top:13px;display:flex;justify-content:space-between;align-items:end}.kiosk-review-total span{font-size:12px;color:#7b6e63}.kiosk-review-total strong{font-size:27px}.kiosk-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kiosk-form-grid label{display:grid;gap:5px;font-size:10px;font-weight:900;color:#5d5046}.kiosk-form-grid label.wide{grid-column:1/-1}.kiosk-form-grid input,.kiosk-form-grid select,.kiosk-form-grid textarea{width:100%;border:1px solid #ddd4cb;border-radius:13px;background:#fff;padding:0 12px;min-height:44px;outline:none}.kiosk-form-grid textarea{height:72px;padding-top:10px;resize:none}.kiosk-form-grid input:focus,.kiosk-form-grid select:focus,.kiosk-form-grid textarea:focus{border-color:var(--kiosk-gold);box-shadow:0 0 0 3px rgba(182,152,97,.12)}.kiosk-payment-card{margin-top:14px}.kiosk-payment-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kiosk-payment-options button{height:112px;border:2px solid #e3dbd3;border-radius:18px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;color:#3a3029}.kiosk-payment-options button.active{border-color:var(--kiosk-accent);background:#fff5fb;box-shadow:0 8px 22px rgba(236,0,140,.1)}.kiosk-payment-options .pay-icon{font-size:25px}.kiosk-payment-options b{font-size:13px}.kiosk-payment-options small{font-size:9px;color:#7f7166}.kiosk-final-row{display:grid;grid-template-columns:180px 1fr;gap:10px;margin-top:14px}.kiosk-clear-order{border:1px solid #ded5cc;background:#fff;border-radius:15px;font-weight:900;color:#7b685c;cursor:pointer}.kiosk-finalize-button{min-height:58px;border:0;border-radius:16px;background:#17110d;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;cursor:pointer}.kiosk-finalize-button strong{color:#ffd6ee}.kiosk-finalize-button span{font-size:20px}.kiosk-finalize-button:disabled{opacity:.5}
+
+/* Success */
+.kiosk-success-page{height:100%;display:grid;place-items:center;padding:20px}.kiosk-success-card{width:min(650px,92%);background:#fff;border-radius:34px;padding:44px;text-align:center;box-shadow:0 24px 60px rgba(18,12,8,.13);border:1px solid rgba(18,12,8,.06);position:relative;overflow:hidden}.kiosk-success-card:before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:linear-gradient(90deg,var(--kiosk-gold),var(--kiosk-accent))}.kiosk-success-mark{width:76px;height:76px;border-radius:999px;background:#eaf8f0;color:#11804c;display:grid;place-items:center;font-size:36px;font-weight:900;margin:0 auto 14px}.kiosk-success-kicker{font-size:10px;font-weight:900;letter-spacing:.16em;color:#11804c}.kiosk-success-card h1{font-size:38px;margin:7px 0 8px}.kiosk-success-card>p{font-size:14px;line-height:1.5;color:#776a60;margin:0 auto 22px;max-width:500px}.kiosk-ticket-number{border:2px dashed #d7cabd;border-radius:22px;padding:18px;margin:18px 0;background:#fbf8f4}.kiosk-ticket-number span{display:block;font-size:10px;font-weight:900;letter-spacing:.13em;color:#8a7d72}.kiosk-ticket-number strong{display:block;font-size:34px;margin-top:5px;letter-spacing:-.03em}.kiosk-ticket-status{display:flex;justify-content:center;gap:10px;font-size:12px}.kiosk-ticket-status span{color:#81746a}.kiosk-ticket-help{margin-top:14px!important;font-size:11px!important}.kiosk-new-order-button{width:100%;height:58px;border:0;border-radius:17px;background:var(--kiosk-accent);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:space-between;padding:0 20px;cursor:pointer;margin-top:15px}.kiosk-reset-note{display:block;margin-top:10px;color:#978b81;font-size:9px}.kiosk-success-logo{max-width:160px;max-height:50px;object-fit:contain;margin-top:18px}
+
+.kioskInfo,.kioskError{border-radius:16px;padding:13px 15px;font-size:12px;font-weight:700;margin:10px 0}.kioskInfo{background:#f5efe8;color:#65574d}.kioskError{background:#fff0f0;color:#a12626;border:1px solid #f2c7c7}
+
+@media(max-width:900px){
+  .kioskTop{grid-template-columns:160px 1fr 245px}.kioskBrandLogo{max-width:145px}.kiosk-progress-step b{display:none}.kiosk-order-layout{grid-template-columns:145px minmax(0,1fr) 235px}.kiosk-category-grid,.kiosk-service-grid{grid-template-columns:1fr}.kiosk-category-card-image{height:150px}.kiosk-service-image{height:150px}.kiosk-review-list article{grid-template-columns:42px 1fr auto}.kiosk-review-line-total{display:none}
+}
+@media(max-width:720px){
+  .kioskScreen{width:100vw}.kioskTop{height:86px;grid-template-columns:130px 1fr auto;padding:10px}.kioskBody{height:calc(100dvh - 86px);padding:10px}.kiosk-progress{gap:3px}.kiosk-progress-step span{width:27px;height:27px}.kiosk-mini-cart{min-width:0;padding:8px}.kiosk-mini-cart span{display:none}.kiosk-mini-cart b{font-size:10px}.kioskLangFlags{display:none}.kiosk-order-layout{grid-template-columns:112px minmax(0,1fr)}.kiosk-order-panel{display:none}.kiosk-rail-list button{grid-template-columns:1fr;text-align:center}.kiosk-rail-list img{width:100%;height:64px}.kiosk-category-grid,.kiosk-service-grid{grid-template-columns:1fr}.kiosk-checkout-grid{grid-template-columns:1fr}.kiosk-payment-options{grid-template-columns:1fr}.kiosk-payment-options button{height:82px}.kiosk-final-row{grid-template-columns:1fr}.kiosk-clear-order{height:48px}.kiosk-start-actions{grid-template-columns:1fr}.kiosk-start-copy h1{font-size:42px}.kiosk-start-copy p{font-size:17px}
 }
