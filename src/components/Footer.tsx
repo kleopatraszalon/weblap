@@ -12,8 +12,8 @@ export function Footer() {
   ].filter(([, url]) => Boolean(url));
 
   return (
-    <footer className="site-footer kleo-modern-footer">
-      <div className="container kleo-modern-footer__grid">
+    <footer className="kleo-modern-footer">
+      <div className="kleo-modern-container kleo-modern-footer__grid">
         <div className="kleo-modern-footer__brand">
           <img src={cms.brand.logoUrl} alt="Kleopátra Szépségszalonok" />
           <p>{cms.brand.slogan}</p>
@@ -63,7 +63,7 @@ export function Footer() {
       </div>
 
       <div className="kleo-modern-footer__bottom">
-        <div className="container">
+        <div className="kleo-modern-container kleo-modern-footer__bottom-inner">
           <span>© {new Date().getFullYear()} Kleopátra Szépségszalonok</span>
           <span>Minden jog fenntartva.</span>
         </div>
