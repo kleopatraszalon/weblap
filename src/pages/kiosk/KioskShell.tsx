@@ -42,18 +42,20 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   function changeLang(next: LangCode) { localStorage.setItem("kiosk_lang", next); setLang(next); window.dispatchEvent(new Event("kiosk-lang-change")); }
   const copy = COPY[lang];
   const shellStyle = {
-    "--kiosk-admin-primary": theme.primaryColor || "#b69861",
-    "--kiosk-admin-accent": theme.accentColor || "#ec008c",
-    "--kiosk-admin-bg": theme.backgroundColor || "#f7f3ed",
+    "--bg": theme.backgroundColor || "#f6efe7",
+    "--magenta": theme.accentColor || "#e6007e",
+    "--magenta2": theme.accentColor || "#c3006a",
+    "--kiosk-gold": theme.primaryColor || "#b69861",
+    background: theme.backgroundColor || "#f6efe7",
   } as React.CSSProperties;
 
   return <div className="kioskScreen" style={shellStyle}>
-    <div className="kioskTop" style={{borderBottomColor:theme.primaryColor||"#b69861"}}>
+    <div className="kioskTop" style={{borderBottom:`3px solid ${theme.primaryColor||"#b69861"}`}}>
       <div className="kioskBrand"><img src={theme.logoUrl || "/images/kleo_logo@2x.png"} className="kioskBrandLogo" alt="Kleopatra" /></div>
       <div className="kioskTopCard"><div className="kioskTopCardTitle">{copy.daily}</div><div className="kioskTopCardSub">{theme.welcomeText || copy.dailySub}</div></div>
       <div className="kioskSteps"><div className="kioskStep">{copy.step1}</div><div className="kioskStep">{copy.step2}</div><div className="kioskStep">{copy.step3}</div></div>
       <div className="kioskLangFlags" aria-label="Language selector">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)} title={item.label} aria-label={item.label}><span>{item.flag}</span></button>)}</div>
-      <div className="kioskTopSpacer"/><div className="kioskMiniTotal" style={{borderColor:theme.accentColor||"#ec008c"}}>{copy.total}: {total.toLocaleString("hu-HU")} Ft</div>
+      <div className="kioskTopSpacer"/><div className="kioskMiniTotal" style={{color:theme.accentColor||"#e6007e"}}>{copy.total}: {total.toLocaleString("hu-HU")} Ft</div>
     </div>
     <div className="kioskBody">{children}</div>
   </div>;
