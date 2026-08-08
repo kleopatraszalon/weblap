@@ -4,6 +4,7 @@ export type KioskService = {
   name_hu?: string | null;
   name_en?: string | null;
   name_ru?: string | null;
+  description?: string | null;
   list_price?: number | null;
   base_price: number | null;
   duration_minutes: number | null;
@@ -12,11 +13,17 @@ export type KioskService = {
   category_name_hu?: string | null;
   category_name_en?: string | null;
   category_name_ru?: string | null;
+  category_subtitle?: string | null;
+  category_image?: string | null;
+  image_url?: string | null;
+  badge_text?: string | null;
+  featured?: boolean;
 };
 
 export type KioskCategory = {
   id: string;
   name: string;
+  subtitle?: string | null;
   image_path: string | null;
 };
 
