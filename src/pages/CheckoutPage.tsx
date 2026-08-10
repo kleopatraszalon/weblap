@@ -14,7 +14,7 @@ const numericPrice = (product: Product) => {
 
 export const CheckoutPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "", payment: "card" as "card" | "cod" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "", payment: "cod" as "card" | "cod" });
   const [couponInput, setCouponInput] = useState("");
   const [couponCode, setCouponCode] = useState<string | null>(null);
   const [discount, setDiscount] = useState(0);
@@ -77,7 +77,9 @@ export const CheckoutPage: React.FC = () => {
       localStorage.removeItem("kleoCart");
       window.dispatchEvent(new Event("kleo-cart-updated"));
       setCart([]);
-      setMsg("Köszönjük! A rendelés rögzítve. A visszaigazolást a megadott e-mail címre küldjük.");
+      const serverTotal = Number(data?.totals?.total_gross ?? total);
+      setDiscount(Number(data?.totals?.discount_gross ?? discount));
+      setMsg(`Köszönjük! A rendelés rögzítve. Fizetendő: ${serverTotal.toLocaleString("hu-HU")} Ft. A visszaigazolást a megadott e-mail címre küldjük.`);
     } catch (err: any) {
       setError(err?.message || "Hiba történt a rendelés rögzítésekor.");
     } finally { setLoading(false); }
@@ -97,10 +99,11 @@ export const CheckoutPage: React.FC = () => {
             </div>
             <div className="form-row form-row--two">
               <label className="field"><span>Telefonszám</span><input value={form.phone} onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))} /></label>
-              <label className="field"><span>Fizetési mód</span><select value={form.payment} onChange={(e) => setForm(prev => ({ ...prev, payment: e.target.value as "card" | "cod" }))}><option value="card">Bankkártya</option><option value="cod">Utánvét</option></select></label>
+              <label className="field"><span>Fizetési mód</span><select value={form.payment} onChange={(e) => setForm(prev => ({ ...prev, payment: e.target.value as "card" | "cod" }))}><option value="cod">Utánvét</option><option value="card" disabled>Bankkártya – bekötés alatt</option></select></label>
             </div>
             <label className="field"><span>Számlázási / szállítási cím*</span><input value={form.address} onChange={(e) => setForm(prev => ({ ...prev, address: e.target.value }))} required /></label>
             <label className="field"><span>Megjegyzés</span><textarea rows={4} value={form.note} onChange={(e) => setForm(prev => ({ ...prev, note: e.target.value }))} /></label>
+            <div className="notice-card">A bankkártyás fizetés csak a fizetési szolgáltató élesítése után válik választhatóvá. Addig utánvétes rendelés adható le.</div>
             <button className="btn btn-primary" type="submit" disabled={loading || !cart.length}>{loading ? "Feldolgozás…" : "Rendelés leadása"}</button>
             {error && <div className="notice-card checkout-message checkout-message--error">{error}</div>}
             {msg && <div className="notice-card checkout-message">{msg}</div>}
@@ -114,6 +117,7 @@ export const CheckoutPage: React.FC = () => {
             {discount > 0 && <div className="checkout-line checkout-line--discount"><span>Kedvezmény {couponCode ? `(${couponCode})` : ""}</span><b>−{discount.toLocaleString("hu-HU")} Ft</b></div>}
             <div className="checkout-total"><span>Fizetendő</span><strong>{total.toLocaleString("hu-HU")} Ft</strong></div>
             <div className="coupon-row"><input value={couponInput} onChange={(e) => setCouponInput(e.target.value)} placeholder="Kuponkód" /><button type="button" className="btn btn-outline" onClick={applyCoupon} disabled={loading}>Alkalmaz</button></div>
+            <small>A végleges fizetendő összeget a szerver a rendelés elküldésekor a terméktörzs és a kuponszabályok alapján újraszámolja.</small>
             <Link to="/cart" className="btn btn-outline">Vissza a kosárhoz</Link>
           </aside>
         </div>
