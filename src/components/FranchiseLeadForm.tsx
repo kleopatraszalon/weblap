@@ -7,12 +7,14 @@ export type FranchiseExtraField = {
   required?: boolean;
   type?: "text" | "number" | "textarea" | "select" | "datetime-local";
   options?: string[];
+  helperText?: string;
 };
 
 type Props = {
-  variant: "franchise" | "franchise-v1" | "franchise-info";
+  variant: "lp" | "sp" | "franchise" | "franchise-v1" | "franchise-info";
   extraFields?: FranchiseExtraField[];
   compact?: boolean;
+  successPath?: string;
 };
 
 const LEAD_ENDPOINT = String(import.meta.env.VITE_FRANCHISE_LEAD_ENDPOINT || "/api/franchise-leads");
@@ -22,6 +24,8 @@ function campaignData() {
   return {
     page_url: window.location.href,
     referrer: document.referrer || "",
+    hostname: window.location.hostname,
+    pathname: window.location.pathname,
     utm_source: params.get("utm_source") || "",
     utm_medium: params.get("utm_medium") || "",
     utm_campaign: params.get("utm_campaign") || "",
@@ -30,7 +34,12 @@ function campaignData() {
   };
 }
 
-export function FranchiseLeadForm({ variant, extraFields = [], compact = false }: Props) {
+function defaultSuccessPath(variant: Props["variant"]) {
+  if (variant === "lp" || variant === "franchise-v1") return "/ajanlat";
+  return "/koszonjuk";
+}
+
+export function FranchiseLeadForm({ variant, extraFields = [], compact = false, successPath }: Props) {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -60,7 +69,7 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
           email: email.trim().toLowerCase(),
           phone: phone.trim(),
           consent,
-          source: "franchise",
+          source: "franchise-funnel",
           variant,
           extra,
           tracking: campaignData(),
@@ -72,7 +81,7 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
         throw new Error(detail?.message || detail?.error || `HTTP ${response.status}`);
       }
 
-      navigate("/franchise-koszonjuk", { replace: true });
+      navigate(successPath || defaultSuccessPath(variant), { replace: true });
     } catch (submitError) {
       console.error("Franchise lead submit failed", submitError);
       setError("A beküldés most nem sikerült. Kérlek, próbáld újra, vagy vedd fel velünk a kapcsolatot.");
@@ -80,6 +89,8 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
       setBusy(false);
     }
   }
+
+  const detailed = variant === "sp" || variant === "franchise-info";
 
   return (
     <form onSubmit={onSubmit} className={compact ? "franchise-lead-form is-compact" : "franchise-lead-form"}>
@@ -94,7 +105,8 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
         </label>
         <label className="feature-card">
           <strong>Telefonszám *</strong>
-          <input className="fr-input" type="tel" name="phone" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+          <input className="fr-input" type="tel" name="phone" autoComplete="tel" placeholder="+36 ..." value={phone} onChange={(e) => setPhone(e.target.value)} required />
+          <small>Lehetőleg +36-os formátumban add meg.</small>
         </label>
       </div>
 
@@ -113,6 +125,7 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
               ) : (
                 <input className="fr-input" type={field.type || "text"} value={extra[field.key] || ""} onChange={(e) => setExtra((prev) => ({ ...prev, [field.key]: e.target.value }))} required={field.required} />
               )}
+              {field.helperText && <small>{field.helperText}</small>}
             </label>
           ))}
         </div>
@@ -125,7 +138,7 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
 
       {error && <p role="alert" style={{ color: "#8b1e1e", fontWeight: 700 }}>{error}</p>}
       <button className="btn btn-primary" type="submit" disabled={!valid || busy} style={{ marginTop: 18 }}>
-        {busy ? "Küldés…" : variant === "franchise-info" ? "Elküldöm a részletes jelentkezést" : "Kérem a franchise információt"}
+        {busy ? "Küldés…" : detailed ? "Elküldöm a jelentkezésem" : "Kérem a franchise információt"}
       </button>
     </form>
   );
