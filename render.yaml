@@ -7,6 +7,16 @@ services:
     env: static
     staticPublishPath: dist
     buildCommand: npm ci && npm run build
+    headers:
+      - path: /franchise-v1
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      - path: /franchise-info
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      - path: /franchise-koszonjuk
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
     routes:
       # Render `type: redirect` szabályai 301 Moved Permanently válasszal működnek.
       # --- Angol/technikai aliasok -> magyar kanonikus URL-ek ---
