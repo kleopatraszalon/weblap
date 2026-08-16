@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export type FranchiseExtraField = {
   key: string;
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const API_BASE = String(import.meta.env.VITE_API_BASE_URL || "https://kleoszalon-api-1.onrender.com").replace(/\/$/, "");
-const LEAD_ENDPOINT = String(import.meta.env.VITE_FRANCHISE_LEAD_ENDPOINT || `${API_BASE}/api/public/marketing/franchise-leads`);
+const LEAD_ENDPOINT = String(import.meta.env.VITE_FRANCHISE_LEAD_ENDPOINT || `${API_BASE}/api/vir-drilldown/franchise-leads`);
 
 function campaignData() {
   const params = new URLSearchParams(window.location.search);
@@ -51,29 +51,31 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
     if (!valid || busy) return;
     setBusy(true);
     setError("");
+    const payload = {
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      consent,
+      source: "franchise",
+      variant,
+      extra,
+      tracking: campaignData(),
+    };
+
     try {
+      // text/plain + no-cors keeps the public campaign form usable even when the
+      // marketing domain and the API live on different hosts. The server parses
+      // the JSON string and keeps the Mailchimp API key entirely server-side.
       const response = await fetch(LEAD_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          phone: phone.trim(),
-          consent,
-          source: "franchise",
-          variant,
-          extra,
-          tracking: campaignData(),
-        }),
+        mode: "no-cors",
+        body: JSON.stringify(payload),
       });
-      if (!response.ok) {
-        const detail = await response.json().catch(() => null);
-        throw new Error(detail?.message || detail?.error || `HTTP ${response.status}`);
-      }
+      if (response.type !== "opaque" && !response.ok) throw new Error(`HTTP ${response.status}`);
       navigate("/franchise-koszonjuk", { replace: true });
     } catch (submitError) {
       console.error("Franchise lead submit failed", submitError);
-      setError("A beküldés most nem sikerült. Kérlek, ellenőrizd az adatokat és próbáld újra.");
+      setError("A beküldés most nem sikerült. Kérlek, próbáld újra, vagy vedd fel velünk a kapcsolatot.");
     } finally {
       setBusy(false);
     }
@@ -118,7 +120,7 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
 
       <label style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 20, lineHeight: 1.5 }}>
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required style={{ marginTop: 5 }} />
-        <span>Hozzájárulok, hogy a Kleopátra Szépségszalonok a megadott adataimat kapcsolatfelvétel és franchise tájékoztatás céljából kezelje. Elolvastam az <Link to="/adatvedelmi-tajekoztato">adatvédelmi tájékoztatót</Link>.</span>
+        <span>Hozzájárulok, hogy a Kleopátra Szépségszalonok a megadott adataimat kapcsolatfelvétel és franchise tájékoztatás céljából kezelje.</span>
       </label>
 
       {error && <p role="alert" style={{ color: "#8b1e1e", fontWeight: 700 }}>{error}</p>}
