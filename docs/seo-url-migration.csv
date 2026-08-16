@@ -1,0 +1,63 @@
+legacy_url,new_url,action,implementation,notes
+https://www.kleoszalon.hu/,https://www.kleoszalon.hu/,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/szalonok,https://www.kleoszalon.hu/szalonok,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/husegprogram,https://www.kleoszalon.hu/husegprogram,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/araink,https://www.kleoszalon.hu/araink,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/karrier.php,https://www.kleoszalon.hu/karrier,301,render.yaml,Régi PHP URL
+https://www.kleoszalon.hu/oktatas,https://www.kleoszalon.hu/oktatas,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/KleoAcademy,https://www.kleoszalon.hu/oktatas,301,render.yaml,Régi Academy URL
+https://www.kleoszalon.hu/rolunk,https://www.kleoszalon.hu/rolunk,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/kapcsolat,https://www.kleoszalon.hu/kapcsolat,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/szolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/index.php/uzleteink/szolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok,301,render.yaml,Régi technikai URL
+https://www.kleoszalon.hu/pricelist.php/szolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok,301,render.yaml,Régi technikai URL
+https://www.kleoszalon.hu/uzleteink/araink,https://www.kleoszalon.hu/araink,301,render.yaml,Régi technikai URL
+https://www.kleoszalon.hu/kozmetika,https://www.kleoszalon.hu/szolgaltatasok/kozmetika,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/fodraszat,https://www.kleoszalon.hu/szolgaltatasok/fodraszat,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/masszazs,https://www.kleoszalon.hu/szolgaltatasok/masszazs,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/koromapolas,https://www.kleoszalon.hu/szolgaltatasok/kez-es-labapolas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/eskuvo,https://www.kleoszalon.hu/szolgaltatasok/eskuvo,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/ipl,https://www.kleoszalon.hu/szolgaltatasok/ipl,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/iplszortelenites,https://www.kleoszalon.hu/szolgaltatasok/iplszortelenites,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/radiofrekvencia,https://www.kleoszalon.hu/szolgaltatasok/radiofrekvencia,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/testkezelesek,https://www.kleoszalon.hu/szolgaltatasok/testkezelesek,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/gyumolcssavashamlasztas,https://www.kleoszalon.hu/szolgaltatasok/gyumolcssavashamlasztas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/szempillalifting,https://www.kleoszalon.hu/szolgaltatasok/szempillalifting,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/szemoldoklaminalas,https://www.kleoszalon.hu/szolgaltatasok/szemoldoklaminalas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/arckezelesek,https://www.kleoszalon.hu/szolgaltatasok/arckezelesek,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/arckezeles,https://www.kleoszalon.hu/szolgaltatasok/arctisztitas,301,render.yaml,Legközelebbi tartalmi pár
+https://www.kleoszalon.hu/arctisztitas,https://www.kleoszalon.hu/szolgaltatasok/arctisztitas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/actisztitas,https://www.kleoszalon.hu/szolgaltatasok/arctisztitas,301,render.yaml,Régi elírt/alias URL
+https://www.kleoszalon.hu/arcmasszazs,https://www.kleoszalon.hu/szolgaltatasok/arcmasszazs,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/szempilla,https://www.kleoszalon.hu/szolgaltatasok/muszempilla,301,render.yaml,Régi alias URL
+https://www.kleoszalon.hu/muszempilla,https://www.kleoszalon.hu/szolgaltatasok/muszempilla,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/szempillaszemoldok,https://www.kleoszalon.hu/szolgaltatasok/szempillaszemoldok,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/cukorpaszta,https://www.kleoszalon.hu/szolgaltatasok/cukorpaszta,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/sminktetovalas,https://www.kleoszalon.hu/szolgaltatasok/sminktetovalas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/smink,https://www.kleoszalon.hu/szolgaltatasok/smink,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/fulbeloves,https://www.kleoszalon.hu/szolgaltatasok/fulbeloves,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/fogfeherites,https://www.kleoszalon.hu/szolgaltatasok/fogfeherites,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/aranykezeles,https://www.kleoszalon.hu/szolgaltatasok/aranykezeles,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/alfaparfhajkezelesek,https://www.kleoszalon.hu/szolgaltatasok/alfaparfhajkezelesek,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/hajfonas,https://www.kleoszalon.hu/szolgaltatasok/hajfonas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/hajvagas,https://www.kleoszalon.hu/szolgaltatasok/hajvagas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/balayage,https://www.kleoszalon.hu/szolgaltatasok/balayage,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/dauer,https://www.kleoszalon.hu/szolgaltatasok/dauer,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/joico,https://www.kleoszalon.hu/szolgaltatasok/joicohajkezeles,301,render.yaml,Régi alias URL
+https://www.kleoszalon.hu/joicohajkezeles,https://www.kleoszalon.hu/szolgaltatasok/joicohajkezeles,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/mollos,https://www.kleoszalon.hu/szolgaltatasok/melegollos,301,render.yaml,Régi melegollós alias
+https://www.kleoszalon.hu/melegollos,https://www.kleoszalon.hu/szolgaltatasok/melegollos,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/hajmosas,https://www.kleoszalon.hu/szolgaltatasok/hajmosas,301,render.yaml,Egyedi szolgáltatás-aloldal
+https://www.kleoszalon.hu/blog2021,https://www.kleoszalon.hu/szolgaltatasok/hajmosas,301,render.yaml,Régi hajmosás tartalom
+https://www.kleoszalon.hu/MEN,https://www.kleoszalon.hu/szolgaltatasok/ferfi-fodraszat,301,render.yaml,Férfi szolgáltatások
+https://www.kleoszalon.hu/vipszolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok/vip-szolgaltatasok,301,render.yaml,VIP szolgáltatások
+https://www.kleoszalon.hu/privatebeauty,https://www.kleoszalon.hu/szolgaltatasok/private-beauty,301,render.yaml,Private Beauty
+https://www.kleoszalon.hu/fitness-welness-gyongyos,https://www.kleoszalon.hu/szalonok/gyongyos,301,render.yaml,Gyöngyösi lokációhoz konszolidálva
+https://www.kleoszalon.hu/fitness,https://www.kleoszalon.hu/szalonok/gyongyos,301,render.yaml,Gyöngyösi lokációhoz konszolidálva
+https://www.kleoszalon.hu/hirlevel,https://www.kleoszalon.hu/husegprogram,301,render.yaml,Hírlevél/lojalitási tartalom
+https://www.kleoszalon.hu/panaszkezeles,https://www.kleoszalon.hu/kapcsolat,301,render.yaml,Átmeneti cél amíg külön panaszkezelési oldal készül
+https://www.kleoszalon.hu/fizetes,https://www.kleoszalon.hu/fizetes,KEEP,application route,Az új rendszer checkout aliasa használja; jogi tartalmi megfelelőség külön ellenőrzendő
+https://www.kleoszalon.hu/impresszum,https://www.kleoszalon.hu/impresszum,REVIEW,pending,A jogi tartalmat migrálni kell; nem irányítottuk félre
+https://www.kleoszalon.hu/content/12/12_0.pdf,https://www.kleoszalon.hu/content/12/12_0.pdf,REVIEW,pending,2018-as adatkezelési PDF; friss jogi tartalom és végleges URL szükséges
+https://kleopatraszepsegszalonok.hu/,https://www.kleoszalon.hu/franchise,301,old-domain-hosting,A régi franchise domain teljes host-szintű 301 átirányítása szükséges
+https://www.kleopatraszepsegszalonok.hu/,https://www.kleoszalon.hu/franchise,301,old-domain-hosting,A régi franchise domain teljes host-szintű 301 átirányítása szükséges
