@@ -1,6 +1,5 @@
 # render.yaml (Blueprint)
-# A "routes" rész statikus site esetén kezeli a 301 redirecteket + SPA rewrite-ot.
-# Ahol szükséges, állítsd a szolgáltatás nevét/build parancsot a saját projektedhez.
+# Render Static Site esetén a 301 redirecteket itt kell kezelni; .htaccess nem fut.
 
 services:
   - type: web
@@ -9,7 +8,7 @@ services:
     staticPublishPath: dist
     buildCommand: npm ci && npm run build
     routes:
-      # --- 301: régi /services/* -> új /szolgaltatasok/* ---
+      # --- Angol/technikai aliasok -> magyar kanonikus URL-ek ---
       - type: redirect
         source: /services
         destination: /szolgaltatasok
@@ -19,30 +18,64 @@ services:
         destination: /szolgaltatasok/*
         status: 301
 
-      # --- 301: régi "root" szolgáltatás oldalak -> új megfelelőjük ---
+      # --- Régi fő szolgáltatásoldalak ---
+      - type: redirect
+        source: /kozmetika
+        destination: /szolgaltatasok/kozmetika
+        status: 301
+      - type: redirect
+        source: /fodraszat
+        destination: /szolgaltatasok/fodraszat
+        status: 301
+      - type: redirect
+        source: /masszazs
+        destination: /szolgaltatasok/masszazs
+        status: 301
+      - type: redirect
+        source: /koromapolas
+        destination: /szolgaltatasok/kez-es-labapolas
+        status: 301
+      - type: redirect
+        source: /eskuvo
+        destination: /szolgaltatasok/eskuvo
+        status: 301
+
+      # --- Régi kozmetikai szolgáltatás URL-ek ---
       - type: redirect
         source: /ipl
         destination: /szolgaltatasok/ipl
         status: 301
       - type: redirect
-        source: /mollos
-        destination: /szolgaltatasok/mollos
+        source: /iplszortelenites
+        destination: /szolgaltatasok/iplszortelenites
         status: 301
       - type: redirect
-        source: /melegollos
-        destination: /szolgaltatasok/melegollos
+        source: /radiofrekvencia
+        destination: /szolgaltatasok/radiofrekvencia
         status: 301
       - type: redirect
-        source: /szempilla
-        destination: /szolgaltatasok/muszempilla
+        source: /testkezelesek
+        destination: /szolgaltatasok/testkezelesek
         status: 301
       - type: redirect
-        source: /muszempilla
-        destination: /szolgaltatasok/muszempilla
+        source: /gyumolcssavashamlasztas
+        destination: /szolgaltatasok/gyumolcssavashamlasztas
         status: 301
       - type: redirect
-        source: /arcmasszazs
-        destination: /szolgaltatasok/arcmasszazs
+        source: /szempillalifting
+        destination: /szolgaltatasok/szempillalifting
+        status: 301
+      - type: redirect
+        source: /szemoldoklaminalas
+        destination: /szolgaltatasok/szemoldoklaminalas
+        status: 301
+      - type: redirect
+        source: /arckezelesek
+        destination: /szolgaltatasok/arckezelesek
+        status: 301
+      - type: redirect
+        source: /arckezeles
+        destination: /szolgaltatasok/arctisztitas
         status: 301
       - type: redirect
         source: /arctisztitas
@@ -53,6 +86,68 @@ services:
         destination: /szolgaltatasok/arctisztitas
         status: 301
       - type: redirect
+        source: /arcmasszazs
+        destination: /szolgaltatasok/arcmasszazs
+        status: 301
+      - type: redirect
+        source: /szempillaszemoldok
+        destination: /szolgaltatasok/szempillaszemoldok
+        status: 301
+      - type: redirect
+        source: /cukorpaszta
+        destination: /szolgaltatasok/cukorpaszta
+        status: 301
+      - type: redirect
+        source: /sminktetovalas
+        destination: /szolgaltatasok/sminktetovalas
+        status: 301
+      - type: redirect
+        source: /smink
+        destination: /szolgaltatasok/smink
+        status: 301
+      - type: redirect
+        source: /fulbeloves
+        destination: /szolgaltatasok/fulbeloves
+        status: 301
+      - type: redirect
+        source: /fogfeherites
+        destination: /szolgaltatasok/fogfeherites
+        status: 301
+      - type: redirect
+        source: /aranykezeles
+        destination: /szolgaltatasok/aranykezeles
+        status: 301
+      - type: redirect
+        source: /szempilla
+        destination: /szolgaltatasok/muszempilla
+        status: 301
+      - type: redirect
+        source: /muszempilla
+        destination: /szolgaltatasok/muszempilla
+        status: 301
+
+      # --- Régi fodrászati szolgáltatás URL-ek ---
+      - type: redirect
+        source: /alfaparfhajkezelesek
+        destination: /szolgaltatasok/alfaparfhajkezelesek
+        status: 301
+      - type: redirect
+        source: /hajfonas
+        destination: /szolgaltatasok/hajfonas
+        status: 301
+      - type: redirect
+        source: /hajvagas
+        destination: /szolgaltatasok/hajvagas
+        status: 301
+      - type: redirect
+        source: /balayage
+        destination: /szolgaltatasok/balayage
+        status: 301
+      - type: redirect
+        source: /dauer
+        destination: /szolgaltatasok/dauer
+        status: 301
+      - type: redirect
         source: /joico
         destination: /szolgaltatasok/joicohajkezeles
         status: 301
@@ -61,11 +156,73 @@ services:
         destination: /szolgaltatasok/joicohajkezeles
         status: 301
       - type: redirect
+        source: /mollos
+        destination: /szolgaltatasok/melegollos
+        status: 301
+      - type: redirect
+        source: /melegollos
+        destination: /szolgaltatasok/melegollos
+        status: 301
+      - type: redirect
         source: /hajmosas
         destination: /szolgaltatasok/hajmosas
         status: 301
+      - type: redirect
+        source: /blog2021
+        destination: /szolgaltatasok/hajmosas
+        status: 301
+      - type: redirect
+        source: /MEN
+        destination: /szolgaltatasok/ferfi-fodraszat
+        status: 301
+      - type: redirect
+        source: /vipszolgaltatasok
+        destination: /szolgaltatasok/vip-szolgaltatasok
+        status: 301
+      - type: redirect
+        source: /privatebeauty
+        destination: /szolgaltatasok/private-beauty
+        status: 301
 
-      # --- SPA rewrite: catch-all 404 elkerülése (React Router) ---
+      # --- Régi oldalstruktúra / technikai URL-ek ---
+      - type: redirect
+        source: /karrier.php
+        destination: /karrier
+        status: 301
+      - type: redirect
+        source: /KleoAcademy
+        destination: /oktatas
+        status: 301
+      - type: redirect
+        source: /uzleteink/araink
+        destination: /araink
+        status: 301
+      - type: redirect
+        source: /index.php/uzleteink/szolgaltatasok
+        destination: /szolgaltatasok
+        status: 301
+      - type: redirect
+        source: /pricelist.php/szolgaltatasok
+        destination: /szolgaltatasok
+        status: 301
+      - type: redirect
+        source: /fitness-welness-gyongyos
+        destination: /szalonok/gyongyos
+        status: 301
+      - type: redirect
+        source: /fitness
+        destination: /szalonok/gyongyos
+        status: 301
+      - type: redirect
+        source: /hirlevel
+        destination: /husegprogram
+        status: 301
+      - type: redirect
+        source: /panaszkezeles
+        destination: /kapcsolat
+        status: 301
+
+      # --- SPA rewrite: a 301-ek után fusson ---
       - type: rewrite
         source: /*
         destination: /index.html
