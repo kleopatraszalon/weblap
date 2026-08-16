@@ -43,7 +43,7 @@ export function FranchiseV1Page() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Franchise kapcsolatfelvételi űrlap"
+          aria-label="LP_form – franchise kapcsolatfelvételi űrlap"
           onClick={() => setOpen(false)}
           style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.68)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 9999, overflowY: "auto" }}
         >
@@ -52,8 +52,8 @@ export function FranchiseV1Page() {
               <h2 className="fr-h2" style={{ margin: 0 }}>Kérj franchise információt</h2>
               <button type="button" className="fr-btn" style={{ width: 48, padding: 10, background: "#0b1220", color: "#fff" }} onClick={() => setOpen(false)} aria-label="Bezárás">×</button>
             </div>
-            <p className="fr-lead">Add meg az elérhetőségeidet, és felvesszük veled a kapcsolatot.</p>
-            <FranchiseLeadForm variant="franchise-v1" compact />
+            <p className="fr-lead">Add meg a neved, e-mail címed és telefonszámod. Sikeres LP_form beküldés után megmutatjuk a részletes franchise ajánlatot.</p>
+            <FranchiseLeadForm variant="lp" compact successPath="/ajanlat" />
           </div>
         </div>
       )}
