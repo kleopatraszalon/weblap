@@ -222,7 +222,12 @@ services:
         destination: /kapcsolat
         status: 301
 
-      # --- SPA rewrite: a 301-ek után fusson ---
+      # --- Same-origin lead proxy -> VIR/API -> Mailchimp ---
+      - type: rewrite
+        source: /api/franchise-leads
+        destination: https://kleoszalon-api-1.onrender.com/api/vir-drilldown/franchise-leads
+
+      # --- SPA rewrite: a 301-ek és API proxy után fusson ---
       - type: rewrite
         source: /*
         destination: /index.html
