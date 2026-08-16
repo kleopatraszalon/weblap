@@ -44,42 +44,38 @@ const PARTNER_CITIES = [
   "Kecskemét",
 ];
 
-function setMeta(name: string, content: string) {
-  let meta = document.head.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
-  if (!meta) {
-    meta = document.createElement("meta");
-    meta.name = name;
-    document.head.appendChild(meta);
-  }
-  meta.content = content;
-  return meta;
-}
-
 export const FranchisePage: React.FC = () => {
   const { pages } = useWebsiteCms();
   const p = pages.franchise;
 
   useEffect(() => {
     const oldTitle = document.title;
-    const description = setMeta("description", "Kleopátra Szépségszalonok franchise: bejáratott márka, működési rendszer, marketing-, HR- és szakmai támogatás új vagy meglévő szépségszalon fejlesztéséhez.");
-    const previousDescription = description.getAttribute("content") || "";
+    let description = document.head.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    const createdDescription = !description;
+    const previousDescription = description?.content || "";
+    if (!description) {
+      description = document.createElement("meta");
+      description.name = "description";
+      document.head.appendChild(description);
+    }
 
     let canonical = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     const createdCanonical = !canonical;
+    const previousCanonical = canonical?.href || "";
     if (!canonical) {
       canonical = document.createElement("link");
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    const previousCanonical = canonical.getAttribute("href") || "";
 
     document.title = "Kleopátra franchise | Szépségszalon franchise rendszer";
+    description.content = "Kleopátra Szépségszalonok franchise: bejáratott márka, működési rendszer, marketing-, HR- és szakmai támogatás új vagy meglévő szépségszalon fejlesztéséhez.";
     canonical.href = "https://www.kleoszalon.hu/franchise";
 
     return () => {
       document.title = oldTitle;
-      if (previousDescription) description.content = previousDescription;
-      else description.remove();
+      if (createdDescription) description?.remove();
+      else if (description) description.content = previousDescription;
       if (createdCanonical) canonical?.remove();
       else if (canonical) canonical.href = previousCanonical;
     };
