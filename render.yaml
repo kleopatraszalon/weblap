@@ -8,6 +8,17 @@ services:
     staticPublishPath: dist
     buildCommand: npm ci && npm run build
     headers:
+      # Canonical franchise funnel campaign pages: intentionally excluded from search.
+      - path: /lp1
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      - path: /ajanlat
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      - path: /koszonjuk
+        name: X-Robots-Tag
+        value: noindex, nofollow, noarchive, nosnippet
+      # Legacy aliases are also noindex during the migration window.
       - path: /franchise-v1
         name: X-Robots-Tag
         value: noindex, nofollow, noarchive, nosnippet
@@ -19,6 +30,18 @@ services:
         value: noindex, nofollow, noarchive, nosnippet
     routes:
       # Render `type: redirect` szabályai 301 Moved Permanently válasszal működnek.
+
+      # --- Franchise funnel: legacy URL-ek -> egységes LP / SP / SP_form_TY ---
+      - type: redirect
+        source: /franchise-v1
+        destination: /lp1
+      - type: redirect
+        source: /franchise-info
+        destination: /ajanlat
+      - type: redirect
+        source: /franchise-koszonjuk
+        destination: /koszonjuk
+
       # --- Angol/technikai aliasok -> magyar kanonikus URL-ek ---
       - type: redirect
         source: /services
