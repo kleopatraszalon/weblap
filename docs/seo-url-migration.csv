@@ -1,12 +1,21 @@
 legacy_url,new_url,action,implementation,notes
 https://www.kleoszalon.hu/,https://www.kleoszalon.hu/,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/szalonok,https://www.kleoszalon.hu/szalonok,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/index.php/uzleteink/content.php?cid=szalonok,https://www.kleoszalon.hu/szalonok,301,render.yaml,Régi szalonlista URL; a redirect útvonal alapján fut és elhagyja a régi query paramétert
+https://www.kleoszalon.hu/index.php/uzleteink/Budapest-Mester,https://www.kleoszalon.hu/szalonok/budapest-ix,301,render.yaml,Régi Mester utcai szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/Budapest-Visegradi-3,https://www.kleoszalon.hu/szalonok/budapest-xiii,301,render.yaml,Régi Visegrádi utcai szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/Budapest-Krisztina,https://www.kleoszalon.hu/szalonok/budapest-xii,301,render.yaml,Régi Krisztina körúti szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/rakoczi,https://www.kleoszalon.hu/szalonok/budapest-viii,301,render.yaml,Régi Rákóczi úti szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/Gyongyos-Koharyut,https://www.kleoszalon.hu/szalonok/gyongyos,301,render.yaml,Régi gyöngyösi szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/Salgotarjan,https://www.kleoszalon.hu/szalonok/salgotarjan,301,render.yaml,Régi salgótarjáni szalon URL
+https://www.kleoszalon.hu/index.php/uzleteink/Eger,https://www.kleoszalon.hu/szalonok/eger,301,render.yaml,Régi egri szalon URL
 https://www.kleoszalon.hu/husegprogram,https://www.kleoszalon.hu/husegprogram,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/araink,https://www.kleoszalon.hu/araink,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/karrier.php,https://www.kleoszalon.hu/karrier,301,render.yaml,Régi PHP URL
 https://www.kleoszalon.hu/oktatas,https://www.kleoszalon.hu/oktatas,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/KleoAcademy,https://www.kleoszalon.hu/oktatas,301,render.yaml,Régi Academy URL
 https://www.kleoszalon.hu/rolunk,https://www.kleoszalon.hu/rolunk,KEEP,existing,Azonos URL
+https://www.kleoszalon.hu/pricelist.php/rolunk,https://www.kleoszalon.hu/rolunk,301,render.yaml,Régi technikai Rólunk URL
 https://www.kleoszalon.hu/kapcsolat,https://www.kleoszalon.hu/kapcsolat,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/szolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok,KEEP,existing,Azonos URL
 https://www.kleoszalon.hu/index.php/uzleteink/szolgaltatasok,https://www.kleoszalon.hu/szolgaltatasok,301,render.yaml,Régi technikai URL
@@ -56,8 +65,13 @@ https://www.kleoszalon.hu/fitness-welness-gyongyos,https://www.kleoszalon.hu/sza
 https://www.kleoszalon.hu/fitness,https://www.kleoszalon.hu/szalonok/gyongyos,301,render.yaml,Gyöngyösi lokációhoz konszolidálva
 https://www.kleoszalon.hu/hirlevel,https://www.kleoszalon.hu/husegprogram,301,render.yaml,Hírlevél/lojalitási tartalom
 https://www.kleoszalon.hu/panaszkezeles,https://www.kleoszalon.hu/kapcsolat,301,render.yaml,Átmeneti cél amíg külön panaszkezelési oldal készül
-https://www.kleoszalon.hu/fizetes,https://www.kleoszalon.hu/fizetes,KEEP,application route,Az új rendszer checkout aliasa használja; jogi tartalmi megfelelőség külön ellenőrzendő
+https://www.kleoszalon.hu/index.php/uzleteink/panaszkezeles,https://www.kleoszalon.hu/kapcsolat,301,render.yaml,Régi panaszkezelési útvonal; átmeneti cél amíg külön oldal készül
+https://www.kleoszalon.hu/fizetes,https://www.kleoszalon.hu/fizetes,KEEP,application route,Az új rendszer checkout aliasa használja; a régi jogi tartalommal ütközik és külön rendezendő
+https://www.kleoszalon.hu/index.php/uzleteink/fizetes,,REVIEW,pending,Régi fizetési tájékoztató; nem irányítjuk checkout oldalra mert tartalmilag eltér
 https://www.kleoszalon.hu/impresszum,https://www.kleoszalon.hu/impresszum,REVIEW,pending,A jogi tartalmat migrálni kell; nem irányítottuk félre
-https://www.kleoszalon.hu/content/12/12_0.pdf,https://www.kleoszalon.hu/content/12/12_0.pdf,REVIEW,pending,2018-as adatkezelési PDF; friss jogi tartalom és végleges URL szükséges
+https://www.kleoszalon.hu/index.php/uzleteink/impresszum,,REVIEW,pending,Régi impresszum útvonal; új jogi oldal szükséges
+https://www.kleoszalon.hu/index.php/uzleteink/cookie_tajekoztato,,REVIEW,pending,Régi cookie tájékoztató; új jogi oldal szükséges
+https://www.kleoszalon.hu/content/12/12_0.pdf,,REVIEW,pending,Régi adatkezelési PDF; friss jogi tartalom és végleges URL szükséges
+https://www.kleoszalon.hu/index.php/uzleteink/content/12/12_0.pdf,,REVIEW,pending,Régi menüből hivatkozott adatkezelési PDF útvonal
 https://kleopatraszepsegszalonok.hu/,https://www.kleoszalon.hu/franchise,301,old-domain-hosting,A régi franchise domain teljes host-szintű 301 átirányítása szükséges
 https://www.kleopatraszepsegszalonok.hu/,https://www.kleoszalon.hu/franchise,301,old-domain-hosting,A régi franchise domain teljes host-szintű 301 átirányítása szükséges
