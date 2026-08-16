@@ -153,6 +153,32 @@ services:
         source: /privatebeauty
         destination: /szolgaltatasok/private-beauty
 
+      # --- Régi szalon URL-ek -> új, kanonikus lokációs oldalak ---
+      - type: redirect
+        source: /index.php/uzleteink/content.php
+        destination: /szalonok
+      - type: redirect
+        source: /index.php/uzleteink/Budapest-Mester
+        destination: /szalonok/budapest-ix
+      - type: redirect
+        source: /index.php/uzleteink/Budapest-Visegradi-3
+        destination: /szalonok/budapest-xiii
+      - type: redirect
+        source: /index.php/uzleteink/Budapest-Krisztina
+        destination: /szalonok/budapest-xii
+      - type: redirect
+        source: /index.php/uzleteink/rakoczi
+        destination: /szalonok/budapest-viii
+      - type: redirect
+        source: /index.php/uzleteink/Gyongyos-Koharyut
+        destination: /szalonok/gyongyos
+      - type: redirect
+        source: /index.php/uzleteink/Salgotarjan
+        destination: /szalonok/salgotarjan
+      - type: redirect
+        source: /index.php/uzleteink/Eger
+        destination: /szalonok/eger
+
       # --- Régi oldalstruktúra / technikai URL-ek ---
       - type: redirect
         source: /karrier.php
@@ -169,6 +195,9 @@ services:
       - type: redirect
         source: /pricelist.php/szolgaltatasok
         destination: /szolgaltatasok
+      - type: redirect
+        source: /pricelist.php/rolunk
+        destination: /rolunk
       - type: redirect
         source: /fitness-welness-gyongyos
         destination: /szalonok/gyongyos
