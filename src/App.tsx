@@ -8,9 +8,13 @@ import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
 import { ServicesPage } from "./pages/ServicesPage";
+import { ServiceDetailPage } from "./pages/ServiceDetailPage";
 import { PriceListPage } from "./pages/PriceListPage";
 import { LoyaltyPage } from "./pages/LoyaltyPage";
 import { FranchisePage } from "./pages/FranchisePage";
+import { FranchiseV1Page } from "./pages/FranchiseV1Page";
+import { FranchiseInfoPage } from "./pages/FranchiseInfoPage";
+import { FranchiseKoszonjukPage } from "./pages/FranchiseKoszonjukPage";
 import { CareerPage } from "./pages/CareerPage";
 import { TrainingPage } from "./pages/TrainingPage";
 import { AboutPage } from "./pages/AboutPage";
@@ -50,10 +54,11 @@ const FloatingCartButton: React.FC = () => {
 function AppShell() {
   const location = useLocation();
   const isSignage = location.pathname.startsWith("/signage") || location.pathname.startsWith("/kiosk");
+  const isFocusedFranchise = ["/franchise-v1", "/franchise-info", "/franchise-koszonjuk"].includes(location.pathname);
   return <>
     {!isSignage && <ModernPublicStyles />}
-    {!isSignage && <Header />}
-    {!isSignage && <FloatingCartButton />}
+    {!isSignage && !isFocusedFranchise && <Header />}
+    {!isSignage && !isFocusedFranchise && <FloatingCartButton />}
     <Routes>
       <Route path="/signage" element={<SignageExperience />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
@@ -70,13 +75,16 @@ function AppShell() {
 
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/szolgaltatasok" element={<ServicesPage />} />
-      <Route path="/szolgaltatasok/*" element={<ServicesPage />} />
+      <Route path="/szolgaltatasok/:slug" element={<ServiceDetailPage />} />
       <Route path="/prices" element={<PriceListPage />} />
       <Route path="/araink" element={<PriceListPage />} />
 
       <Route path="/loyalty" element={<LoyaltyPage />} />
       <Route path="/husegprogram" element={<LoyaltyPage />} />
       <Route path="/franchise" element={<FranchisePage />} />
+      <Route path="/franchise-v1" element={<FranchiseV1Page />} />
+      <Route path="/franchise-info" element={<FranchiseInfoPage />} />
+      <Route path="/franchise-koszonjuk" element={<FranchiseKoszonjukPage />} />
       <Route path="/career" element={<CareerPage />} />
       <Route path="/karrier" element={<CareerPage />} />
       <Route path="/training" element={<TrainingPage />} />
@@ -96,7 +104,7 @@ function AppShell() {
 
       <Route path="*" element={<HomePage />} />
     </Routes>
-    {!isSignage && <Footer />}
+    {!isSignage && !isFocusedFranchise && <Footer />}
   </>;
 }
 
