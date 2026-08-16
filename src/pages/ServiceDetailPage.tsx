@@ -3,33 +3,43 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import PublicPageHero from "../components/PublicPageHero";
 import { SERVICE_PAGE_BY_SLUG } from "../data/servicePages";
 
-function setMeta(name: string, content: string) {
-  let node = document.head.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
-  if (!node) {
-    node = document.createElement("meta");
-    node.setAttribute("name", name);
-    document.head.appendChild(node);
-  }
-  node.setAttribute("content", content);
-}
-
 export function ServiceDetailPage() {
   const { slug = "" } = useParams();
   const service = SERVICE_PAGE_BY_SLUG.get(slug.toLowerCase());
 
   useEffect(() => {
     if (!service) return;
-    document.title = `${service.title} | Kleopátra Szépségszalonok`;
-    setMeta("description", service.lead);
 
-    const canonicalHref = `https://www.kleoszalon.hu/szolgaltatasok/${service.slug}`;
-    let canonical = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) {
-      canonical = document.createElement("link");
+    const previousTitle = document.title;
+    const existingDescription = document.head.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    const descriptionWasCreated = !existingDescription;
+    const description = existingDescription || document.createElement("meta");
+    const previousDescription = existingDescription?.content || "";
+    if (descriptionWasCreated) {
+      description.name = "description";
+      document.head.appendChild(description);
+    }
+
+    const existingCanonical = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    const canonicalWasCreated = !existingCanonical;
+    const canonical = existingCanonical || document.createElement("link");
+    const previousCanonical = existingCanonical?.href || "";
+    if (canonicalWasCreated) {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = canonicalHref;
+
+    document.title = `${service.title} | Kleopátra Szépségszalonok`;
+    description.content = service.lead;
+    canonical.href = `https://www.kleoszalon.hu/szolgaltatasok/${service.slug}`;
+
+    return () => {
+      document.title = previousTitle;
+      if (descriptionWasCreated) description.remove();
+      else description.content = previousDescription;
+      if (canonicalWasCreated) canonical.remove();
+      else canonical.href = previousCanonical;
+    };
   }, [service]);
 
   if (!service) return <Navigate to="/szolgaltatasok" replace />;
