@@ -1,0 +1,6 @@
+# Telepítési hely: a kleopatraszepsegszalonok.hu jelenlegi Apache document rootja.
+# Cél: a régi franchise domain MINDEN URL-je egyetlen kanonikus landingre menjen.
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^(www\.)?kleopatraszepsegszalonok\.hu$ [NC]
+RewriteRule ^.*$ https://www.kleoszalon.hu/franchise [R=301,L]
