@@ -31,6 +31,9 @@ import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
 import { WebsiteCmsProvider } from "./websiteCms";
 
+const OLD_FRANCHISE_HOSTS = new Set(["kleopatraszepsegszalonok.hu", "www.kleopatraszepsegszalonok.hu"]);
+const isFranchiseHost = () => typeof window !== "undefined" && OLD_FRANCHISE_HOSTS.has(window.location.hostname.toLowerCase());
+
 const FloatingCartButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
   const updateCountFromStorage = () => {
@@ -53,8 +56,9 @@ const FloatingCartButton: React.FC = () => {
 
 function AppShell() {
   const location = useLocation();
+  const franchiseHost = isFranchiseHost();
   const isSignage = location.pathname.startsWith("/signage") || location.pathname.startsWith("/kiosk");
-  const isFocusedFranchise = ["/franchise-v1", "/franchise-info", "/franchise-koszonjuk"].includes(location.pathname);
+  const isFocusedFranchise = franchiseHost || ["/lp1", "/ajanlat", "/koszonjuk", "/franchise-v1", "/franchise-info", "/franchise-koszonjuk"].includes(location.pathname);
   return <>
     {!isSignage && <ModernPublicStyles />}
     {!isSignage && !isFocusedFranchise && <Header />}
@@ -62,7 +66,7 @@ function AppShell() {
     <Routes>
       <Route path="/signage" element={<SignageExperience />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
 
       <Route path="/booking" element={<BookingPageV2 />} />
       <Route path="/idopontfoglalas" element={<BookingPageV2 />} />
@@ -82,9 +86,17 @@ function AppShell() {
       <Route path="/loyalty" element={<LoyaltyPage />} />
       <Route path="/husegprogram" element={<LoyaltyPage />} />
       <Route path="/franchise" element={<FranchisePage />} />
+
+      {/* Franchise funnel canonical routes */}
+      <Route path="/lp1" element={<FranchiseV1Page />} />
+      <Route path="/ajanlat" element={<FranchiseInfoPage />} />
+      <Route path="/koszonjuk" element={<FranchiseKoszonjukPage />} />
+
+      {/* Legacy aliases kept until Render 301 rules have propagated */}
       <Route path="/franchise-v1" element={<FranchiseV1Page />} />
       <Route path="/franchise-info" element={<FranchiseInfoPage />} />
       <Route path="/franchise-koszonjuk" element={<FranchiseKoszonjukPage />} />
+
       <Route path="/career" element={<CareerPage />} />
       <Route path="/karrier" element={<CareerPage />} />
       <Route path="/training" element={<TrainingPage />} />
@@ -102,7 +114,7 @@ function AppShell() {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/fizetes" element={<CheckoutPage />} />
 
-      <Route path="*" element={<HomePage />} />
+      <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
     </Routes>
     {!isSignage && !isFocusedFranchise && <Footer />}
   </>;
