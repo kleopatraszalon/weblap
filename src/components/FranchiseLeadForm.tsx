@@ -15,8 +15,7 @@ type Props = {
   compact?: boolean;
 };
 
-const API_BASE = String(import.meta.env.VITE_API_BASE_URL || "https://kleoszalon-api-1.onrender.com").replace(/\/$/, "");
-const LEAD_ENDPOINT = String(import.meta.env.VITE_FRANCHISE_LEAD_ENDPOINT || `${API_BASE}/api/vir-drilldown/franchise-leads`);
+const LEAD_ENDPOINT = String(import.meta.env.VITE_FRANCHISE_LEAD_ENDPOINT || "/api/franchise-leads");
 
 function campaignData() {
   const params = new URLSearchParams(window.location.search);
@@ -51,27 +50,28 @@ export function FranchiseLeadForm({ variant, extraFields = [], compact = false }
     if (!valid || busy) return;
     setBusy(true);
     setError("");
-    const payload = {
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-      consent,
-      source: "franchise",
-      variant,
-      extra,
-      tracking: campaignData(),
-    };
 
     try {
-      // text/plain + no-cors keeps the public campaign form usable even when the
-      // marketing domain and the API live on different hosts. The server parses
-      // the JSON string and keeps the Mailchimp API key entirely server-side.
       const response = await fetch(LEAD_ENDPOINT, {
         method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          phone: phone.trim(),
+          consent,
+          source: "franchise",
+          variant,
+          extra,
+          tracking: campaignData(),
+        }),
       });
-      if (response.type !== "opaque" && !response.ok) throw new Error(`HTTP ${response.status}`);
+
+      if (!response.ok) {
+        const detail = await response.json().catch(() => null);
+        throw new Error(detail?.message || detail?.error || `HTTP ${response.status}`);
+      }
+
       navigate("/franchise-koszonjuk", { replace: true });
     } catch (submitError) {
       console.error("Franchise lead submit failed", submitError);
