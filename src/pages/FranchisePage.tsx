@@ -52,7 +52,7 @@ export const FranchisePage: React.FC = () => {
       <header className="public-section__header">
         <p className="section-eyebrow">Franchise jelentkezés</p>
         <h2>Kérj részletes franchise információt</h2>
-        <p>Add meg a neved, e-mail címed és telefonszámod. Az adatok a franchise érdeklődői folyamatba és Mailchimpbe kerülnek, így a további tájékoztatást célzottan tudjuk küldeni.</p>
+        <p>Add meg a neved, e-mail címed és telefonszámod. A franchise csapat a megadott elérhetőségeken tud további tájékoztatást küldeni és kapcsolatba lépni veled.</p>
       </header>
       <FranchiseLeadForm variant="franchise" />
     </div></section>
