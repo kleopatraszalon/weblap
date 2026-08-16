@@ -1,11 +1,20 @@
-services:
-  - type: web
-    name: kleopatraszepsegszalonok-redirect
-    runtime: static
-    buildCommand: 'true'
-    staticPublishPath: ./
-
-    routes:
-      - type: redirect
-        source: /*
-        destination: https://kleoszalon.hu/franchise
+# DEPRECATED / DO NOT SYNC AS A SEPARATE RENDER SERVICE.
+#
+# The franchise domain is now part of the LP -> SP -> SP_form_TY funnel and must
+# be attached as a Custom Domain to the existing `kleoszalon-weblap` Static Site.
+# The React application detects these hosts:
+#   - kleopatraszepsegszalonok.hu
+#   - www.kleopatraszepsegszalonok.hu
+# and serves:
+#   /           -> LP
+#   /lp1        -> LP
+#   /ajanlat    -> SP + SP_form
+#   /koszonjuk  -> SP_form_TY
+#
+# The old redirect service used to send every request to kleoszalon.hu/franchise;
+# keeping that service active would break the new campaign funnel.
+#
+# Render dashboard migration:
+# 1. Detach the franchise custom domain from the old redirect service (if attached).
+# 2. Add it to the `kleoszalon-weblap` Static Site under Settings > Custom Domains.
+# 3. Apply the DNS records Render displays and verify the domain.
