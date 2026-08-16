@@ -208,7 +208,13 @@ services:
         source: /hirlevel
         destination: /husegprogram
       - type: redirect
+        source: /index.php/uzleteink/hirlevel
+        destination: /husegprogram
+      - type: redirect
         source: /panaszkezeles
+        destination: /kapcsolat
+      - type: redirect
+        source: /index.php/uzleteink/panaszkezeles
         destination: /kapcsolat
 
       # --- Same-origin lead proxy -> VIR/API -> Mailchimp ---
