@@ -1,0 +1,4 @@
+Render redeploy trigger
+2026-08-18T12:06:00+02:00
+Deploy latest main including all previously merged commits.
+Reason: full Kleopatra production redeploy requested across API, VIR frontend and public website.
