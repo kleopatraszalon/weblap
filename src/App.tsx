@@ -27,12 +27,15 @@ import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import { BookingPage as VoiceBookingPage } from "./pages/BookingPage";
 import { BookingPageV2 } from "./pages/BookingPageV2";
+import { API_BASE } from "./apiClient";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
 import { WebsiteCmsProvider } from "./websiteCms";
 
 const OLD_FRANCHISE_HOSTS = new Set(["kleopatraszepsegszalonok.hu", "www.kleopatraszepsegszalonok.hu"]);
 const isFranchiseHost = () => typeof window !== "undefined" && OLD_FRANCHISE_HOSTS.has(window.location.hostname.toLowerCase());
+const NBA_JOB_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const NBA_BOOKING_PATHS=new Set(["/booking","/idopontfoglalas","/foglalas"]);
 
 const FloatingCartButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
@@ -59,6 +62,32 @@ function AppShell() {
   const franchiseHost = isFranchiseHost();
   const isSignage = location.pathname.startsWith("/signage") || location.pathname.startsWith("/kiosk");
   const isFocusedFranchise = franchiseHost || ["/lp1", "/ajanlat", "/koszonjuk", "/franchise-v1", "/franchise-info", "/franchise-koszonjuk"].includes(location.pathname);
+
+  useEffect(()=>{
+    if(!NBA_BOOKING_PATHS.has(location.pathname))return;
+    const fromUrl=new URLSearchParams(location.search).get("nba_job_id")||"";
+    const stored=sessionStorage.getItem("kleo_nba_job_id")||"";
+    const jobId=NBA_JOB_RE.test(fromUrl)?fromUrl:NBA_JOB_RE.test(stored)?stored:"";
+    if(!jobId)return;
+    sessionStorage.setItem("kleo_nba_job_id",jobId);
+    const nativeFetch=window.fetch.bind(window);
+    void nativeFetch(`${API_BASE}/api/public/booking/nba/touch`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId})}).catch(()=>undefined);
+    window.fetch=async(input:RequestInfo|URL,init?:RequestInit)=>{
+      const response=await nativeFetch(input,init);
+      try{
+        const target=typeof input==="string"?input:input instanceof URL?input.toString():input.url;
+        const requestMethod=typeof Request!=="undefined"&&input instanceof Request?input.method:"GET";
+        const method=String(init?.method||requestMethod||"GET").toUpperCase();
+        if(response.ok&&method==="POST"&&target.includes("/api/public/booking/book")){
+          const payload=await response.clone().json().catch(()=>null);
+          if(payload?.id)void nativeFetch(`${API_BASE}/api/public/booking/nba/attribute`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId,appointment_id:String(payload.id)})}).catch(()=>undefined);
+        }
+      }catch{}
+      return response;
+    };
+    return()=>{window.fetch=nativeFetch};
+  },[location.pathname,location.search]);
+
   return <>
     {!isSignage && <ModernPublicStyles />}
     {!isSignage && !isFocusedFranchise && <Header />}
@@ -70,6 +99,7 @@ function AppShell() {
 
       <Route path="/booking" element={<BookingPageV2 />} />
       <Route path="/idopontfoglalas" element={<BookingPageV2 />} />
+      <Route path="/foglalas" element={<BookingPageV2 />} />
       <Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
 
       <Route path="/salons" element={<SalonsPage />} />
