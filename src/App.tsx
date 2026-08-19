@@ -76,7 +76,8 @@ function AppShell() {
       const response=await nativeFetch(input,init);
       try{
         const target=typeof input==="string"?input:input instanceof URL?input.toString():input.url;
-        const method=String(init?.method||("method" in input?(input as Request).method:"GET")||"GET").toUpperCase();
+        const requestMethod=typeof Request!=="undefined"&&input instanceof Request?input.method:"GET";
+        const method=String(init?.method||requestMethod||"GET").toUpperCase();
         if(response.ok&&method==="POST"&&target.includes("/api/public/booking/book")){
           const payload=await response.clone().json().catch(()=>null);
           if(payload?.id)void nativeFetch(`${API_BASE}/api/public/booking/nba/attribute`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId,appointment_id:String(payload.id)})}).catch(()=>undefined);
