@@ -1,4 +1,4 @@
 Render redeploy trigger
-2026-08-18T12:58:00+02:00
-Deploy latest main including all currently merged public website changes.
-Reason: full production redeploy requested for the complete Kleopatra release.
+2026-08-20T21:21:00+02:00
+Deploy latest main including public website discovery, pricing, salon detail and SEO refresh.
+Reason: production redeploy requested after PR #6 merge.
