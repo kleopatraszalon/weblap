@@ -1,4 +1,5 @@
 Render redeploy trigger
-2026-08-20T22:40:00+02:00
-Deploy latest main including the approved light Kleopátra Booking 4.0 hero artwork, responsive mobile treatment, service → salon → available staff → free slot flow, and price-list recovery handling.
-Reason: production redeploy after PR #10 merge and successful Public website build #142.
+2026-08-20 hero-binary-fix-2
+Deploy latest main with verified Booking 4.0 hero binary reconstruction.
+Verified hero: 41000 bytes; sha256=84bfa160c7a07f3e77970474ed6572bb970d72979aa59357c498a4cd80df6dd2.
+Reason: production redeploy after PR #11 merge and successful Public website build #146.
