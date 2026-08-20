@@ -1,195 +1,63 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { API_BASE } from "../apiClient";
+import React,{useEffect,useMemo,useState}from"react";
+import{API_BASE}from"../apiClient";
 
-type Location = { id: string; name: string };
-type Service = { id: string; name: string; duration_minutes: number; price: number | string; category_name?: string };
-type Employee = { id: string; full_name: string; photo_url?: string | null };
-type Slot = { employee_id: string; employee_name: string; start: string; end: string };
-type SearchMode = "service" | "time" | "location" | "employee";
-type Recommendation = { service_id?: string; id?: string; name?: string; service_name?: string; reason?: string; price?: number | string; duration_minutes?: number };
+type Location={id:string;name:string};
+type Service={id:string;name:string;duration_minutes:number;price:number|string;category_name?:string};
+type Employee={id:string;full_name:string;photo_url?:string|null};
+type Slot={employee_id:string;employee_name:string;start:string;end:string};
+type SearchMode="service"|"time"|"location"|"employee";
+type Recommendation={service_id?:string;id?:string;name?:string;service_name?:string;reason?:string};
+type LastMinute={id:string;location_id:string;service_id:string;employee_id:string;start_time:string;end_time:string;original_price:number|string;offer_price:number|string;discount_percent:number|string;location_name:string;service_name:string;employee_name:string};
+type CouponResult={valid:boolean;code?:string;name?:string;discount_amount?:number;total_after_discount?:number;error?:string};
 
-const api = (path: string, init?: RequestInit) =>
-  fetch(`${API_BASE}${path}`, {
-    credentials: "include",
-    headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
-    ...init,
-  }).then(async (response) => {
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || data.message || `API hiba: ${response.status}`);
-    return data;
-  });
+const api=(path:string,init?:RequestInit)=>fetch(`${API_BASE}${path}`,{credentials:"include",headers:{"Content-Type":"application/json",...(init?.headers||{})},...init}).then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||d.message||`API hiba: ${r.status}`);return d});
+const ymd=(d:Date)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const money=(v:number|string)=>`${Math.round(Number(v||0)).toLocaleString("hu-HU")} Ft`;
+const hhmm=(iso:string)=>new Date(iso).toLocaleTimeString("hu-HU",{hour:"2-digit",minute:"2-digit"});
 
-const ymd = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-const money = (value: number | string) => `${Math.round(Number(value || 0)).toLocaleString("hu-HU")} Ft`;
-const hhmm = (iso: string) => new Date(iso).toLocaleTimeString("hu-HU", { hour: "2-digit", minute: "2-digit" });
-
-const CSS = String.raw`
-.kb4,.kb4 *{box-sizing:border-box}.kb4{--ink:#16100d;--gold:#b69861;--pink:#ec008c;--line:#eadfd5;--muted:#766d66;min-height:100vh;padding:42px 18px 90px;background:linear-gradient(180deg,#fbf7f2 0,#fff 620px);font-family:Montserrat,Arial,sans-serif;color:var(--ink)}
-.kb4-wrap{max-width:1180px;margin:0 auto}.kb4-hero{padding:48px;border-radius:28px;background:linear-gradient(125deg,#17100d,#34231b);color:white;box-shadow:0 28px 80px rgba(25,13,8,.16)}
-.kb4-hero small{display:block;color:#d9c49c;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.kb4-hero h1{max-width:850px;margin:10px 0 12px;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-.04em}.kb4-hero h1 em{font-style:normal;color:#ff57b6}.kb4-hero p{max-width:800px;color:rgba(255,255,255,.76);line-height:1.65}
-.kb4-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0}.kb4-mode{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff;text-align:left;cursor:pointer;box-shadow:0 10px 30px rgba(28,18,12,.05)}.kb4-mode.active{border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,0,140,.08)}.kb4-mode b,.kb4-mode span{display:block}.kb4-mode b{font-size:14px}.kb4-mode span{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.45}
-.kb4-card{margin-top:18px;padding:28px;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 16px 46px rgba(28,18,12,.055)}.kb4-card h2{margin:0 0 8px;font-size:24px}.kb4-card>p{margin:0 0 20px;color:var(--muted);font-size:12px;line-height:1.55}
-.kb4-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.kb4-field{display:grid;gap:7px}.kb4-field span{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#655c56}.kb4 input,.kb4 select{width:100%;height:50px;padding:0 13px;border:1px solid #ddd2c8;border-radius:12px;background:#fff;font:600 13px Montserrat,Arial,sans-serif}.kb4 input:focus,.kb4 select:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,0,140,.07)}
-.kb4-services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.kb4-service{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;border:1px solid #eee5dc;border-radius:14px;background:#fff}.kb4-service b,.kb4-service small{display:block}.kb4-service small{margin-top:4px;color:#8b8179}.kb4-service button,.kb4-primary,.kb4-secondary{border:0;border-radius:11px;padding:11px 14px;font-weight:800;cursor:pointer}.kb4-service button,.kb4-primary{background:var(--ink);color:#fff}.kb4-secondary{background:#f5efe9;color:var(--ink)}
-.kb4-selected{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.kb4-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:#f7f1eb;font-size:11px;font-weight:700}.kb4-chip button{border:0;background:transparent;cursor:pointer;color:var(--pink);font-weight:900}
-.kb4-reco{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.kb4-reco article{padding:14px;border:1px solid #eadfd5;border-radius:14px;background:linear-gradient(145deg,#fffaf4,#fff)}.kb4-reco b,.kb4-reco small{display:block}.kb4-reco small{margin:6px 0 10px;color:var(--muted);line-height:1.45}
-.kb4-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:16px}.kb4-slot{padding:12px;border:1px solid #e5dbd1;border-radius:12px;background:#fff;cursor:pointer;text-align:left}.kb4-slot.active{border-color:var(--pink);background:#fff5fa}.kb4-slot b,.kb4-slot small{display:block}.kb4-slot small{margin-top:4px;color:var(--muted)}
-.kb4-consent{display:flex;align-items:flex-start;gap:9px;margin-top:12px;color:#655d57;font-size:11px;line-height:1.5}.kb4-consent input{width:16px;height:16px;margin-top:1px}.kb4-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.kb4-error{margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff0f7;color:#92145f;font-size:12px}.kb4-success{margin-top:14px;padding:14px;border-radius:12px;background:#effaf5;color:#246848;font-size:12px;font-weight:700}
-@media(max-width:900px){.kb4-modes,.kb4-grid,.kb4-reco{grid-template-columns:repeat(2,minmax(0,1fr))}.kb4-slots{grid-template-columns:repeat(3,minmax(0,1fr))}.kb4-hero{padding:34px}}
-@media(max-width:620px){.kb4{padding:24px 12px 70px}.kb4-modes,.kb4-grid,.kb4-services,.kb4-reco{grid-template-columns:1fr}.kb4-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.kb4-card{padding:20px}.kb4-hero{padding:28px 22px;border-radius:22px}}
+const CSS=String.raw`
+.kb4,.kb4 *{box-sizing:border-box}.kb4{--ink:#16100d;--gold:#b69861;--pink:#ec008c;--line:#eadfd5;--muted:#766d66;min-height:100vh;padding:42px 18px 90px;background:linear-gradient(180deg,#fbf7f2,#fff 620px);font-family:Montserrat,Arial,sans-serif;color:var(--ink)}.kb4-wrap{max-width:1180px;margin:auto}
+.kb4-hero{padding:46px;border-radius:28px;background:linear-gradient(125deg,#17100d,#34231b);color:#fff;box-shadow:0 28px 80px rgba(25,13,8,.16)}.kb4-hero small{color:#d9c49c;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.kb4-hero h1{max-width:850px;margin:10px 0 12px;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-.04em}.kb4-hero h1 em{font-style:normal;color:#ff57b6}.kb4-hero p{max-width:800px;color:rgba(255,255,255,.76);line-height:1.65}
+.kb4-card{margin-top:18px;padding:26px;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 16px 46px rgba(28,18,12,.055)}.kb4-card h2{margin:0 0 7px}.kb4-card>p{margin:0 0 18px;color:var(--muted);font-size:12px}.kb4-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.kb4-field{display:grid;gap:6px}.kb4-field span{font-size:10px;font-weight:800;text-transform:uppercase}.kb4 input,.kb4 select{width:100%;height:49px;padding:0 12px;border:1px solid #ddd2c8;border-radius:11px;background:#fff;font:600 12px Montserrat,Arial,sans-serif}
+.kb4-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}.kb4-mode{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:left;cursor:pointer}.kb4-mode.active{border-color:var(--pink);box-shadow:0 0 0 3px rgba(236,0,140,.08)}.kb4-mode b,.kb4-mode span{display:block}.kb4-mode span{margin-top:5px;color:var(--muted);font-size:10px;line-height:1.4}
+.kb4-last{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.kb4-offer{padding:17px;border:1px solid rgba(236,0,140,.22);border-radius:17px;background:linear-gradient(145deg,#fff4fa,#fff);cursor:pointer;text-align:left}.kb4-offer strong,.kb4-offer span,.kb4-offer small{display:block}.kb4-offer strong{margin:5px 0;font-size:15px}.kb4-offer span{font-size:11px}.kb4-offer del{color:#8a817a;margin-right:7px}.kb4-offer b{color:var(--pink)}
+.kb4-services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}.kb4-service{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid #eee5dc;border-radius:13px}.kb4-service b,.kb4-service small{display:block}.kb4-service small{margin-top:3px;color:#8b8179}.kb4-service button,.kb4-primary,.kb4-secondary{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer}.kb4-service button,.kb4-primary{background:var(--ink);color:#fff}.kb4-secondary{background:#f5efe9;color:var(--ink)}.kb4-selected{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.kb4-chip{display:inline-flex;gap:7px;align-items:center;padding:7px 9px;border-radius:999px;background:#f7f1eb;font-size:10px;font-weight:700}.kb4-chip button{border:0;background:none;color:var(--pink);cursor:pointer}
+.kb4-reco{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.kb4-reco article{padding:13px;border:1px solid #eadfd5;border-radius:13px}.kb4-reco small{display:block;margin:5px 0 10px;color:var(--muted)}.kb4-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.kb4-slot{padding:11px;border:1px solid #e5dbd1;border-radius:11px;background:#fff;cursor:pointer;text-align:left}.kb4-slot.active{border-color:var(--pink);background:#fff5fa}.kb4-slot b,.kb4-slot small{display:block}.kb4-slot small{margin-top:3px;color:var(--muted)}
+.kb4-consent{display:flex;align-items:flex-start;gap:8px;margin-top:11px;color:#655d57;font-size:11px}.kb4-consent input{width:16px;height:16px}.kb4-coupon{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}.kb4-coupon-note{margin-top:8px;padding:9px 11px;border-radius:10px;background:#f4faf7;color:#246848;font-size:11px}.kb4-actions{display:flex;justify-content:flex-end;margin-top:17px}.kb4-error,.kb4-success{margin-top:12px;padding:11px 13px;border-radius:11px;font-size:11px}.kb4-error{background:#fff0f7;color:#92145f}.kb4-success{background:#effaf5;color:#246848;font-weight:700}
+@media(max-width:900px){.kb4-grid,.kb4-modes,.kb4-last,.kb4-reco{grid-template-columns:repeat(2,minmax(0,1fr))}.kb4-slots{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:620px){.kb4{padding:22px 11px 70px}.kb4-grid,.kb4-modes,.kb4-last,.kb4-services,.kb4-reco{grid-template-columns:1fr}.kb4-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.kb4-hero{padding:27px 21px}}
 `;
 
-export const BookingPageV4: React.FC = () => {
-  const [mode, setMode] = useState<SearchMode>("service");
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [locationId, setLocationId] = useState("");
-  const [employeeId, setEmployeeId] = useState("");
-  const [serviceIds, setServiceIds] = useState<string[]>([]);
-  const [date, setDate] = useState(ymd(new Date()));
-  const [availableMinutes, setAvailableMinutes] = useState(60);
-  const [slots, setSlots] = useState<Slot[]>([]);
-  const [slot, setSlot] = useState<Slot | null>(null);
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [bookingForOther, setBookingForOther] = useState(false);
-  const [guestName, setGuestName] = useState("");
-  const [guestPhone, setGuestPhone] = useState("");
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [marketingConsent, setMarketingConsent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+export const BookingPageV4:React.FC=()=>{
+ const[mode,setMode]=useState<SearchMode>("service"),[locations,setLocations]=useState<Location[]>([]),[services,setServices]=useState<Service[]>([]),[employees,setEmployees]=useState<Employee[]>([]);
+ const[locationId,setLocationId]=useState(""),[employeeId,setEmployeeId]=useState(""),[serviceIds,setServiceIds]=useState<string[]>([]),[date,setDate]=useState(ymd(new Date())),[availableMinutes,setAvailableMinutes]=useState(60);
+ const[slots,setSlots]=useState<Slot[]>([]),[slot,setSlot]=useState<Slot|null>(null),[recommendations,setRecommendations]=useState<Recommendation[]>([]),[offers,setOffers]=useState<LastMinute[]>([]),[targetOffer,setTargetOffer]=useState<LastMinute|null>(null);
+ const[name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[bookingForOther,setBookingForOther]=useState(false),[guestName,setGuestName]=useState(""),[guestPhone,setGuestPhone]=useState("");
+ const[privacyAccepted,setPrivacyAccepted]=useState(false),[marketingConsent,setMarketingConsent]=useState(false),[couponCode,setCouponCode]=useState(""),[coupon,setCoupon]=useState<CouponResult|null>(null),[loading,setLoading]=useState(false),[error,setError]=useState(""),[success,setSuccess]=useState("");
+ const selectedServices=useMemo(()=>services.filter(s=>serviceIds.includes(s.id)),[services,serviceIds]);
+ const selectedMinutes=selectedServices.reduce((a,s)=>a+Number(s.duration_minutes||0),0),selectedTotal=selectedServices.reduce((a,s)=>a+Number(s.price||0),0),displayTotal=coupon?.valid&&coupon.total_after_discount!=null?coupon.total_after_discount:selectedTotal;
+ const visibleServices=useMemo(()=>mode==="time"?services.filter(s=>Number(s.duration_minutes||0)<=availableMinutes):services,[services,mode,availableMinutes]);
 
-  const selectedServices = useMemo(() => services.filter((s) => serviceIds.includes(s.id)), [services, serviceIds]);
-  const selectedMinutes = selectedServices.reduce((sum, s) => sum + Number(s.duration_minutes || 0), 0);
-  const selectedTotal = selectedServices.reduce((sum, s) => sum + Number(s.price || 0), 0);
-  const visibleServices = useMemo(() => mode === "time" ? services.filter((s) => Number(s.duration_minutes || 0) <= availableMinutes) : services, [services, mode, availableMinutes]);
-
-  useEffect(() => {
-    api("/api/public/booking/catalog")
-      .then((data) => setLocations(data.locations || []))
-      .catch((e) => setError(e.message));
-  }, []);
-
-  useEffect(() => {
-    if (!locationId) {
-      setServices([]); setEmployees([]); setServiceIds([]); setSlots([]); setSlot(null); return;
-    }
-    setError("");
-    api(`/api/public/booking/catalog?location_id=${encodeURIComponent(locationId)}`)
-      .then((data) => { setServices(data.services || []); setEmployees(data.employees || []); })
-      .catch((e) => setError(e.message));
-  }, [locationId]);
-
-  useEffect(() => {
-    if (!locationId || !serviceIds.length) { setSlots([]); setSlot(null); return; }
-    const q = new URLSearchParams({ location_id: locationId, date, service_ids: serviceIds.join(",") });
-    if (employeeId) q.set("employee_id", employeeId);
-    setLoading(true);
-    api(`/api/public/booking/availability?${q.toString()}`)
-      .then((data) => { setSlots(data.slots || []); setSlot(null); })
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [locationId, serviceIds, employeeId, date]);
-
-  useEffect(() => {
-    if (!locationId || !serviceIds.length) { setRecommendations([]); return; }
-    const q = new URLSearchParams({ location_id: locationId, service_ids: serviceIds.join(",") });
-    api(`/api/public/booking/recommendations?${q.toString()}`)
-      .then((data) => setRecommendations(data.recommendations || []))
-      .catch(() => setRecommendations([]));
-  }, [locationId, serviceIds]);
-
-  const addService = (id: string) => setServiceIds((prev) => prev.includes(id) ? prev : [...prev, id]);
-  const removeService = (id: string) => setServiceIds((prev) => prev.filter((x) => x !== id));
-
-  const submit = async () => {
-    setError(""); setSuccess("");
-    if (!locationId || !slot || !serviceIds.length) return setError("Válassz szalont, szolgáltatást és szabad időpontot.");
-    if (!name.trim() || !phone.trim() || !email.trim()) return setError("A név, telefonszám és e-mail cím kötelező.");
-    if (bookingForOther && !guestName.trim()) return setError("Add meg annak a nevét, akinek az időpont szól.");
-    if (!privacyAccepted) return setError("A foglaláshoz az adatkezelési tájékoztató elfogadása szükséges.");
-    setLoading(true);
-    try {
-      const result = await api("/api/public/booking/book", {
-        method: "POST",
-        body: JSON.stringify({
-          location_id: locationId,
-          employee_id: slot.employee_id,
-          service_ids: serviceIds,
-          client_name: name.trim(),
-          phone: phone.trim(),
-          email: email.trim(),
-          start_time: slot.start,
-          booking_source: "online",
-        }),
-      });
-      if (result?.id) {
-        try {
-          await api("/api/public/booking/v4/booking-meta", {
-            method: "POST",
-            body: JSON.stringify({
-              appointment_id: result.id,
-              booking_for_other: bookingForOther,
-              guest_name: bookingForOther ? guestName.trim() : undefined,
-              guest_phone: bookingForOther ? guestPhone.trim() : undefined,
-              email: email.trim(),
-              phone: phone.trim(),
-              marketing_consent: marketingConsent,
-            }),
-          });
-        } catch (metaError) {
-          console.warn("Booking 4.0 metaadat mentési hiba", metaError);
-        }
-      }
-      setSuccess(`Foglalás rögzítve${result?.id ? ` · azonosító: ${result.id}` : ""}.`);
-    } catch (e: any) { setError(e.message || "A foglalás sikertelen."); }
-    finally { setLoading(false); }
-  };
-
-  const modeItems: Array<[SearchMode, string, string]> = [
-    ["service", "Szolgáltatást keresek", "Válaszd ki, mit szeretnél, és mutatjuk a lehetőségeket."],
-    ["time", "Időpont alapján keresek", "Mondd meg, mikor és mennyi időd van."],
-    ["location", "Szalon alapján keresek", "Kezdd a kedvenc szalonoddal."],
-    ["employee", "Szakemberhez foglalok", "Keresd meg a megszokott kollégádat."],
-  ];
-
-  return <main className="kb4"><style>{CSS}</style><div className="kb4-wrap">
-    <section className="kb4-hero"><small>Kleopátra Booking 4.0</small><h1>Foglalj úgy, ahogy <em>neked kényelmes.</em></h1><p>Nem kell egy kötött folyamatot követned. Indulhatsz szolgáltatásból, időpontból, szalonból vagy szakemberből, és több szolgáltatást is hozzáadhatsz egyetlen foglaláshoz.</p></section>
-
-    <section className="kb4-modes">{modeItems.map(([id, title, desc]) => <button key={id} className={`kb4-mode ${mode === id ? "active" : ""}`} onClick={() => setMode(id)}><b>{title}</b><span>{desc}</span></button>)}</section>
-
-    <section className="kb4-card"><h2>Keresés</h2><p>A mezők sorrendje rugalmas. A rendszer minden választás után újraszűri a lehetőségeket.</p>
-      <div className="kb4-grid">
-        <label className="kb4-field"><span>Szalon</span><select value={locationId} onChange={(e) => setLocationId(e.target.value)}><option value="">Válassz szalont</option>{locations.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}</select></label>
-        <label className="kb4-field"><span>Dátum</span><input type="date" min={ymd(new Date())} value={date} onChange={(e) => setDate(e.target.value)} /></label>
-        {mode === "time" ? <label className="kb4-field"><span>Rendelkezésre álló idő</span><select value={availableMinutes} onChange={(e) => setAvailableMinutes(Number(e.target.value))}><option value={30}>30 perc</option><option value={45}>45 perc</option><option value={60}>60 perc</option><option value={90}>90 perc</option><option value={120}>120 perc</option><option value={180}>180 perc</option></select></label> : <label className="kb4-field"><span>Szakember</span><select value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} disabled={!locationId}><option value="">Mindegy, kihez</option>{employees.map((e) => <option key={e.id} value={e.id}>{e.full_name}</option>)}</select></label>}
-      </div>
-
-      {locationId && <><div className="kb4-services">{visibleServices.map((s) => <div className="kb4-service" key={s.id}><div><b>{s.name}</b><small>{s.category_name || "Szolgáltatás"} · {s.duration_minutes} perc · {money(s.price)}</small></div><button onClick={() => addService(s.id)} disabled={serviceIds.includes(s.id)}>+</button></div>)}</div>
-      {!!selectedServices.length && <div className="kb4-selected">{selectedServices.map((s) => <span className="kb4-chip" key={s.id}>{s.name}<button onClick={() => removeService(s.id)}>×</button></span>)}<span className="kb4-chip">Összesen: {selectedMinutes} perc · {money(selectedTotal)}</span></div>}</>}
-    </section>
-
-    {!!recommendations.length && <section className="kb4-card"><h2>Ehhez ajánljuk</h2><p>Kiegészítő szolgáltatások a választásod alapján.</p><div className="kb4-reco">{recommendations.slice(0, 6).map((r, i) => { const id = String(r.service_id || r.id || ""); const svc = services.find((s) => s.id === id); return <article key={`${id}-${i}`}><b>{r.name || r.service_name || svc?.name || "Ajánlott szolgáltatás"}</b><small>{r.reason || "Jól kombinálható a kiválasztott szolgáltatásoddal."}</small>{id && <button className="kb4-secondary" onClick={() => addService(id)}>Hozzáadom</button>}</article>; })}</div></section>}
-
-    <section className="kb4-card"><h2>Szabad időpontok</h2><p>{loading ? "Frissítjük a szabad kapacitásokat…" : serviceIds.length ? "Válassz a valós idejű szabad időpontok közül." : "Előbb válassz legalább egy szolgáltatást."}</p><div className="kb4-slots">{slots.map((s) => <button key={`${s.employee_id}-${s.start}`} className={`kb4-slot ${slot?.start === s.start && slot?.employee_id === s.employee_id ? "active" : ""}`} onClick={() => setSlot(s)}><b>{hhmm(s.start)}</b><small>{s.employee_name}</small></button>)}</div></section>
-
-    <section className="kb4-card"><h2>Vendégadatok</h2><p>A foglalás véglegesítéséhez biztos elérhetőséget kérünk.</p><div className="kb4-grid">
-      <label className="kb4-field"><span>Név *</span><input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" /></label>
-      <label className="kb4-field"><span>Telefonszám *</span><input value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" /></label>
-      <label className="kb4-field"><span>E-mail *</span><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
-    </div>
-    <label className="kb4-consent"><input type="checkbox" checked={bookingForOther} onChange={(e) => setBookingForOther(e.target.checked)} /><span>Más részére foglalok.</span></label>
-    {bookingForOther && <div className="kb4-grid"><label className="kb4-field"><span>Vendég neve *</span><input value={guestName} onChange={(e) => setGuestName(e.target.value)} /></label><label className="kb4-field"><span>Vendég telefonszáma</span><input value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} /></label></div>}
-    <label className="kb4-consent"><input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} /><span>Elolvastam és elfogadom az adatkezelési tájékoztatót, és kérem a foglalás teljesítését. *</span></label>
-    <label className="kb4-consent"><input type="checkbox" checked={marketingConsent} onChange={(e) => setMarketingConsent(e.target.checked)} /><span>Szeretnék értesülni az akciókról és újdonságokról. Ez külön, opcionális marketinghozzájárulás.</span></label>
-    {error && <div className="kb4-error">{error}</div>}{success && <div className="kb4-success">{success}</div>}
-    <div className="kb4-actions"><button className="kb4-primary" onClick={submit} disabled={loading || !slot}>Foglalás véglegesítése</button></div></section>
-  </div></main>;
+ useEffect(()=>{api("/api/public/booking/catalog").then(d=>setLocations(d.locations||[])).catch(e=>setError(e.message));api("/api/public/booking/v4/last-minute").then(d=>setOffers(d.offers||[])).catch(()=>setOffers([]));},[]);
+ useEffect(()=>{if(!locationId){setServices([]);setEmployees([]);setServiceIds([]);setSlots([]);setSlot(null);return}api(`/api/public/booking/catalog?location_id=${encodeURIComponent(locationId)}`).then(d=>{setServices(d.services||[]);setEmployees(d.employees||[])}).catch(e=>setError(e.message));api(`/api/public/booking/v4/last-minute?location_id=${encodeURIComponent(locationId)}`).then(d=>setOffers(d.offers||[])).catch(()=>{});},[locationId]);
+ useEffect(()=>{setCoupon(null)},[locationId,serviceIds]);
+ useEffect(()=>{if(!locationId||!serviceIds.length){setSlots([]);setSlot(null);return}const q=new URLSearchParams({location_id:locationId,date,service_ids:serviceIds.join(",")});if(employeeId)q.set("employee_id",employeeId);setLoading(true);api(`/api/public/booking/availability?${q}`).then(d=>{const next=d.slots||[];setSlots(next);const matched=targetOffer?next.find((x:Slot)=>x.employee_id===targetOffer.employee_id&&new Date(x.start).getTime()===new Date(targetOffer.start_time).getTime()):null;setSlot(matched||null);if(matched)setTargetOffer(null)}).catch(e=>setError(e.message)).finally(()=>setLoading(false));},[locationId,serviceIds,employeeId,date,targetOffer]);
+ useEffect(()=>{if(!locationId||!serviceIds.length){setRecommendations([]);return}const q=new URLSearchParams({location_id:locationId,service_ids:serviceIds.join(",")});api(`/api/public/booking/recommendations?${q}`).then(d=>setRecommendations(d.recommendations||[])).catch(()=>setRecommendations([]));},[locationId,serviceIds]);
+ const addService=(id:string)=>setServiceIds(p=>p.includes(id)?p:[...p,id]),removeService=(id:string)=>setServiceIds(p=>p.filter(x=>x!==id));
+ const chooseOffer=(o:LastMinute)=>{setMode("time");setLocationId(o.location_id);setEmployeeId(o.employee_id);setServiceIds([o.service_id]);setDate(ymd(new Date(o.start_time)));setTargetOffer(o);window.scrollTo({top:500,behavior:"smooth"})};
+ const validateCoupon=async()=>{setError("");if(!couponCode.trim())return;try{const d=await api("/api/public/booking/v4/coupon/validate",{method:"POST",body:JSON.stringify({code:couponCode,location_id:locationId,service_ids:serviceIds,subtotal:selectedTotal})});setCoupon(d)}catch(e:any){setCoupon(null);setError(e.message)}};
+ const submit=async()=>{setError("");setSuccess("");if(!locationId||!slot||!serviceIds.length)return setError("Válassz szalont, szolgáltatást és szabad időpontot.");if(!name.trim()||!phone.trim()||!email.trim())return setError("A név, telefonszám és e-mail cím kötelező.");if(bookingForOther&&!guestName.trim())return setError("Add meg annak a nevét, akinek az időpont szól.");if(!privacyAccepted)return setError("A foglaláshoz az adatkezelési tájékoztató elfogadása szükséges.");setLoading(true);try{const result=await api("/api/public/booking/book",{method:"POST",body:JSON.stringify({location_id:locationId,employee_id:slot.employee_id,service_ids:serviceIds,client_name:name.trim(),phone:phone.trim(),email:email.trim(),start_time:slot.start,booking_source:"online",coupon_code:coupon?.valid?coupon.code:undefined})});if(result?.id)try{await api("/api/public/booking/v4/booking-meta",{method:"POST",body:JSON.stringify({appointment_id:result.id,booking_for_other:bookingForOther,guest_name:bookingForOther?guestName.trim():undefined,guest_phone:bookingForOther?guestPhone.trim():undefined,email:email.trim(),phone:phone.trim(),marketing_consent:marketingConsent,coupon_code:coupon?.valid?coupon.code:undefined})})}catch(e){console.warn("Booking 4 meta",e)}setSuccess(`Foglalás rögzítve${result?.id?` · azonosító: ${result.id}`:""}.`)}catch(e:any){setError(e.message||"A foglalás sikertelen.")}finally{setLoading(false)}};
+ const modes:Array<[SearchMode,string,string]>=[["service","Szolgáltatást keresek","Válaszd ki, mit szeretnél."],["time","Időpont alapján keresek","Mondd meg, mikor és mennyi időd van."],["location","Szalon alapján keresek","Kezdd a kedvenc szalonoddal."],["employee","Szakemberhez foglalok","Keresd meg a megszokott kollégádat."]];
+ return <main className="kb4"><style>{CSS}</style><div className="kb4-wrap">
+  <section className="kb4-hero"><small>Kleopátra Booking 4.0</small><h1>Foglalj úgy, ahogy <em>neked kényelmes.</em></h1><p>Indulhatsz szolgáltatásból, időpontból, szalonból vagy szakemberből, és több szolgáltatást is hozzáadhatsz egyetlen foglaláshoz.</p></section>
+  {!!offers.length&&<section className="kb4-card"><h2>⚡ Napi / Last Minute ajánlatok</h2><p>Szabad kapacitások kedvezményesen. Egy kattintással előtöltjük a szalont, szolgáltatást, szakembert és időpontot.</p><div className="kb4-last">{offers.slice(0,6).map(o=><button key={o.id} className="kb4-offer" onClick={()=>chooseOffer(o)}><small>CSAK MOST · −{Number(o.discount_percent)}%</small><strong>{o.service_name}</strong><span>📍 {o.location_name}</span><span>🕒 {new Date(o.start_time).toLocaleDateString("hu-HU")} {hhmm(o.start_time)}</span><span><del>{money(o.original_price)}</del><b>{money(o.offer_price)}</b></span></button>)}</div></section>}
+  <section className="kb4-modes">{modes.map(([id,t,d])=><button key={id} className={`kb4-mode ${mode===id?"active":""}`} onClick={()=>setMode(id)}><b>{t}</b><span>{d}</span></button>)}</section>
+  <section className="kb4-card"><h2>Keresés</h2><p>A sorrend rugalmas; minden választás után frissítjük a lehetőségeket.</p><div className="kb4-grid"><label className="kb4-field"><span>Szalon</span><select value={locationId} onChange={e=>setLocationId(e.target.value)}><option value="">Válassz szalont</option>{locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></label><label className="kb4-field"><span>Dátum</span><input type="date" min={ymd(new Date())} value={date} onChange={e=>setDate(e.target.value)}/></label>{mode==="time"?<label className="kb4-field"><span>Rendelkezésre álló idő</span><select value={availableMinutes} onChange={e=>setAvailableMinutes(Number(e.target.value))}>{[30,45,60,90,120,180].map(x=><option key={x} value={x}>{x} perc</option>)}</select></label>:<label className="kb4-field"><span>Szakember</span><select value={employeeId} onChange={e=>setEmployeeId(e.target.value)} disabled={!locationId}><option value="">Mindegy, kihez</option>{employees.map(x=><option key={x.id} value={x.id}>{x.full_name}</option>)}</select></label>}</div>{locationId&&<><div className="kb4-services">{visibleServices.map(s=><div className="kb4-service" key={s.id}><div><b>{s.name}</b><small>{s.category_name||"Szolgáltatás"} · {s.duration_minutes} perc · {money(s.price)}</small></div><button onClick={()=>addService(s.id)} disabled={serviceIds.includes(s.id)}>+</button></div>)}</div>{!!selectedServices.length&&<div className="kb4-selected">{selectedServices.map(s=><span className="kb4-chip" key={s.id}>{s.name}<button onClick={()=>removeService(s.id)}>×</button></span>)}<span className="kb4-chip">{selectedMinutes} perc · {money(selectedTotal)}</span></div>}</>}</section>
+  {!!recommendations.length&&<section className="kb4-card"><h2>Ehhez ajánljuk</h2><div className="kb4-reco">{recommendations.slice(0,6).map((r,i)=>{const id=String(r.service_id||r.id||"");return <article key={`${id}-${i}`}><b>{r.name||r.service_name||"Ajánlott szolgáltatás"}</b><small>{r.reason||"Jól kombinálható a választásoddal."}</small>{id&&<button className="kb4-secondary" onClick={()=>addService(id)}>Hozzáadom</button>}</article>})}</div></section>}
+  <section className="kb4-card"><h2>Szabad időpontok</h2><p>{loading?"Frissítjük a szabad kapacitásokat…":serviceIds.length?"Válassz a valós idejű szabad időpontok közül.":"Előbb válassz szolgáltatást."}</p><div className="kb4-slots">{slots.map(s=><button key={`${s.employee_id}-${s.start}`} className={`kb4-slot ${slot?.start===s.start&&slot?.employee_id===s.employee_id?"active":""}`} onClick={()=>setSlot(s)}><b>{hhmm(s.start)}</b><small>{s.employee_name}</small></button>)}</div></section>
+  <section className="kb4-card"><h2>Vendégadatok és kedvezmény</h2><div className="kb4-grid"><label className="kb4-field"><span>Név *</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name"/></label><label className="kb4-field"><span>Telefonszám *</span><input value={phone} onChange={e=>setPhone(e.target.value)} autoComplete="tel"/></label><label className="kb4-field"><span>E-mail *</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email"/></label></div><label className="kb4-consent"><input type="checkbox" checked={bookingForOther} onChange={e=>setBookingForOther(e.target.checked)}/><span>Más részére foglalok.</span></label>{bookingForOther&&<div className="kb4-grid"><label className="kb4-field"><span>Vendég neve *</span><input value={guestName} onChange={e=>setGuestName(e.target.value)}/></label><label className="kb4-field"><span>Vendég telefonszáma</span><input value={guestPhone} onChange={e=>setGuestPhone(e.target.value)}/></label></div>}
+   <div className="kb4-coupon"><input value={couponCode} onChange={e=>setCouponCode(e.target.value.toUpperCase())} placeholder="Kuponkód"/><button className="kb4-secondary" onClick={validateCoupon} disabled={!locationId||!serviceIds.length}>Kupon ellenőrzése</button></div>{coupon?.valid&&<div className="kb4-coupon-note">✓ {coupon.name||coupon.code}: −{money(coupon.discount_amount||0)} · Fizetendő: <strong>{money(displayTotal)}</strong></div>}
+   <label className="kb4-consent"><input type="checkbox" checked={privacyAccepted} onChange={e=>setPrivacyAccepted(e.target.checked)}/><span>Elolvastam és elfogadom az adatkezelési tájékoztatót, és kérem a foglalás teljesítését. *</span></label><label className="kb4-consent"><input type="checkbox" checked={marketingConsent} onChange={e=>setMarketingConsent(e.target.checked)}/><span>Szeretnék értesülni az akciókról és újdonságokról. Ez külön, opcionális marketinghozzájárulás.</span></label>{error&&<div className="kb4-error">{error}</div>}{success&&<div className="kb4-success">{success}</div>}<div className="kb4-actions"><button className="kb4-primary" onClick={submit} disabled={loading||!slot}>Foglalás véglegesítése · {money(displayTotal)}</button></div>
+  </section>
+ </div></main>
 };
-
 export default BookingPageV4;
