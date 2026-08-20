@@ -1,4 +1,4 @@
 Render redeploy trigger
-2026-08-20T21:53:00+02:00
-Deploy latest main including service → salon → available staff → free slot booking flow and public price list recovery.
-Reason: production redeploy requested after PR #8 merge and successful public build #135.
+2026-08-20T21:55:30+02:00
+Deploy latest main including public Booking 4 service → salon → available staff → free slot flow, price list taxonomy recovery and transient DB/API retry handling.
+Reason: production redeploy requested after PR #9 merge and successful public build #138.
