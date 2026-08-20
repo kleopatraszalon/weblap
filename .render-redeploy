@@ -1,4 +1,4 @@
 Render redeploy trigger
-2026-08-20T22:13:00+02:00
-Deploy latest main including public Booking 4 service → salon → available staff → free slot flow and price list DB/API recovery handling.
-Reason: explicit production deploy requested now.
+2026-08-20T22:40:00+02:00
+Deploy latest main including the approved light Kleopátra Booking 4.0 hero artwork, responsive mobile treatment, service → salon → available staff → free slot flow, and price-list recovery handling.
+Reason: production redeploy after PR #10 merge and successful Public website build #142.
