@@ -37,9 +37,14 @@ const HOME_PRIORITY_CSS = `
 .kleo-home-priority-nav__inner::-webkit-scrollbar{display:none}
 .kleo-home-priority-nav a{white-space:nowrap;padding:9px 13px;border:1px solid #e8dfd6;border-radius:999px;color:#241914;text-decoration:none;font-size:12px;font-weight:750;background:#fff}
 .kleo-home-priority-nav a:last-child{background:#ec008c;color:#fff;border-color:#ec008c}
-.kleo-modern-services{padding-top:54px!important;padding-bottom:46px!important}
-.kleo-modern-section--soft{padding-top:50px!important}
-@media(max-width:700px){.kleo-modern-services{padding-top:36px!important}.kleo-modern-section--soft{padding-top:38px!important}}
+.kleo-home-modern .kleo-modern-hero{min-height:520px!important}
+.kleo-home-modern .kleo-modern-hero__grid{min-height:520px!important;padding-top:26px!important;padding-bottom:26px!important}
+.kleo-home-modern .kleo-modern-hero__visual{min-height:450px!important}
+.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:450px!important}
+.kleo-modern-services{padding-top:42px!important;padding-bottom:40px!important}
+.kleo-modern-section--soft{padding-top:42px!important}
+@media(max-width:900px){.kleo-home-modern .kleo-modern-hero,.kleo-home-modern .kleo-modern-hero__grid{min-height:auto!important}.kleo-home-modern .kleo-modern-hero__visual,.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:390px!important}}
+@media(max-width:700px){.kleo-modern-services{padding-top:30px!important}.kleo-modern-section--soft{padding-top:32px!important}}
 `;
 
 export const HomePage: React.FC = () => {
