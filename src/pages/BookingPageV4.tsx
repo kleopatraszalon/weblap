@@ -125,14 +125,27 @@ export const BookingPageV4: React.FC = () => {
           phone: phone.trim(),
           email: email.trim(),
           start_time: slot.start,
-          booking_for_other: bookingForOther,
-          guest_name: bookingForOther ? guestName.trim() : undefined,
-          guest_phone: bookingForOther ? guestPhone.trim() : undefined,
-          privacy_accepted: privacyAccepted,
-          marketing_consent: marketingConsent,
           booking_source: "online",
         }),
       });
+      if (result?.id) {
+        try {
+          await api("/api/public/booking/v4/booking-meta", {
+            method: "POST",
+            body: JSON.stringify({
+              appointment_id: result.id,
+              booking_for_other: bookingForOther,
+              guest_name: bookingForOther ? guestName.trim() : undefined,
+              guest_phone: bookingForOther ? guestPhone.trim() : undefined,
+              email: email.trim(),
+              phone: phone.trim(),
+              marketing_consent: marketingConsent,
+            }),
+          });
+        } catch (metaError) {
+          console.warn("Booking 4.0 metaadat mentési hiba", metaError);
+        }
+      }
       setSuccess(`Foglalás rögzítve${result?.id ? ` · azonosító: ${result.id}` : ""}.`);
     } catch (e: any) { setError(e.message || "A foglalás sikertelen."); }
     finally { setLoading(false); }
