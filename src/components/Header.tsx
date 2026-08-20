@@ -15,55 +15,35 @@ export function Header() {
   return (
     <header className="kleo-modern-header">
       <div className="kleo-modern-container kleo-modern-header__inner">
-        <NavLink
-          to="/"
-          className="kleo-modern-header__brand"
-          aria-label="Kleopátra főoldal"
-          onClick={close}
-        >
+        <NavLink to="/" className="kleo-modern-header__brand" aria-label="Kleopátra főoldal" onClick={close}>
           <img src={cms.brand.logoUrl} alt="Kleopátra Szépségszalonok" />
         </NavLink>
 
-        <button
-          type="button"
-          className="kleo-modern-header__menu-btn"
-          aria-label={open ? "Menü bezárása" : "Menü megnyitása"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-          <span />
+        <button type="button" className="kleo-modern-header__menu-btn" aria-label={open ? "Menü bezárása" : "Menü megnyitása"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+          <span /><span /><span />
         </button>
 
         <div className={"kleo-modern-header__nav-wrap" + (open ? " is-open" : "")}>
           <nav className="kleo-modern-nav" aria-label="Fő navigáció">
-            <NavLink to="/salons" className={navLinkClass} onClick={close}>{t("menu.salons")}</NavLink>
-            <NavLink to="/services" className={navLinkClass} onClick={close}>{t("menu.pricesServices")}</NavLink>
-            <NavLink to="/prices" className={navLinkClass} onClick={close}>Árak</NavLink>
+            <NavLink to="/services" className={navLinkClass} onClick={close}>Szolgáltatások</NavLink>
+            <NavLink to="/prices" className={navLinkClass} onClick={close}>Áraink</NavLink>
+            <NavLink to="/salons" className={navLinkClass} onClick={close}>Szalonjaink</NavLink>
             <NavLink to="/webshop" className={navLinkClass} onClick={close}>{t("menu.webshop")}</NavLink>
-            <NavLink to="/about" className={navLinkClass} onClick={close}>{t("menu.about")}</NavLink>
-            <NavLink to="/contact" className={navLinkClass} onClick={close}>{t("menu.contact")}</NavLink>
+            <NavLink to="/education" className={navLinkClass} onClick={close}>Oktatás</NavLink>
+            <NavLink to="/career" className={navLinkClass} onClick={close}>Karrier</NavLink>
           </nav>
 
           <div className="kleo-modern-header__tools">
             {cms.header.showLanguageSwitcher && (
               <div className="kleo-modern-lang" aria-label={t("header.language.label")}>
                 {(["hu", "en", "ru"] as const).map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={lang === value ? "is-active" : ""}
-                    onClick={() => setLang(value)}
-                  >
+                  <button key={value} type="button" className={lang === value ? "is-active" : ""} onClick={() => setLang(value)}>
                     {value.toUpperCase()}
                   </button>
                 ))}
               </div>
             )}
-            <NavLink to="/booking" className="kleo-modern-header__cta" onClick={close}>
-              {cms.header.bookingLabel}
-            </NavLink>
+            <NavLink to="/booking" className="kleo-modern-header__cta" onClick={close}>{cms.header.bookingLabel}</NavLink>
           </div>
         </div>
       </div>
