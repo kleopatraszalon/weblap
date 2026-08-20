@@ -1,4 +1,4 @@
 Render redeploy trigger
-2026-08-20T21:30:00+02:00
-Deploy latest main including public website discovery, pricing, SEO and verified salon contact metadata.
-Reason: production redeploy requested after PR #7 merge and successful public build #132.
+2026-08-20T21:53:00+02:00
+Deploy latest main including service → salon → available staff → free slot booking flow and public price list recovery.
+Reason: production redeploy requested after PR #8 merge and successful public build #135.
