@@ -1,4 +1,4 @@
 Render redeploy trigger
-2026-08-20T21:21:00+02:00
-Deploy latest main including public website discovery, pricing, salon detail and SEO refresh.
-Reason: production redeploy requested after PR #6 merge.
+2026-08-20T21:30:00+02:00
+Deploy latest main including public website discovery, pricing, SEO and verified salon contact metadata.
+Reason: production redeploy requested after PR #7 merge and successful public build #132.
