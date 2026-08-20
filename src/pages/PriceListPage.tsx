@@ -1,51 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { getPublicServices, PublicService } from "../apiClient";
+import { API_BASE } from "../apiClient";
 import PublicPageHero from "../components/PublicPageHero";
 import { useWebsiteCms } from "../websiteCms";
+import { SERVICE_PAGES } from "../data/servicePages";
 
-const LOCATIONS = [
-  { id: null as number | null, label: "Összes szalon" },
-  { id: 1, label: "Budapest IX. – Mester u. 1." },
-  { id: 2, label: "Budapest VIII. – Rákóczi u. 63." },
-  { id: 3, label: "Budapest XII. – Krisztina krt. 23." },
-  { id: 4, label: "Budapest XIII. – Visegrádi u. 3." },
-  { id: 5, label: "Eger – Dr. Nagy János u. 8." },
-  { id: 6, label: "Gyöngyös – Koháry u. 29." },
-  { id: 7, label: "Salgótarján – Füleki u. 44." },
-];
-
-export const PriceListPage: React.FC = () => {
-  const { pages } = useWebsiteCms();
-  const p = pages.prices;
-  const [allServices, setAllServices] = useState<PublicService[]>([]);
-  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true); setError(null);
-    getPublicServices().then(setAllServices).catch((err) => { console.error(err); setError("Nem sikerült betölteni a szolgáltatásokat. Kérjük, próbáld meg később."); }).finally(() => setLoading(false));
-  }, []);
-
-  const filteredServices = selectedLocationId == null ? allServices : allServices.filter((s) => s.location_id === selectedLocationId);
-  const groupedByCategory: Record<string, PublicService[]> = {};
-  filteredServices.forEach((s) => { const key = s.category_id?.toString() ?? "egyéb"; if (!groupedByCategory[key]) groupedByCategory[key] = []; groupedByCategory[key].push(s); });
-  const locationLabel = LOCATIONS.find((l) => l.id === selectedLocationId)?.label || "Összes szalon";
-
-  return <main>
-    <PublicPageHero eyebrow={p.eyebrow} title={<>{p.titlePrefix}<span className="highlight">{p.titleHighlight}</span>{p.titleSuffix}</>} lead={<p>{p.lead}</p>} image={p.imageUrl} imageAlt="Kleopátra árlista és szolgáltatások" actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/salons" className="btn btn-outline">Szalonjaink</NavLink></>} />
-    <section className="public-section"><div className="container pricelist-block">
-      <header className="public-section__header"><p className="section-eyebrow">Árak és időtartamok</p><h2>{p.sectionTitle}</h2><p>{p.sectionLead}</p></header>
-      <div className="notice-card">Az árak forintban értendők. Az időszakos kedvezmények, kuponok, bérletek és egyéb promóciók feltételei eltérhetnek, ezért a foglaláskor és a szalonban megjelenő aktuális információ az irányadó.</div>
-      <div className="pricelist-location-filter"><label htmlFor="location-select">Szalon kiválasztása</label><select id="location-select" value={selectedLocationId ?? ""} onChange={(e) => { const v=e.target.value; setSelectedLocationId(v===""?null:Number(v)); }}>{LOCATIONS.map(loc => <option key={loc.id ?? "all"} value={loc.id ?? ""}>{loc.label}</option>)}</select></div>
-      {loading && <div className="notice-card">Szolgáltatások betöltése…</div>}{error && <div className="notice-card form-msg--error">{error}</div>}
-      {!loading&&!error&&<div className="pricelist-content"><p className="pricelist-location-label">Megjelenített árlista: <strong>{locationLabel}</strong></p>{Object.keys(groupedByCategory).length===0&&<div className="notice-card">Ehhez a szűréshez jelenleg nincs megjeleníthető szolgáltatás.</div>}{Object.keys(groupedByCategory).map(catKey=>{const items=groupedByCategory[catKey];if(!items?.length)return null;return <section key={catKey} className="pricelist-category"><h2 className="pricelist-category__title">{categoryLabelFromId(catKey)}</h2><div className="pricelist-category__table">{items.map(s=><div key={s.id} className="pricelist-row"><div className="pricelist-row__name">{s.name}</div><div className="pricelist-row__duration">{s.duration_min?`${s.duration_min} perc`:""}</div><div className="pricelist-row__price">{s.price!=null?`${Number(s.price).toLocaleString("hu-HU")} Ft`:"egyedi ár"}</div></div>)}</div></section>})}</div>}
-    </div></section>
-    <section className="public-section public-section--soft"><div className="container public-cta"><div><h2>Megtaláltad a szolgáltatást?</h2><p>A foglalóban kiválaszthatod a szalont, a szolgáltatást, a szakembert és a szabad időpontot.</p></div><NavLink to="/booking" className="btn btn-primary">Foglalás indítása</NavLink></div></section>
-  </main>;
+type Location = { id: string; name: string };
+type PriceService = {
+  id: string; name: string; duration_minutes: number; category_name: string;
+  department_code: "hair"|"handsfeet"|"beauty"|"massage"; department_name: string; base_price: number|string;
+  level_prices?: { trainee?: number|null; normal?: number|null; top?: number|null; master?: number|null };
 };
 
-function categoryLabelFromId(id: string): string {
-  switch (id) { case "1":return "Fodrászat"; case "2":return "Kozmetika"; case "3":return "Manikűr / műköröm"; case "4":return "Pedikűr"; case "5":return "Szolárium"; case "6":return "Masszázs"; case "7":return "Egyéb / kiegészítők"; default:return "Egyéb szolgáltatások"; }
-}
+const DEPARTMENTS = [
+  ["", "Összes részleg"], ["hair", "Fodrászat"], ["handsfeet", "Kéz- és lábápolás"], ["beauty", "Kozmetika"], ["massage", "Masszázs"],
+] as const;
+const normalize=(value:string)=>value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const serviceSlug=(name:string)=>{
+  const n=normalize(name);
+  const exact=SERVICE_PAGES.find(p=>normalize(p.title)===n||normalize(p.slug)===n);
+  if(exact)return exact.slug;
+  const partial=SERVICE_PAGES.find(p=>n.includes(normalize(p.title))||normalize(p.title).includes(n));
+  return partial?.slug||n;
+};
+const money=(v:number|null|undefined)=>v==null?"—":`${Math.round(Number(v)).toLocaleString("hu-HU")} Ft`;
+
+const CSS=`
+.price-v4-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.price-v4-filters label{display:grid;gap:6px;font-size:11px;font-weight:800;color:#625a53}.price-v4-filters select,.price-v4-filters input{height:48px;padding:0 12px;border:1px solid #ded4ca;border-radius:11px;background:#fff;font:600 12px Montserrat,Arial,sans-serif}
+.price-v4-departments{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.price-v4-departments button{border:1px solid #e5dbd2;border-radius:999px;padding:9px 13px;background:#fff;font-weight:750;cursor:pointer}.price-v4-departments button.active{background:#17100d;color:#fff;border-color:#17100d}
+.price-v4-table{overflow-x:auto;border:1px solid #e8ded5;border-radius:18px;background:#fff}.price-v4-head,.price-v4-row{display:grid;grid-template-columns:minmax(250px,2fr) 100px repeat(3,minmax(120px,1fr));gap:0;min-width:850px;align-items:center}.price-v4-head{background:#f8f3ee;color:#6f655e;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.06em}.price-v4-head>div,.price-v4-row>div{padding:13px 15px;border-right:1px solid #eee5dd}.price-v4-head>div:last-child,.price-v4-row>div:last-child{border-right:0}.price-v4-row{border-top:1px solid #eee5dd;font-size:12px}.price-v4-row a{color:#17100d;font-weight:800;text-decoration:none}.price-v4-row a:hover{color:#ec008c;text-decoration:underline}.price-v4-price{font-weight:750;text-align:right}.price-v4-category{margin-top:28px}.price-v4-category h3{margin:0 0 10px;font-size:19px}.price-v4-category small{color:#857b73}.price-v4-count{color:#796f68;font-size:12px;margin:10px 0 0}
+@media(max-width:850px){.price-v4-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.price-v4-filters{grid-template-columns:1fr}}
+`;
+
+export const PriceListPage: React.FC = () => {
+  const { pages }=useWebsiteCms(); const p=pages.prices;
+  const [locations,setLocations]=useState<Location[]>([]); const [services,setServices]=useState<PriceService[]>([]);
+  const [locationId,setLocationId]=useState(""); const [department,setDepartment]=useState(""); const [category,setCategory]=useState(""); const [search,setSearch]=useState("");
+  const [loading,setLoading]=useState(false); const [error,setError]=useState("");
+
+  useEffect(()=>{
+    setLoading(true);setError("");
+    const q=locationId?`?location_id=${encodeURIComponent(locationId)}`:"";
+    fetch(`${API_BASE}/api/public/booking/v4/pricelist${q}`,{credentials:"include"}).then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Az árlista nem tölthető be.");return d;})
+      .then(d=>{setLocations(d.locations||[]);setServices(d.services||[]);}).catch(e=>setError(e.message)).finally(()=>setLoading(false));
+  },[locationId]);
+
+  const categories=useMemo(()=>Array.from(new Set(services.filter(s=>!department||s.department_code===department).map(s=>s.category_name).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"hu")),[services,department]);
+  useEffect(()=>{if(category&&!categories.includes(category))setCategory("");},[category,categories]);
+  const filtered=useMemo(()=>services.filter(s=>(!department||s.department_code===department)&&(!category||s.category_name===category)&&(!search||normalize(s.name).includes(normalize(search)))),[services,department,category,search]);
+  const grouped=useMemo(()=>filtered.reduce<Record<string,PriceService[]>>((acc,s)=>{(acc[s.category_name||"Egyéb"]??=[]).push(s);return acc;},{}),[filtered]);
+  const locationName=locations.find(l=>l.id===locationId)?.name||"Összes szalon";
+
+  return <main><style>{CSS}</style>
+    <PublicPageHero eyebrow={p.eyebrow} title={<>{p.titlePrefix}<span className="highlight">{p.titleHighlight}</span>{p.titleSuffix}</>} lead={<p>A teljes árlistát itt önállóan böngészheted. Szűrj részlegre, kategóriára vagy szalonra, és hasonlítsd össze egy helyen a Normál, TOP és Master szakemberi árakat.</p>} image={p.imageUrl} imageAlt="Kleopátra árlista és szolgáltatások" actions={<><NavLink to="/booking" className="btn btn-primary">Időpontfoglalás</NavLink><NavLink to="/services" className="btn btn-outline">Szolgáltatások</NavLink></>} />
+    <section className="public-section"><div className="container pricelist-block">
+      <header className="public-section__header"><p className="section-eyebrow">Böngészhető árlista</p><h2>Találd meg gyorsan a szolgáltatást és a megfelelő árkategóriát</h2><p>A szolgáltatás nevére kattintva megnyílik a részletes szolgáltatásoldal; az árlista maga szándékosan tömör marad.</p></header>
+      <div className="notice-card">Az árak forintban értendők. A TOP és Master oszlop csak ott mutat külön összeget, ahol az adott szakemberszinthez külön ár van beállítva. A foglaláskor a rendszer a kiválasztott szalon és szakember alapján véglegesíti az aktuális árat.</div>
+      <div className="price-v4-departments">{DEPARTMENTS.map(([code,label])=><button key={code||"all"} type="button" className={department===code?"active":""} onClick={()=>setDepartment(code)}>{label}</button>)}</div>
+      <div className="price-v4-filters">
+        <label>Szalon<select value={locationId} onChange={e=>setLocationId(e.target.value)}><option value="">Összes szalon</option>{locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></label>
+        <label>Részleg<select value={department} onChange={e=>setDepartment(e.target.value)}>{DEPARTMENTS.map(([code,label])=><option key={code||"all"} value={code}>{label}</option>)}</select></label>
+        <label>Kategória<select value={category} onChange={e=>setCategory(e.target.value)}><option value="">Összes kategória</option>{categories.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
+        <label>Keresés<input value={search} onChange={e=>setSearch(e.target.value)} placeholder="pl. balayage, géllakk…" /></label>
+      </div>
+      {loading&&<div className="notice-card">Árlista betöltése…</div>}{error&&<div className="notice-card form-msg--error">{error}</div>}
+      {!loading&&!error&&<><p className="price-v4-count"><strong>{filtered.length}</strong> szolgáltatás · {locationName}</p>{!filtered.length&&<div className="notice-card">Ehhez a szűréshez jelenleg nincs találat.</div>}{Object.entries(grouped).sort(([a],[b])=>a.localeCompare(b,"hu")).map(([cat,items])=><section className="price-v4-category" key={cat}><h3>{cat} <small>· {items[0]?.department_name}</small></h3><div className="price-v4-table"><div className="price-v4-head"><div>Szolgáltatás</div><div>Időtartam</div><div>Normál</div><div>TOP</div><div>Master</div></div>{items.map(s=><div className="price-v4-row" key={s.id}><div><NavLink to={`/szolgaltatasok/${serviceSlug(s.name)}`}>{s.name}</NavLink></div><div>{s.duration_minutes?`${s.duration_minutes} perc`:"—"}</div><div className="price-v4-price">{money(s.level_prices?.normal??Number(s.base_price||0))}</div><div className="price-v4-price">{money(s.level_prices?.top)}</div><div className="price-v4-price">{money(s.level_prices?.master)}</div></div>)}</div></section>)}</>}
+    </div></section>
+    <section className="public-section public-section--soft"><div className="container public-cta"><div><h2>Megtaláltad, amit keresel?</h2><p>A részletes szolgáltatásoldalról vagy innen közvetlenül is továbbléphetsz a Booking 4.0 foglalóba.</p></div><NavLink to="/booking" className="btn btn-primary">Foglalás indítása</NavLink></div></section>
+  </main>;
+};
