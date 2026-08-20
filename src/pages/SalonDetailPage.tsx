@@ -14,7 +14,7 @@ const SALON_IMAGES: Record<string, string> = {
 };
 
 const CSS=`
-.salon-detail-info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.salon-detail-info .feature-card{height:100%}.salon-detail-info a{color:#ec008c;font-weight:800;text-decoration:none}.salon-detail-map{overflow:hidden;border:1px solid #e4d9cf;border-radius:22px;background:#fff;box-shadow:0 16px 45px rgba(25,15,10,.07)}.salon-detail-map iframe{display:block;width:100%;height:430px;border:0}.salon-detail-map__actions{display:flex;gap:10px;flex-wrap:wrap;padding:16px}.salon-detail-map__actions a{display:inline-flex;align-items:center;min-height:42px;padding:0 14px;border:1px solid #e7ddd4;border-radius:999px;color:#241914;text-decoration:none;font-size:11px;font-weight:800}.salon-detail-map__actions a:hover{border-color:#ec008c;color:#ec008c}@media(max-width:920px){.salon-detail-info{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){.salon-detail-info{grid-template-columns:1fr}.salon-detail-map iframe{height:360px}}
+.salon-detail-info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.salon-detail-info .feature-card{height:100%}.salon-detail-info a{color:#ec008c;font-weight:800;text-decoration:none}.salon-detail-phones{display:grid;gap:7px;margin:10px 0}.salon-detail-phones a{width:max-content;max-width:100%;font-size:15px}.salon-detail-hours-note{display:block;margin-top:9px;color:#8a8179;font-size:11px}.salon-detail-map{overflow:hidden;border:1px solid #e4d9cf;border-radius:22px;background:#fff;box-shadow:0 16px 45px rgba(25,15,10,.07)}.salon-detail-map iframe{display:block;width:100%;height:430px;border:0}.salon-detail-map__actions{display:flex;gap:10px;flex-wrap:wrap;padding:16px}.salon-detail-map__actions a{display:inline-flex;align-items:center;min-height:42px;padding:0 14px;border:1px solid #e7ddd4;border-radius:999px;color:#241914;text-decoration:none;font-size:11px;font-weight:800}.salon-detail-map__actions a:hover{border-color:#ec008c;color:#ec008c}@media(max-width:920px){.salon-detail-info{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){.salon-detail-info{grid-template-columns:1fr}.salon-detail-map iframe{height:360px}}
 `;
 
 export const SalonDetailPage: React.FC = () => {
@@ -56,6 +56,7 @@ export const SalonDetailPage: React.FC = () => {
     ? `https://www.google.com/maps?q=${salon.latitude},${salon.longitude}&z=16&output=embed`
     : `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const mapSearch=`https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const phones=[salon.phone,salon.phone_secondary].filter((value): value is string => Boolean(value));
 
   return (
     <main><style>{CSS}</style>
@@ -71,8 +72,8 @@ export const SalonDetailPage: React.FC = () => {
       <section className="public-section">
         <div className="container salon-detail-info">
           <article className="feature-card"><span className="feature-card__kicker">Helyszín</span><h2>Cím</h2><p>{salon.address || "A cím betöltése folyamatban."}</p><a href={mapSearch} target="_blank" rel="noreferrer">Útvonaltervezés →</a></article>
-          <article className="feature-card"><span className="feature-card__kicker">Elérhetőség</span><h2>Telefon</h2><p>{salon.phone||"Az elérhetőség betöltése folyamatban."}</p>{salon.phone&&<a href={`tel:${salon.phone.replace(/\s/g,"")}`}>Hívás indítása →</a>}</article>
-          <article className="feature-card"><span className="feature-card__kicker">Nyitvatartás</span><h2>Mikor várunk?</h2><p>{salon.hours||"Az aktuális nyitvatartás betöltése folyamatban."}</p>{Number(salon.review_count||0)>0&&<p><strong>{Number(salon.rating||0).toFixed(1)} / 5</strong> · {salon.review_count} értékelés</p>}</article>
+          <article className="feature-card"><span className="feature-card__kicker">Elérhetőség</span><h2>Telefon</h2>{phones.length?<div className="salon-detail-phones">{phones.map(phone=><a key={phone} href={`tel:${phone.replace(/\s/g,"")}`}>{phone}</a>)}</div>:<p>Az elérhetőség betöltése folyamatban.</p>}<span className="link-btn">Koppints a számra a híváshoz</span></article>
+          <article className="feature-card"><span className="feature-card__kicker">Nyitvatartás</span><h2>Mikor várunk?</h2><p>{salon.hours||"Az aktuális nyitvatartás betöltése folyamatban."}</p><small className="salon-detail-hours-note">Ünnepnapokon a nyitvatartás eltérhet.</small>{Number(salon.review_count||0)>0&&<p><strong>{Number(salon.rating||0).toFixed(1)} / 5</strong> · {salon.review_count} értékelés</p>}</article>
           <article className="feature-card"><span className="feature-card__kicker">Szolgáltatások</span><h2>Minden egy helyen</h2><p>Fodrászat, kozmetika, kéz- és lábápolás, masszázs és további szolgáltatások. A pontos kínálat szalononként eltérhet.</p><NavLink to="/prices">Szolgáltatások és árak →</NavLink></article>
         </div>
       </section>
