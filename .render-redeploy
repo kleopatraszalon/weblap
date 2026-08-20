@@ -1,5 +1,5 @@
 Render redeploy trigger
-2026-08-20 hero-binary-fix-2
-Deploy latest main with verified Booking 4.0 hero binary reconstruction.
-Verified hero: 41000 bytes; sha256=84bfa160c7a07f3e77970474ed6572bb970d72979aa59357c498a4cd80df6dd2.
-Reason: production redeploy after PR #11 merge and successful Public website build #146.
+2026-08-21T00:14:00+02:00
+Deploy latest main with homepage hero layer fix: image → magenta foreground shape → loyalty card.
+Image wrapper background/frame removed; rectangular photo background visually suppressed.
+Reason: explicit production update requested after PR #12 merge.
