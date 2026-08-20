@@ -6,6 +6,12 @@ export interface PublicSalon {
   slug: string;
   city_label: string;
   address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  phone?: string | null;
+  hours?: string | null;
+  review_count?: number | null;
+  rating?: number | null;
 }
 
 export interface PublicService {
@@ -19,13 +25,13 @@ export interface PublicService {
 }
 
 const STATIC_SALONS: PublicSalon[] = [
-  { id: "budapest-ix", slug: "budapest-ix", city_label: "Kleopátra Szépségszalon – Budapest IX.", address: "Mester u. 1." },
-  { id: "budapest-viii", slug: "budapest-viii", city_label: "Kleopátra Szépségszalon – Budapest VIII.", address: "Rákóczi u. 63." },
-  { id: "budapest-xii", slug: "budapest-xii", city_label: "Kleopátra Szépségszalon – Budapest XII.", address: "Krisztina krt. 23." },
-  { id: "budapest-xiii", slug: "budapest-xiii", city_label: "Kleopátra Szépségszalon – Budapest XIII.", address: "Visegrádi u. 3." },
-  { id: "eger", slug: "eger", city_label: "Kleopátra Szépségszalon – Eger", address: "Dr. Nagy János u. 8." },
-  { id: "gyongyos", slug: "gyongyos", city_label: "Kleopátra Szépségszalon – Gyöngyös", address: "Koháry u. 29." },
-  { id: "salgotarjan", slug: "salgotarjan", city_label: "Kleopátra Szépségszalon – Salgótarján", address: "Füleki u. 44." },
+  { id: "budapest-ix", slug: "budapest-ix", city_label: "Budapest IX.", address: "1095 Budapest, Mester u. 1.", latitude: 47.4829, longitude: 19.0691, phone: "+36 30 905 7765", hours: "H-P 07:00-21:00, Szo 07:00-16:00" },
+  { id: "budapest-viii", slug: "budapest-viii", city_label: "Budapest VIII.", address: "1081 Budapest, Rákóczi út 63.", latitude: 47.4982, longitude: 19.077, phone: "+36 30 905 7765", hours: "H-P 07:00-21:00, Szo 07:00-16:00" },
+  { id: "budapest-xii", slug: "budapest-xii", city_label: "Budapest XII.", address: "1122 Budapest, Krisztina krt. 23.", latitude: 47.5005, longitude: 19.0301, phone: "+36 30 905 7765", hours: "H-P 07:00-21:00, Szo 07:00-16:00" },
+  { id: "budapest-xiii", slug: "budapest-xiii", city_label: "Budapest XIII.", address: "1132 Budapest, Visegrádi u. 3.", latitude: 47.512, longitude: 19.0522, phone: "+36 30 905 7765", hours: "H-P 07:00-21:00, Szo 07:00-16:00" },
+  { id: "eger", slug: "eger", city_label: "Eger", address: "3300 Eger, Dr. Nagy János u. 8.", latitude: 47.9022, longitude: 20.3745, phone: "+36 30 905 7765", hours: "H-P 08:00-20:00, Szo 08:00-14:00" },
+  { id: "gyongyos", slug: "gyongyos", city_label: "Gyöngyös", address: "3200 Gyöngyös, Koháry u. 29.", latitude: 47.7834, longitude: 19.9297, phone: "+36 30 905 7765", hours: "H-P 08:00-20:00, Szo 08:00-14:00" },
+  { id: "salgotarjan", slug: "salgotarjan", city_label: "Salgótarján", address: "3100 Salgótarján, Füleki u. 44.", latitude: 48.1034, longitude: 19.8061, phone: "+36 30 905 7765", hours: "H-P 08:00-20:00, Szo 08:00-14:00" },
 ];
 
 function normalizeBase(value: unknown) {
