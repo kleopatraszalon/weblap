@@ -1,5 +1,5 @@
 Render redeploy trigger
-2026-08-21T00:19:00+02:00
-Deploy latest main with homepage hero layer order: existing image → existing magenta arc in foreground → loyalty card.
-All original image background, frame and decorative styling preserved; only stacking order changed.
-Reason: explicit production deploy after PR #13 and successful Public website build #152.
+2026-08-21T00:25:00+02:00
+Deploy latest main with the homepage magenta foreground arc pushed back out to the right edge while preserving the existing image and loyalty card.
+Layer order remains: image → magenta arc → loyalty card.
+Reason: explicit production deploy after PR #14 and successful Public website build #155.
