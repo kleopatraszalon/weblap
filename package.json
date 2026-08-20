@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/build-booking-hero.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
