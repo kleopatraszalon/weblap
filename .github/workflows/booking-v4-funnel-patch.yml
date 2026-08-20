@@ -1,0 +1,42 @@
+name: Booking 4 funnel instrumentation
+on:
+  push:
+    branches: [feature/booking-4-growth]
+    paths: [.github/workflows/booking-v4-funnel-patch.yml]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/booking-4-growth
+      - name: Instrument BookingPageV5
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/pages/BookingPageV5.tsx');s=p.read_text()
+          if 'trackBooking' not in s:
+            s=s.replace('import{API_BASE}from"../apiClient";','import{API_BASE}from"../apiClient";\nimport{trackBooking}from"../bookingFunnel";',1)
+          s=s.replace('useEffect(()=>{api("/api/public/booking/catalog")','useEffect(()=>{trackBooking("booking_page_view");api("/api/public/booking/catalog")',1)
+          s=s.replace('if(!locationId){setServices([]);setEmployees([]);return}api(`/api/public/booking/catalog?location_id=${locationId}`)','if(!locationId){setServices([]);setEmployees([]);return}trackBooking("location_selected",{location_id:locationId});api(`/api/public/booking/catalog?location_id=${locationId}`)',1)
+          old='const add=(id:string)=>setServiceIds(p=>p.includes(id)?p:[...p,id].slice(0,6)),remove=(id:string)=>setServiceIds(p=>p.filter(x=>x!==id));const offer=(o:LastMinute)=>{setLocationId(o.location_id);setServiceIds([o.service_id]);setEmployeeId(o.employee_id);setDate(ymd(new Date(o.start_time)))};'
+          new='const add=(id:string)=>{trackBooking("service_selected",{location_id:locationId,service_ids:[id]});setServiceIds(p=>p.includes(id)?p:[...p,id].slice(0,6))},remove=(id:string)=>setServiceIds(p=>p.filter(x=>x!==id));const offer=(o:LastMinute)=>{trackBooking("last_minute_clicked",{location_id:o.location_id,employee_id:o.employee_id,service_ids:[o.service_id],metadata:{offer_id:o.id}});setLocationId(o.location_id);setServiceIds([o.service_id]);setEmployeeId(o.employee_id);setDate(ymd(new Date(o.start_time)))};'
+          if old in s:s=s.replace(old,new,1)
+          s=s.replace('setChains(d.chains||[]);setSlots([])','setChains(d.chains||[]);setSlots([]);trackBooking("availability_viewed",{location_id:locationId,service_ids:serviceIds,metadata:{mode:"chain",results:(d.chains||[]).length}})',1)
+          s=s.replace('setSlots(d.slots||[]);setChains([])','setSlots(d.slots||[]);setChains([]);trackBooking("availability_viewed",{location_id:locationId,service_ids:serviceIds,employee_id:employeeId||undefined,metadata:{mode:"single",results:(d.slots||[]).length}})',1)
+          s=s.replace('api(`/api/public/booking/recommendations?location_id=${locationId}&service_ids=${serviceIds.join(",")}`).then(d=>setRecommendations(d.recommendations||[]))','api(`/api/public/booking/recommendations?location_id=${locationId}&service_ids=${serviceIds.join(",")}`).then(d=>{setRecommendations(d.recommendations||[]);(d.recommendations||[]).forEach((r:any)=>r.id&&trackBooking("recommendation_viewed",{location_id:locationId,service_ids:serviceIds,recommendation_id:r.id}))})',1)
+          s=s.replace('if(!privacy)return setError("Az adatkezelési tájékoztató elfogadása szükséges.");setLoading(true);try{','if(!privacy)return setError("Az adatkezelési tájékoztató elfogadása szükséges.");trackBooking("booking_started",{location_id:locationId,service_ids:serviceIds,employee_id:multi?undefined:slot?.employee_id,metadata:{multi}});setLoading(true);try{',1)
+          s=s.replace('setSuccess(`A teljes foglalási lánc rögzítve · ${r.appointments?.length||chain.items.length} szolgáltatás · láncazonosító: ${r.chain_id}.`)','trackBooking("booking_completed",{location_id:locationId,service_ids:serviceIds,metadata:{multi:true,chain_id:r.chain_id}});setSuccess(`A teljes foglalási lánc rögzítve · ${r.appointments?.length||chain.items.length} szolgáltatás · láncazonosító: ${r.chain_id}.`)',1)
+          s=s.replace('setSuccess(`Foglalás rögzítve · ${r.id}.`)','trackBooking("booking_completed",{location_id:locationId,service_ids:serviceIds,employee_id:slot.employee_id,metadata:{multi:false,appointment_id:r.id}});setSuccess(`Foglalás rögzítve · ${r.id}.`)',1)
+          s=s.replace('}catch(e:any){setError(e.message)}finally{setLoading(false)}};','}catch(e:any){trackBooking("booking_failed",{location_id:locationId,service_ids:serviceIds,metadata:{message:e.message,multi}});setError(e.message)}finally{setLoading(false)}};',1)
+          p.write_text(s)
+          PY
+      - run: grep -q 'booking_completed' src/pages/BookingPageV5.tsx
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- src/pages/BookingPageV5.tsx
+          git diff --cached --quiet || (git commit -m "feat(booking-v4): instrument booking funnel" && git push origin HEAD:feature/booking-4-growth)
