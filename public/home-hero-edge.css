@@ -1,0 +1,15 @@
+.kleo-home-modern .kleo-modern-hero__shape--pink-foreground {
+  right: -300px !important;
+}
+
+@media (max-width: 900px) {
+  .kleo-home-modern .kleo-modern-hero__shape--pink-foreground {
+    right: -220px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .kleo-home-modern .kleo-modern-hero__shape--pink-foreground {
+    right: -180px !important;
+  }
+}
