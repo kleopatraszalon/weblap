@@ -39,16 +39,14 @@ const HOME_PRIORITY_CSS = `
 .kleo-home-priority-nav a:last-child{background:#ec008c;color:#fff;border-color:#ec008c}
 .kleo-home-modern .kleo-modern-hero{min-height:520px!important}
 .kleo-home-modern .kleo-modern-hero__grid{min-height:520px!important;padding-top:26px!important;padding-bottom:26px!important}
-.kleo-home-modern .kleo-modern-hero__visual{min-height:450px!important;isolation:isolate;overflow:visible!important}
-.kleo-home-modern .kleo-modern-hero__image-wrap{z-index:1!important;background:transparent!important;box-shadow:none!important}
-.kleo-home-modern .kleo-modern-hero__image-wrap::before{display:none!important}
-.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:450px!important;position:relative!important;z-index:2!important;background:transparent!important;mix-blend-mode:multiply}
-.kleo-home-modern .kleo-modern-hero__shape--pink-foreground{z-index:3!important;right:-160px!important;bottom:-215px!important;pointer-events:none!important}
+.kleo-home-modern .kleo-modern-hero__visual{min-height:450px!important;isolation:isolate}
+.kleo-home-modern .kleo-modern-hero__image-wrap{z-index:1!important}
+.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:450px!important}
+.kleo-home-modern .kleo-modern-hero__shape--pink-foreground{z-index:3!important;pointer-events:none!important}
 .kleo-home-modern .kleo-modern-loyalty-card{z-index:4!important}
 .kleo-modern-services{padding-top:42px!important;padding-bottom:40px!important}
 .kleo-modern-section--soft{padding-top:42px!important}
 @media(max-width:900px){.kleo-home-modern .kleo-modern-hero,.kleo-home-modern .kleo-modern-hero__grid{min-height:auto!important}.kleo-home-modern .kleo-modern-hero__visual,.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:390px!important}}
-@media(max-width:760px){.kleo-home-modern .kleo-modern-hero__shape--pink-foreground{right:-235px!important;bottom:-225px!important;transform:rotate(-8deg) scale(.9)!important}}
 @media(max-width:700px){.kleo-modern-services{padding-top:30px!important}.kleo-modern-section--soft{padding-top:32px!important}}
 `;
 
