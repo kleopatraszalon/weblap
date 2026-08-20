@@ -1,5 +1,5 @@
 Render redeploy trigger
-2026-08-21T00:14:00+02:00
-Deploy latest main with homepage hero layer fix: image → magenta foreground shape → loyalty card.
-Image wrapper background/frame removed; rectangular photo background visually suppressed.
-Reason: explicit production update requested after PR #12 merge.
+2026-08-21T00:19:00+02:00
+Deploy latest main with homepage hero layer order: existing image → existing magenta arc in foreground → loyalty card.
+All original image background, frame and decorative styling preserved; only stacking order changed.
+Reason: explicit production deploy after PR #13 and successful Public website build #152.
