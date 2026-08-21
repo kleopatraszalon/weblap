@@ -1,6 +1,8 @@
 Render redeploy trigger
-2026-08-21T19:50:00+02:00
-Deploy exact latest main after responsive Smart Signage v5 merge (799ca5cf81269bdde2ebe270f270252c6e38a9fc).
-Reason: production screenshot still showed the legacy 3840x1080 letterboxed signage; force the viewport-native v5 bundle to Render.
+2026-08-21T19:59:00+02:00
+Deploy exact latest main containing responsive Smart Signage v5.
+Merged feature commit: 799ca5cf81269bdde2ebe270f270252c6e38a9fc
+Previous deploy trigger: e48056d4866897e80a1e378731d4e3e036c86993
+Reason: explicit immediate production deploy requested after confirming the live screenshot still showed the legacy layout.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
 Expected marker: smart-signage-v5 / layout=viewport-native-responsive
