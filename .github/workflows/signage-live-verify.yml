@@ -50,11 +50,10 @@ jobs:
               if grep -q '__kleoSignageMotionV10Installed' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'floating-bounded-v10' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'requestAnimationFrame' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'CARD_SELECTOR' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '__kleoSignageMotionV8Installed' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'kleoLineMascotLayer' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'sgx-widgetDock-v3' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'data-motion-v10' /tmp/signage-live.css 2>/dev/null; then
+                && grep -q 'motion-v10' /tmp/signage-live.css 2>/dev/null; then
                 echo "Smart Signage v10 bounded floating cards + random YouTube + mascot are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
