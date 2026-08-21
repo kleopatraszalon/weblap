@@ -1,4 +1,4 @@
-smart-signage-v4
-source-main=456e292a0988ff16afe8c71f42188c434d309b65
-features=birthday,last-minute,product,weather,premium-v3-ui
-published=2026-08-21T19:30:00+02:00
+smart-signage-v5
+layout=viewport-native-responsive
+features=birthday,last-minute,product,weather,premium-v5-ui
+published=2026-08-21T19:46:00+02:00

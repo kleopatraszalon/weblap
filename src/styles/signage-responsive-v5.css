@@ -1,0 +1,365 @@
+/*
+ * KLEO Smart Signage v5
+ * Viewport-native presentation for normal 16:9 / 16:10 displays.
+ * The legacy board was authored as a 3840x1080 (32:9) canvas. On a normal
+ * browser/display it was scaled to width and therefore occupied only the top
+ * half of the screen. These rules deliberately override that fixed-canvas
+ * behavior while preserving the same data/components.
+ */
+
+.sgx.sgx-modern-v3 {
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(236, 0, 140, .18), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(182, 152, 97, .24), transparent 30%),
+    linear-gradient(135deg, #120b08 0%, #20130f 52%, #0d0806 100%) !important;
+}
+
+.sgx.sgx-modern-v3 > .sgViewport {
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+/* Make the redesign visible even if VIR still has template=classic. */
+.sgx.sgx-modern-v3 .sgTopbar {
+  background:
+    radial-gradient(circle at 72% 0%, rgba(236, 0, 140, .16), transparent 34%),
+    linear-gradient(112deg, #100a07 0%, #1d120d 48%, #302018 100%) !important;
+  color: #fff !important;
+  border-bottom: 1px solid rgba(214, 184, 126, .65) !important;
+  box-shadow: 0 18px 54px rgba(0, 0, 0, .34) !important;
+}
+
+.sgx.sgx-modern-v3 .sgTopbar .sgInfoBox,
+.sgx.sgx-modern-v3 .sgTopbar .sgWxDay {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .055)) !important;
+  border: 1px solid rgba(255, 255, 255, .13) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 14px 32px rgba(0, 0, 0, .18) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+}
+
+.sgx.sgx-modern-v3 .sgTopbar .sgInfoLabel { color: #d9bb82 !important; }
+.sgx.sgx-modern-v3 .sgTopbar .sgInfoTitle,
+.sgx.sgx-modern-v3 .sgTopbar .sgTime,
+.sgx.sgx-modern-v3 .sgTopbar .sgWxDay { color: #fff !important; }
+.sgx.sgx-modern-v3 .sgTopbar .sgDate,
+.sgx.sgx-modern-v3 .sgTopbar .sgInfoBody,
+.sgx.sgx-modern-v3 .sgTopbar .sgInfoBody--muted { color: rgba(255,255,255,.72) !important; }
+
+.sgx.sgx-modern-v3 .sgPanel {
+  position: relative !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(214, 184, 126, .24) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182, 152, 97, .09), transparent 32%),
+    linear-gradient(150deg, rgba(255,255,255,.985), rgba(250,244,238,.96)) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255,255,255,.95) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+.sgx.sgx-modern-v3 .sgPanel::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 3 !important;
+  inset: 0 0 auto 0 !important;
+  width: auto !important;
+  height: 4px !important;
+  border-radius: 24px 24px 0 0 !important;
+  background: linear-gradient(90deg, #b69861 0%, #ec008c 52%, #b69861 100%) !important;
+  opacity: .9 !important;
+}
+
+.sgx.sgx-modern-v3 .sgPanelHeader {
+  background: linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,0)) !important;
+  border-color: rgba(182, 152, 97, .18) !important;
+}
+
+.sgx.sgx-modern-v3 .sgPanelHeader h2 {
+  color: #1b110d !important;
+  font-weight: 950 !important;
+  letter-spacing: -.035em !important;
+  text-transform: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgSvcItem,
+.sgx.sgx-modern-v3 .sgProRow,
+.sgx.sgx-modern-v3 .sgDealRow {
+  border-radius: 16px !important;
+  border: 1px solid rgba(182, 152, 97, .20) !important;
+  background: linear-gradient(145deg, #fff 0%, #fbf5ef 100%) !important;
+  box-shadow: 0 8px 20px rgba(22, 12, 7, .055) !important;
+}
+
+.sgx.sgx-modern-v3 .sgDealRow .sgStripe {
+  background: linear-gradient(180deg, #ec008c, #b69861) !important;
+}
+
+.sgx.sgx-modern-v3 .sgChip {
+  color: #26170f !important;
+  background: #f1e6d8 !important;
+  border-color: rgba(182, 152, 97, .28) !important;
+}
+
+.sgx.sgx-modern-v3 .sgTicker {
+  background: linear-gradient(90deg, #7d154d 0%, #ec008c 48%, #a81c6a 100%) !important;
+  box-shadow: 0 -10px 34px rgba(236, 0, 140, .22) !important;
+}
+
+/* Live smart strip. */
+.sgx.sgx-modern-v3 .sgx-liveRibbon {
+  position: fixed !important;
+  z-index: 180 !important;
+  top: 10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 7px 13px !important;
+  border-radius: 999px !important;
+  color: rgba(255,255,255,.86) !important;
+  background: rgba(7,4,3,.62) !important;
+  border: 1px solid rgba(216,188,133,.32) !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.22) !important;
+  backdrop-filter: blur(14px) saturate(1.2) !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  pointer-events: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-liveRibbon span { color: #56df91 !important; font-weight: 950 !important; }
+.sgx.sgx-modern-v3 .sgx-liveRibbon b { color: #d9bb82 !important; }
+.sgx.sgx-modern-v3 .sgx-liveRibbon em { font-style: normal !important; opacity: .74 !important; }
+
+/* The widget dock is part of the board, not a second row floating in empty whitespace. */
+.sgx.sgx-modern-v3 .sgx-widgetDock,
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 {
+  position: fixed !important;
+  z-index: 160 !important;
+  left: 1.25vw !important;
+  right: 1.25vw !important;
+  bottom: 5.6vh !important;
+  width: auto !important;
+  transform: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: .72vw !important;
+  pointer-events: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widget {
+  min-width: 0 !important;
+  min-height: 72px !important;
+  border-radius: 18px !important;
+  color: #fff !important;
+  border: 1px solid rgba(216,188,133,.28) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(236,0,140,.18), transparent 38%),
+    linear-gradient(145deg, rgba(28,17,13,.94), rgba(10,7,5,.91)) !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  backdrop-filter: blur(18px) saturate(1.16) !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widget::after {
+  height: 3px !important;
+  background: linear-gradient(90deg, #b69861, #ec008c 50%, transparent) !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widget-kicker { color: #d9bb82 !important; }
+.sgx.sgx-modern-v3 .sgx-widget strong { color: #fff !important; }
+.sgx.sgx-modern-v3 .sgx-widget small,
+.sgx.sgx-modern-v3 .sgx-widget p { color: rgba(255,255,255,.70) !important; }
+.sgx.sgx-modern-v3 .sgx-widget-birthday.is-celebrating {
+  border-color: rgba(236,0,140,.55) !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.28), 0 0 34px rgba(236,0,140,.18) !important;
+}
+
+/* Standard TV / monitor proportions: remove the 3840x1080 letterbox entirely. */
+@media (max-aspect-ratio: 5 / 2) {
+  .sgx.sgx-modern-v3 .sgCanvas {
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: none !important;
+    transform-origin: center center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background:
+      radial-gradient(circle at 10% 12%, rgba(236,0,140,.13), transparent 28%),
+      radial-gradient(circle at 90% 10%, rgba(182,152,97,.23), transparent 28%),
+      linear-gradient(135deg, #18100c 0%, #291913 48%, #110a08 100%) !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgCanvas::before {
+    background:
+      radial-gradient(circle at 18% 16%, rgba(236,0,140,.14), transparent 27%),
+      radial-gradient(circle at 83% 19%, rgba(182,152,97,.23), transparent 28%),
+      linear-gradient(135deg, rgba(255,255,255,.02), rgba(0,0,0,.12)) !important;
+    opacity: 1 !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgTopbar {
+    flex: 0 0 13.8vh !important;
+    height: 13.8vh !important;
+    min-height: 104px !important;
+    padding: 1.35vh 1.25vw !important;
+    display: grid !important;
+    grid-template-columns: minmax(150px,.9fr) minmax(220px,1.28fr) minmax(400px,2.25fr) minmax(235px,1.35fr) minmax(150px,.86fr) !important;
+    gap: .72vw !important;
+    align-items: center !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgBrand { min-width: 0 !important; }
+  .sgx.sgx-modern-v3 .sgLogo {
+    height: min(9.6vh, 86px) !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    align-self: center !important;
+    padding: 7px 10px !important;
+    border-radius: 15px !important;
+    background: rgba(255,255,255,.96) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,.20) !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgInfoBox {
+    width: auto !important;
+    min-width: 0 !important;
+    height: 9.3vh !important;
+    min-height: 72px !important;
+    margin: 0 !important;
+    padding: 1vh .9vw !important;
+    border-radius: 17px !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgInfoLabel { font-size: clamp(9px, .68vw, 13px) !important; }
+  .sgx.sgx-modern-v3 .sgInfoTitle { font-size: clamp(13px, 1vw, 19px) !important; }
+  .sgx.sgx-modern-v3 .sgInfoBody { font-size: clamp(11px, .82vw, 16px) !important; line-height: 1.18 !important; }
+
+  .sgx.sgx-modern-v3 .sgWeather {
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .sgx.sgx-modern-v3 .sgWxRow { width: 100% !important; gap: .42vw !important; justify-content: center !important; }
+  .sgx.sgx-modern-v3 .sgWxDay {
+    width: min(4.6vw, 72px) !important;
+    min-width: 48px !important;
+    padding: .65vh .3vw !important;
+    border-radius: 14px !important;
+  }
+  .sgx.sgx-modern-v3 .sgWxDow { font-size: clamp(9px, .62vw, 12px) !important; }
+  .sgx.sgx-modern-v3 .sgWxIcon { font-size: clamp(17px, 1.35vw, 27px) !important; line-height: 1 !important; margin: .2vh 0 !important; }
+  .sgx.sgx-modern-v3 .sgWxTemp { gap: 5px !important; font-size: clamp(9px, .62vw, 12px) !important; }
+
+  .sgx.sgx-modern-v3 .sgClock { min-width: 0 !important; }
+  .sgx.sgx-modern-v3 .sgDate { font-size: clamp(10px, .82vw, 16px) !important; margin-bottom: .4vh !important; white-space: nowrap !important; }
+  .sgx.sgx-modern-v3 .sgTime { font-size: clamp(25px, 2.35vw, 44px) !important; line-height: 1 !important; }
+
+  .sgx.sgx-modern-v3 .sgGrid {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0,1.02fr) minmax(0,1.12fr) minmax(0,2.65fr) minmax(0,1.12fr) minmax(0,1.02fr) !important;
+    gap: .72vw !important;
+    padding: 1.05vh 1.15vw 14.2vh !important;
+    align-items: stretch !important;
+  }
+
+  .sgx.sgx-modern-v3 .sgPanel { border-radius: 20px !important; }
+  .sgx.sgx-modern-v3 .sgPanelHeader {
+    min-height: 48px !important;
+    padding: 1.05vh .85vw .8vh !important;
+    align-items: center !important;
+  }
+  .sgx.sgx-modern-v3 .sgPanelHeader h2 { font-size: clamp(14px, 1.15vw, 22px) !important; }
+  .sgx.sgx-modern-v3 .sgMeta { font-size: clamp(8px, .53vw, 10px) !important; }
+
+  .sgx.sgx-modern-v3 .sgSvcList,
+  .sgx.sgx-modern-v3 .sgProList { padding: .7vh .6vw !important; gap: .52vh !important; }
+  .sgx.sgx-modern-v3 .sgSvcItem,
+  .sgx.sgx-modern-v3 .sgProRow { padding: .72vh .62vw !important; border-radius: 13px !important; }
+  .sgx.sgx-modern-v3 .sgSvcTitle,
+  .sgx.sgx-modern-v3 .sgProName,
+  .sgx.sgx-modern-v3 .sgProNameBig { font-size: clamp(11px, .82vw, 16px) !important; line-height: 1.08 !important; }
+  .sgx.sgx-modern-v3 .sgSvcDesc,
+  .sgx.sgx-modern-v3 .sgProMeta { font-size: clamp(8px, .57vw, 11px) !important; }
+  .sgx.sgx-modern-v3 .sgChip,
+  .sgx.sgx-modern-v3 .sgChipLite { font-size: clamp(8px, .55vw, 10px) !important; padding: 3px 7px !important; }
+
+  .sgx.sgx-modern-v3 .sgAvatarWrap { width: clamp(34px, 3vw, 54px) !important; height: clamp(34px, 3vw, 54px) !important; flex: 0 0 auto !important; }
+  .sgx.sgx-modern-v3 .sgProAvatar,
+  .sgx.sgx-modern-v3 .sgAvatarFallback { width: 100% !important; height: 100% !important; }
+
+  .sgx.sgx-modern-v3 .sgDealList { padding: .7vh .6vw !important; gap: .65vh !important; }
+  .sgx.sgx-modern-v3 .sgDealRow { min-height: 0 !important; padding: .78vh .6vw !important; border-radius: 13px !important; }
+  .sgx.sgx-modern-v3 .sgDealTitle,
+  .sgx.sgx-modern-v3 .sgDealTitleBig { font-size: clamp(11px, .82vw, 16px) !important; }
+  .sgx.sgx-modern-v3 .sgDealSub { font-size: clamp(8px, .56vw, 11px) !important; }
+  .sgx.sgx-modern-v3 .sgDealRowPrice,
+  .sgx.sgx-modern-v3 .sgDealRowPriceBig { font-size: clamp(11px, .84vw, 17px) !important; }
+
+  .sgx.sgx-modern-v3 .sgVideoFooter { padding: .65vh .7vw !important; }
+  .sgx.sgx-modern-v3 .sgPill { font-size: clamp(8px, .55vw, 11px) !important; padding: 5px 8px !important; }
+
+  .sgx.sgx-modern-v3 .sgTicker {
+    position: absolute !important;
+    z-index: 120 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 4.7vh !important;
+    min-height: 36px !important;
+    padding: 0 1vw !important;
+  }
+  .sgx.sgx-modern-v3 .sgMarquee { font-size: clamp(10px, .72vw, 14px) !important; }
+
+  .sgx.sgx-modern-v3 .sgx-widgetDock,
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3 {
+    bottom: 5.35vh !important;
+    left: 1.15vw !important;
+    right: 1.15vw !important;
+    gap: .7vw !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widget {
+    min-height: 8.3vh !important;
+    padding: .9vh .85vw !important;
+    border-radius: 16px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widget-kicker { font-size: clamp(8px, .52vw, 10px) !important; }
+  .sgx.sgx-modern-v3 .sgx-widget strong { font-size: clamp(16px, 1.35vw, 26px) !important; }
+  .sgx.sgx-modern-v3 .sgx-widget small,
+  .sgx.sgx-modern-v3 .sgx-widget p { font-size: clamp(9px, .6vw, 12px) !important; }
+
+  .sgx.sgx-modern-v3 .sgx-toast {
+    top: 15vh !important;
+    right: 1.4vw !important;
+    width: min(34vw, 520px) !important;
+  }
+}
+
+/* Keep the original 32:9 scale model on real ultra-wide signage, but still use v5 skin. */
+@media (min-aspect-ratio: 5 / 2) {
+  .sgx.sgx-modern-v3 .sgx-widgetDock,
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3 {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  .sgx.sgx-modern-v3 .sgx-liveRibbon em { display: none !important; }
+  .sgx.sgx-modern-v3 .sgx-widgetDock,
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3 { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sgx.sgx-modern-v3 *,
+  .sgx.sgx-modern-v3 *::before,
+  .sgx.sgx-modern-v3 *::after { scroll-behavior: auto !important; }
+}
