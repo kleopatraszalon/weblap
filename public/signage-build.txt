@@ -2,6 +2,6 @@ smart-signage-v10
 layout=viewport-native-responsive
 motion=four-smart-cards-bounded-random-roam
 youtube=curated-random-gym-hair-beauty
-mascot=kleo-line-v1
-features=birthday,last-minute,product,weather,premium-v5-ui,bounded-floating-smart-cards,random-youtube-gym,random-youtube-hair,random-youtube-beauty,line-mascot
+mascot=kleo-woman-gta-v1
+features=birthday,last-minute,product,weather,premium-v5-ui,bounded-floating-smart-cards,random-youtube-gym,random-youtube-hair,random-youtube-beauty,gta-woman,lower-line-walk,video-stop
 published=2026-08-21T21:58:00+02:00
