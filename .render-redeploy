@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-21T21:29:00+02:00
-Force deploy the exact latest main for Smart Signage motion stack and current signage features.
-Reason: explicit merge + deploy request after confirming the v9 requestAnimationFrame runtime is required for visible movement.
+2026-08-21T22:03:00+02:00
+Force deploy the exact latest main for Smart Signage v10.
+Reason: move the four Smart Signage rectangles inside the visible board as continuously roaming bounded cards.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous
-Required runtime: requestAnimationFrame inline transform !important motion for top information blocks and four Smart Signage cards.
-Keep enabled: curated random YouTube rotation for GYM / FODRÁSZAT / KOZMETIKA and current Kleo line mascot layer.
+Expected marker: smart-signage-v10 / motion=four-smart-cards-bounded-random-roam
+Required runtime: __kleoSignageMotionV10Installed / floating-bounded-v10 / requestAnimationFrame.
+Keep enabled: curated random YouTube rotation for GYM / FODRÁSZAT / KOZMETIKA and current Kleo line mascot.
