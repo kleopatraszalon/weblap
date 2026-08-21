@@ -1,0 +1,121 @@
+/* KLEO Smart Signage v6 — organic/random motion for the top information widgets. */
+
+.sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
+.sgx .sgTopbar > .sgWeather.sgRandomMotion,
+.sgx .sgTopbar > .sgClock.sgRandomMotion {
+  transform:
+    translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0)
+    rotate(var(--sg-rand-rot, 0deg))
+    scale(var(--sg-rand-scale, 1));
+  transition:
+    transform var(--sg-rand-dur, 4.5s) cubic-bezier(.18,.72,.24,1),
+    filter 1.4s ease,
+    opacity 1.2s ease;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.sgx .sgTopbar > .sgInfoBox.sgRandomMotion:hover,
+.sgx .sgTopbar > .sgWeather.sgRandomMotion:hover,
+.sgx .sgTopbar > .sgClock.sgRandomMotion:hover {
+  filter: brightness(1.04);
+}
+
+.sgx .sgTopbar .sgWxDay.sgRandomWeatherDay {
+  transform:
+    translate3d(var(--sg-wx-x, 0px), var(--sg-wx-y, 0px), 0)
+    rotate(var(--sg-wx-rot, 0deg))
+    scale(var(--sg-wx-scale, 1));
+  transition: transform var(--sg-wx-dur, 5s) cubic-bezier(.2,.78,.25,1);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.sgx .sgTopbar .sgRandomContentMotion {
+  transform: translate3d(var(--sg-content-x, 0px), var(--sg-content-y, 0px), 0);
+  transition: transform var(--sg-content-dur, 5s) cubic-bezier(.22,.76,.24,1);
+  will-change: transform;
+}
+
+/* Occasionally one card makes a more visible side-to-side glide, then returns to its random base position. */
+.sgx .sgTopbar > .sgRandomMotion.sgRandomRoll {
+  animation: sgRandomTopRoll var(--sg-roll-dur, 4.6s) cubic-bezier(.18,.78,.22,1) 1;
+}
+
+@keyframes sgRandomTopRoll {
+  0% {
+    transform:
+      translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0)
+      rotate(var(--sg-rand-rot, 0deg))
+      scale(var(--sg-rand-scale, 1));
+  }
+  16% {
+    transform:
+      translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-from, -18px)), calc(var(--sg-rand-y, 0px) - 2px), 0)
+      rotate(calc(var(--sg-rand-rot, 0deg) - .28deg))
+      scale(.99);
+  }
+  46% {
+    transform:
+      translate3d(var(--sg-rand-x, 0px), calc(var(--sg-rand-y, 0px) + 2px), 0)
+      rotate(var(--sg-rand-rot, 0deg))
+      scale(1.012);
+  }
+  74% {
+    transform:
+      translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-to, 18px)), calc(var(--sg-rand-y, 0px) - 1px), 0)
+      rotate(calc(var(--sg-rand-rot, 0deg) + .24deg))
+      scale(.995);
+  }
+  100% {
+    transform:
+      translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0)
+      rotate(var(--sg-rand-rot, 0deg))
+      scale(var(--sg-rand-scale, 1));
+  }
+}
+
+/* The five-day weather strip also glides gently between the random JS-driven changes. */
+.sgx .sgTopbar .sgWxRow {
+  animation: sgWeatherBreath 13s ease-in-out infinite alternate;
+}
+
+@keyframes sgWeatherBreath {
+  0%, 17% { margin-left: 0; }
+  38% { margin-left: 5px; }
+  61% { margin-left: -4px; }
+  82% { margin-left: 3px; }
+  100% { margin-left: 0; }
+}
+
+/* Keep vertical drift minimal on true ultra-wide wallboards. */
+@media (min-aspect-ratio: 5 / 2) {
+  .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
+  .sgx .sgTopbar > .sgWeather.sgRandomMotion,
+  .sgx .sgTopbar > .sgClock.sgRandomMotion {
+    --sg-rand-y: 0px;
+  }
+}
+
+/* On small displays keep the cards stable enough to avoid collisions. */
+@media (max-width: 1180px) {
+  .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
+  .sgx .sgTopbar > .sgWeather.sgRandomMotion,
+  .sgx .sgTopbar > .sgClock.sgRandomMotion {
+    --sg-rand-x: 0px;
+    --sg-rand-y: 0px;
+    --sg-rand-rot: 0deg;
+    --sg-rand-scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sgx .sgRandomMotion,
+  .sgx .sgRandomWeatherDay,
+  .sgx .sgRandomContentMotion,
+  .sgx .sgWxRow {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
