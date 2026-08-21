@@ -1,34 +1,40 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { getPublicSalons, type PublicSalon } from "../apiClient";
 import { useWebsiteCms } from "../websiteCms";
 
 type ServiceCard = { title: string; text: string; to: string };
-type SalonCard = { title: string; address: string; image: string; to: string };
+type UserPosition = { latitude: number; longitude: number };
 
 const SERVICES: ServiceCard[] = [
-  { title: "Fodrászat", text: "Hajvágás, hajfestés, balayage, hajformázás és professzionális hajápolás – a hozzád illő megjelenésért.", to: "/szolgaltatasok/fodraszat" },
-  { title: "Kozmetika", text: "Arckezelések, gépi kezelések, szempilla, szemöldök és szőrtelenítés korszerű megoldásokkal.", to: "/szolgaltatasok/kozmetika" },
-  { title: "Kéz- és lábápolás", text: "Manikűr, géllakk, műköröm és pedikűr – tartós, ápolt és stílusos végeredménnyel.", to: "/szolgaltatasok/kez-es-labapolas" },
-  { title: "Szolárium", text: "Szalononként elérhető szolárium szolgáltatások, rugalmasan, a Kleopátra szépségélmény részeként.", to: "/szolgaltatasok/szolarium" },
-  { title: "Masszázs", text: "Relaxáló és frissítő kezelések, hogy a szépségápolás valódi feltöltődés is legyen.", to: "/szolgaltatasok/masszazs" },
-  { title: "Fitness & Wellness Gyöngyös", text: "Mozgás, feltöltődés és szépség egy helyen – a gyöngyösi helyszín kiemelt szolgáltatásai.", to: "/salons" },
+  { title: "Fodrászat", text: "Hajvágás, hajfestés, balayage, hajformázás és professzionális hajápolás – mindig a Te stílusodhoz és elképzelésedhez igazítva.", to: "/szolgaltatasok/fodraszat" },
+  { title: "Kéz- és lábápolás", text: "Manikűr, géllakk, műköröm és pedikűr modern technikákkal, minőségi alapanyagokkal és tartós, ápolt végeredménnyel.", to: "/szolgaltatasok/kez-es-labapolas" },
+  { title: "Kozmetika", text: "Arckezelések, gépi kezelések, szempilla, szemöldök és szőrtelenítés korszerű megoldásokkal, a bőr állapotához igazítva.", to: "/szolgaltatasok/kozmetika" },
+  { title: "Masszázs", text: "Relaxáló és frissítő kezelések, hogy a mindennapi stressz helyét nyugalom, feltöltődés és jó közérzet vegye át.", to: "/szolgaltatasok/masszazs" },
 ];
 
-const SALONS: SalonCard[] = [
-  { title: "Budapest IX.", address: "Mester u. 1.", image: "/images/mester.jpg", to: "/salons/budapest-ix" },
-  { title: "Budapest VIII.", address: "Rákóczi u. 63.", image: "/images/rakoczi.jpg", to: "/salons/budapest-viii" },
-  { title: "Budapest XII.", address: "Krisztina krt. 23.", image: "/images/krisztina.jpg", to: "/salons/budapest-xii" },
-  { title: "Budapest XIII.", address: "Visegrádi u. 3.", image: "/images/visegradi.jpg", to: "/salons/budapest-xiii" },
-];
+const SALON_IMAGES: Record<string, string> = {
+  "budapest-ix": "/images/mester.jpg",
+  "budapest-viii": "/images/rakoczi.jpg",
+  "budapest-xii": "/images/krisztina.jpg",
+  "budapest-xiii": "/images/visegradi.jpg",
+  eger: "/images/Eger.jpg",
+  gyongyos: "/images/gyongyos.png",
+  salgotarjan: "/images/salgotarjan.jpg",
+};
 
 const QUICK_LINKS = [
   ["Szolgáltatások", "/services"],
   ["Áraink", "/prices"],
   ["Szalonjaink", "/salons"],
-  ["Hűségprogram", "/loyalty"],
-  ["Ajándékutalvány", "/webshop"],
   ["Webshop", "/webshop"],
+  ["Oktatás", "/education"],
+  ["Karrier", "/career"],
+  ["Időpontfoglalás", "/booking"],
+  ["Hűségprogram", "/loyalty"],
+  ["Franchise", "/franchise"],
   ["Rólunk", "/about"],
+  ["Ajándékutalvány", "/webshop"],
 ] as const;
 
 const APP_FEATURES = [
@@ -47,11 +53,55 @@ const FRANCHISE_ITEMS = [
   "Bevezetett márka- és működési háttér",
 ];
 
+const radians = (value: number) => value * Math.PI / 180;
+function distanceKm(position: UserPosition, salon: PublicSalon) {
+  if (salon.latitude == null || salon.longitude == null) return Number.POSITIVE_INFINITY;
+  const earth = 6371;
+  const dLat = radians(Number(salon.latitude) - position.latitude);
+  const dLon = radians(Number(salon.longitude) - position.longitude);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(radians(position.latitude)) * Math.cos(radians(Number(salon.latitude))) * Math.sin(dLon / 2) ** 2;
+  return earth * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 export const HomePage: React.FC = () => {
   const cms = useWebsiteCms();
   const h = cms.home;
   const configuredHero = (h.heroImageUrl || "").trim();
   const heroImage = !configuredHero || /logo|kleo_logo/i.test(configuredHero) ? "/images/home.png" : configuredHero;
+  const [salons, setSalons] = useState<PublicSalon[]>([]);
+  const [position, setPosition] = useState<UserPosition | null>(null);
+  const [locationState, setLocationState] = useState<"idle" | "loading" | "ready" | "denied">("idle");
+
+  useEffect(() => {
+    let alive = true;
+    getPublicSalons().then((items) => { if (alive) setSalons(items); }).catch(() => undefined);
+    if (typeof navigator !== "undefined" && navigator.permissions?.query) {
+      navigator.permissions.query({ name: "geolocation" as PermissionName }).then((permission) => {
+        if (!alive || permission.state !== "granted") return;
+        navigator.geolocation.getCurrentPosition((result) => {
+          if (!alive) return;
+          setPosition({ latitude: result.coords.latitude, longitude: result.coords.longitude });
+          setLocationState("ready");
+        }, () => undefined, { enableHighAccuracy: false, maximumAge: 300000, timeout: 4000 });
+      }).catch(() => undefined);
+    }
+    return () => { alive = false; };
+  }, []);
+
+  const nearbySalons = useMemo(() => {
+    const copy = [...salons];
+    if (position) copy.sort((a, b) => distanceKm(position, a) - distanceKm(position, b));
+    return copy.slice(0, 4);
+  }, [salons, position]);
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) return setLocationState("denied");
+    setLocationState("loading");
+    navigator.geolocation.getCurrentPosition((result) => {
+      setPosition({ latitude: result.coords.latitude, longitude: result.coords.longitude });
+      setLocationState("ready");
+    }, () => setLocationState("denied"), { enableHighAccuracy: false, maximumAge: 300000, timeout: 7000 });
+  };
 
   return (
     <main className="kleo-v3-home">
@@ -66,9 +116,9 @@ export const HomePage: React.FC = () => {
               <NavLink to="/salons" className="kleo-v3-btn kleo-v3-btn--ghost">Szalon választása</NavLink>
             </div>
             <div className="kleo-v3-hero__meta" aria-label="Kleopátra előnyök">
+              <span><i aria-hidden="true" /> Minden egy helyen</span>
               <span><i aria-hidden="true" /> Bejelentkezés nélkül is</span>
               <span><i aria-hidden="true" /> Online foglalás</span>
-              <span><i aria-hidden="true" /> Több szépségápolási részleg</span>
             </div>
           </div>
 
@@ -92,13 +142,13 @@ export const HomePage: React.FC = () => {
       </nav>
 
       {h.showServices && (
-        <section className="kleo-v3-section">
+        <section className="kleo-v3-section kleo-v3-section--priority">
           <div className="kleo-modern-container">
             <header className="kleo-v3-head">
               <div className="kleo-v3-head__copy">
                 <p className="kleo-v3-eyebrow">Minden, ami szépség – egy helyen</p>
-                <h2>Válaszd azt, amitől igazán jól érzed magad.</h2>
-                <p>A Kleopátra világában a haj, a bőr, a kéz- és lábápolás, a relaxáció és a kiegészítő szépségszolgáltatások egyetlen, könnyen elérhető rendszerben találkoznak.</p>
+                <h2>Szépségápolás felsőfokon.</h2>
+                <p>Fodrászat, kéz- és lábápolás, kozmetika és masszázs egyetlen könnyen átlátható rendszerben. Válaszd ki a részleget, nézd meg a szolgáltatásokat és az árakat, majd csak akkor foglalj, amikor már tudod, mit szeretnél.</p>
               </div>
               <NavLink to="/services" className="kleo-v3-text-link">Minden szolgáltatás <span>→</span></NavLink>
             </header>
@@ -117,29 +167,34 @@ export const HomePage: React.FC = () => {
         </section>
       )}
 
-      <section className="kleo-v3-section kleo-v3-section--paper">
+      <section className="kleo-v3-section kleo-v3-section--paper kleo-v3-section--priority">
         <div className="kleo-modern-container">
           <header className="kleo-v3-head">
             <div className="kleo-v3-head__copy">
               <p className="kleo-v3-eyebrow">Szalonjaink</p>
-              <h2>A Kleopátra élmény hozzád közel.</h2>
-              <p>Válassz helyszínt, nézd meg az elérhető szolgáltatásokat és szakembereket, majd foglalj néhány lépésben.</p>
+              <h2>Találj ránk a közeledben.</h2>
+              <p>{position ? "A helyzeted alapján a hozzád legközelebbi szalonokat mutatjuk elsőként." : "Válassz képek és helyszín alapján, vagy engedélyezd a helyzeted használatát, és a hozzád legközelebbi szalonokat rendezzük előre."}</p>
             </div>
-            <NavLink to="/salons" className="kleo-v3-text-link">Összes szalon <span>→</span></NavLink>
+            <div className="kleo-v3-nearby-actions">
+              {!position && <button type="button" className="kleo-v3-nearby-btn" onClick={requestLocation} disabled={locationState === "loading"}>{locationState === "loading" ? "Helyzet meghatározása…" : "Helyzetem alapján rendezem"}</button>}
+              <NavLink to="/salons" className="kleo-v3-text-link">Összes szalon és térkép <span>→</span></NavLink>
+            </div>
           </header>
+          {locationState === "denied" && <p className="kleo-v3-location-note">A helyzeted nem érhető el, ezért az alapértelmezett szalonlistát mutatjuk. A teljes térképes kereső a Szalonjaink oldalon továbbra is használható.</p>}
 
           <div className="kleo-v3-salon-grid">
-            {SALONS.map((salon) => (
-              <NavLink key={salon.to} to={salon.to} className="kleo-v3-salon">
-                <img loading="lazy" decoding="async" src={salon.image} alt={`Kleopátra Szépségszalon – ${salon.title}`} />
+            {nearbySalons.map((salon) => {
+              const km = position ? distanceKm(position, salon) : null;
+              return <NavLink key={salon.slug} to={`/salons/${salon.slug}`} className="kleo-v3-salon">
+                <img loading="lazy" decoding="async" src={SALON_IMAGES[salon.slug] || "/images/szalonok.jpg"} alt={`Kleopátra Szépségszalon – ${salon.city_label}`} />
                 <div className="kleo-v3-salon__body">
-                  <small>Kleopátra Szépségszalon</small>
-                  <h3>{salon.title}</h3>
+                  <small>{km != null && Number.isFinite(km) ? `${km.toFixed(km < 10 ? 1 : 0)} km · ` : ""}Kleopátra Szépségszalon</small>
+                  <h3>{salon.city_label}</h3>
                   <p>{salon.address}</p>
-                  <span>Részletek és foglalás →</span>
+                  <span>Részletek, árak és foglalás →</span>
                 </div>
-              </NavLink>
-            ))}
+              </NavLink>;
+            })}
           </div>
         </div>
       </section>
