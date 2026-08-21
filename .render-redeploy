@@ -1,7 +1,9 @@
 Render redeploy trigger
-2026-08-21T21:15:00+02:00
-Force deploy current public web / Smart Signage v9.
-Feature merge: f2efa1efb3d0a9813b31ea1f60e9872578f9ab29.
-Reason: CSS animation was deployed but remained visually static on the actual display. v9 uses requestAnimationFrame and inline !important transforms every frame, targeting both the four top information blocks and the four Smart Signage widgets. Random curated YouTube rotation remains enabled.
+2026-08-21T21:24:00+02:00
+Force deploy current public web / Smart Signage v9 + Kleo line mascot.
+Feature merge: 504357a98d2f0cbbe9b15a1bd42de6f5d20e51ab.
+Deploy-evidence merge: 04a4d87fd7442715e4428495e1c3c41eddb4639a.
+Reason: force Render to rebuild the current main after adding the original one-line signage mascot and its strict live deployment verification.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous
+Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous / mascot=kleo-line-v1
+Expected live bundle token: kleoLineMascotLayer
