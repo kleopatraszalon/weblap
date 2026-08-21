@@ -8,6 +8,7 @@ import "./styles/public-pages.css";
 import "./styles/commerce-pages.css";
 import "./styles/home-modern.css";
 import "./styles/booking-modern.css";
+import "./styles/signage-responsive-v5.css";
 
 installMarketingAttribution();
 
