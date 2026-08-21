@@ -32,7 +32,7 @@ import { BookingPageV5 } from "./pages/BookingPageV5";
 import { API_BASE } from "./apiClient";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
-import { WebsiteCmsProvider } from "./websiteCms";
+import { WebsiteCmsProvider, useWebsiteCms } from "./websiteCms";
 
 const OLD_FRANCHISE_HOSTS = new Set(["kleopatraszepsegszalonok.hu", "www.kleopatraszepsegszalonok.hu"]);
 const isFranchiseHost = () => typeof window !== "undefined" && OLD_FRANCHISE_HOSTS.has(window.location.hostname.toLowerCase());
@@ -61,9 +61,11 @@ const FloatingCartButton: React.FC = () => {
 
 function AppShell() {
   const location = useLocation();
+  const cms = useWebsiteCms();
   const franchiseHost = isFranchiseHost();
   const isSignage = location.pathname.startsWith("/signage") || location.pathname.startsWith("/kiosk");
   const isFocusedFranchise = franchiseHost || ["/lp1", "/ajanlat", "/koszonjuk", "/franchise-v1", "/franchise-info", "/franchise-koszonjuk"].includes(location.pathname);
+  const useBrandRefresh = (cms.theme as any)?.preset !== "classic";
 
   useEffect(()=>{
     if(!NBA_BOOKING_PATHS.has(location.pathname))return;
@@ -92,8 +94,8 @@ function AppShell() {
 
   return <>
     {!isSignage && <ModernPublicStyles />}
-    {!isSignage && <BrandRefreshStyles />}
-    {!isSignage && <BrandRefreshFixes />}
+    {!isSignage && useBrandRefresh && <BrandRefreshStyles />}
+    {!isSignage && useBrandRefresh && <BrandRefreshFixes />}
     {!isSignage && !isFocusedFranchise && <Header />}
     {!isSignage && !isFocusedFranchise && <FloatingCartButton />}
     <Routes>

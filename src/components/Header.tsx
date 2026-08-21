@@ -29,6 +29,7 @@ export function Header() {
             <NavLink to="/loyalty" className={navLinkClass} onClick={close}>Hűségprogram</NavLink>
             <NavLink to="/prices" className={navLinkClass} onClick={close}>Áraink</NavLink>
             <NavLink to="/webshop" className={navLinkClass} onClick={close}>{t("menu.webshop")}</NavLink>
+            <NavLink to="/franchise" className={navLinkClass} onClick={close}>Franchise</NavLink>
             <NavLink to="/career" className={navLinkClass} onClick={close}>Karrier</NavLink>
             <NavLink to="/education" className={navLinkClass} onClick={close}>Oktatás</NavLink>
           </nav>
