@@ -1,0 +1,115 @@
+/* KLEO Smart Signage v8 — guaranteed visible motion for the four smart cards. */
+
+.sgx .sgx-widgetDock-v3 {
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget {
+  position: relative;
+  z-index: 2;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(1) {
+  animation: sgV8WidgetOne var(--sg-v8-dur, 9.4s) cubic-bezier(.36,.02,.22,1) var(--sg-v8-delay, 0s) infinite alternate !important;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(2) {
+  animation: sgV8WidgetTwo var(--sg-v8-dur, 11.6s) cubic-bezier(.28,.04,.25,1) var(--sg-v8-delay, -2s) infinite alternate !important;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(3) {
+  animation: sgV8WidgetThree var(--sg-v8-dur, 10.2s) cubic-bezier(.31,.03,.2,1) var(--sg-v8-delay, -4s) infinite alternate !important;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(4) {
+  animation: sgV8WidgetFour var(--sg-v8-dur, 12.4s) cubic-bezier(.29,.02,.23,1) var(--sg-v8-delay, -6s) infinite alternate !important;
+}
+
+@keyframes sgV8WidgetOne {
+  0%   { transform: translate3d(-26px, 4px, 0) rotate(-.45deg) scale(.992); }
+  18%  { transform: translate3d(14px, -7px, 0) rotate(.28deg) scale(1.012); }
+  41%  { transform: translate3d(31px, 5px, 0) rotate(.55deg) scale(1.018); }
+  63%  { transform: translate3d(-7px, 8px, 0) rotate(-.18deg) scale(.998); }
+  82%  { transform: translate3d(-34px, -4px, 0) rotate(-.62deg) scale(1.008); }
+  100% { transform: translate3d(20px, 2px, 0) rotate(.35deg) scale(1.014); }
+}
+
+@keyframes sgV8WidgetTwo {
+  0%   { transform: translate3d(28px, -6px, 0) rotate(.5deg) scale(1.008); }
+  21%  { transform: translate3d(-18px, 4px, 0) rotate(-.42deg) scale(.995); }
+  44%  { transform: translate3d(-33px, -3px, 0) rotate(-.58deg) scale(1.015); }
+  69%  { transform: translate3d(11px, 7px, 0) rotate(.22deg) scale(1.005); }
+  87%  { transform: translate3d(35px, 1px, 0) rotate(.61deg) scale(.994); }
+  100% { transform: translate3d(-10px, -5px, 0) rotate(-.2deg) scale(1.012); }
+}
+
+@keyframes sgV8WidgetThree {
+  0%   { transform: translate3d(-18px, -5px, 0) rotate(-.32deg) scale(1.014); }
+  16%  { transform: translate3d(24px, 7px, 0) rotate(.44deg) scale(.996); }
+  39%  { transform: translate3d(37px, -2px, 0) rotate(.66deg) scale(1.018); }
+  61%  { transform: translate3d(3px, 8px, 0) rotate(.08deg) scale(1.003); }
+  84%  { transform: translate3d(-32px, 2px, 0) rotate(-.55deg) scale(.991); }
+  100% { transform: translate3d(17px, -6px, 0) rotate(.31deg) scale(1.01); }
+}
+
+@keyframes sgV8WidgetFour {
+  0%   { transform: translate3d(20px, 6px, 0) rotate(.36deg) scale(.994); }
+  23%  { transform: translate3d(-27px, -7px, 0) rotate(-.5deg) scale(1.016); }
+  47%  { transform: translate3d(-36px, 3px, 0) rotate(-.65deg) scale(1.006); }
+  66%  { transform: translate3d(8px, 8px, 0) rotate(.16deg) scale(.992); }
+  86%  { transform: translate3d(34px, -3px, 0) rotate(.59deg) scale(1.018); }
+  100% { transform: translate3d(-13px, 4px, 0) rotate(-.25deg) scale(1.008); }
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget strong,
+.sgx .sgx-widgetDock-v3 .sgx-widget small {
+  animation: sgV8TextGlide var(--sg-v8-text-dur, 6.8s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(2) strong,
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(2) small { animation-delay: -1.8s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(3) strong,
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(3) small { animation-delay: -3.1s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(4) strong,
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(4) small { animation-delay: -4.6s; }
+
+@keyframes sgV8TextGlide {
+  0%, 12% { transform: translate3d(-5px, 0, 0); }
+  38% { transform: translate3d(10px, 0, 0); }
+  67% { transform: translate3d(-2px, 0, 0); }
+  100% { transform: translate3d(7px, 0, 0); }
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(112deg, transparent 18%, rgba(255,255,255,.10) 47%, transparent 76%);
+  transform: translateX(-125%);
+  animation: sgV8Sheen 6.2s ease-in-out infinite;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(2)::after { animation-delay: -1.4s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(3)::after { animation-delay: -2.8s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(4)::after { animation-delay: -4.2s; }
+
+@keyframes sgV8Sheen {
+  0%, 18% { transform: translateX(-125%); opacity: 0; }
+  33% { opacity: .8; }
+  57% { transform: translateX(125%); opacity: .22; }
+  100% { transform: translateX(125%); opacity: 0; }
+}
+
+/* Random YouTube mode label. */
+.sgx .sgPanel.sgVideo[data-youtube-random="smart-signage-v8"] .sgPanelHeader h2::after {
+  content: "  ·  RANDOM YOUTUBE";
+  font-size: .58em;
+  letter-spacing: .12em;
+  opacity: .66;
+}

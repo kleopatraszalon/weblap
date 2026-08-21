@@ -24,10 +24,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v7 moving smart widgets on Render",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v8 continuous motion and random YouTube on Render",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v7
+      - name: Wait for Render and verify deployed Smart Signage v8
         shell: bash
         run: |
           set -euo pipefail
@@ -38,41 +38,39 @@ jobs:
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
             css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
 
-            if [[ "$marker" == *"smart-signage-v7"* \
-              && "$marker" == *"layout=viewport-native-responsive"* \
-              && "$marker" == *"motion=smart-widget-random-roll"* \
+            if [[ "$marker" == *"smart-signage-v8"* \
+              && "$marker" == *"motion=css-continuous-plus-js-random"* \
+              && "$marker" == *"youtube=curated-random-gym-hair-beauty"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
 
-              if grep -q 'SMART SIGNAGE' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'MOST FELSZABADULT IDŐPONT' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'KLEOSHOP' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '/api/signage/birthdays' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '/api/public/booking/v4/last-minute' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgSmartWidgetMotion' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgSmartRoll' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'random-roll-v7' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgSmartWidgetRoll' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgSmartContentMotion' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgSmartSheen' /tmp/signage-live.css 2>/dev/null; then
-                echo "Smart Signage v7 moving smart widgets are live. js=$js_asset css=$css_asset"
+              if grep -q '__kleoSignageMotionV8Installed' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'smart-signage-v8' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'UItWltVZZmE' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'SM-OspCx4qk' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'y7UyKEb2ZHw' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'sgV8WidgetOne' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgV8WidgetFour' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgV8TextGlide' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'infinite alternate' /tmp/signage-live.css 2>/dev/null; then
+                echo "Smart Signage v8 continuous motion and random YouTube bundle are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
             fi
-            echo "Waiting for Render Smart Signage v7 deployment ($attempt/90)"
+            echo "Waiting for Render Smart Signage v8 deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v7 moving smart widgets were not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1 || { echo "Smart Signage v8 was not observable on Render within the verification window." >&2; exit 1; }
 
       - name: Mark signage live verification success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v7 moving smart widgets verified live on Render",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v8 continuous motion + random YouTube verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
       - name: Mark signage live verification failure
@@ -80,5 +78,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v7 moving smart widgets not verified live on Render",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v8 not verified live on Render",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
