@@ -1,3 +1,5 @@
+@import "./signageModernV3.css";
+
 .sgx .sgViewport,
 .sgx .sgCanvas {
   background: var(--sgx-bg) !important;
