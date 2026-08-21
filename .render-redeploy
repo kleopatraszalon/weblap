@@ -1,8 +1,7 @@
 Render redeploy trigger
-2026-08-21T21:06:00+02:00
-Force deploy current public web / Smart Signage v8 with guaranteed continuous motion for the four smart widgets and random curated YouTube rotation.
-Feature merge: 4546667b0d71ec24f8b68a28b2343ac7a59e5118.
-Observer hotfix merge: 5886ecf6512f2b40759da13af6074bd0155c0ac2.
-Reason: explicit redeploy of every production component required for signage motion. The motion runtime, CSS keyframes and YouTube rotation are all in the public weblap bundle; no backend redeploy is required for the animation itself.
+2026-08-21T21:15:00+02:00
+Force deploy current public web / Smart Signage v9.
+Feature merge: f2efa1efb3d0a9813b31ea1f60e9872578f9ab29.
+Reason: CSS animation was deployed but remained visually static on the actual display. v9 uses requestAnimationFrame and inline !important transforms every frame, targeting both the four top information blocks and the four Smart Signage widgets. Random curated YouTube rotation remains enabled.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v8 / motion=continuous-css-keyframes-randomized
+Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous
