@@ -1,4 +1,4 @@
-/* KLEO Smart Signage v6 — organic/random motion for the top information widgets. */
+/* KLEO Smart Signage v7 — visible random motion for the four Smart Signage widgets. */
 
 .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
 .sgx .sgTopbar > .sgWeather.sgRandomMotion,
@@ -37,45 +37,112 @@
   will-change: transform;
 }
 
-/* Occasionally one card makes a more visible side-to-side glide, then returns to its random base position. */
 .sgx .sgTopbar > .sgRandomMotion.sgRandomRoll {
   animation: sgRandomTopRoll var(--sg-roll-dur, 4.6s) cubic-bezier(.18,.78,.22,1) 1;
 }
 
 @keyframes sgRandomTopRoll {
   0% {
-    transform:
-      translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0)
-      rotate(var(--sg-rand-rot, 0deg))
-      scale(var(--sg-rand-scale, 1));
+    transform: translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0) rotate(var(--sg-rand-rot, 0deg)) scale(var(--sg-rand-scale, 1));
   }
   16% {
-    transform:
-      translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-from, -18px)), calc(var(--sg-rand-y, 0px) - 2px), 0)
-      rotate(calc(var(--sg-rand-rot, 0deg) - .28deg))
-      scale(.99);
+    transform: translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-from, -18px)), calc(var(--sg-rand-y, 0px) - 2px), 0) rotate(calc(var(--sg-rand-rot, 0deg) - .28deg)) scale(.99);
   }
   46% {
-    transform:
-      translate3d(var(--sg-rand-x, 0px), calc(var(--sg-rand-y, 0px) + 2px), 0)
-      rotate(var(--sg-rand-rot, 0deg))
-      scale(1.012);
+    transform: translate3d(var(--sg-rand-x, 0px), calc(var(--sg-rand-y, 0px) + 2px), 0) rotate(var(--sg-rand-rot, 0deg)) scale(1.012);
   }
   74% {
-    transform:
-      translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-to, 18px)), calc(var(--sg-rand-y, 0px) - 1px), 0)
-      rotate(calc(var(--sg-rand-rot, 0deg) + .24deg))
-      scale(.995);
+    transform: translate3d(calc(var(--sg-rand-x, 0px) + var(--sg-roll-to, 18px)), calc(var(--sg-rand-y, 0px) - 1px), 0) rotate(calc(var(--sg-rand-rot, 0deg) + .24deg)) scale(.995);
   }
   100% {
-    transform:
-      translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0)
-      rotate(var(--sg-rand-rot, 0deg))
-      scale(var(--sg-rand-scale, 1));
+    transform: translate3d(var(--sg-rand-x, 0px), var(--sg-rand-y, 0px), 0) rotate(var(--sg-rand-rot, 0deg)) scale(var(--sg-rand-scale, 1));
   }
 }
 
-/* The five-day weather strip also glides gently between the random JS-driven changes. */
+/* The four cards explicitly requested by the signage operator. */
+.sgx .sgx-widgetDock-v3.sgSmartDockMotion {
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartWidgetMotion {
+  position: relative;
+  z-index: 2;
+  transform:
+    translate3d(var(--sg-smart-x, 0px), var(--sg-smart-y, 0px), 0)
+    rotate(var(--sg-smart-rot, 0deg))
+    scale(var(--sg-smart-scale, 1));
+  transition:
+    transform var(--sg-smart-dur, 3.2s) cubic-bezier(.16,.78,.22,1) var(--sg-smart-delay, 0s),
+    box-shadow 900ms ease,
+    filter 900ms ease;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartWidgetMotion:nth-child(odd) {
+  box-shadow: 0 22px 52px rgba(0,0,0,.34), 0 0 24px rgba(182,152,97,.10), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartWidgetMotion:nth-child(even) {
+  box-shadow: 0 22px 52px rgba(0,0,0,.34), 0 0 24px rgba(236,0,140,.08), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartRoll {
+  z-index: 8;
+  animation: sgSmartWidgetRoll var(--sg-smart-roll-dur, 4.8s) cubic-bezier(.16,.8,.2,1) 1;
+}
+
+@keyframes sgSmartWidgetRoll {
+  0% {
+    transform: translate3d(var(--sg-smart-x, 0px), var(--sg-smart-y, 0px), 0) rotate(var(--sg-smart-rot, 0deg)) scale(var(--sg-smart-scale, 1));
+  }
+  18% {
+    transform: translate3d(calc(var(--sg-smart-x, 0px) + var(--sg-smart-roll-a, 95px)), calc(var(--sg-smart-y, 0px) - 5px), 0) rotate(1.2deg) scale(1.035);
+  }
+  48% {
+    transform: translate3d(calc(var(--sg-smart-x, 0px) + var(--sg-smart-roll-b, -50px)), calc(var(--sg-smart-y, 0px) + 4px), 0) rotate(-.75deg) scale(.99);
+  }
+  76% {
+    transform: translate3d(calc(var(--sg-smart-x, 0px) + (var(--sg-smart-roll-a, 95px) * .22)), var(--sg-smart-y, 0px), 0) rotate(.28deg) scale(1.01);
+  }
+  100% {
+    transform: translate3d(var(--sg-smart-x, 0px), var(--sg-smart-y, 0px), 0) rotate(var(--sg-smart-rot, 0deg)) scale(var(--sg-smart-scale, 1));
+  }
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget strong.sgSmartContentMotion,
+.sgx .sgx-widgetDock-v3 .sgx-widget small.sgSmartContentMotion {
+  display: block;
+  max-width: 100%;
+  transform: translate3d(var(--sg-smart-text-x, 0px), 0, 0);
+  transition: transform var(--sg-smart-text-dur, 5s) cubic-bezier(.18,.75,.22,1);
+  will-change: transform;
+}
+
+/* A persistent micro-motion makes it impossible for the cards to look frozen between random target changes. */
+.sgx .sgx-widgetDock-v3 .sgx-widget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.08) 48%, transparent 76%);
+  transform: translateX(-120%);
+  animation: sgSmartSheen 7.5s ease-in-out infinite;
+}
+
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(2)::before { animation-delay: -1.6s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(3)::before { animation-delay: -3.3s; }
+.sgx .sgx-widgetDock-v3 .sgx-widget:nth-child(4)::before { animation-delay: -5.1s; }
+
+@keyframes sgSmartSheen {
+  0%, 22% { transform: translateX(-120%); opacity: 0; }
+  36% { opacity: .75; }
+  58% { transform: translateX(120%); opacity: .18; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
 .sgx .sgTopbar .sgWxRow {
   animation: sgWeatherBreath 13s ease-in-out infinite alternate;
 }
@@ -88,7 +155,6 @@
   100% { margin-left: 0; }
 }
 
-/* Keep vertical drift minimal on true ultra-wide wallboards. */
 @media (min-aspect-ratio: 5 / 2) {
   .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
   .sgx .sgTopbar > .sgWeather.sgRandomMotion,
@@ -97,7 +163,6 @@
   }
 }
 
-/* On small displays keep the cards stable enough to avoid collisions. */
 @media (max-width: 1180px) {
   .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
   .sgx .sgTopbar > .sgWeather.sgRandomMotion,
@@ -107,8 +172,16 @@
     --sg-rand-rot: 0deg;
     --sg-rand-scale: 1;
   }
+
+  .sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartWidgetMotion {
+    --sg-smart-x: 0px;
+    --sg-smart-y: 0px;
+    --sg-smart-rot: 0deg;
+  }
 }
 
+/* Accessibility only suppresses decorative top-bar motion. The four smart display widgets
+   remain animated because motion is an explicit requirement of this unattended signage mode. */
 @media (prefers-reduced-motion: reduce) {
   .sgx .sgRandomMotion,
   .sgx .sgRandomWeatherDay,
