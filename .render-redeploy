@@ -1,8 +1,7 @@
 Render redeploy trigger
-2026-08-21T22:03:00+02:00
-Force deploy the exact latest main for Smart Signage v10.
-Reason: move the four Smart Signage rectangles inside the visible board as continuously roaming bounded cards.
+2026-08-21T22:26:00+02:00
+Force deploy the exact latest main for Smart Signage v10 with GTA-style woman video-stop animation.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v10 / motion=four-smart-cards-bounded-random-roam
-Required runtime: __kleoSignageMotionV10Installed / floating-bounded-v10 / requestAnimationFrame.
-Keep enabled: curated random YouTube rotation for GYM / FODRÁSZAT / KOZMETIKA and current Kleo line mascot.
+Expected marker: smart-signage-v10 / mascot=kleo-woman-gta-v1 / motion=four-smart-cards-bounded-random-roam
+Required runtime: __kleoSignageMotionV10Installed / floating-bounded-v10 / requestAnimationFrame / .sgPanel.sgVideo target measurement.
+Keep enabled: curated random YouTube rotation and GTA-style woman walking on the lower line, stopping at the video, then continuing right.
