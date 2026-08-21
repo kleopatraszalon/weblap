@@ -7,240 +7,107 @@
   contain: layout paint;
 }
 
-.kleoLineMascotTrack {
+.kleoWomanTrack {
   position: absolute;
   left: 0;
-  bottom: clamp(4px, .8vh, 12px);
-  width: clamp(220px, 15vw, 330px);
+  bottom: var(--kleo-walk-bottom, 68px);
+  height: clamp(250px, 40vh, 455px);
+  width: auto;
   opacity: 0;
-  filter: drop-shadow(0 7px 18px color-mix(in srgb, var(--sgx-bg, #fbfaf8) 52%, transparent));
-  animation: kleoMascotScene 28s cubic-bezier(.4, 0, .2, 1) infinite;
+  transform: translate3d(-360px, 0, 0);
+  transform-origin: 50% 100%;
   will-change: transform, opacity;
 }
 
-.kleoLineMascot {
+.kleoWomanMotion {
+  position: relative;
+  height: 100%;
+  width: max-content;
+  transform-origin: 50% 100%;
+  animation: kleoWomanWalk 0.72s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.kleoWomanArtwork {
   display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.kleoLineMascot path,
-.kleoLineMascot circle {
-  vector-effect: non-scaling-stroke;
-}
-
-.klm-ground,
-.klm-mainStroke,
-.klm-hairStroke,
-.klm-eyeStroke,
-.klm-browStroke,
-.klm-smileStroke,
-.klm-lapelStroke,
-.klm-limbStroke,
-.klm-handStroke,
-.klm-shoeStroke,
-.klm-sparkles path,
-.klm-sparkles circle {
-  fill: none;
-  stroke: var(--sgx-text, #120c08);
-  stroke-width: 4.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.klm-ground {
-  stroke: color-mix(in srgb, var(--sgx-gold, #b69861) 88%, var(--sgx-text, #120c08));
-  stroke-width: 5.2;
-  opacity: .9;
-}
-
-.klm-groundTail {
-  opacity: .72;
-}
-
-.klm-mainStroke {
-  stroke-width: 5.5;
-}
-
-.klm-hairStroke {
-  stroke: color-mix(in srgb, var(--sgx-text, #120c08) 92%, var(--sgx-gold, #b69861));
-  stroke-width: 5.2;
-}
-
-.klm-eyeStroke,
-.klm-browStroke,
-.klm-smileStroke {
-  stroke-width: 3.8;
-}
-
-.klm-accentStroke {
-  fill: color-mix(in srgb, var(--sgx-accent, #ec008c) 7%, transparent);
-  stroke: var(--sgx-accent, #ec008c);
-  stroke-width: 3.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.klm-character {
-  transform-origin: 190px 210px;
-  animation: kleoBodyFloat 1.08s ease-in-out infinite alternate;
-}
-
-.klm-bodyGroup {
-  transform-origin: 193px 210px;
-  animation: kleoBodyLean 5.8s ease-in-out infinite;
-}
-
-.klm-leftArm {
-  transform-origin: 190px 126px;
-  animation: kleoLeftArm 1.08s ease-in-out infinite alternate;
-}
-
-.klm-rightArm {
-  transform-origin: 197px 126px;
-  animation: kleoRightArm 5.8s ease-in-out infinite;
-}
-
-.klm-legA {
-  transform-origin: 184px 209px;
-  animation: kleoLegA 1.08s cubic-bezier(.42, 0, .58, 1) infinite alternate;
-}
-
-.klm-legB {
-  transform-origin: 196px 207px;
-  animation: kleoLegB 1.08s cubic-bezier(.42, 0, .58, 1) infinite alternate;
-}
-
-.klm-accessory {
-  transform-origin: 286px 96px;
-  animation: kleoMirrorTilt 5.8s ease-in-out infinite;
-}
-
-.klm-sparkles {
-  stroke: var(--sgx-accent, #ec008c);
-  transform-origin: 321px 92px;
-  animation: kleoSpark 2.9s ease-in-out infinite;
-}
-
-.klm-sparkles path,
-.klm-sparkles circle {
-  stroke: var(--sgx-accent, #ec008c);
-  stroke-width: 3.2;
-}
-
-.sgx-neon .kleoLineMascotTrack,
-.sgx-glass .kleoLineMascotTrack {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  opacity: 0.98;
   filter:
-    drop-shadow(0 0 10px color-mix(in srgb, var(--sgx-accent, #ec008c) 42%, transparent))
-    drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
+    drop-shadow(0 13px 16px rgba(15, 9, 5, 0.22))
+    drop-shadow(0 2px 4px rgba(15, 9, 5, 0.18));
+  -webkit-mask-image: radial-gradient(ellipse 72% 98% at 50% 48%, #000 64%, rgba(0,0,0,.95) 74%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 98% at 50% 48%, #000 64%, rgba(0,0,0,.95) 74%, transparent 100%);
 }
 
-.sgx-luxe .klm-mainStroke,
-.sgx-luxe .klm-hairStroke {
-  stroke: #f6ecd8;
+.kleoWomanVideoGlow {
+  position: absolute;
+  right: 4%;
+  top: 24%;
+  width: 22%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sgx-accent, #ec008c) 58%, #fff) 0 8%, color-mix(in srgb, var(--sgx-accent, #ec008c) 22%, transparent) 22%, transparent 70%);
+  filter: blur(2px);
+  transform: scale(.72);
 }
 
-.sgx-luxe .klm-ground {
-  stroke: var(--sgx-gold, #d5b36f);
+.kleoWomanTrack.is-at-video .kleoWomanMotion {
+  animation: kleoWomanVideoPose 1.3s ease-in-out infinite alternate;
 }
 
-@keyframes kleoMascotScene {
-  0% {
-    transform: translate3d(-360px, 0, 0) scale(.94);
-    opacity: 0;
-  }
-  4% { opacity: .92; }
-  34% {
-    transform: translate3d(29vw, 0, 0) scale(.98);
-    opacity: .92;
-  }
-  43% {
-    transform: translate3d(38vw, 0, 0) scale(1);
-    opacity: .97;
-  }
-  57% {
-    transform: translate3d(38vw, 0, 0) scale(1);
-    opacity: .97;
-  }
-  66% {
-    transform: translate3d(49vw, -2px, 0) scale(.99);
-    opacity: .95;
-  }
-  96% { opacity: .92; }
-  100% {
-    transform: translate3d(calc(100vw + 380px), 0, 0) scale(.94);
-    opacity: 0;
-  }
+.kleoWomanTrack.is-at-video .kleoWomanArtwork {
+  filter:
+    drop-shadow(0 16px 22px rgba(15, 9, 5, 0.25))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--sgx-gold, #b69861) 26%, transparent));
 }
 
-@keyframes kleoBodyFloat {
-  from { transform: translateY(0) rotate(-.18deg); }
-  to { transform: translateY(-3px) rotate(.28deg); }
+.kleoWomanTrack.is-at-video .kleoWomanVideoGlow {
+  animation: kleoWomanGlow 1.15s ease-in-out infinite;
 }
 
-@keyframes kleoBodyLean {
-  0%, 58%, 100% { transform: rotate(0deg); }
-  66% { transform: rotate(-1.8deg) translateY(-1px); }
-  74% { transform: rotate(1.1deg); }
-  82% { transform: rotate(0deg); }
+.sgx-neon .kleoWomanArtwork,
+.sgx-glass .kleoWomanArtwork {
+  filter:
+    drop-shadow(0 13px 18px rgba(0,0,0,.34))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--sgx-accent, #ec008c) 22%, transparent));
 }
 
-@keyframes kleoLeftArm {
-  from { transform: rotate(4deg); }
-  to { transform: rotate(-5.5deg); }
+.sgx-luxe .kleoWomanArtwork {
+  filter:
+    drop-shadow(0 15px 20px rgba(0,0,0,.38))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--sgx-gold, #d5b36f) 24%, transparent));
 }
 
-@keyframes kleoRightArm {
-  0%, 56%, 100% { transform: rotate(0deg); }
-  63% { transform: rotate(-16deg); }
-  68% { transform: rotate(9deg); }
-  73% { transform: rotate(-13deg); }
-  79% { transform: rotate(5deg); }
-  86% { transform: rotate(0deg); }
+@keyframes kleoWomanWalk {
+  from { transform: translate3d(0, 0, 0) rotate(-0.35deg) scale(1); }
+  to { transform: translate3d(0, -5px, 0) rotate(0.45deg) scale(1.003); }
 }
 
-@keyframes kleoLegA {
-  from { transform: rotate(6.5deg) translateY(0); }
-  to { transform: rotate(-7deg) translateY(-1px); }
+@keyframes kleoWomanVideoPose {
+  from { transform: translate3d(0, 0, 0) rotate(-0.7deg) scale(1.005); }
+  to { transform: translate3d(4px, -2px, 0) rotate(0.45deg) scale(1.02); }
 }
 
-@keyframes kleoLegB {
-  from { transform: rotate(-7deg) translateY(-1px); }
-  to { transform: rotate(6.5deg) translateY(0); }
-}
-
-@keyframes kleoMirrorTilt {
-  0%, 54%, 100% { transform: rotate(0deg) scale(1); }
-  63% { transform: rotate(-5deg) scale(1.03); }
-  74% { transform: rotate(4deg) scale(1.02); }
-  86% { transform: rotate(0deg) scale(1); }
-}
-
-@keyframes kleoSpark {
-  0%, 25%, 100% { transform: scale(.7) rotate(0deg); opacity: .08; }
-  45% { transform: scale(1.08) rotate(10deg); opacity: .9; }
-  66% { transform: scale(.94) rotate(-5deg); opacity: .48; }
+@keyframes kleoWomanGlow {
+  0%, 100% { opacity: .08; transform: scale(.72); }
+  45% { opacity: .86; transform: scale(1.08); }
+  68% { opacity: .42; transform: scale(.94); }
 }
 
 @media (max-height: 720px), (max-width: 1280px) {
-  .kleoLineMascotTrack {
-    width: clamp(180px, 14vw, 245px);
-    bottom: 0;
+  .kleoWomanTrack {
+    height: clamp(205px, 36vh, 320px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kleoLineMascotTrack {
-    left: auto;
-    right: 1.2vw;
-    transform: none;
-    opacity: .62;
-    animation: none;
-  }
-
-  .kleoLineMascot *,
-  .kleoLineMascot {
-    animation: none !important;
-  }
+  .kleoWomanTrack { opacity: .88; }
+  .kleoWomanMotion,
+  .kleoWomanTrack.is-at-video .kleoWomanMotion,
+  .kleoWomanVideoGlow { animation: none !important; }
 }
