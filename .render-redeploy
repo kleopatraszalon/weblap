@@ -1,7 +1,7 @@
 Render redeploy trigger
-2026-08-21T22:26:00+02:00
-Force deploy the exact latest main for Smart Signage v10 with GTA-style woman video-stop animation.
+2026-08-21T22:54:00+02:00
+Force deploy the exact latest main for Smart Signage v10 with GTA-style woman feet above the pink ticker.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v10 / mascot=kleo-woman-gta-v1 / motion=four-smart-cards-bounded-random-roam
-Required runtime: __kleoSignageMotionV10Installed / floating-bounded-v10 / requestAnimationFrame / .sgPanel.sgVideo target measurement.
-Keep enabled: curated random YouTube rotation and GTA-style woman walking on the lower line, stopping at the video, then continuing right.
+Expected marker: smart-signage-v10 / mascot=kleo-woman-gta-v1 / feet=ticker-top-plus-6px
+Required runtime: __kleoSignageMotionV10Installed / floating-bounded-v10 / requestAnimationFrame / ticker-top-plus-6px / .sgPanel.sgVideo target measurement.
+Keep enabled: curated random YouTube rotation and GTA-style woman walking with shoe soles 6 px above the magenta ticker, stopping at the video, then continuing right.
