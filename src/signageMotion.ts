@@ -149,7 +149,8 @@ function randomizeSmartWidgets() {
   widgets.forEach((el, index) => setSmartWidgetMotion(el, index));
 
   const text = shuffle(Array.from(document.querySelectorAll<HTMLElement>(SMART_TEXT_SELECTOR)));
-  const count = Math.min(text.length, randInt(3, Math.max(3, text.length)));
+  const minCount = Math.min(3, text.length);
+  const count = text.length ? Math.min(text.length, randInt(minCount, text.length)) : 0;
   text.slice(0, count).forEach(setSmartTextMotion);
 }
 
@@ -176,6 +177,7 @@ function triggerSmartWidgetRoll() {
   const direction = Math.random() < 0.5 ? -1 : 1;
   el.style.setProperty("--sg-smart-roll-a", `${direction * rand(70, 125)}px`);
   el.style.setProperty("--sg-smart-roll-b", `${direction * -rand(35, 70)}px`);
+  el.style.setProperty("--sg-smart-roll-c", `${direction * rand(14, 30)}px`);
   el.style.setProperty("--sg-smart-roll-dur", `${rand(3.8, 5.8)}s`);
   el.classList.remove("sgSmartRoll");
   void el.offsetWidth;
