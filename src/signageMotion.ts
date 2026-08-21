@@ -10,6 +10,9 @@ const TOP_TARGETS: MotionTarget[] = [
   { selector: ".sgTopbar > .sgClock", intensity: 0.62 },
 ];
 
+const SMART_WIDGET_SELECTOR = ".sgx-widgetDock-v3 .sgx-widget";
+const SMART_TEXT_SELECTOR = ".sgx-widgetDock-v3 .sgx-widget strong, .sgx-widgetDock-v3 .sgx-widget small";
+
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const randInt = (min: number, max: number) => Math.floor(rand(min, max + 1));
 
@@ -57,7 +60,48 @@ function collectTopTargets(): Array<{ el: HTMLElement; intensity: number }> {
   );
 }
 
-function attachClasses() {
+function collectSmartWidgets() {
+  return Array.from(document.querySelectorAll<HTMLElement>(SMART_WIDGET_SELECTOR));
+}
+
+function setSmartWidgetMotion(el: HTMLElement, index = 0) {
+  el.classList.add("sgSmartWidgetMotion");
+  el.style.setProperty("--sg-smart-x", `${rand(-34, 34)}px`);
+  el.style.setProperty("--sg-smart-y", `${rand(-8, 8)}px`);
+  el.style.setProperty("--sg-smart-rot", `${rand(-0.7, 0.7)}deg`);
+  el.style.setProperty("--sg-smart-scale", `${rand(0.985, 1.025)}`);
+  el.style.setProperty("--sg-smart-dur", `${rand(2.2, 4.6)}s`);
+  el.style.setProperty("--sg-smart-delay", `${Math.max(0, index) * 0.12}s`);
+}
+
+function setSmartTextMotion(el: HTMLElement) {
+  el.classList.add("sgSmartContentMotion");
+  const parent = el.parentElement;
+  const room = parent ? Math.max(0, parent.clientWidth - 36) : 0;
+  const overflow = room > 0 ? Math.max(0, el.scrollWidth - room) : 0;
+  const travel = overflow > 8 ? Math.min(overflow + 18, 180) : rand(10, 24);
+  const direction = Math.random() < 0.5 ? -1 : 1;
+  el.style.setProperty("--sg-smart-text-x", `${direction * travel}px`);
+  el.style.setProperty("--sg-smart-text-dur", `${rand(3.4, 7.2)}s`);
+}
+
+function attachSmartWidgetClasses() {
+  if (!isSignageRoute()) return;
+  const dock = document.querySelector<HTMLElement>(".sgx-widgetDock-v3");
+  if (dock) {
+    dock.classList.add("sgSmartDockMotion");
+    dock.dataset.motionActive = "random-roll-v7";
+  }
+
+  collectSmartWidgets().forEach((el, index) => {
+    if (!el.classList.contains("sgSmartWidgetMotion")) setSmartWidgetMotion(el, index);
+  });
+  document.querySelectorAll<HTMLElement>(SMART_TEXT_SELECTOR).forEach((el) => {
+    if (!el.classList.contains("sgSmartContentMotion")) setSmartTextMotion(el);
+  });
+}
+
+function attachTopClasses() {
   if (!isSignageRoute()) return;
   collectTopTargets().forEach(({ el, intensity }) => {
     if (!el.classList.contains("sgRandomMotion")) setMotion(el, intensity);
@@ -72,9 +116,14 @@ function attachClasses() {
     });
 }
 
-function randomizeSome() {
+function attachClasses() {
+  attachSmartWidgetClasses();
+  attachTopClasses();
+}
+
+function randomizeTopSome() {
   if (!isSignageRoute()) return;
-  attachClasses();
+  attachTopClasses();
 
   const targets = shuffle(collectTopTargets());
   const count = Math.min(targets.length, randInt(1, 3));
@@ -93,7 +142,18 @@ function randomizeSome() {
   content.slice(0, Math.min(content.length, randInt(1, 2))).forEach(setContentMotion);
 }
 
-function triggerRandomRoll() {
+function randomizeSmartWidgets() {
+  if (!isSignageRoute()) return;
+  attachSmartWidgetClasses();
+  const widgets = shuffle(collectSmartWidgets());
+  widgets.forEach((el, index) => setSmartWidgetMotion(el, index));
+
+  const text = shuffle(Array.from(document.querySelectorAll<HTMLElement>(SMART_TEXT_SELECTOR)));
+  const count = Math.min(text.length, randInt(3, Math.max(3, text.length)));
+  text.slice(0, count).forEach(setSmartTextMotion);
+}
+
+function triggerRandomTopRoll() {
   if (!isSignageRoute()) return;
   const targets = collectTopTargets();
   if (!targets.length) return;
@@ -103,10 +163,24 @@ function triggerRandomRoll() {
   el.style.setProperty("--sg-roll-to", `${direction * -rand(10, 24)}px`);
   el.style.setProperty("--sg-roll-dur", `${rand(3.6, 5.4)}s`);
   el.classList.remove("sgRandomRoll");
-  // Restart the one-shot animation even if the same card is picked twice.
   void el.offsetWidth;
   el.classList.add("sgRandomRoll");
   window.setTimeout(() => el.classList.remove("sgRandomRoll"), 5600);
+}
+
+function triggerSmartWidgetRoll() {
+  if (!isSignageRoute()) return;
+  const widgets = collectSmartWidgets();
+  if (!widgets.length) return;
+  const el = widgets[Math.floor(Math.random() * widgets.length)];
+  const direction = Math.random() < 0.5 ? -1 : 1;
+  el.style.setProperty("--sg-smart-roll-a", `${direction * rand(70, 125)}px`);
+  el.style.setProperty("--sg-smart-roll-b", `${direction * -rand(35, 70)}px`);
+  el.style.setProperty("--sg-smart-roll-dur", `${rand(3.8, 5.8)}s`);
+  el.classList.remove("sgSmartRoll");
+  void el.offsetWidth;
+  el.classList.add("sgSmartRoll");
+  window.setTimeout(() => el.classList.remove("sgSmartRoll"), 6200);
 }
 
 export function installSignageMotion() {
@@ -114,29 +188,39 @@ export function installSignageMotion() {
   if ((window as any).__kleoSignageMotionInstalled) return;
   (window as any).__kleoSignageMotionInstalled = true;
 
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  const prefersReducedMotion = Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 
   const observer = new MutationObserver(() => attachClasses());
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
   const scheduleMove = () => {
     if (!isSignageRoute()) {
-      window.setTimeout(scheduleMove, 5000);
+      window.setTimeout(scheduleMove, 4000);
       return;
     }
-    randomizeSome();
-    window.setTimeout(scheduleMove, randInt(3200, 7600));
+
+    // These are the four Smart Signage cards shown at the bottom of the screen.
+    // They always move because this is an unattended display mode and explicit signage behavior.
+    randomizeSmartWidgets();
+
+    // Decorative top-bar motion still respects the operating system accessibility preference.
+    if (!prefersReducedMotion) randomizeTopSome();
+    window.setTimeout(scheduleMove, randInt(2200, 4300));
   };
 
   const scheduleRoll = () => {
-    if (isSignageRoute()) triggerRandomRoll();
-    window.setTimeout(scheduleRoll, randInt(14000, 29000));
+    if (isSignageRoute()) {
+      triggerSmartWidgetRoll();
+      if (!prefersReducedMotion && Math.random() > 0.45) triggerRandomTopRoll();
+    }
+    window.setTimeout(scheduleRoll, randInt(8000, 15500));
   };
 
   window.setTimeout(() => {
     attachClasses();
-    randomizeSome();
+    randomizeSmartWidgets();
+    if (!prefersReducedMotion) randomizeTopSome();
     scheduleMove();
-  }, 450);
-  window.setTimeout(scheduleRoll, randInt(6500, 11000));
+  }, 350);
+  window.setTimeout(scheduleRoll, randInt(3800, 7200));
 }
