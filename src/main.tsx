@@ -4,7 +4,7 @@ import App from "./App";
 import SignageLineMascot from "./components/SignageLineMascot";
 import { installMarketingAttribution } from "./marketingAttribution";
 import { installSignageMotionV8 } from "./signageMotionV8";
-import { installSignageMotionV9 } from "./signageMotionV9";
+import { installSignageMotionV10 } from "./signageMotionV10";
 import "./styles/kleo-theme.css";
 import "./styles/website-cms.css";
 import "./styles/public-pages.css";
@@ -13,10 +13,11 @@ import "./styles/home-modern.css";
 import "./styles/booking-modern.css";
 import "./styles/signage-responsive-v5.css";
 import "./styles/signage-motion-v8.css";
+import "./styles/signage-motion-v10.css";
 
 installMarketingAttribution();
 installSignageMotionV8();
-installSignageMotionV9();
+installSignageMotionV10();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
