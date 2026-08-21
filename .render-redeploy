@@ -1,5 +1,5 @@
 Render redeploy trigger
-2026-08-21T00:25:00+02:00
-Deploy latest main with the homepage magenta foreground arc pushed back out to the right edge while preserving the existing image and loyalty card.
-Layer order remains: image → magenta arc → loyalty card.
-Reason: explicit production deploy after PR #14 and successful Public website build #155.
+2026-08-21T14:02:00+02:00
+Deploy exact latest main after PR #16 (5f1a16552cdb8230d69fae226cd364ff3fb90920).
+Reason: explicit production redeploy for complete Kleoshop category navigation and the 511-product catalog rollout.
+Expected public route: https://weblap-o3g6.onrender.com/webshop
