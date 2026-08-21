@@ -75,15 +75,10 @@
   }
 }
 
-/* Make the weather strip feel alive even between JS-driven random target changes. */
+/* The five-day weather strip also glides gently between the random JS-driven changes. */
 .sgx .sgTopbar .sgWxRow {
   animation: sgWeatherBreath 13s ease-in-out infinite alternate;
 }
-
-.sgx .sgTopbar .sgWxDay:nth-child(2n) { animation-delay: -2.7s; }
-.sgx .sgTopbar .sgWxDay:nth-child(3n) { animation-delay: -5.1s; }
-.sgx .sgTopbar .sgWxDay:nth-child(4n) { animation-delay: -7.8s; }
-.sgx .sgTopbar .sgWxDay:nth-child(5n) { animation-delay: -10.2s; }
 
 @keyframes sgWeatherBreath {
   0%, 17% { margin-left: 0; }
@@ -93,7 +88,7 @@
   100% { margin-left: 0; }
 }
 
-/* Keep motion tasteful on ultra-wide wallboards and smaller displays. */
+/* Keep vertical drift minimal on true ultra-wide wallboards. */
 @media (min-aspect-ratio: 5 / 2) {
   .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
   .sgx .sgTopbar > .sgWeather.sgRandomMotion,
@@ -102,14 +97,15 @@
   }
 }
 
+/* On small displays keep the cards stable enough to avoid collisions. */
 @media (max-width: 1180px) {
   .sgx .sgTopbar > .sgInfoBox.sgRandomMotion,
   .sgx .sgTopbar > .sgWeather.sgRandomMotion,
   .sgx .sgTopbar > .sgClock.sgRandomMotion {
-    transform:
-      translate3d(calc(var(--sg-rand-x, 0px) * .45), calc(var(--sg-rand-y, 0px) * .45), 0)
-      rotate(calc(var(--sg-rand-rot, 0deg) * .45))
-      scale(1);
+    --sg-rand-x: 0px;
+    --sg-rand-y: 0px;
+    --sg-rand-rot: 0deg;
+    --sg-rand-scale: 1;
   }
 }
 
