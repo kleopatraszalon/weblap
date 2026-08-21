@@ -1,9 +1,8 @@
 Render redeploy trigger
-2026-08-21T21:24:00+02:00
-Force deploy current public web / Smart Signage v9 + Kleo line mascot.
-Feature merge: 504357a98d2f0cbbe9b15a1bd42de6f5d20e51ab.
-Deploy-evidence merge: 04a4d87fd7442715e4428495e1c3c41eddb4639a.
-Reason: force Render to rebuild the current main after adding the original one-line signage mascot and its strict live deployment verification.
+2026-08-21T21:29:00+02:00
+Force deploy the exact latest main for Smart Signage motion stack and current signage features.
+Reason: explicit merge + deploy request after confirming the v9 requestAnimationFrame runtime is required for visible movement.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous / mascot=kleo-line-v1
-Expected live bundle token: kleoLineMascotLayer
+Expected marker: smart-signage-v9 / motion=raf-inline-important-continuous
+Required runtime: requestAnimationFrame inline transform !important motion for top information blocks and four Smart Signage cards.
+Keep enabled: curated random YouTube rotation for GYM / FODRÁSZAT / KOZMETIKA and current Kleo line mascot layer.
