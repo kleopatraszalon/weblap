@@ -1,0 +1,68 @@
+/* KLEO Smart Signage v10 — four Smart cards roam inside the visible board area. */
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 {
+  position: fixed !important;
+  z-index: 210 !important;
+  left: 1.1vw !important;
+  right: 1.1vw !important;
+  top: calc(13.8vh + 10px) !important;
+  bottom: calc(4.8vh + 10px) !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
+  overflow: hidden !important;
+  transform: none !important;
+  pointer-events: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: clamp(270px, 20.5vw, 410px) !important;
+  min-width: 270px !important;
+  max-width: 410px !important;
+  min-height: 78px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 14px 17px !important;
+  border-radius: 20px !important;
+  animation: none !important;
+  transition: none !important;
+  pointer-events: none !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.34), 0 0 0 1px rgba(216,188,133,.12), inset 0 1px 0 rgba(255,255,255,.10) !important;
+  backdrop-filter: blur(18px) saturate(1.22) !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget strong,
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget small {
+  animation: none !important;
+  transform: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget::before,
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget::after {
+  animation: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget[data-motion-v10="active"]::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background: linear-gradient(112deg, transparent 12%, rgba(255,255,255,.09) 48%, transparent 82%) !important;
+  opacity: .42 !important;
+}
+
+@media (max-width: 1080px) {
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3 .sgx-widget {
+    width: clamp(230px, 31vw, 330px) !important;
+    min-width: 230px !important;
+    max-width: 330px !important;
+    min-height: 70px !important;
+    padding: 11px 14px !important;
+  }
+}
