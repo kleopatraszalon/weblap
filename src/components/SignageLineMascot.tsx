@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import "./SignageLineMascot.css";
 
 /**
- * Original Kleopátra one-line mascot for the public signage screen.
- * The drawing is intentionally generic/original and does not reproduce
- * any existing cartoon character or copyrighted animation asset.
+ * Original Kleopátra single-line style mascot for the public signage screen.
+ * The artwork is an original salon-themed continuous sketch and does not use
+ * frames, assets or traced geometry from an existing cartoon character.
  */
 export default function SignageLineMascot() {
   const [host, setHost] = useState<Element | null>(null);
@@ -33,46 +33,91 @@ export default function SignageLineMascot() {
   return createPortal(
     <div className="kleoLineMascotLayer" aria-hidden="true">
       <div className="kleoLineMascotTrack">
-        <svg
-          className="kleoLineMascot"
-          viewBox="0 0 280 210"
-          role="presentation"
-          focusable="false"
-        >
-          <path className="klm-line" d="M4 177 C48 177 67 174 99 177 C147 181 185 173 276 177" />
+        <svg className="kleoLineMascot" viewBox="0 0 420 250" role="presentation" focusable="false">
+          <path
+            className="klm-ground"
+            d="M6 210 C58 210 83 207 116 210 C137 212 149 213 162 208"
+          />
 
-          <g className="klm-person">
-            <circle className="klm-head" cx="139" cy="69" r="29" />
-            <path className="klm-hair" d="M120 48 C128 34 138 39 141 29 C147 39 158 35 163 49" />
-            <path className="klm-face" d="M160 65 C177 65 181 71 164 77" />
-            <circle className="klm-eye" cx="151" cy="63" r="2.8" />
-            <path className="klm-body" d="M138 98 C132 116 132 141 138 159" />
+          <g className="klm-character">
+            <g className="klm-bodyGroup">
+              <path
+                className="klm-mainStroke"
+                d="M162 208
+                   C173 201 182 190 187 177
+                   C191 166 192 149 190 134
+                   C188 120 184 108 188 96
+                   C191 87 198 82 207 80
+                   C216 78 224 81 230 86
+                   C235 90 238 96 238 102
+                   C238 108 234 112 229 115
+                   C240 116 247 120 249 125
+                   C250 131 244 135 235 135
+                   C231 143 223 148 214 148
+                   C207 148 200 145 194 140
+                   C196 151 198 164 197 177
+                   C196 192 191 202 184 210"
+              />
 
-            <g className="klm-arm-left">
-              <path d="M135 116 C116 121 105 132 94 145 C88 151 84 151 78 148" />
-              <path d="M78 148 l-7 -5 M78 148 l-4 8" />
+              <path
+                className="klm-hairStroke"
+                d="M190 94 C187 79 194 67 207 61 C202 72 213 72 216 60 C219 72 229 68 236 63 C235 76 230 83 222 86"
+              />
+
+              <path className="klm-eyeStroke" d="M224 99 C226 98 228 98 230 99" />
+              <path className="klm-browStroke" d="M220 94 C224 91 230 91 233 94" />
+              <path className="klm-smileStroke" d="M228 126 C232 129 237 129 241 126" />
+
+              <path
+                className="klm-lapelStroke"
+                d="M193 139 C183 145 177 155 176 168 M196 143 C205 151 212 159 215 170"
+              />
             </g>
 
-            <g className="klm-arm-right">
-              <path d="M141 115 C161 108 174 96 187 81 C193 74 201 73 211 75" />
-              <path d="M211 75 l10 -5 M211 75 l10 4" />
+            <g className="klm-leftArm">
+              <path
+                className="klm-limbStroke"
+                d="M190 126 C175 128 163 134 152 144 C144 151 137 153 129 150"
+              />
+              <path className="klm-handStroke" d="M129 150 C124 147 120 144 117 140 M129 150 C124 152 120 155 118 159" />
             </g>
 
-            <g className="klm-leg-a">
-              <path d="M138 159 C125 168 113 174 99 177" />
-            </g>
-            <g className="klm-leg-b">
-              <path d="M138 159 C151 168 163 175 179 177" />
+            <g className="klm-rightArm">
+              <path
+                className="klm-limbStroke"
+                d="M197 126 C211 121 222 114 232 104 C238 98 246 95 254 97"
+              />
+              <path className="klm-handStroke" d="M254 97 C260 91 265 90 270 91 M254 97 C261 99 266 103 269 108" />
             </g>
 
-            <path className="klm-accent" d="M136 32 l5 -9 l5 9 l10 2 l-7 7 l2 10 l-10 -5 l-9 5 l2 -10 l-8 -7 z" />
+            <g className="klm-legs">
+              <g className="klm-legA">
+                <path className="klm-limbStroke" d="M184 209 C177 218 168 224 157 228 C151 230 145 232 139 235" />
+                <path className="klm-shoeStroke" d="M139 235 C133 236 127 235 124 232" />
+              </g>
+              <g className="klm-legB">
+                <path className="klm-limbStroke" d="M196 207 C203 218 211 224 221 228 C227 231 233 233 239 235" />
+                <path className="klm-shoeStroke" d="M239 235 C246 236 252 235 256 232" />
+              </g>
+            </g>
+
+            <g className="klm-accessory">
+              <path className="klm-accentStroke" d="M272 82 C282 74 294 76 300 85 C306 94 302 106 291 110 C281 113 272 106 271 96 C270 90 271 86 272 82 Z" />
+              <path className="klm-accentStroke" d="M279 96 C284 99 290 99 295 95" />
+              <path className="klm-accentStroke" d="M286 110 C286 119 286 127 286 136" />
+            </g>
+
+            <g className="klm-sparkles">
+              <path d="M315 72 V88 M307 80 H323" />
+              <path d="M333 103 V114 M327 108.5 H339" />
+              <circle cx="311" cy="113" r="2.6" />
+            </g>
           </g>
 
-          <g className="klm-sparkles">
-            <path d="M224 50 v18 M215 59 h18" />
-            <path d="M239 84 v12 M233 90 h12" />
-            <circle cx="220" cy="94" r="3" />
-          </g>
+          <path
+            className="klm-ground klm-groundTail"
+            d="M184 210 C216 208 250 211 283 210 C328 209 361 211 414 210"
+          />
         </svg>
       </div>
     </div>,
