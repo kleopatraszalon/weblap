@@ -1,5 +1,6 @@
 Render redeploy trigger
-2026-08-21T14:02:00+02:00
-Deploy exact latest main after PR #16 (5f1a16552cdb8230d69fae226cd364ff3fb90920).
-Reason: explicit production redeploy for complete Kleoshop category navigation and the 511-product catalog rollout.
-Expected public route: https://weblap-o3g6.onrender.com/webshop
+2026-08-21T19:50:00+02:00
+Deploy exact latest main after responsive Smart Signage v5 merge (799ca5cf81269bdde2ebe270f270252c6e38a9fc).
+Reason: production screenshot still showed the legacy 3840x1080 letterboxed signage; force the viewport-native v5 bundle to Render.
+Expected public route: https://weblap-o3g6.onrender.com/signage/
+Expected marker: smart-signage-v5 / layout=viewport-native-responsive
