@@ -1,8 +1,7 @@
 Render redeploy trigger
-2026-08-21T20:23:00+02:00
-Redeploy current public web / Smart Signage v6 after API and VIR frontend stages.
-Base application main before this trigger: 6fbb8f182994b14739e62e09dfd35068385b529c.
-Smart Signage feature merge: 73487c2b71a78428f9b5f84d805ca0fd85045363.
-Reason: explicit deploy-all request. Deploy public website / signage third in the ordered production rollout.
+2026-08-21T20:35:00+02:00
+Deploy current public web / Smart Signage v7 with visible random motion on the four bottom smart widgets.
+Feature merge: 8284d22517c6010fef6c00df1ad7e8fcb038f914.
+Reason: previous v6 motion targeted topbar elements instead of the four Last Minute, KLEOSHOP, weather and birthday cards shown by the user.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v6 / motion=random-organic-roll
+Expected marker: smart-signage-v7 / motion=smart-widget-random-roll
