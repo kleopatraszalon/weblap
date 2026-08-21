@@ -1,0 +1,38 @@
+name: Public Kleoshop live probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-kleoshop-live-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify deployed webshop bundle contains complete category navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://weblap-o3g6.onrender.com'
+          curl -fsS --retry 3 --max-time 30 -H 'Cache-Control: no-cache' "$base/webshop?probe=${GITHUB_SHA}" -o /tmp/webshop.html
+          mapfile -t assets < <(grep -oE '(src|href)="[^"]+\.(js|mjs)(\?[^" ]*)?"' /tmp/webshop.html | sed -E 's/^(src|href)="//; s/"$//' | sort -u)
+          test "${#assets[@]}" -gt 0 || { echo 'No JavaScript assets found in deployed webshop HTML.' >&2; cat /tmp/webshop.html; exit 1; }
+          : > /tmp/live-bundle.js
+          for asset in "${assets[@]}"; do
+            case "$asset" in
+              http*) url="$asset" ;;
+              /*) url="$base$asset" ;;
+              *) url="$base/$asset" ;;
+            esac
+            curl -fsS --retry 3 --max-time 30 -H 'Cache-Control: no-cache' "$url" >> /tmp/live-bundle.js
+            printf '\n' >> /tmp/live-bundle.js
+          done
+          for marker in SALON_PRODUCTS TRAININGS PASSES_BUDAPEST PASSES_COUNTRYSIDE SALON_NAIL SALON_COSMETIC; do
+            grep -q "$marker" /tmp/live-bundle.js || { echo "Missing deployed category marker: $marker" >&2; exit 1; }
+          done
+          echo "LIVE_WEBSHOP_PASS assets=${#assets[@]} markers=SALON_PRODUCTS,TRAININGS,PASSES_BUDAPEST,PASSES_COUNTRYSIDE,SALON_NAIL,SALON_COSMETIC"
