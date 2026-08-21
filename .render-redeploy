@@ -1,7 +1,8 @@
 Render redeploy trigger
-2026-08-21T20:35:00+02:00
-Deploy current public web / Smart Signage v7 with visible random motion on the four bottom smart widgets.
-Feature merge: 8284d22517c6010fef6c00df1ad7e8fcb038f914.
-Reason: previous v6 motion targeted topbar elements instead of the four Last Minute, KLEOSHOP, weather and birthday cards shown by the user.
+2026-08-21T21:06:00+02:00
+Force deploy current public web / Smart Signage v8 with guaranteed continuous motion for the four smart widgets and random curated YouTube rotation.
+Feature merge: 4546667b0d71ec24f8b68a28b2343ac7a59e5118.
+Observer hotfix merge: 5886ecf6512f2b40759da13af6074bd0155c0ac2.
+Reason: explicit redeploy of every production component required for signage motion. The motion runtime, CSS keyframes and YouTube rotation are all in the public weblap bundle; no backend redeploy is required for the animation itself.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v7 / motion=smart-widget-random-roll
+Expected marker: smart-signage-v8 / motion=continuous-css-keyframes-randomized
