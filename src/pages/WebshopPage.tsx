@@ -8,7 +8,9 @@ type MainCategoryKey =
   | "PASSES"
   | "GUEST_ACCOUNT"
   | "KLEO_PRODUCTS"
-  | "COMPANY_DISCOUNTS";
+  | "COMPANY_DISCOUNTS"
+  | "SALON_PRODUCTS"
+  | "TRAININGS";
 
 type SubCategoryKey =
   | "GIFT_VOUCHERS_BASIC"
@@ -16,7 +18,18 @@ type SubCategoryKey =
   | "GIFT_BEAUTY_VOUCHERS"
   | "GIFT_BEAUTY_PACKAGES"
   | "PASSES_BUDAPEST"
-  | "PASSES_COUNTRYSIDE";
+  | "PASSES_COUNTRYSIDE"
+  | "GUEST_ACCOUNT_BASIC"
+  | "KLEO_BRAND"
+  | "COMPANY_OFFERS"
+  | "SALON_HAIR"
+  | "SALON_NAIL"
+  | "SALON_COSMETIC"
+  | "SALON_SUPPLIES"
+  | "SALON_OTHER"
+  | "TRAINING_HAIR"
+  | "TRAINING_NAIL"
+  | "TRAINING_COSMETIC";
 
 type ServiceCategoryKey =
   | "HAIRDRESSING"
@@ -58,27 +71,40 @@ type CouponResponse = {
   message?: string;
 };
 type SortKey = "recommended" | "price-asc" | "price-desc" | "name";
-
-type Category = {
-  key: MainCategoryKey;
-  label: string;
-  icon: string;
-};
+type Category = { key: MainCategoryKey; label: string; icon: string };
 
 const CATEGORIES: Category[] = [
   { key: "GIFT_VOUCHERS", label: "Ajándékutalványok", icon: "✦" },
   { key: "PASSES", label: "Bérletek", icon: "∞" },
+  { key: "SALON_PRODUCTS", label: "Szalon termékek", icon: "◫" },
   { key: "KLEO_PRODUCTS", label: "Kleo termékek", icon: "◌" },
+  { key: "TRAININGS", label: "Tanfolyamok", icon: "⌁" },
   { key: "GUEST_ACCOUNT", label: "Vendégszámla", icon: "◇" },
-  { key: "COMPANY_DISCOUNTS", label: "Céges kedvezmények", icon: "%" },
+  { key: "COMPANY_DISCOUNTS", label: "Céges ajánlatok", icon: "%" },
 ];
 
+const SUBCATEGORY_LABELS: Record<SubCategoryKey, string> = {
+  GIFT_VOUCHERS_BASIC: "Ajándékutalványok",
+  GIFT_CUSTOM_PACKAGE: "Egyedi szépségcsomag",
+  GIFT_BEAUTY_VOUCHERS: "Szépségutalványok",
+  GIFT_BEAUTY_PACKAGES: "Szépségcsomagok",
+  PASSES_BUDAPEST: "Budapest",
+  PASSES_COUNTRYSIDE: "Vidék",
+  GUEST_ACCOUNT_BASIC: "Vendégszámla",
+  KLEO_BRAND: "Kleo márkatermékek",
+  COMPANY_OFFERS: "Céges csomagok",
+  SALON_HAIR: "Fodrászat",
+  SALON_NAIL: "Körömápolás",
+  SALON_COSMETIC: "Kozmetika",
+  SALON_SUPPLIES: "Szalonellátás és higiénia",
+  SALON_OTHER: "Egyéb termékek",
+  TRAINING_HAIR: "Fodrász tanfolyamok",
+  TRAINING_NAIL: "Kéz- és lábápolás",
+  TRAINING_COSMETIC: "Kozmetikai tanfolyamok",
+};
+
 const normalize = (value: string) =>
-  value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+  value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
 const toNumber = (value: number | string | null | undefined) => {
   if (value == null || value === "") return 0;
@@ -129,6 +155,7 @@ export const WebshopPage: React.FC = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recommended");
   const [category, setCategory] = useState<MainCategoryKey | null>(null);
+  const [subCategory, setSubCategory] = useState<SubCategoryKey | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [toast, setToast] = useState("");
@@ -181,6 +208,7 @@ export const WebshopPage: React.FC = () => {
     const q = normalize(search);
     const next = products.filter((product) => {
       if (category && product.main_category !== category) return false;
+      if (subCategory && product.sub_category !== subCategory) return false;
       if (!q) return true;
       const haystack = normalize(`${product.name} ${product.web_description || ""}`);
       return haystack.includes(q);
@@ -192,7 +220,7 @@ export const WebshopPage: React.FC = () => {
       if (sort === "name") return a.name.localeCompare(b.name, "hu");
       return 0;
     });
-  }, [products, search, category, sort]);
+  }, [products, search, category, subCategory, sort]);
 
   const categoryCounts = useMemo(() => {
     const counts = new Map<MainCategoryKey, number>();
@@ -202,6 +230,18 @@ export const WebshopPage: React.FC = () => {
     });
     return counts;
   }, [products]);
+
+  const subcategories = useMemo(() => {
+    if (!category) return [] as Array<{ key: SubCategoryKey; count: number }>;
+    const counts = new Map<SubCategoryKey, number>();
+    products.forEach((product) => {
+      if (product.main_category !== category || !product.sub_category) return;
+      counts.set(product.sub_category, (counts.get(product.sub_category) || 0) + 1);
+    });
+    return [...counts.entries()]
+      .map(([key, count]) => ({ key, count }))
+      .sort((a, b) => (SUBCATEGORY_LABELS[a.key] || a.key).localeCompare(SUBCATEGORY_LABELS[b.key] || b.key, "hu"));
+  }, [products, category]);
 
   const cartCount = useMemo(
     () => cart.reduce((sum, item) => sum + Math.max(0, item.quantity || 0), 0),
@@ -251,6 +291,17 @@ export const WebshopPage: React.FC = () => {
     localStorage.setItem("kleoWishlist", JSON.stringify(next));
   };
 
+  const selectCategory = (next: MainCategoryKey | null) => {
+    setCategory(next);
+    setSubCategory(null);
+  };
+
+  const clearFilters = () => {
+    setSearch("");
+    setCategory(null);
+    setSubCategory(null);
+  };
+
   const applyCoupon = async () => {
     setCouponError("");
     setCouponMessage("");
@@ -298,8 +349,9 @@ export const WebshopPage: React.FC = () => {
             <span className="shop-modern__eyebrow">KLEOSHOP · KLEOPÁTRA SZÉPSÉGSZALONOK</span>
             <h1>Szépségélmény, <em>egy kattintásra.</em></h1>
             <p>
-              Ajándékutalványok, bérletek és Kleo termékek letisztult, gyors vásárlási
-              élménnyel. Keresés, kuponkezelés, vendég checkout és mobilbarát kosár egy helyen.
+              Ajándékutalványok, bérletek, professzionális szalontermékek, Kleo termékek és
+              tanfolyamok egy gyors, áttekinthető webshopban. Kategóriák, alcsoportok, keresés,
+              kuponkezelés, vendég checkout és mobilbarát kosár egy helyen.
             </p>
             <div className="shop-modern__hero-actions">
               <a className="shop-modern__button shop-modern__button--primary" href="#termekek">
@@ -310,9 +362,9 @@ export const WebshopPage: React.FC = () => {
               </Link>
             </div>
             <div className="shop-modern__microproof">
+              <span>✓ Teljes Kleoshop kínálat</span>
               <span>✓ Vendégként is vásárolhatsz</span>
               <span>✓ Kuponkód a checkoutban</span>
-              <span>✓ Azonnali rendelési visszaigazolás</span>
             </div>
           </div>
           <div className="shop-modern__hero-visual" aria-hidden="true">
@@ -320,9 +372,9 @@ export const WebshopPage: React.FC = () => {
               <img src="/images/kleoshop.png" alt="" />
             </div>
             <div className="shop-modern__hero-card shop-modern__hero-card--floating">
-              <span>AJÁNDÉK</span>
-              <strong>Kleopátra élmény</strong>
-              <small>digitális vagy szalonban felhasználható termékekhez</small>
+              <span>ONLINE</span>
+              <strong>Teljes Kleoshop kínálat</strong>
+              <small>utalvány, bérlet, termék és tanfolyam</small>
             </div>
           </div>
         </div>
@@ -331,9 +383,9 @@ export const WebshopPage: React.FC = () => {
       <section className="shop-modern__trustbar" aria-label="Webshop előnyök">
         <div className="container shop-modern__trustbar-grid">
           <div><span>01</span><strong>Gyors termékkeresés</strong><small>név és leírás alapján</small></div>
-          <div><span>02</span><strong>Átlátható árak</strong><small>akciós ár kiemeléssel</small></div>
+          <div><span>02</span><strong>Átlátható csoportok</strong><small>fő- és alkategóriákkal</small></div>
           <div><span>03</span><strong>Kuponrendszer</strong><small>azonnali szerveres ellenőrzéssel</small></div>
-          <div><span>04</span><strong>Mobil-first checkout</strong><small>külön kosár és fizetési oldal</small></div>
+          <div><span>04</span><strong>Mobil-first checkout</strong><small>külön kosár és pénztár</small></div>
         </div>
       </section>
 
@@ -341,7 +393,7 @@ export const WebshopPage: React.FC = () => {
         <div className="container">
           <div className="shop-modern__section-head">
             <div>
-              <span className="shop-modern__eyebrow">ONLINE KÍNÁLAT</span>
+              <span className="shop-modern__eyebrow">TELJES ONLINE KÍNÁLAT</span>
               <h2>Találd meg gyorsan, amit keresel</h2>
               <p>{products.length} elérhető webshop tétel · {filteredProducts.length} találat</p>
             </div>
@@ -353,11 +405,7 @@ export const WebshopPage: React.FC = () => {
           </div>
 
           <div className="shop-modern__category-scroller" aria-label="Termékkategóriák">
-            <button
-              type="button"
-              className={!category ? "is-active" : ""}
-              onClick={() => setCategory(null)}
-            >
+            <button type="button" className={!category ? "is-active" : ""} onClick={() => selectCategory(null)}>
               <span>⌘</span> Összes <b>{products.length}</b>
             </button>
             {CATEGORIES.map((item) => (
@@ -365,12 +413,30 @@ export const WebshopPage: React.FC = () => {
                 type="button"
                 key={item.key}
                 className={category === item.key ? "is-active" : ""}
-                onClick={() => setCategory(category === item.key ? null : item.key)}
+                onClick={() => selectCategory(category === item.key ? null : item.key)}
               >
                 <span>{item.icon}</span> {item.label} <b>{categoryCounts.get(item.key) || 0}</b>
               </button>
             ))}
           </div>
+
+          {category && subcategories.length > 1 && (
+            <div className="shop-modern__category-scroller" aria-label="Alkategóriák">
+              <button type="button" className={!subCategory ? "is-active" : ""} onClick={() => setSubCategory(null)}>
+                <span>↳</span> Mind <b>{categoryCounts.get(category) || 0}</b>
+              </button>
+              {subcategories.map((item) => (
+                <button
+                  type="button"
+                  key={item.key}
+                  className={subCategory === item.key ? "is-active" : ""}
+                  onClick={() => setSubCategory(subCategory === item.key ? null : item.key)}
+                >
+                  {SUBCATEGORY_LABELS[item.key] || item.key} <b>{item.count}</b>
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="shop-modern__toolbar">
             <label className="shop-modern__search">
@@ -378,7 +444,7 @@ export const WebshopPage: React.FC = () => {
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Keresés termék, bérlet vagy utalvány alapján…"
+                placeholder="Keresés termék, bérlet, utalvány vagy tanfolyam alapján…"
                 aria-label="Keresés a webshopban"
               />
               {search && (
@@ -413,8 +479,8 @@ export const WebshopPage: React.FC = () => {
           {!loading && !error && filteredProducts.length === 0 && (
             <div className="shop-modern__empty">
               <strong>Nincs találat.</strong>
-              <p>Próbálj másik keresést vagy válaszd az összes kategóriát.</p>
-              <button type="button" onClick={() => { setSearch(""); setCategory(null); }}>Szűrők törlése</button>
+              <p>Próbálj másik keresést vagy válassz másik kategóriát.</p>
+              <button type="button" onClick={clearFilters}>Szűrők törlése</button>
             </div>
           )}
 
@@ -425,6 +491,8 @@ export const WebshopPage: React.FC = () => {
                   const image = buildImageUrl(product.thumbnail_url || product.image_url);
                   const price = priceInfo(product);
                   const favorite = wishlist.includes(product.id);
+                  const mainLabel = CATEGORIES.find((item) => item.key === product.main_category)?.label || "Kleoshop";
+                  const subLabel = product.sub_category ? SUBCATEGORY_LABELS[product.sub_category] : "";
                   return (
                     <article key={product.id} className="shop-modern__product-card">
                       <div className="shop-modern__product-media">
@@ -450,7 +518,7 @@ export const WebshopPage: React.FC = () => {
                       </div>
                       <div className="shop-modern__product-body">
                         <span className="shop-modern__product-kicker">
-                          {CATEGORIES.find((item) => item.key === product.main_category)?.label || "Kleoshop"}
+                          {mainLabel}{subLabel ? ` · ${subLabel}` : ""}
                         </span>
                         <h3><Link to={`/webshop/${product.id}`} state={{ product }}>{product.name}</Link></h3>
                         {product.web_description && <p>{product.web_description}</p>}
@@ -541,14 +609,14 @@ export const WebshopPage: React.FC = () => {
       <section className="shop-modern__info-section">
         <div className="container">
           <div className="shop-modern__info-grid">
-            <article><span>01</span><h3>Ajándékozás egyszerűen</h3><p>Válassz utalványt vagy szépségcsomagot, majd add meg a rendelésnél a szükséges adatokat és megjegyzést.</p></article>
+            <article><span>01</span><h3>Teljes Kleoshop kínálat</h3><p>Utalványok, bérletek, professzionális termékek, Kleo márkatermékek és tanfolyamok egységes kategóriákban.</p></article>
             <article><span>02</span><h3>Akciók és kuponok</h3><p>A kuponkódot már a kosárban ellenőrizheted; a szerver a checkout során ismét validálja a kedvezményt.</p></article>
             <article><span>03</span><h3>Átlátható végösszeg</h3><p>A kosár minden módosítás után újraszámol, az akciós árakat és a kuponkedvezményt külön mutatja.</p></article>
           </div>
           <div className="shop-modern__faq">
+            <details><summary>Hogyan találom meg a régi Kleoshop termékeit?</summary><p>Válassz főcsoportot, majd szükség esetén alcsoportot. A kereső az összes látható webshop tételben keres.</p></details>
             <details><summary>Hogyan használhatom a kuponkódot?</summary><p>Add meg a kódot a kosár összesítőjében vagy a pénztár oldalon. Az érvényességet a webshop API ellenőrzi.</p></details>
             <details><summary>Kell fiókot létrehoznom?</summary><p>Nem. A checkout vendégként is használható; csak a rendelés teljesítéséhez szükséges adatokat kérjük.</p></details>
-            <details><summary>Hol tudom módosítani a kosarat?</summary><p>A webshop jobb oldali gyors-kosarában vagy a külön Kosár oldalon is változtathatod a mennyiségeket.</p></details>
           </div>
         </div>
       </section>
