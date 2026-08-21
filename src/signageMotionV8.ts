@@ -85,10 +85,12 @@ function updateVideoCaption(video: KleoYoutubeVideo) {
   panel.dataset.youtubeTopic = video.topic.toLowerCase();
 
   const heading = panel.querySelector<HTMLElement>(".sgPanelHeader h2");
-  if (heading) heading.textContent = `KLEO TV · ${video.topic}`;
+  const nextHeading = `KLEO TV · ${video.topic}`;
+  if (heading && heading.textContent !== nextHeading) heading.textContent = nextHeading;
 
   const meta = panel.querySelector<HTMLElement>(".sgPanelHeader .sgMeta");
-  if (meta) meta.textContent = `${video.channel} · ${video.title}`;
+  const nextMeta = `${video.channel} · ${video.title}`;
+  if (meta && meta.textContent !== nextMeta) meta.textContent = nextMeta;
 }
 
 export function installSignageMotionV8() {
@@ -129,20 +131,17 @@ export function installSignageMotionV8() {
     cadenceTimer = window.setTimeout(randomizeCadence, randInt(10_000, 18_000));
   };
 
-  const observer = new MutationObserver((records) => {
+  const observer = new MutationObserver(() => {
     if (!isSignageRoute()) return;
     decorateSmartWidgets();
-
     if (!currentVideo) return;
-    const videoChanged = records.some((record) => {
-      if (record.type === "attributes") return (record.target as Element)?.matches?.(VIDEO_FRAME) ?? false;
-      return true;
-    });
 
-    if (videoChanged) {
-      window.clearTimeout(reapplyTimer);
-      reapplyTimer = window.setTimeout(applyCurrentVideo, 120);
-    }
+    const frame = document.querySelector<HTMLIFrameElement>(VIDEO_FRAME);
+    const expectedFragment = `/embed/${currentVideo.id}`;
+    if (frame && frame.src.includes(expectedFragment)) return;
+
+    window.clearTimeout(reapplyTimer);
+    reapplyTimer = window.setTimeout(applyCurrentVideo, 120);
   });
 
   observer.observe(document.documentElement, {
