@@ -1,7 +1,8 @@
 Render redeploy trigger
-2026-08-21T20:15:30+02:00
-Deploy exact latest main containing Smart Signage v6 random motion.
-Merged feature commit: 73487c2b71a78428f9b5f84d805ca0fd85045363
-Reason: make the top Villám akció, weather, névnap and clock widgets move, glide and roll at randomized intervals on the live signage.
+2026-08-21T20:23:00+02:00
+Redeploy current public web / Smart Signage v6 after API and VIR frontend stages.
+Base application main before this trigger: 6fbb8f182994b14739e62e09dfd35068385b529c.
+Smart Signage feature merge: 73487c2b71a78428f9b5f84d805ca0fd85045363.
+Reason: explicit deploy-all request. Deploy public website / signage third in the ordered production rollout.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
 Expected marker: smart-signage-v6 / motion=random-organic-roll
