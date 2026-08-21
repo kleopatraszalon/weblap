@@ -1,5 +1,5 @@
-smart-signage-v6
+smart-signage-v7
 layout=viewport-native-responsive
-motion=random-organic-roll
-features=birthday,last-minute,product,weather,premium-v5-ui,random-top-widgets
-published=2026-08-21T20:12:00+02:00
+motion=smart-widget-random-roll
+features=birthday,last-minute,product,weather,premium-v5-ui,random-top-widgets,random-smart-widget-drift,smart-widget-roll
+published=2026-08-21T20:28:00+02:00
