@@ -7,6 +7,7 @@ const CYCLE_MS = 22_000;
 const STOP_START = 0.45;
 const STOP_END = 0.59;
 const TICKER_CLEARANCE_PX = 6;
+const FEET_POSITION_MARKER = "ticker-top-plus-6px";
 
 /**
  * Kleopátra signage character.
@@ -145,7 +146,12 @@ export default function SignageLineMascot() {
   if (!host || !window.location.pathname.startsWith("/signage")) return null;
 
   return createPortal(
-    <div className="kleoLineMascotLayer kleoWomanMascotLayer" data-mascot="kleo-woman-gta-v1" aria-hidden="true">
+    <div
+      className="kleoLineMascotLayer kleoWomanMascotLayer"
+      data-mascot="kleo-woman-gta-v1"
+      data-feet={FEET_POSITION_MARKER}
+      aria-hidden="true"
+    >
       <div className="kleoLineMascotTrack kleoWomanTrack" ref={trackRef}>
         <div className="kleoWomanMotion">
           <img className="kleoWomanArtwork" src={WOMAN_ART} alt="" draggable={false} />
