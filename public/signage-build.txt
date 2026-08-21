@@ -1,5 +1,6 @@
-smart-signage-v7
+smart-signage-v8
 layout=viewport-native-responsive
-motion=smart-widget-random-roll
-features=birthday,last-minute,product,weather,premium-v5-ui,random-top-widgets,random-smart-widget-drift,smart-widget-roll
-published=2026-08-21T20:28:00+02:00
+motion=css-continuous-plus-js-random
+youtube=curated-random-gym-hair-beauty
+features=birthday,last-minute,product,weather,premium-v5-ui,continuous-smart-widget-motion,random-youtube-gym,random-youtube-hair,random-youtube-beauty
+published=2026-08-21T20:49:00+02:00
