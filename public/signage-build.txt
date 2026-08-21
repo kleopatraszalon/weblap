@@ -1,0 +1,4 @@
+smart-signage-v3
+source-merge=1ed3bfdcc5bcfc410092847fd5c9d5dc6f7e5a64
+features=birthday,last-minute,product,weather
+published=2026-08-21T19:03:00+02:00
