@@ -6,6 +6,7 @@ const WOMAN_ART = "/images/signage/kleo-woman-gta.webp";
 const CYCLE_MS = 22_000;
 const STOP_START = 0.45;
 const STOP_END = 0.59;
+const TICKER_CLEARANCE_PX = 6;
 
 /**
  * Kleopátra signage character.
@@ -75,7 +76,9 @@ export default function SignageLineMascot() {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
 
-      const walkBottom = Math.max(0, viewportHeight - tickerRect.top - 2);
+      // Anchor the artwork by its bottom edge to the TOP of the pink ticker.
+      // Positive clearance keeps the shoe soles visibly above the magenta line.
+      const walkBottom = Math.max(0, viewportHeight - tickerRect.top + TICKER_CLEARANCE_PX);
       track.style.setProperty("--kleo-walk-bottom", `${walkBottom}px`);
 
       const startX = -womanWidth - 40;
