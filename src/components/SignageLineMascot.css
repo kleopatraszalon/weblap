@@ -1,7 +1,7 @@
 .kleoLineMascotLayer {
   position: fixed;
   inset: 0;
-  z-index: 70;
+  z-index: 58;
   overflow: hidden;
   pointer-events: none;
   contain: layout paint;
@@ -10,10 +10,11 @@
 .kleoLineMascotTrack {
   position: absolute;
   left: 0;
-  bottom: clamp(6px, 1.2vh, 18px);
-  width: clamp(150px, 11vw, 245px);
-  filter: drop-shadow(0 5px 13px color-mix(in srgb, var(--sgx-bg, #fbfaf8) 36%, transparent));
-  animation: kleoLineTravel 32s linear infinite;
+  bottom: clamp(4px, .8vh, 12px);
+  width: clamp(220px, 15vw, 330px);
+  opacity: 0;
+  filter: drop-shadow(0 7px 18px color-mix(in srgb, var(--sgx-bg, #fbfaf8) 52%, transparent));
+  animation: kleoMascotScene 28s cubic-bezier(.4, 0, .2, 1) infinite;
   will-change: transform, opacity;
 }
 
@@ -29,81 +30,97 @@
   vector-effect: non-scaling-stroke;
 }
 
-.klm-line,
-.klm-head,
-.klm-hair,
-.klm-face,
-.klm-body,
-.klm-arm-left path,
-.klm-arm-right path,
-.klm-leg-a path,
-.klm-leg-b path,
+.klm-ground,
+.klm-mainStroke,
+.klm-hairStroke,
+.klm-eyeStroke,
+.klm-browStroke,
+.klm-smileStroke,
+.klm-lapelStroke,
+.klm-limbStroke,
+.klm-handStroke,
+.klm-shoeStroke,
 .klm-sparkles path,
 .klm-sparkles circle {
   fill: none;
   stroke: var(--sgx-text, #120c08);
-  stroke-width: 4.2;
+  stroke-width: 4.7;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.klm-line {
-  stroke: var(--sgx-gold, #b69861);
-  stroke-width: 5;
-  opacity: .94;
-  stroke-dasharray: 310;
-  stroke-dashoffset: 310;
-  animation: kleoLineDraw 2.4s ease-out infinite alternate;
+.klm-ground {
+  stroke: color-mix(in srgb, var(--sgx-gold, #b69861) 88%, var(--sgx-text, #120c08));
+  stroke-width: 5.2;
+  opacity: .9;
 }
 
-.klm-eye {
-  fill: var(--sgx-text, #120c08);
-  stroke: none !important;
+.klm-groundTail {
+  opacity: .72;
 }
 
-.klm-accent {
-  fill: color-mix(in srgb, var(--sgx-accent, #ec008c) 18%, transparent);
+.klm-mainStroke {
+  stroke-width: 5.5;
+}
+
+.klm-hairStroke {
+  stroke: color-mix(in srgb, var(--sgx-text, #120c08) 92%, var(--sgx-gold, #b69861));
+  stroke-width: 5.2;
+}
+
+.klm-eyeStroke,
+.klm-browStroke,
+.klm-smileStroke {
+  stroke-width: 3.8;
+}
+
+.klm-accentStroke {
+  fill: color-mix(in srgb, var(--sgx-accent, #ec008c) 7%, transparent);
   stroke: var(--sgx-accent, #ec008c);
-  stroke-width: 3.2;
+  stroke-width: 3.7;
+  stroke-linecap: round;
   stroke-linejoin: round;
-  transform-origin: 141px 38px;
-  animation: kleoLineCrown 1.9s ease-in-out infinite;
 }
 
-.klm-person {
-  transform-origin: 140px 177px;
-  animation: kleoLineBob .72s ease-in-out infinite alternate;
+.klm-character {
+  transform-origin: 190px 210px;
+  animation: kleoBodyFloat 1.08s ease-in-out infinite alternate;
 }
 
-.klm-head {
-  transform-origin: 139px 69px;
-  animation: kleoLineLook 4.8s ease-in-out infinite;
+.klm-bodyGroup {
+  transform-origin: 193px 210px;
+  animation: kleoBodyLean 5.8s ease-in-out infinite;
 }
 
-.klm-arm-left {
-  transform-origin: 135px 116px;
-  animation: kleoLineArmLeft .72s ease-in-out infinite alternate;
+.klm-leftArm {
+  transform-origin: 190px 126px;
+  animation: kleoLeftArm 1.08s ease-in-out infinite alternate;
 }
 
-.klm-arm-right {
-  transform-origin: 141px 115px;
-  animation: kleoLineWave 4.8s ease-in-out infinite;
+.klm-rightArm {
+  transform-origin: 197px 126px;
+  animation: kleoRightArm 5.8s ease-in-out infinite;
 }
 
-.klm-leg-a {
-  transform-origin: 138px 159px;
-  animation: kleoLineLegA .72s ease-in-out infinite alternate;
+.klm-legA {
+  transform-origin: 184px 209px;
+  animation: kleoLegA 1.08s cubic-bezier(.42, 0, .58, 1) infinite alternate;
 }
 
-.klm-leg-b {
-  transform-origin: 138px 159px;
-  animation: kleoLineLegB .72s ease-in-out infinite alternate;
+.klm-legB {
+  transform-origin: 196px 207px;
+  animation: kleoLegB 1.08s cubic-bezier(.42, 0, .58, 1) infinite alternate;
+}
+
+.klm-accessory {
+  transform-origin: 286px 96px;
+  animation: kleoMirrorTilt 5.8s ease-in-out infinite;
 }
 
 .klm-sparkles {
   stroke: var(--sgx-accent, #ec008c);
-  transform-origin: 224px 70px;
-  animation: kleoLineSpark 2.1s ease-in-out infinite;
+  transform-origin: 321px 92px;
+  animation: kleoSpark 2.9s ease-in-out infinite;
 }
 
 .klm-sparkles path,
@@ -115,91 +132,115 @@
 .sgx-neon .kleoLineMascotTrack,
 .sgx-glass .kleoLineMascotTrack {
   filter:
-    drop-shadow(0 0 8px color-mix(in srgb, var(--sgx-accent, #ec008c) 55%, transparent))
-    drop-shadow(0 7px 18px rgba(0, 0, 0, .32));
+    drop-shadow(0 0 10px color-mix(in srgb, var(--sgx-accent, #ec008c) 42%, transparent))
+    drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
 }
 
-.sgx-luxe .klm-line {
-  stroke-width: 5.5;
+.sgx-luxe .klm-mainStroke,
+.sgx-luxe .klm-hairStroke {
+  stroke: #f6ecd8;
 }
 
-@keyframes kleoLineTravel {
-  0% { transform: translate3d(-270px, 0, 0); opacity: 0; }
-  3% { opacity: .96; }
-  40% { transform: translate3d(42vw, 0, 0); opacity: .96; }
-  49% { transform: translate3d(42vw, 0, 0); opacity: .96; }
-  52% { transform: translate3d(45vw, -5px, 0); opacity: .96; }
-  97% { opacity: .96; }
-  100% { transform: translate3d(calc(100vw + 270px), 0, 0); opacity: 0; }
+.sgx-luxe .klm-ground {
+  stroke: var(--sgx-gold, #d5b36f);
 }
 
-@keyframes kleoLineDraw {
-  from { stroke-dashoffset: 310; opacity: .4; }
-  to { stroke-dashoffset: 0; opacity: .98; }
+@keyframes kleoMascotScene {
+  0% {
+    transform: translate3d(-360px, 0, 0) scale(.94);
+    opacity: 0;
+  }
+  4% { opacity: .92; }
+  34% {
+    transform: translate3d(29vw, 0, 0) scale(.98);
+    opacity: .92;
+  }
+  43% {
+    transform: translate3d(38vw, 0, 0) scale(1);
+    opacity: .97;
+  }
+  57% {
+    transform: translate3d(38vw, 0, 0) scale(1);
+    opacity: .97;
+  }
+  66% {
+    transform: translate3d(49vw, -2px, 0) scale(.99);
+    opacity: .95;
+  }
+  96% { opacity: .92; }
+  100% {
+    transform: translate3d(calc(100vw + 380px), 0, 0) scale(.94);
+    opacity: 0;
+  }
 }
 
-@keyframes kleoLineBob {
-  from { transform: translateY(0) rotate(-.6deg); }
-  to { transform: translateY(-4px) rotate(.7deg); }
+@keyframes kleoBodyFloat {
+  from { transform: translateY(0) rotate(-.18deg); }
+  to { transform: translateY(-3px) rotate(.28deg); }
 }
 
-@keyframes kleoLineLook {
-  0%, 64%, 100% { transform: rotate(0deg); }
-  70%, 82% { transform: rotate(-8deg); }
-  88% { transform: rotate(4deg); }
+@keyframes kleoBodyLean {
+  0%, 58%, 100% { transform: rotate(0deg); }
+  66% { transform: rotate(-1.8deg) translateY(-1px); }
+  74% { transform: rotate(1.1deg); }
+  82% { transform: rotate(0deg); }
 }
 
-@keyframes kleoLineArmLeft {
-  from { transform: rotate(7deg); }
-  to { transform: rotate(-8deg); }
+@keyframes kleoLeftArm {
+  from { transform: rotate(4deg); }
+  to { transform: rotate(-5.5deg); }
 }
 
-@keyframes kleoLineWave {
-  0%, 62%, 100% { transform: rotate(0deg); }
-  68% { transform: rotate(-24deg); }
-  74% { transform: rotate(12deg); }
-  80% { transform: rotate(-20deg); }
-  88% { transform: rotate(0deg); }
+@keyframes kleoRightArm {
+  0%, 56%, 100% { transform: rotate(0deg); }
+  63% { transform: rotate(-16deg); }
+  68% { transform: rotate(9deg); }
+  73% { transform: rotate(-13deg); }
+  79% { transform: rotate(5deg); }
+  86% { transform: rotate(0deg); }
 }
 
-@keyframes kleoLineLegA {
-  from { transform: rotate(8deg); }
-  to { transform: rotate(-9deg); }
+@keyframes kleoLegA {
+  from { transform: rotate(6.5deg) translateY(0); }
+  to { transform: rotate(-7deg) translateY(-1px); }
 }
 
-@keyframes kleoLineLegB {
-  from { transform: rotate(-9deg); }
-  to { transform: rotate(9deg); }
+@keyframes kleoLegB {
+  from { transform: rotate(-7deg) translateY(-1px); }
+  to { transform: rotate(6.5deg) translateY(0); }
 }
 
-@keyframes kleoLineCrown {
-  0%, 100% { transform: scale(.94) rotate(-3deg); opacity: .82; }
-  50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+@keyframes kleoMirrorTilt {
+  0%, 54%, 100% { transform: rotate(0deg) scale(1); }
+  63% { transform: rotate(-5deg) scale(1.03); }
+  74% { transform: rotate(4deg) scale(1.02); }
+  86% { transform: rotate(0deg) scale(1); }
 }
 
-@keyframes kleoLineSpark {
-  0%, 22%, 100% { transform: scale(.72) rotate(0deg); opacity: .18; }
-  44%, 74% { transform: scale(1.08) rotate(14deg); opacity: 1; }
+@keyframes kleoSpark {
+  0%, 25%, 100% { transform: scale(.7) rotate(0deg); opacity: .08; }
+  45% { transform: scale(1.08) rotate(10deg); opacity: .9; }
+  66% { transform: scale(.94) rotate(-5deg); opacity: .48; }
 }
 
 @media (max-height: 720px), (max-width: 1280px) {
   .kleoLineMascotTrack {
-    width: clamp(120px, 10vw, 170px);
-    bottom: 2px;
+    width: clamp(180px, 14vw, 245px);
+    bottom: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .kleoLineMascotTrack {
     left: auto;
-    right: 1vw;
+    right: 1.2vw;
     transform: none;
-    opacity: .72;
+    opacity: .62;
     animation: none;
   }
+
   .kleoLineMascot *,
   .kleoLineMascot {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
+    animation: none !important;
   }
 }
