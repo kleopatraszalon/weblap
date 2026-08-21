@@ -2,5 +2,6 @@ smart-signage-v9
 layout=viewport-native-responsive
 motion=raf-inline-important-continuous
 youtube=curated-random-gym-hair-beauty
-features=birthday,last-minute,product,weather,premium-v5-ui,raf-top-motion,raf-smart-widget-motion,random-youtube-gym,random-youtube-hair,random-youtube-beauty
+mascot=kleo-line-v1
+features=birthday,last-minute,product,weather,premium-v5-ui,raf-top-motion,raf-smart-widget-motion,random-youtube-gym,random-youtube-hair,random-youtube-beauty,line-mascot
 published=2026-08-21T21:12:00+02:00
