@@ -104,7 +104,7 @@
     transform: translate3d(calc(var(--sg-smart-x, 0px) + var(--sg-smart-roll-b, -50px)), calc(var(--sg-smart-y, 0px) + 4px), 0) rotate(-.75deg) scale(.99);
   }
   76% {
-    transform: translate3d(calc(var(--sg-smart-x, 0px) + (var(--sg-smart-roll-a, 95px) * .22)), var(--sg-smart-y, 0px), 0) rotate(.28deg) scale(1.01);
+    transform: translate3d(calc(var(--sg-smart-x, 0px) + var(--sg-smart-roll-c, 22px)), var(--sg-smart-y, 0px), 0) rotate(.28deg) scale(1.01);
   }
   100% {
     transform: translate3d(var(--sg-smart-x, 0px), var(--sg-smart-y, 0px), 0) rotate(var(--sg-smart-rot, 0deg)) scale(var(--sg-smart-scale, 1));
@@ -120,7 +120,7 @@
   will-change: transform;
 }
 
-/* A persistent micro-motion makes it impossible for the cards to look frozen between random target changes. */
+/* Persistent sheen means the cards are visibly alive even between random glide targets. */
 .sgx .sgx-widgetDock-v3 .sgx-widget::before {
   content: "";
   position: absolute;
@@ -172,16 +172,10 @@
     --sg-rand-rot: 0deg;
     --sg-rand-scale: 1;
   }
-
-  .sgx .sgx-widgetDock-v3 .sgx-widget.sgSmartWidgetMotion {
-    --sg-smart-x: 0px;
-    --sg-smart-y: 0px;
-    --sg-smart-rot: 0deg;
-  }
 }
 
-/* Accessibility only suppresses decorative top-bar motion. The four smart display widgets
-   remain animated because motion is an explicit requirement of this unattended signage mode. */
+/* Accessibility suppresses only decorative top-bar motion. The four smart display widgets
+   remain animated because movement is an explicit requirement of this unattended signage mode. */
 @media (prefers-reduced-motion: reduce) {
   .sgx .sgRandomMotion,
   .sgx .sgRandomWeatherDay,
