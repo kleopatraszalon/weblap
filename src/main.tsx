@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import SignageLineMascot from "./components/SignageLineMascot";
 import { installMarketingAttribution } from "./marketingAttribution";
 import { installSignageMotionV8 } from "./signageMotionV8";
 import { installSignageMotionV9 } from "./signageMotionV9";
@@ -20,5 +21,6 @@ installSignageMotionV9();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App />
+    <SignageLineMascot />
   </React.StrictMode>
 );
