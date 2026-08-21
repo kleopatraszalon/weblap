@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import "./SignageLineMascot.css";
 
+const WOMAN_ART = "/images/signage/kleo-woman-gta.webp";
+const CYCLE_MS = 22_000;
+const STOP_START = 0.45;
+const STOP_END = 0.59;
+
 /**
- * Original Kleopátra single-line style mascot for the public signage screen.
- * The artwork is an original salon-themed continuous sketch and does not use
- * frames, assets or traced geometry from an existing cartoon character.
+ * Kleopátra signage character.
+ * Keeps the legacy layer class because the live-deploy workflow uses it as a
+ * bundle marker, but the visible mascot is now a full-colour illustrated woman.
  */
 export default function SignageLineMascot() {
   const [host, setHost] = useState<Element | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!window.location.pathname.startsWith("/signage")) return;
@@ -28,97 +34,120 @@ export default function SignageLineMascot() {
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
+  useEffect(() => {
+    if (!host) return;
+
+    let disposed = false;
+    let motion: Animation | null = null;
+    let restartTimer = 0;
+    let stopTimer = 0;
+    let resumeTimer = 0;
+    let resizeTimer = 0;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const clearCycle = () => {
+      motion?.cancel();
+      motion = null;
+      window.clearTimeout(restartTimer);
+      window.clearTimeout(stopTimer);
+      window.clearTimeout(resumeTimer);
+      trackRef.current?.classList.remove("is-at-video");
+    };
+
+    const runCycle = () => {
+      if (disposed) return;
+      const track = trackRef.current;
+      const video = document.querySelector<HTMLElement>(".sgPanel.sgVideo");
+      const ticker = document.querySelector<HTMLElement>(".sgTicker");
+
+      if (!track || !video || !ticker) {
+        restartTimer = window.setTimeout(runCycle, 500);
+        return;
+      }
+
+      clearCycle();
+
+      const videoRect = video.getBoundingClientRect();
+      const tickerRect = ticker.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      const womanWidth = Math.max(140, trackRect.width || 240);
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      const walkBottom = Math.max(0, viewportHeight - tickerRect.top - 2);
+      track.style.setProperty("--kleo-walk-bottom", `${walkBottom}px`);
+
+      const startX = -womanWidth - 40;
+      const desiredStop = videoRect.left + Math.min(videoRect.width * 0.08, 70) - womanWidth * 0.46;
+      const stopX = Math.max(18, Math.min(desiredStop, viewportWidth - womanWidth - 18));
+      const endX = viewportWidth + womanWidth + 50;
+
+      if (reducedMotion.matches) {
+        track.style.opacity = "0.88";
+        track.style.transform = `translate3d(${stopX}px,0,0)`;
+        track.classList.add("is-at-video");
+        return;
+      }
+
+      track.style.transform = `translate3d(${startX}px,0,0)`;
+      track.style.opacity = "0";
+
+      motion = track.animate(
+        [
+          { transform: `translate3d(${startX}px,0,0)`, opacity: 0, offset: 0 },
+          { transform: `translate3d(${startX + 70}px,0,0)`, opacity: 0.97, offset: 0.045 },
+          { transform: `translate3d(${stopX}px,0,0)`, opacity: 0.97, offset: STOP_START },
+          { transform: `translate3d(${stopX}px,0,0)`, opacity: 1, offset: STOP_END },
+          { transform: `translate3d(${endX - 90}px,0,0)`, opacity: 0.96, offset: 0.965 },
+          { transform: `translate3d(${endX}px,0,0)`, opacity: 0, offset: 1 },
+        ],
+        {
+          duration: CYCLE_MS,
+          easing: "linear",
+          fill: "forwards",
+        },
+      );
+
+      stopTimer = window.setTimeout(() => {
+        if (!disposed) track.classList.add("is-at-video");
+      }, CYCLE_MS * STOP_START);
+
+      resumeTimer = window.setTimeout(() => {
+        if (!disposed) track.classList.remove("is-at-video");
+      }, CYCLE_MS * STOP_END);
+
+      motion.onfinish = () => {
+        if (!disposed) restartTimer = window.setTimeout(runCycle, 4_500);
+      };
+    };
+
+    const handleResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(runCycle, 220);
+    };
+
+    const startTimer = window.setTimeout(runCycle, 350);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      disposed = true;
+      window.clearTimeout(startTimer);
+      window.clearTimeout(resizeTimer);
+      clearCycle();
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [host]);
+
   if (!host || !window.location.pathname.startsWith("/signage")) return null;
 
   return createPortal(
-    <div className="kleoLineMascotLayer" aria-hidden="true">
-      <div className="kleoLineMascotTrack">
-        <svg className="kleoLineMascot" viewBox="0 0 420 250" role="presentation" focusable="false">
-          <path
-            className="klm-ground"
-            d="M6 210 C58 210 83 207 116 210 C137 212 149 213 162 208"
-          />
-
-          <g className="klm-character">
-            <g className="klm-bodyGroup">
-              <path
-                className="klm-mainStroke"
-                d="M162 208
-                   C173 201 182 190 187 177
-                   C191 166 192 149 190 134
-                   C188 120 184 108 188 96
-                   C191 87 198 82 207 80
-                   C216 78 224 81 230 86
-                   C235 90 238 96 238 102
-                   C238 108 234 112 229 115
-                   C240 116 247 120 249 125
-                   C250 131 244 135 235 135
-                   C231 143 223 148 214 148
-                   C207 148 200 145 194 140
-                   C196 151 198 164 197 177
-                   C196 192 191 202 184 210"
-              />
-
-              <path
-                className="klm-hairStroke"
-                d="M190 94 C187 79 194 67 207 61 C202 72 213 72 216 60 C219 72 229 68 236 63 C235 76 230 83 222 86"
-              />
-
-              <path className="klm-eyeStroke" d="M224 99 C226 98 228 98 230 99" />
-              <path className="klm-browStroke" d="M220 94 C224 91 230 91 233 94" />
-              <path className="klm-smileStroke" d="M228 126 C232 129 237 129 241 126" />
-
-              <path
-                className="klm-lapelStroke"
-                d="M193 139 C183 145 177 155 176 168 M196 143 C205 151 212 159 215 170"
-              />
-            </g>
-
-            <g className="klm-leftArm">
-              <path
-                className="klm-limbStroke"
-                d="M190 126 C175 128 163 134 152 144 C144 151 137 153 129 150"
-              />
-              <path className="klm-handStroke" d="M129 150 C124 147 120 144 117 140 M129 150 C124 152 120 155 118 159" />
-            </g>
-
-            <g className="klm-rightArm">
-              <path
-                className="klm-limbStroke"
-                d="M197 126 C211 121 222 114 232 104 C238 98 246 95 254 97"
-              />
-              <path className="klm-handStroke" d="M254 97 C260 91 265 90 270 91 M254 97 C261 99 266 103 269 108" />
-            </g>
-
-            <g className="klm-legs">
-              <g className="klm-legA">
-                <path className="klm-limbStroke" d="M184 209 C177 218 168 224 157 228 C151 230 145 232 139 235" />
-                <path className="klm-shoeStroke" d="M139 235 C133 236 127 235 124 232" />
-              </g>
-              <g className="klm-legB">
-                <path className="klm-limbStroke" d="M196 207 C203 218 211 224 221 228 C227 231 233 233 239 235" />
-                <path className="klm-shoeStroke" d="M239 235 C246 236 252 235 256 232" />
-              </g>
-            </g>
-
-            <g className="klm-accessory">
-              <path className="klm-accentStroke" d="M272 82 C282 74 294 76 300 85 C306 94 302 106 291 110 C281 113 272 106 271 96 C270 90 271 86 272 82 Z" />
-              <path className="klm-accentStroke" d="M279 96 C284 99 290 99 295 95" />
-              <path className="klm-accentStroke" d="M286 110 C286 119 286 127 286 136" />
-            </g>
-
-            <g className="klm-sparkles">
-              <path d="M315 72 V88 M307 80 H323" />
-              <path d="M333 103 V114 M327 108.5 H339" />
-              <circle cx="311" cy="113" r="2.6" />
-            </g>
-          </g>
-
-          <path
-            className="klm-ground klm-groundTail"
-            d="M184 210 C216 208 250 211 283 210 C328 209 361 211 414 210"
-          />
-        </svg>
+    <div className="kleoLineMascotLayer kleoWomanMascotLayer" data-mascot="kleo-woman-gta-v1" aria-hidden="true">
+      <div className="kleoLineMascotTrack kleoWomanTrack" ref={trackRef}>
+        <div className="kleoWomanMotion">
+          <img className="kleoWomanArtwork" src={WOMAN_ART} alt="" draggable={false} />
+          <span className="kleoWomanVideoGlow" />
+        </div>
       </div>
     </div>,
     host,
