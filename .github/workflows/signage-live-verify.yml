@@ -42,6 +42,7 @@ jobs:
               && "$marker" == *"motion=four-smart-cards-bounded-random-roam"* \
               && "$marker" == *"youtube=curated-random-gym-hair-beauty"* \
               && "$marker" == *"mascot=kleo-woman-gta-v1"* \
+              && "$marker" == *"feet=ticker-top-plus-6px"* \
               && "$marker" == *"video-stop"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
@@ -55,6 +56,7 @@ jobs:
                 && grep -q '__kleoSignageMotionV8Installed' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'kleoLineMascotLayer' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'kleo-woman-gta-v1' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'ticker-top-plus-6px' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '/images/signage/kleo-woman-gta.webp' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '.sgPanel.sgVideo' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'kleoWomanTrack' /tmp/signage-live.css 2>/dev/null \
@@ -62,7 +64,7 @@ jobs:
                 && grep -q 'motion-v10' /tmp/signage-live.css 2>/dev/null \
                 && test -s /tmp/kleo-woman-gta.webp \
                 && test "$(wc -c < /tmp/kleo-woman-gta.webp)" -gt 5000; then
-                echo "Smart Signage v10 + Kleo GTA woman + video-stop motion are live. js=$js_asset css=$css_asset"
+                echo "Smart Signage v10 + Kleo GTA woman + ticker-top feet clearance + video-stop are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
