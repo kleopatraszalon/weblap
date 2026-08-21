@@ -2,14 +2,16 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useWebsiteCms } from "../websiteCms";
 
-type ServiceCard = { title: string; text: string; to: string; icon: string };
+type ServiceCard = { title: string; text: string; to: string };
 type SalonCard = { title: string; address: string; image: string; to: string };
 
 const SERVICES: ServiceCard[] = [
-  { title: "Fodrászat", text: "Hajvágás, hajfestés, balayage, hajformázás és professzionális hajápolás.", to: "/szolgaltatasok/fodraszat", icon: "✦" },
-  { title: "Kéz- és lábápolás", text: "Manikűr, géllakk, műköröm és pedikűr egy helyen.", to: "/szolgaltatasok/kez-es-labapolas", icon: "◇" },
-  { title: "Kozmetika", text: "Arckezelések, gépi kezelések, szempilla, szemöldök és gyantázás.", to: "/szolgaltatasok/kozmetika", icon: "○" },
-  { title: "Masszázs", text: "Relaxáló, frissítő és regeneráló masszázskezelések.", to: "/szolgaltatasok/masszazs", icon: "♢" },
+  { title: "Fodrászat", text: "Hajvágás, hajfestés, balayage, hajformázás és professzionális hajápolás – a hozzád illő megjelenésért.", to: "/szolgaltatasok/fodraszat" },
+  { title: "Kozmetika", text: "Arckezelések, gépi kezelések, szempilla, szemöldök és szőrtelenítés korszerű megoldásokkal.", to: "/szolgaltatasok/kozmetika" },
+  { title: "Kéz- és lábápolás", text: "Manikűr, géllakk, műköröm és pedikűr – tartós, ápolt és stílusos végeredménnyel.", to: "/szolgaltatasok/kez-es-labapolas" },
+  { title: "Szolárium", text: "Szalononként elérhető szolárium szolgáltatások, rugalmasan, a Kleopátra szépségélmény részeként.", to: "/szolgaltatasok/szolarium" },
+  { title: "Masszázs", text: "Relaxáló és frissítő kezelések, hogy a szépségápolás valódi feltöltődés is legyen.", to: "/szolgaltatasok/masszazs" },
+  { title: "Fitness & Wellness Gyöngyös", text: "Mozgás, feltöltődés és szépség egy helyen – a gyöngyösi helyszín kiemelt szolgáltatásai.", to: "/salons" },
 ];
 
 const SALONS: SalonCard[] = [
@@ -20,92 +22,261 @@ const SALONS: SalonCard[] = [
 ];
 
 const QUICK_LINKS = [
-  ["Szolgáltatások", "/services"], ["Áraink", "/prices"], ["Szalonjaink", "/salons"],
-  ["Webshop", "/webshop"], ["Oktatás", "/education"], ["Karrier", "/career"], ["Időpontfoglalás", "/booking"],
+  ["Szolgáltatások", "/services"],
+  ["Áraink", "/prices"],
+  ["Szalonjaink", "/salons"],
+  ["Hűségprogram", "/loyalty"],
+  ["Ajándékutalvány", "/webshop"],
+  ["Webshop", "/webshop"],
+  ["Rólunk", "/about"],
 ] as const;
 
-const TRUST_ITEMS = [
-  ["7", "szalon", "Budapesten és vidéken"],
-  ["Online", "időpontfoglalás", "Gyorsan, néhány lépésben"],
-  ["Képzett", "szakemberek", "Folyamatos szakmai fejlődés"],
-  ["KLEO", "élmény", "Minden ami szépség, csak Neked!"],
+const APP_FEATURES = [
+  "Foglalásaid gyors áttekintése és egyszerű újrafoglalás",
+  "Bérleteid és a még felhasználható alkalmak követése",
+  "Vendégszámla-egyenleged megtekintése",
+  "Személyre szabott ajánlatok és aktuális akciók",
 ];
 
-const HOME_PRIORITY_CSS = `
-.kleo-home-priority-nav{background:#fff;border-bottom:1px solid rgba(182,152,97,.22);position:relative;z-index:3}
-.kleo-home-priority-nav__inner{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
-.kleo-home-priority-nav__inner::-webkit-scrollbar{display:none}
-.kleo-home-priority-nav a{white-space:nowrap;padding:9px 13px;border:1px solid #e8dfd6;border-radius:999px;color:#241914;text-decoration:none;font-size:12px;font-weight:750;background:#fff}
-.kleo-home-priority-nav a:last-child{background:#ec008c;color:#fff;border-color:#ec008c}
-.kleo-home-modern .kleo-modern-hero{min-height:520px!important}
-.kleo-home-modern .kleo-modern-hero__grid{min-height:520px!important;padding-top:26px!important;padding-bottom:26px!important}
-.kleo-home-modern .kleo-modern-hero__visual{min-height:450px!important;isolation:isolate}
-.kleo-home-modern .kleo-modern-hero__image-wrap{z-index:1!important}
-.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:450px!important}
-.kleo-home-modern .kleo-modern-hero__shape--pink-foreground{z-index:3!important;pointer-events:none!important}
-.kleo-home-modern .kleo-modern-loyalty-card{z-index:4!important}
-.kleo-modern-services{padding-top:42px!important;padding-bottom:40px!important}
-.kleo-modern-section--soft{padding-top:42px!important}
-@media(max-width:900px){.kleo-home-modern .kleo-modern-hero,.kleo-home-modern .kleo-modern-hero__grid{min-height:auto!important}.kleo-home-modern .kleo-modern-hero__visual,.kleo-home-modern .kleo-modern-hero__image-wrap img{min-height:390px!important}}
-@media(max-width:700px){.kleo-modern-services{padding-top:30px!important}.kleo-modern-section--soft{padding-top:32px!important}}
-`;
+const FRANCHISE_ITEMS = [
+  "Marketing támogatás",
+  "HR és toborzási támogatás",
+  "Kedvezményes eszköz- és anyagvásárlás",
+  "Folyamatos szakmai és vezetői képzések",
+  "Központi ügyfélmenedzsment",
+  "Bevezetett márka- és működési háttér",
+];
 
 export const HomePage: React.FC = () => {
   const cms = useWebsiteCms();
   const h = cms.home;
   const configuredHero = (h.heroImageUrl || "").trim();
-  const heroImage = !configuredHero || /logo|kleo_logo/i.test(configuredHero) ? "/images/szalonok.jpg" : configuredHero;
+  const heroImage = !configuredHero || /logo|kleo_logo/i.test(configuredHero) ? "/images/home.png" : configuredHero;
 
   return (
-    <main className="kleo-home-modern">
-      <style>{HOME_PRIORITY_CSS}</style>
-      <section className="kleo-modern-hero">
-        <div className="kleo-modern-hero__shape kleo-modern-hero__shape--gold" />
-        <div className="kleo-modern-container kleo-modern-hero__grid">
-          <div className="kleo-modern-hero__copy">
-            <p className="kleo-modern-eyebrow">{h.heroKicker}</p>
-            <h1 className="kleo-modern-hero__title">{h.heroTitlePrefix}<span>{h.heroTitleHighlight}</span>{h.heroTitleSuffix}</h1>
-            <p className="kleo-modern-hero__lead">{h.heroLead}</p>
-            <p className="kleo-modern-hero__lead"><strong>Minden, ami szépség – egy helyen.</strong> Találd meg gyorsan a szolgáltatást, az árat, a hozzád legközelebbi szalont és a megfelelő időpontot.</p>
-            <div className="kleo-modern-hero__actions">
-              <NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--primary">{cms.header.bookingLabel}</NavLink>
-              <NavLink to="/prices" className="kleo-modern-btn kleo-modern-btn--outline">Árak és szolgáltatások</NavLink>
+    <main className="kleo-v3-home">
+      <section className="kleo-v3-hero">
+        <div className="kleo-modern-container kleo-v3-hero__grid">
+          <div className="kleo-v3-hero__copy">
+            <p className="kleo-v3-eyebrow">{h.heroKicker}</p>
+            <h1>{h.heroTitlePrefix}<em>{h.heroTitleHighlight}</em>{h.heroTitleSuffix}</h1>
+            <p className="kleo-v3-hero__lead">{h.heroLead}</p>
+            <div className="kleo-v3-hero__actions">
+              <NavLink to="/booking" className="kleo-v3-btn kleo-v3-btn--dark">{cms.header.bookingLabel}</NavLink>
+              <NavLink to="/salons" className="kleo-v3-btn kleo-v3-btn--ghost">Szalon választása</NavLink>
             </div>
-            <div className="kleo-modern-benefits" aria-label="Kleopátra előnyök">
-              <div><b>♕</b><span><strong>Minden egy helyen</strong><small>4 fő szépségápolási részleg</small></span></div>
-              <div><b>♡</b><span><strong>Szakértő kezek</strong><small>Tapasztalt csapat</small></span></div>
-              <div><b>◇</b><span><strong>Gyors foglalás</strong><small>Szalon, időpont vagy szakember alapján</small></span></div>
+            <div className="kleo-v3-hero__meta" aria-label="Kleopátra előnyök">
+              <span><i aria-hidden="true" /> Bejelentkezés nélkül is</span>
+              <span><i aria-hidden="true" /> Online foglalás</span>
+              <span><i aria-hidden="true" /> Több szépségápolási részleg</span>
             </div>
           </div>
-          <div className="kleo-modern-hero__visual">
-            <div className="kleo-modern-hero__image-wrap"><img src={heroImage} alt="Kleopátra Szépségszalonok" /></div>
-            <div className="kleo-modern-hero__shape kleo-modern-hero__shape--pink kleo-modern-hero__shape--pink-foreground" aria-hidden="true" />
-            <NavLink to="/loyalty" className="kleo-modern-loyalty-card"><span className="kleo-modern-loyalty-card__icon">♧</span><span><strong>Hűségprogram</strong><small>Gyűjts pontokat és élvezd az előnyöket!</small></span></NavLink>
+
+          <div className="kleo-v3-hero__visual">
+            <div className="kleo-v3-hero__image">
+              <img src={heroImage} alt="Kleopátra Szépségszalonok" decoding="async" />
+            </div>
+            <div className="kleo-v3-hero__badge">
+              <small>Rugalmas szépségápolás</small>
+              <strong>Térj be, amikor csak akarsz.</strong>
+              <span>Ha előre tervezel, foglalj online vagy telefonon; ha gyors megoldás kell, szalonjaink bejelentkezés nélkül is várnak.</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <nav className="kleo-home-priority-nav" aria-label="Gyors elérés"><div className="kleo-modern-container kleo-home-priority-nav__inner">
-        {QUICK_LINKS.map(([label,to]) => <NavLink key={to} to={to}>{label}</NavLink>)}
-      </div></nav>
+      <nav className="kleo-v3-quick" aria-label="Gyors elérés">
+        <div className="kleo-modern-container kleo-v3-quick__inner">
+          {QUICK_LINKS.map(([label, to]) => <NavLink key={`${label}-${to}`} to={to}>{label}</NavLink>)}
+        </div>
+      </nav>
 
-      {h.showServices && <section className="kleo-modern-section kleo-modern-services"><div className="kleo-modern-container">
-        <div className="kleo-modern-section-head"><div><p className="kleo-modern-eyebrow">Minden egy helyen</p><h2>Szépségápolás felsőfokon</h2></div><NavLink to="/services" className="kleo-modern-text-link">Összes szolgáltatás <span>→</span></NavLink></div>
-        <div className="kleo-modern-service-grid">{SERVICES.map(service => <NavLink key={service.title} to={service.to} className="kleo-modern-service-card"><span className="kleo-modern-service-card__icon" aria-hidden="true">{service.icon}</span><h3>{service.title}</h3><p>{service.text}</p><span className="kleo-modern-card-arrow">→</span></NavLink>)}</div>
-      </div></section>}
+      {h.showServices && (
+        <section className="kleo-v3-section">
+          <div className="kleo-modern-container">
+            <header className="kleo-v3-head">
+              <div className="kleo-v3-head__copy">
+                <p className="kleo-v3-eyebrow">Minden, ami szépség – egy helyen</p>
+                <h2>Válaszd azt, amitől igazán jól érzed magad.</h2>
+                <p>A Kleopátra világában a haj, a bőr, a kéz- és lábápolás, a relaxáció és a kiegészítő szépségszolgáltatások egyetlen, könnyen elérhető rendszerben találkoznak.</p>
+              </div>
+              <NavLink to="/services" className="kleo-v3-text-link">Minden szolgáltatás <span>→</span></NavLink>
+            </header>
 
-      <section className="kleo-modern-section kleo-modern-section--soft"><div className="kleo-modern-container">
-        <div className="kleo-modern-section-head"><div><p className="kleo-modern-eyebrow">Szalonjaink</p><h2>Találj ránk a közeledben!</h2></div><NavLink to="/salons" className="kleo-modern-text-link">Összes szalon és térkép <span>→</span></NavLink></div>
-        <div className="kleo-modern-salon-grid">{SALONS.map(salon => <NavLink key={salon.to} to={salon.to} className="kleo-modern-salon-card"><img src={salon.image} alt={`Kleopátra Szépségszalon – ${salon.title}`} /><div className="kleo-modern-salon-card__body"><small>Kleopátra Szépségszalon</small><h3>{salon.title}</h3><p>{salon.address}</p><span>Részletek →</span></div></NavLink>)}</div>
-      </div></section>
+            <div className="kleo-v3-services">
+              {SERVICES.map((service, index) => (
+                <NavLink key={service.title} to={service.to} className="kleo-v3-service">
+                  <span className="kleo-v3-service__index">0{index + 1}</span>
+                  <span className="kleo-v3-service__arrow" aria-hidden="true">↗</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.text}</p>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-      {h.showVouchers && <section className="kleo-modern-promo-wrap"><div className="kleo-modern-container"><div className="kleo-modern-promo"><div className="kleo-modern-promo__copy"><p className="kleo-modern-eyebrow">Ajándékötlet</p><h2>{h.voucherTitle || "Ajándékozz Kleopátra élményt"}</h2><p>{h.voucherLead}</p><NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Megnézem az utalványokat</NavLink></div><div className="kleo-modern-promo__image"><img src="/images/vouchers.png" alt="Kleopátra ajándékutalványok" /></div></div></div></section>}
+      <section className="kleo-v3-section kleo-v3-section--paper">
+        <div className="kleo-modern-container">
+          <header className="kleo-v3-head">
+            <div className="kleo-v3-head__copy">
+              <p className="kleo-v3-eyebrow">Szalonjaink</p>
+              <h2>A Kleopátra élmény hozzád közel.</h2>
+              <p>Válassz helyszínt, nézd meg az elérhető szolgáltatásokat és szakembereket, majd foglalj néhány lépésben.</p>
+            </div>
+            <NavLink to="/salons" className="kleo-v3-text-link">Összes szalon <span>→</span></NavLink>
+          </header>
 
-      <section className="kleo-modern-trust"><div className="kleo-modern-container kleo-modern-trust__grid">{TRUST_ITEMS.map(([value,label,note]) => <div className="kleo-modern-trust__item" key={`${value}-${label}`}><span className="kleo-modern-trust__icon">✦</span><div><strong>{value}</strong><b>{label}</b><small>{note}</small></div></div>)}</div></section>
+          <div className="kleo-v3-salon-grid">
+            {SALONS.map((salon) => (
+              <NavLink key={salon.to} to={salon.to} className="kleo-v3-salon">
+                <img loading="lazy" decoding="async" src={salon.image} alt={`Kleopátra Szépségszalon – ${salon.title}`} />
+                <div className="kleo-v3-salon__body">
+                  <small>Kleopátra Szépségszalon</small>
+                  <h3>{salon.title}</h3>
+                  <p>{salon.address}</p>
+                  <span>Részletek és foglalás →</span>
+                </div>
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {h.showProducts && <section className="kleo-modern-section kleo-modern-shop"><div className="kleo-modern-container kleo-modern-shop__grid"><div className="kleo-modern-shop__copy"><p className="kleo-modern-eyebrow">Kleopátra webshop</p><h2>{h.productsTitle || "Prémium termékek a szépségedért"}</h2><p>{h.productsLead}</p><NavLink to="/webshop" className="kleo-modern-btn kleo-modern-btn--primary">Webshop megtekintése</NavLink></div><div className="kleo-modern-shop__visual"><img src="/images/products.png" alt="KLEOS termékek" /></div></div></section>}
+      <section className="kleo-v3-section kleo-v3-section--ink">
+        <div className="kleo-modern-container">
+          <div className="kleo-v3-booking-choice">
+            <div>
+              <span>01 / Spontán</span>
+              <h2>Csak térj be.</h2>
+              <p>Gyors megoldásra van szükséged? Szalonjainkban lehetőséged van arra, hogy bejelentkezés nélkül is igénybe vedd az adott helyszínen szabadon elérhető szolgáltatásokat.</p>
+              <NavLink to="/salons">Közeli szalon keresése →</NavLink>
+            </div>
+            <div>
+              <span>02 / Tervezetten</span>
+              <h2>Foglalj előre.</h2>
+              <p>Ha fontos a konkrét időpont vagy a megszokott szakember, válassz szalont, szolgáltatást és időpontot az online foglalásban.</p>
+              <NavLink to="/booking">Online időpontfoglalás →</NavLink>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <section className="kleo-modern-booking-strip"><div className="kleo-modern-container kleo-modern-booking-strip__inner"><div className="kleo-modern-booking-strip__copy"><span className="kleo-modern-booking-strip__icon">▣</span><div><strong>Foglalj időpontot online!</strong><small>Gyorsan és egyszerűen, néhány kattintással.</small></div></div><NavLink to="/booking" className="kleo-modern-btn kleo-modern-btn--light">Időpontfoglalás</NavLink></div></section>
+      {h.showApp && (
+        <section className="kleo-v3-section">
+          <div className="kleo-modern-container kleo-v3-split kleo-v3-split--reverse">
+            <div className="kleo-v3-split__media">
+              <img loading="lazy" decoding="async" src="/images/app.png" alt="Kleopátra mobilalkalmazás" />
+            </div>
+            <div className="kleo-v3-split__copy">
+              <p className="kleo-v3-eyebrow">Kleopátra a mobilodon</p>
+              <h2>{h.appTitle}</h2>
+              <p>{h.appLead}</p>
+              <div className="kleo-v3-feature-list">
+                {APP_FEATURES.map((item) => <span key={item}>{item}</span>)}
+              </div>
+              <div className="kleo-v3-store-buttons">
+                <a href="https://apps.apple.com/us/app/id1492246806" target="_blank" rel="noreferrer">Letöltés iPhone-ra ↗</a>
+                <a href="https://play.google.com/store/apps/details?hl=hu&id=com.yclients.mobile.s206313" target="_blank" rel="noreferrer">Letöltés Androidra ↗</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {(h.showVouchers || h.showNewsletter) && (
+        <section className="kleo-v3-section kleo-v3-section--paper">
+          <div className="kleo-modern-container kleo-v3-bento">
+            {h.showVouchers && (
+              <article className="kleo-v3-bento__card">
+                <img loading="lazy" decoding="async" src="/images/vouchers.png" alt="Kleopátra ajándékutalványok" />
+                <div className="kleo-v3-bento__content">
+                  <p className="kleo-v3-eyebrow">Ajándék, ami élménnyé válik</p>
+                  <h2>{h.voucherTitle}</h2>
+                  <p>{h.voucherLead}</p>
+                  <NavLink to="/webshop">Ajándékutalványok megtekintése →</NavLink>
+                </div>
+              </article>
+            )}
+
+            {h.showNewsletter && (
+              <article className="kleo-v3-bento__card kleo-v3-bento__card--magenta">
+                <div className="kleo-v3-bento__content">
+                  <p className="kleo-v3-eyebrow">Kleopátra hírlevél</p>
+                  <h2>{h.newsletterTitle}</h2>
+                  <p>{h.newsletterLead}</p>
+                  <a href="https://www.kleoszalon.hu/hirlevel" target="_blank" rel="noreferrer">Feliratkozom →</a>
+                </div>
+              </article>
+            )}
+          </div>
+        </section>
+      )}
+
+      {h.showProducts && (
+        <section className="kleo-v3-section">
+          <div className="kleo-modern-container kleo-v3-shop">
+            <div className="kleo-v3-shop__copy">
+              <p className="kleo-v3-eyebrow">Kleos termékek</p>
+              <h2>{h.productsTitle}</h2>
+              <p>{h.productsLead}</p>
+              <p>Stílusos, letisztult és egyedi megjelenés – a Kleopátra életérzés a szalonon kívül is.</p>
+              <NavLink to="/webshop" className="kleo-v3-btn kleo-v3-btn--dark">Webshop megnyitása</NavLink>
+            </div>
+            <div className="kleo-v3-shop__visual">
+              <img loading="lazy" decoding="async" src="/images/products.png" alt="KLEOS saját márkás termékek" />
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="kleo-v3-section kleo-v3-section--paper">
+        <div className="kleo-modern-container kleo-v3-why">
+          <div>
+            <p className="kleo-v3-eyebrow">Miért Kleopátra?</p>
+            <h2>{h.whyTitle}</h2>
+          </div>
+          <div className="kleo-v3-why__items">
+            {h.whyItems.map((item, index) => (
+              <div key={item} className="kleo-v3-why__item">
+                <span>0{index + 1}</span>
+                <p>{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {h.showFranchise && (
+        <section className="kleo-v3-section">
+          <div className="kleo-modern-container">
+            <div className="kleo-v3-franchise">
+              <div className="kleo-v3-franchise__media">
+                <img loading="lazy" decoding="async" src="/images/franchise.jpg" alt="Kleopátra franchise program" />
+              </div>
+              <div className="kleo-v3-franchise__copy">
+                <p className="kleo-v3-eyebrow">Franchise program</p>
+                <h2>Saját Kleopátra Szépségszalont szeretnél?</h2>
+                <p>Csatlakozz egy professzionális háttérrel rendelkező szépségmárkához, és építs szalont kialakított üzleti, szakmai és marketing rendszerrel.</p>
+                <ul>{FRANCHISE_ITEMS.map((item) => <li key={item}>{item}</li>)}</ul>
+                <NavLink to="/franchise" className="kleo-v3-btn kleo-v3-btn--ghost" style={{ marginTop: 28, alignSelf: "flex-start", color: "#fff", borderColor: "rgba(255,255,255,.35)" }}>Franchise részletek</NavLink>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="kleo-v3-final">
+        <div className="kleo-modern-container kleo-v3-final__inner">
+          <div className="kleo-v3-final__copy">
+            <p className="kleo-v3-eyebrow">Look good, feel good</p>
+            <h2>Találd meg a szalonod, és foglalj időpontot.</h2>
+            <p>Válassz szolgáltatást, helyszínt és szakembert – vagy térj be hozzánk spontán, amikor szépségre és feltöltődésre van szükséged.</p>
+          </div>
+          <NavLink to="/booking" className="kleo-v3-btn kleo-v3-btn--dark">Időpontfoglalás</NavLink>
+        </div>
+      </section>
     </main>
   );
 };

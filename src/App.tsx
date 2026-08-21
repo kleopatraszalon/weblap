@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-do
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import ModernPublicStyles from "./components/ModernPublicStyles";
+import BrandRefreshStyles from "./components/BrandRefreshStyles";
+import BrandRefreshFixes from "./components/BrandRefreshFixes";
 import { HomePage } from "./pages/HomePage";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
@@ -90,6 +92,8 @@ function AppShell() {
 
   return <>
     {!isSignage && <ModernPublicStyles />}
+    {!isSignage && <BrandRefreshStyles />}
+    {!isSignage && <BrandRefreshFixes />}
     {!isSignage && !isFocusedFranchise && <Header />}
     {!isSignage && !isFocusedFranchise && <FloatingCartButton />}
     <Routes>

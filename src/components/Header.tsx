@@ -25,11 +25,12 @@ export function Header() {
 
         <div className={"kleo-modern-header__nav-wrap" + (open ? " is-open" : "")}>
           <nav className="kleo-modern-nav" aria-label="Fő navigáció">
-            <NavLink to="/prices" className={navLinkClass} onClick={close}>Áraink és szolgáltatásaink</NavLink>
             <NavLink to="/salons" className={navLinkClass} onClick={close}>Szalonjaink</NavLink>
+            <NavLink to="/loyalty" className={navLinkClass} onClick={close}>Hűségprogram</NavLink>
+            <NavLink to="/prices" className={navLinkClass} onClick={close}>Áraink</NavLink>
             <NavLink to="/webshop" className={navLinkClass} onClick={close}>{t("menu.webshop")}</NavLink>
-            <NavLink to="/education" className={navLinkClass} onClick={close}>Oktatás</NavLink>
             <NavLink to="/career" className={navLinkClass} onClick={close}>Karrier</NavLink>
+            <NavLink to="/education" className={navLinkClass} onClick={close}>Oktatás</NavLink>
           </nav>
 
           <div className="kleo-modern-header__tools">
