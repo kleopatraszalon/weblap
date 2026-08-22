@@ -458,6 +458,16 @@ export const SignagePage: React.FC = () => {
     return arr;
   }, [deals]);
 
+  const tickerNews = useMemo(() => {
+    const items: string[] = [];
+    if (flash?.title) items.push(`⚡ ${flash.title}${flash.body ? ` – ${flash.body}` : ""}`);
+    deals.forEach((deal) => {
+      const details = [deal.subtitle, deal.price_text].filter(Boolean).join(" · ");
+      items.push(`${deal.title}${details ? ` – ${details}` : ""}`);
+    });
+    return items;
+  }, [flash, deals]);
+
   const freeCount = useMemo(() => professionals.filter(isFree).length, [professionals]);
 
   const visiblePros = useMemo(() => professionals.filter((p) => p.show !== false), [professionals]);
@@ -867,7 +877,11 @@ export const SignagePage: React.FC = () => {
 
         <footer className="sgTicker">
           <div className="sgMarquee">
-            {tickerQuotes.length ? (
+            {tickerNews.length ? (
+              <>
+                KLEOPÁTRA HÍREK&nbsp;&nbsp; • &nbsp;&nbsp;{tickerNews.join("  •  ")}
+              </>
+            ) : tickerQuotes.length ? (
               <>
                 {tickerQuotes[tickerIdx]?.text}
                 {tickerQuotes[tickerIdx]?.author ? ` — ${tickerQuotes[tickerIdx]?.author}` : ""}
