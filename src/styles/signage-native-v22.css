@@ -2,14 +2,14 @@
 
 .kleoRoamLayerV22 {
   position: fixed !important;
-  inset: 0 !important;
+  inset: auto !important;
   z-index: 2147483000 !important;
   pointer-events: none !important;
   overflow: hidden !important;
 }
 
 .kleoRoamCardV22 {
-  position: fixed !important;
+  position: absolute !important;
   width: clamp(238px, 17vw, 320px) !important;
   min-height: clamp(88px, 9.8vh, 118px) !important;
   padding: 10px 13px 12px !important;
