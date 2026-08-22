@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T13:14:00+02:00
-Force deploy the exact latest main for Smart Signage v11 with no character overlay and guaranteed rotating offers.
+2026-08-22T17:10:00+02:00
+Force deploy the exact latest main for Smart Signage v12 content-band placement.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v11 / character=none / offers=forced-rotating-spotlight
-Required runtime: __kleoSignageOfferSpotlightV11Installed / spotlight-v11 / flash + deals + last-minute + KLEOSHOP offer sources.
-Keep enabled: Smart Signage v10 four-card bounded motion and curated random YouTube rotation for gym / hair / beauty.
-Remove from rendered bundle: kleo-woman-gta-v1 / kleoWomanTrack / /images/signage/kleo-woman-gta.webp.
+Expected marker: smart-signage-v12 / motion=four-smart-cards-content-band-video-row / offers=forced-rotating-spotlight-video-row / character=none
+Required runtime: __kleoSignageContentBandV12 / floating-content-band-v12 / video-row-v12 / __kleoSignageOfferContentBandV12 / spotlight-content-band-v12.
+Keep enabled: curated random YouTube rotation for gym / hair / beauty.
+Important: four Smart cards and rotating offers must remain inside the visible .sgGrid / video row, never in the blank lower viewport area.
