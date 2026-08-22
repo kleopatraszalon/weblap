@@ -1,10 +1,8 @@
 Render redeploy trigger
-2026-08-22T19:55:00+02:00
-Force deploy the exact latest main with Smart Signage v18 and the complete kiosk theme system.
-Expected signage route: https://weblap-o3g6.onrender.com/signage/
-Required signage marker: smart-signage-v18 / ui=native-signage-dom.
-Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Required kiosk themes: Classic, Pearl, Silver, KIDS.
-Required KIDS markers: data-kiosk-visual=kids, kiosk-kids-stage, bunny.gif, bear.gif, fox.gif.
+2026-08-22T20:05:00+02:00
+Force deploy the refined KIDS kiosk experience.
+Expected route: https://weblap-o3g6.onrender.com/kiosk
+Required themes: Classic, Pearl, Silver, KIDS.
+Required KIDS fix: new minimal cinematic mascots; correctly transparent animated GIFs; no black rectangles; smaller character composition with no title overlap.
 Preserve all current signage and kiosk functionality.
-Deploy target main before trigger: 10da7a05dc3d751d97f7450260bff596e9c68251.
+Deploy target main before trigger: 4477293df0c4c7bc8b3b8b544a909a67d8c64cb9.
