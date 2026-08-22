@@ -1,0 +1,138 @@
+/* Smart Signage v13 — five moving information cards in the real video/content band. */
+
+/* v13 replaces the legacy four-card dock. The rotating offer spotlight remains separate. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3 {
+  display: none !important;
+}
+
+.sgx .sgxInfoDockV13 {
+  position: fixed;
+  z-index: 255;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint style;
+  isolation: isolate;
+}
+
+.sgx .sgxInfoCardV13 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: clamp(235px, 16.4vw, 325px);
+  min-height: 82px;
+  max-height: 112px;
+  padding: 13px 16px 14px;
+  overflow: hidden;
+  border-radius: 19px;
+  border: 1px solid rgba(219, 187, 126, .42);
+  color: #fff;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(236, 0, 140, .17), transparent 46%),
+    linear-gradient(135deg, rgba(27, 17, 13, .95), rgba(62, 38, 29, .92));
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, .32),
+    inset 0 1px 0 rgba(255, 255, 255, .10);
+  backdrop-filter: blur(15px) saturate(1.18);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.sgx .sgxInfoCardV13::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 14%, rgba(255,255,255,.08) 48%, transparent 82%);
+  opacity: .45;
+}
+
+.sgx .sgxInfoCardV13--nameday {
+  border-color: rgba(236, 0, 140, .50);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(236, 0, 140, .33), transparent 48%),
+    linear-gradient(135deg, rgba(36, 14, 26, .97), rgba(70, 33, 37, .94));
+}
+
+.sgx .sgxInfoCardV13--weather {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 201, 99, .20), transparent 46%),
+    linear-gradient(135deg, rgba(24, 18, 13, .96), rgba(59, 42, 29, .93));
+}
+
+.sgx .sgxInfoCardV13--motivation,
+.sgx .sgxInfoCardV13--beauty,
+.sgx .sgxInfoCardV13--gym {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182, 152, 97, .19), transparent 48%),
+    linear-gradient(135deg, rgba(21, 14, 11, .96), rgba(50, 31, 24, .93));
+}
+
+.sgx .sgxInfoCardV13__kicker,
+.sgx .sgxInfoCardV13__strong,
+.sgx .sgxInfoCardV13__small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.sgx .sgxInfoCardV13__kicker {
+  margin-bottom: 5px;
+  color: #e7cb94;
+  font-size: clamp(9px, .58vw, 12px);
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sgx .sgxInfoCardV13__strong {
+  color: #fff;
+  font-size: clamp(17px, 1.18vw, 25px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sgx .sgxInfoCardV13--nameday .sgxInfoCardV13__strong {
+  color: #ffd3ea;
+  font-size: clamp(24px, 1.7vw, 34px);
+}
+
+.sgx .sgxInfoCardV13__small {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, .76);
+  font-size: clamp(9px, .62vw, 12px);
+  line-height: 1.18;
+  font-weight: 650;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Offer spotlight must remain the dominant layer when it appears over the video row. */
+.sgx .sgOfferSpotlightV11 {
+  z-index: 980 !important;
+}
+
+@media (max-width: 1200px) {
+  .sgx .sgxInfoCardV13 {
+    width: clamp(210px, 22vw, 275px);
+    min-height: 74px;
+    max-height: 102px;
+    padding: 11px 13px 12px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sgx .sgxInfoCardV13 {
+    width: clamp(185px, 42vw, 240px);
+  }
+}
