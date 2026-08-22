@@ -138,12 +138,15 @@ function updateCards() {
 }
 
 function seedMotion() {
-  const w = Math.max(900, window.innerWidth);
-  const h = Math.max(600, window.innerHeight);
+  const video = document.querySelector<HTMLElement>(".sgVideoWrap")?.getBoundingClientRect();
+  const w = Math.max(320, video?.width || window.innerWidth);
+  const h = Math.max(180, video?.height || window.innerHeight);
   CARD_KINDS.forEach((kind, index) => {
     if (motion.has(kind)) return;
-    const x = 24 + ((index * 0.187 + 0.055) % 0.82) * (w - 330);
-    const y = 82 + ((index * 0.217 + 0.07) % 0.69) * (h - 270);
+    const originX = video?.left || 0;
+    const originY = video?.top || 0;
+    const x = originX + 10 + ((index * 0.187 + 0.055) % 0.82) * Math.max(20, w - 330);
+    const y = originY + 10 + ((index * 0.217 + 0.07) % 0.69) * Math.max(20, h - 130);
     const speed = 21 + index * 2.7;
     const angle = 0.53 + index * 0.88;
     motion.set(kind, { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed * 0.76 });
@@ -190,10 +193,15 @@ function animate(ts: number) {
   seedMotion();
   const dt = Math.min(0.034, lastTs ? (ts - lastTs) / 1000 : 0.016);
   lastTs = ts;
-  const left = 10;
-  const top = 68;
-  const right = window.innerWidth - 10;
-  const bottom = window.innerHeight - 54;
+  const video = document.querySelector<HTMLElement>(".sgVideoWrap")?.getBoundingClientRect();
+  if (!video || video.width < 320 || video.height < 160) {
+    frame = window.requestAnimationFrame(animate);
+    return;
+  }
+  const left = video.left + 8;
+  const top = video.top + 8;
+  const right = video.right - 8;
+  const bottom = video.bottom - 8;
   const cards: Array<{ el: HTMLElement; state: MotionState; w: number; h: number }> = [];
 
   CARD_KINDS.forEach((kind) => {
