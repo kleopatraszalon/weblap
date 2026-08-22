@@ -1,4 +1,4 @@
-smart-signage-v22.1
+smart-signage-v22.2
 layout=viewport-native-responsive
 ui=body-level-readable-roaming-cards
 youtube=curated-random-gym-hair-beauty
@@ -11,12 +11,12 @@ gym-tip=hourly-form-cues-full-readable
 weather=open-meteo-full-readable
 colors=forced-inline-magenta-blue-amber-violet-green
 prices=booking-v4-only-rolling-pricelist
-cards=exactly-five-readable-full-frame-bouncing-cards
-anchor=full-signage-frame
-headlines=large-white-headlines-disabled
-text-repeat=single-copy-only
-text-motion=none-inside-card
+cards=exactly-five-readable-video-frame-bouncing-cards
+anchor=middle-video-frame-full-width
+headlines=large-white-headlines-enabled
+text-repeat=continuous-ticker-repeat
+text-motion=continuous-ticker
 bubble-size=readable-88-118px
 motion=request-animation-frame-bouncing-collision-aware
 features=full-frame-roaming-readable-bubbles,bounce-at-frame-edges,collision-separation,full-quote-visible,forced-distinct-colors,booking-v4-price-overlay,booking-v4-prices,nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
-published=2026-08-22T21:15:00+02:00
+published=2026-08-22T21:38:00+02:00
