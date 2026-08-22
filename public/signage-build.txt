@@ -1,6 +1,6 @@
-smart-signage-v13
+smart-signage-v14
 layout=viewport-native-responsive
-motion=five-info-cards-video-band-random-roam
+motion=five-info-cards-five-lanes-no-overlap
 youtube=curated-random-gym-hair-beauty
 character=none
 offers=forced-rotating-spotlight-video-row
@@ -9,5 +9,7 @@ motivation=daily-hu
 beauty-quote=hourly-hu
 gym-tip=hourly-form-cues
 weather=open-meteo
-features=nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,premium-v5-ui,video-band-floating-info-cards,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight,flash-offers,daily-deals,last-minute-offers,kleoshop-offers
-published=2026-08-22T17:20:00+02:00
+colors=nameday-magenta,weather-blue,motivation-amber,beauty-violet,gym-green
+legacy-smart-dock=disabled
+features=nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,five-visible-non-overlap-lanes,distinct-card-colors,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight,flash-offers,daily-deals,last-minute-offers,kleoshop-offers
+published=2026-08-22T18:10:00+02:00
