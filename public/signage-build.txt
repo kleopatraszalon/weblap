@@ -1,6 +1,6 @@
-smart-signage-v15
+smart-signage-v16
 layout=viewport-native-responsive
-motion=five-info-cards-grid-child-five-lanes
+motion=five-info-cards-body-fixed-five-lanes
 youtube=curated-random-gym-hair-beauty
 character=none
 offers=forced-rotating-spotlight-video-row
@@ -11,6 +11,7 @@ gym-tip=hourly-form-cues
 weather=open-meteo
 colors=nameday-magenta,weather-blue,motivation-amber,beauty-violet,gym-green
 legacy-smart-dock=disabled
-anchor=sgGrid-direct-child
-features=nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,five-visible-non-overlap-lanes,distinct-card-colors,sgGrid-direct-child,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
-published=2026-08-22T18:23:00+02:00
+anchor=document-body-fixed-to-sgGrid-bounds
+prices=rolling-service-price-list
+features=nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,five-visible-non-overlap-lanes,distinct-card-colors,body-fixed-overlay,rolling-prices,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
+published=2026-08-22T18:50:00+02:00
