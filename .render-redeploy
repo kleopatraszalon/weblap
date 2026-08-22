@@ -1,9 +1,10 @@
 Render redeploy trigger
-2026-08-22T18:53:00+02:00
-Force deploy the exact latest main for Smart Signage v16.
+2026-08-22T18:55:00+02:00
+Force deploy ALL changes currently on main for Smart Signage v16.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
 Expected marker: smart-signage-v16 / motion=five-info-cards-body-fixed-five-lanes / anchor=document-body-fixed-to-sgGrid-bounds / prices=rolling-service-price-list.
 Required runtime: __kleoSignageInfoCardsV16Installed / body-fixed-five-cards-v16 / visible-video-band-v16 / sgPriceListV16.
 Visible cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green).
-Left panel: HETI AKCIÓINK is replaced at runtime by ÁRAINK; service names and prices roll vertically. Legacy v13-v15 docks and birthday visuals stay hidden. Keep curated random YouTube rotation and rotating offer spotlight.
-Deploy target main before trigger: a9043b97cf9a321ba17919a5b003e1c9b03c9ae7.
+Left panel: ÁRAINK with vertically rolling service names and prices.
+Keep all current main features, including curated random YouTube rotation, rotating offer spotlight, kiosk theme work, and birthday/woman suppression.
+Deploy target main before trigger: cbd7174b5adf862cad5c4708493c12af055c60d5.
