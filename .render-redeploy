@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T20:48:00+02:00
-Force deploy latest main with framed KIDS companions and child-friendly copy.
-Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Required theme menu options: Classic, Pearl, Silver, KIDS.
-Required KIDS fixes: all mascots stay within kiosk frame; smaller helper characters; child-friendly hero, AI, card, cart, payment and success wording.
-Preserve Smart Signage v19 and all current kiosk functionality.
-Deploy target main before trigger: b931587a3167dd4cd581da85668bc4f5bc863b31.
+2026-08-22T20:24:00+02:00
+Force deploy latest main with Smart Signage v20 compact moving bubbles and real rolling prices.
+Expected signage route: https://weblap-o3g6.onrender.com/signage/
+Required signage: five compact bubbles inside video bottom band; requestAnimationFrame motion; single-copy scrolling text; forced magenta/blue/amber/violet/green palettes; no large white headlines.
+Required prices: ÁRAINK must show actual priced services via Booking v4 pricelist, /api/public/services, /api/signage/services, or priced DOM fallback; rolling overlay only appears after real prices exist.
+Preserve all current kiosk themes and functionality.
+Deploy target main before trigger: 827b72c1f548dcb2ae8697ccd9ad45bc4c3ead53.
