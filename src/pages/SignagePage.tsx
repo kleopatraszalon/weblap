@@ -275,6 +275,7 @@ export const SignagePage: React.FC = () => {
   const [daily, setDaily] = useState<any>(null);
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [tickerQuotes, setTickerQuotes] = useState<TickerQuote[]>([]);
+  const [tickerIdx, setTickerIdx] = useState(0);
   const [err, setErr] = useState<string>("");
   const [flash, setFlash] = useState<FlashPromo | null>(null);
   const [nameday, setNameday] = useState<NamedayPayload | null>(null);
@@ -430,6 +431,12 @@ export const SignagePage: React.FC = () => {
     window.addEventListener("resize", applyScale);
     return () => window.removeEventListener("resize", applyScale);
   }, []);
+
+  useEffect(() => {
+    if (!tickerQuotes.length) return;
+    const t = setInterval(() => setTickerIdx((i) => (i + 1) % tickerQuotes.length), 12_000);
+    return () => clearInterval(t);
+  }, [tickerQuotes.length]);
 
   useEffect(() => {
     const t = setInterval(() => setClock(new Date()), 1000);
@@ -859,14 +866,22 @@ export const SignagePage: React.FC = () => {
         </main>
 
         <footer className="sgTicker">
-          <div className="sgMarquee sgQuoteStaticV22">
+          <div className="sgMarquee">
             {tickerQuotes.length ? (
               <>
-                {tickerQuotes[0]?.text}
-                {tickerQuotes[0]?.author ? ` — ${tickerQuotes[0]?.author}` : ""}
+                {tickerQuotes[tickerIdx]?.text}
+                {tickerQuotes[tickerIdx]?.author ? ` — ${tickerQuotes[tickerIdx]?.author}` : ""}
+                {"  •  "}
+                {tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.text}
+                {tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.author
+                  ? ` — ${tickerQuotes[(tickerIdx + 1) % tickerQuotes.length]?.author}`
+                  : ""}
               </>
             ) : (
-              <>{daily?.beauty?.text || "A konzisztens rutin többet ér, mint a ritka csodamegoldás."}</>
+              <>
+                Szépség • Kozmetika • Edzés • Motiváció • {daily?.fitness?.text || "A fegyelem akkor is dolgozik, amikor a motiváció eltűnik."} •{" "}
+                {daily?.beauty?.text || "A konzisztens rutin többet ér, mint a ritka csodamegoldás."}
+              </>
             )}
           </div>
         </footer>
