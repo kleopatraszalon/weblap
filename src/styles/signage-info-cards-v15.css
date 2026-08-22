@@ -1,0 +1,117 @@
+/* Smart Signage v15 — five guaranteed visible cards anchored directly inside .sgGrid. */
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3,
+.sgx .sgx-widget-birthday,
+.sgx .sgx-popup-kind-birthday,
+.sgx .sgx-toast-birthday,
+.sgx .sgxInfoDockV13,
+.sgx .sgxInfoDockV14 {
+  display: none !important;
+}
+
+.sgGrid > .sgxInfoDockV15 {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 360 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  isolation: isolate;
+}
+
+.sgGrid > .sgxInfoDockV15 > .sgxInfoCardV15 {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  min-height: 78px !important;
+  padding: 12px 15px 13px !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.26) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  box-shadow: 0 16px 36px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(14px) saturate(1.18);
+  will-change: transform;
+}
+
+.sgxInfoCardV15::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 12%, rgba(255,255,255,.12) 48%, transparent 82%);
+  opacity: .5;
+}
+
+.sgxInfoCardV15--nameday {
+  border-color: rgba(255,117,184,.72) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(255,80,170,.34), transparent 48%), linear-gradient(135deg, rgba(86,12,52,.98), rgba(169,31,99,.96)) !important;
+}
+.sgxInfoCardV15--weather {
+  border-color: rgba(112,188,255,.72) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(92,182,255,.34), transparent 48%), linear-gradient(135deg, rgba(17,47,87,.98), rgba(34,116,181,.96)) !important;
+}
+.sgxInfoCardV15--motivation {
+  border-color: rgba(247,193,91,.74) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(255,198,91,.34), transparent 48%), linear-gradient(135deg, rgba(85,50,12,.98), rgba(168,101,22,.96)) !important;
+}
+.sgxInfoCardV15--beauty {
+  border-color: rgba(205,131,255,.72) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(211,120,255,.34), transparent 48%), linear-gradient(135deg, rgba(64,19,88,.98), rgba(127,47,163,.96)) !important;
+}
+.sgxInfoCardV15--gym {
+  border-color: rgba(91,222,159,.72) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(82,219,154,.34), transparent 48%), linear-gradient(135deg, rgba(14,73,50,.98), rgba(27,137,91,.96)) !important;
+}
+
+.sgxInfoCardV15__kicker,
+.sgxInfoCardV15__strong,
+.sgxInfoCardV15__small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+.sgxInfoCardV15__kicker {
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.88);
+  font-size: clamp(9px,.58vw,12px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sgxInfoCardV15__strong {
+  color: #fff;
+  font-size: clamp(17px,1.12vw,24px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sgxInfoCardV15--nameday .sgxInfoCardV15__strong {
+  color: #ffe4f2;
+  font-size: clamp(24px,1.55vw,32px);
+}
+.sgxInfoCardV15__small {
+  margin-top: 5px;
+  color: rgba(255,255,255,.9);
+  font-size: clamp(9px,.60vw,12px);
+  line-height: 1.16;
+  font-weight: 650;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.sgx .sgOfferSpotlightV11 { z-index: 980 !important; }
