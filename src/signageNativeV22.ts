@@ -111,6 +111,13 @@ function ensureRoamLayer() {
     document.body.appendChild(layer);
   }
   if (layer.querySelectorAll("[data-v22-kind]").length !== 5) layer.innerHTML = cardMarkup();
+  const video = document.querySelector<HTMLElement>(".sgVideoWrap")?.getBoundingClientRect();
+  if (video && video.width >= 320 && video.height >= 160) {
+    layer.style.setProperty("left", `${video.left.toFixed(1)}px`, "important");
+    layer.style.setProperty("top", `${video.top.toFixed(1)}px`, "important");
+    layer.style.setProperty("width", `${video.width.toFixed(1)}px`, "important");
+    layer.style.setProperty("height", `${video.height.toFixed(1)}px`, "important");
+  }
   return layer;
 }
 
@@ -143,10 +150,8 @@ function seedMotion() {
   const h = Math.max(180, video?.height || window.innerHeight);
   CARD_KINDS.forEach((kind, index) => {
     if (motion.has(kind)) return;
-    const originX = video?.left || 0;
-    const originY = video?.top || 0;
-    const x = originX + 10 + ((index * 0.187 + 0.055) % 0.82) * Math.max(20, w - 330);
-    const y = originY + 10 + ((index * 0.217 + 0.07) % 0.69) * Math.max(20, h - 130);
+    const x = 10 + ((index * 0.187 + 0.055) % 0.82) * Math.max(20, w - 330);
+    const y = 10 + ((index * 0.217 + 0.07) % 0.69) * Math.max(20, h - 130);
     const speed = 21 + index * 2.7;
     const angle = 0.53 + index * 0.88;
     motion.set(kind, { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed * 0.76 });
@@ -198,10 +203,15 @@ function animate(ts: number) {
     frame = window.requestAnimationFrame(animate);
     return;
   }
-  const left = video.left + 8;
-  const top = video.top + 8;
-  const right = video.right - 8;
-  const bottom = video.bottom - 8;
+  const layer = ensureRoamLayer();
+  layer.style.setProperty("left", `${video.left.toFixed(1)}px`, "important");
+  layer.style.setProperty("top", `${video.top.toFixed(1)}px`, "important");
+  layer.style.setProperty("width", `${video.width.toFixed(1)}px`, "important");
+  layer.style.setProperty("height", `${video.height.toFixed(1)}px`, "important");
+  const left = 8;
+  const top = 8;
+  const right = video.width - 8;
+  const bottom = video.height - 8;
   const cards: Array<{ el: HTMLElement; state: MotionState; w: number; h: number }> = [];
 
   CARD_KINDS.forEach((kind) => {
