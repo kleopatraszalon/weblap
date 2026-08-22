@@ -82,18 +82,25 @@ jobs:
         run: |
           set -euo pipefail
           for endpoint in /api/public/booking/v4/pricelist /api/public/services /api/signage/services; do
-            payload="$(curl -fsS --max-time 30 -H 'Accept: application/json' -H 'Cache-Control: no-cache' "$API_URL$endpoint?_=${GITHUB_SHA}" 2>/dev/null || true)"
-            if PAYLOAD="$payload" node - <<'NODE'
-          const raw = process.env.PAYLOAD || '';
-          if (!raw) process.exit(1);
+            rm -f /tmp/price-source.json
+            if ! curl -fsS --max-time 30 -H 'Accept: application/json' -H 'Cache-Control: no-cache' "$API_URL$endpoint?_=${GITHUB_SHA}" -o /tmp/price-source.json 2>/dev/null; then
+              continue
+            fi
+            if node - /tmp/price-source.json <<'NODE'
+          const fs = require('fs');
+          const path = process.argv[2];
           let data;
-          try { data = JSON.parse(raw); } catch { process.exit(1); }
+          try { data = JSON.parse(fs.readFileSync(path, 'utf8')); } catch { process.exit(1); }
           const arr = Array.isArray(data) ? data : (data.services || data.items || data.rows || []);
-          const hasPrice = Array.isArray(arr) && arr.some((x) => {
-            const vals = [x?.price, x?.base_price, x?.price_text, x?.priceText, x?.level_prices?.normal, x?.level_prices?.top, x?.level_prices?.master];
-            return vals.some((v) => v != null && /\d/.test(String(v)) && Number(String(v).replace(/\s/g,'').replace(/[^0-9,.-]/g,'').replace(',','.')) > 0);
-          });
-          process.exit(hasPrice ? 0 : 1);
+          const numeric = (v) => {
+            if (v == null) return 0;
+            const s = String(v).replace(/\s/g,'').replace(/[^0-9,.-]/g,'').replace(',','.');
+            const n = Number(s);
+            return Number.isFinite(n) ? n : 0;
+          };
+          const priced = Array.isArray(arr) ? arr.filter((x) => [x?.price, x?.base_price, x?.price_text, x?.priceText, x?.level_prices?.normal, x?.level_prices?.top, x?.level_prices?.master].some((v) => numeric(v) > 0)) : [];
+          console.log(`priced rows: ${priced.length}`);
+          process.exit(priced.length ? 0 : 1);
           NODE
             then
               echo "Price source verified: $endpoint"
