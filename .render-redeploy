@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T17:53:00+02:00
-Force deploy the exact latest main for Smart Signage v13 information cards and birthday suppression.
+2026-08-22T18:12:00+02:00
+Force deploy the exact latest main for Smart Signage v14 five-lane information cards.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v13 / motion=five-info-cards-video-band-random-roam / nameday=20-percent / motivation=daily-hu / beauty-quote=hourly-hu / gym-tip=hourly-form-cues / weather=open-meteo.
-Required runtime: __kleoSignageInfoCardsV13Installed / info-cards-v13-video-band / video-row-v13 / __kleoSignageOfferContentBandV12 / spotlight-content-band-v12.
-Keep enabled: curated random YouTube rotation for gym / hair / beauty and rotating flash/deal/last-minute/KLEOSHOP spotlight over the video row.
-Important: birthday visuals remain suppressed; the old birthday/last-minute/product mini-card dock stays hidden. Visible moving cards are nameday 20%, weather, daily motivation, hourly beauty quote and hourly gym technique tip, all bounded to the .sgGrid/video band.
+Expected marker: smart-signage-v14 / motion=five-info-cards-five-lanes-no-overlap / nameday=20-percent / weather=open-meteo / motivation=daily-hu / beauty-quote=hourly-hu / gym-tip=hourly-form-cues.
+Required runtime: __kleoSignageInfoCardsV14Installed / five-lane-info-cards-v14 / video-row-five-lanes-v14.
+Visible cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green).
+Legacy V10 four-card runtime and birthday visuals must stay disabled. Keep curated random YouTube rotation for gym / hair / beauty and the rotating offer spotlight in the video row.
