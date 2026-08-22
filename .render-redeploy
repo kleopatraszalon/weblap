@@ -1,10 +1,7 @@
 Render redeploy trigger
-2026-08-22T18:55:00+02:00
-Force deploy ALL changes currently on main for Smart Signage v16.
-Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v16 / motion=five-info-cards-body-fixed-five-lanes / anchor=document-body-fixed-to-sgGrid-bounds / prices=rolling-service-price-list.
-Required runtime: __kleoSignageInfoCardsV16Installed / body-fixed-five-cards-v16 / visible-video-band-v16 / sgPriceListV16.
-Visible cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green).
-Left panel: ÁRAINK with vertically rolling service names and prices.
-Keep all current main features, including curated random YouTube rotation, rotating offer spotlight, kiosk theme work, and birthday/woman suppression.
-Deploy target main before trigger: cbd7174b5adf862cad5c4708493c12af055c60d5.
+2026-08-22T19:10:00+02:00
+Force deploy the current main for Pearl kiosk.
+Expected public route: https://weblap-o3g6.onrender.com/kiosk
+Required kiosk behavior: visible Pearl/Classic theme switcher; Pearl selectable; light Beauty Lab presentation active after selection.
+Preserve all current main features, including Smart Signage v16, AI beauty advisor, curated media rotation, and kiosk Classic mode.
+Deploy target main before trigger: 0142f0a8ad81d1ae1f7de4e096f28ead11a7e627.
