@@ -1,0 +1,129 @@
+/* Smart Signage v14 — exactly five visible, color-coded cards in non-overlapping lanes. */
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3,
+.sgx .sgx-widget-birthday,
+.sgx .sgx-popup-kind-birthday,
+.sgx .sgx-toast-birthday,
+.sgx .sgxInfoDockV13 {
+  display: none !important;
+}
+
+.sgx .sgxInfoDockV14 {
+  position: fixed;
+  z-index: 290;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint style;
+  isolation: isolate;
+}
+
+.sgx .sgxInfoCardV14 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  min-height: 78px;
+  padding: 12px 15px 13px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.24);
+  color: #fff;
+  box-shadow: 0 15px 34px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.13);
+  backdrop-filter: blur(15px) saturate(1.18);
+  will-change: transform;
+}
+
+.sgx .sgxInfoCardV14::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 12%, rgba(255,255,255,.10) 48%, transparent 82%);
+  opacity: .55;
+}
+
+.sgx .sgxInfoCardV14--nameday {
+  border-color: rgba(255, 117, 184, .65);
+  background: radial-gradient(circle at 100% 0%, rgba(255,80,170,.30), transparent 48%), linear-gradient(135deg, rgba(79,12,49,.97), rgba(151,31,91,.94));
+}
+
+.sgx .sgxInfoCardV14--weather {
+  border-color: rgba(112, 188, 255, .64);
+  background: radial-gradient(circle at 100% 0%, rgba(92,182,255,.28), transparent 48%), linear-gradient(135deg, rgba(18,45,79,.97), rgba(35,103,160,.94));
+}
+
+.sgx .sgxInfoCardV14--motivation {
+  border-color: rgba(247, 193, 91, .66);
+  background: radial-gradient(circle at 100% 0%, rgba(255,198,91,.27), transparent 48%), linear-gradient(135deg, rgba(75,46,13,.97), rgba(151,92,24,.94));
+}
+
+.sgx .sgxInfoCardV14--beauty {
+  border-color: rgba(205, 131, 255, .64);
+  background: radial-gradient(circle at 100% 0%, rgba(211,120,255,.28), transparent 48%), linear-gradient(135deg, rgba(58,20,77,.97), rgba(113,45,146,.94));
+}
+
+.sgx .sgxInfoCardV14--gym {
+  border-color: rgba(91, 222, 159, .64);
+  background: radial-gradient(circle at 100% 0%, rgba(82,219,154,.28), transparent 48%), linear-gradient(135deg, rgba(17,66,48,.97), rgba(30,122,85,.94));
+}
+
+.sgx .sgxInfoCardV14__kicker,
+.sgx .sgxInfoCardV14__strong,
+.sgx .sgxInfoCardV14__small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.sgx .sgxInfoCardV14__kicker {
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.80);
+  font-size: clamp(9px, .58vw, 12px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sgx .sgxInfoCardV14__strong {
+  color: #fff;
+  font-size: clamp(17px, 1.12vw, 24px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sgx .sgxInfoCardV14--nameday .sgxInfoCardV14__strong {
+  color: #ffe1f0;
+  font-size: clamp(24px, 1.55vw, 32px);
+}
+
+.sgx .sgxInfoCardV14__small {
+  margin-top: 5px;
+  color: rgba(255,255,255,.84);
+  font-size: clamp(9px, .60vw, 12px);
+  line-height: 1.16;
+  font-weight: 650;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.sgx .sgOfferSpotlightV11 {
+  z-index: 980 !important;
+}
+
+@media (max-width: 1180px) {
+  .sgx .sgxInfoCardV14 {
+    padding: 10px 12px 11px;
+    border-radius: 15px;
+  }
+}
