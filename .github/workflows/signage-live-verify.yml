@@ -19,15 +19,16 @@ jobs:
     timeout-minutes: 18
     env:
       SITE_URL: https://weblap-o3g6.onrender.com
+      API_URL: https://kleoszalon-api-1.onrender.com
     steps:
       - name: Mark signage verification pending
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v19 moving marquee UI",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v20 compact moving UI",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v19
+      - name: Wait for Render and verify deployed Smart Signage v20
         shell: bash
         run: |
           set -euo pipefail
@@ -38,53 +39,76 @@ jobs:
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
             css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
 
-            if [[ "$marker" == *"smart-signage-v19"* \
-              && "$marker" == *"cards=exactly-five-moving-marquee-cards"* \
-              && "$marker" == *"anchor=actual-video-panel-bottom-band"* \
-              && "$marker" == *"headlines=large-white-headlines-disabled"* \
-              && "$marker" == *"prices=rolling-public-pricelist-v4-with-signage-fallback"* \
+            if [[ "$marker" == *"smart-signage-v20"* \
+              && "$marker" == *"cards=exactly-five-compact-js-moving-single-copy-cards"* \
+              && "$marker" == *"anchor=inside-video-bottom-band"* \
+              && "$marker" == *"text-repeat=single-copy-only"* \
+              && "$marker" == *"bubble-size=compact-42-54px"* \
+              && "$marker" == *"prices=rolling-real-prices-booking-v4-public-services-signage-fallback"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
 
-              if grep -q '__kleoSignageNativeV19Installed' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'native-five-moving-marquee-cards-v19' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'video-panel-bottom-band-v19' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'rolling-public-pricelist-v19' /tmp/signage-live.js 2>/dev/null \
+              if grep -q '__kleoSignageNativeV20Installed' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'five-compact-moving-single-marquee-cards-v20' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'inside-video-bottom-band-v20' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'requestAnimationFrame' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '/api/public/booking/v4/pricelist' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/public/services' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '/api/signage/services' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'NÉVNAP · 20%' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'MOTIVÁCIÓ' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'SZÉPSÉG' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'GYM TIPP' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgx-widgetDock-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-marquee-track-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgV19TextMarquee' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgV19CardMoveA' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-nameday-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-weather-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-motivation-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-beauty-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-gym-v19' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgPriceNativeRollV19' /tmp/signage-live.css 2>/dev/null \
-                && ! grep -q '__kleoSignageNativeV18Installed' /tmp/signage-live.js 2>/dev/null; then
-                echo "Smart Signage v19 moving marquee cards + rolling prices are live. js=$js_asset css=$css_asset"
+                && grep -q 'sgx-widgetDock-v20' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgV20SingleMarquee' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgPriceOverlayV20' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '#d71f77' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '#168bc8' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '#e58c17' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '#a34cc8' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '#23a875' /tmp/signage-live.css 2>/dev/null \
+                && ! grep -q '__kleoSignageNativeV19Installed' /tmp/signage-live.js 2>/dev/null; then
+                echo "Smart Signage v20 compact moving bubbles are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
             fi
-            echo "Waiting for Render Smart Signage v19 deployment ($attempt/90)"
+            echo "Waiting for Render Smart Signage v20 deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v19 was not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1 || { echo "Smart Signage v20 was not observable on Render within the verification window." >&2; exit 1; }
+
+      - name: Verify a public price source contains actual prices
+        shell: bash
+        run: |
+          set -euo pipefail
+          for endpoint in /api/public/booking/v4/pricelist /api/public/services /api/signage/services; do
+            payload="$(curl -fsS --max-time 30 -H 'Accept: application/json' -H 'Cache-Control: no-cache' "$API_URL$endpoint?_=${GITHUB_SHA}" 2>/dev/null || true)"
+            if PAYLOAD="$payload" node - <<'NODE'
+          const raw = process.env.PAYLOAD || '';
+          if (!raw) process.exit(1);
+          let data;
+          try { data = JSON.parse(raw); } catch { process.exit(1); }
+          const arr = Array.isArray(data) ? data : (data.services || data.items || data.rows || []);
+          const hasPrice = Array.isArray(arr) && arr.some((x) => {
+            const vals = [x?.price, x?.base_price, x?.price_text, x?.priceText, x?.level_prices?.normal, x?.level_prices?.top, x?.level_prices?.master];
+            return vals.some((v) => v != null && /\d/.test(String(v)) && Number(String(v).replace(/\s/g,'').replace(/[^0-9,.-]/g,'').replace(',','.')) > 0);
+          });
+          process.exit(hasPrice ? 0 : 1);
+          NODE
+            then
+              echo "Price source verified: $endpoint"
+              exit 0
+            fi
+          done
+          echo "No public price endpoint returned a priced service." >&2
+          exit 1
 
       - name: Mark signage live verification success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v19 moving marquee UI verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v20 UI + prices verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
       - name: Mark signage live verification failure
@@ -92,5 +116,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v19 not verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v20 not fully verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
