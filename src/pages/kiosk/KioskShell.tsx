@@ -105,5 +105,10 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
     </header>
     <main className="kioskBody">{children}</main>
+    <div className="kiosk-kids-companions" aria-hidden="true">
+      <div className="kiosk-kids-guide bunny"><img src="/images/kiosk/kids/bunny.gif" alt=""/><span>Mit válasszunk? ✨</span></div>
+      <div className="kiosk-kids-guide bear"><img src="/images/kiosk/kids/bear.gif" alt=""/><span>Szuper választás! ★</span></div>
+      <div className="kiosk-kids-guide fox"><img src="/images/kiosk/kids/fox.gif" alt=""/><span>Segítek! 🌈</span></div>
+    </div>
   </div>;
 }
