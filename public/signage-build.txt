@@ -1,8 +1,8 @@
-smart-signage-v10
+smart-signage-v11
 layout=viewport-native-responsive
 motion=four-smart-cards-bounded-random-roam
 youtube=curated-random-gym-hair-beauty
-mascot=kleo-woman-gta-v1
-feet=ticker-top-plus-6px
-features=birthday,last-minute,product,weather,premium-v5-ui,bounded-floating-smart-cards,random-youtube-gym,random-youtube-hair,random-youtube-beauty,gta-woman,lower-line-walk,video-stop,ticker-top-clearance
-published=2026-08-21T22:48:00+02:00
+character=none
+offers=forced-rotating-spotlight
+features=birthday,last-minute,product,weather,premium-v5-ui,bounded-floating-smart-cards,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight,flash-offers,daily-deals,last-minute-offers,kleoshop-offers
+published=2026-08-22T13:12:00+02:00
