@@ -4,7 +4,7 @@ import App from "./App";
 import { installMarketingAttribution } from "./marketingAttribution";
 import { installSignageMotionV8 } from "./signageMotionV8";
 import { installSignageOfferSpotlightV11 } from "./signageOfferSpotlightV11";
-import { installSignageNativeV18 } from "./signageNativeV18";
+import { installSignageNativeV19 } from "./signageNativeV19";
 import "./styles/kleo-theme.css";
 import "./styles/website-cms.css";
 import "./styles/public-pages.css";
@@ -14,12 +14,12 @@ import "./styles/booking-modern.css";
 import "./styles/signage-responsive-v5.css";
 import "./styles/signage-motion-v8.css";
 import "./styles/signage-offer-spotlight-v11.css";
-import "./styles/signage-native-v18.css";
+import "./styles/signage-native-v19.css";
 
 installMarketingAttribution();
 installSignageMotionV8();
 installSignageOfferSpotlightV11();
-installSignageNativeV18();
+installSignageNativeV19();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
