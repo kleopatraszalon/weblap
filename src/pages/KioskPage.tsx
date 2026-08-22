@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./kiosk.css";
 import "./kiosk/kiosk-gyongyos.css";
 import "./kiosk/kiosk-2026.css";
+import "./kiosk/kiosk-pearl.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";

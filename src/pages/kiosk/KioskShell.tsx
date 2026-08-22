@@ -11,10 +11,10 @@ const LANGS = [
 type LangCode = (typeof LANGS)[number]["code"];
 function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
 
-const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string }> = {
-  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü" },
-  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home" },
-  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная" },
+const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string }> = {
+  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma" },
+  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home", theme: "Theme" },
+  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная", theme: "Тема" },
 };
 
 export function KioskShell({ children }: { children: React.ReactNode }) {
@@ -22,6 +22,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
+  const [visualMode, setVisualMode] = React.useState<"classic" | "pearl">(() => localStorage.getItem("kiosk_visual_mode") === "pearl" ? "pearl" : "classic");
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
   const loadConfig = React.useCallback(() => {
@@ -53,6 +54,12 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     window.dispatchEvent(new Event("kiosk-lang-change"));
   }
 
+  function toggleVisualMode() {
+    const next = visualMode === "pearl" ? "classic" : "pearl";
+    localStorage.setItem("kiosk_visual_mode", next);
+    setVisualMode(next);
+  }
+
   const copy = COPY[lang];
   const step = location.pathname.includes("/ticket") ? 3 : location.pathname.includes("/pay") ? 2 : 1;
   const total = cartTotal(cart);
@@ -68,7 +75,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     background: theme.backgroundColor || "#f4efe7",
   } as React.CSSProperties;
 
-  return <div className="kioskScreen" style={shellStyle}>
+  return <div className="kioskScreen" data-kiosk-visual={visualMode} style={shellStyle}>
     <header className="kioskTop">
       <button className="kiosk-home-button" onClick={() => navigate("/kiosk")} aria-label={copy.home}>
         <img src={theme.logoUrl || "/images/kleo_logo@2x.png"} className="kioskBrandLogo" alt="Kleopátra" />
@@ -81,6 +88,9 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
         })}
       </div>
       <div className="kiosk-utilities">
+        <button className="kiosk-theme-toggle" type="button" onClick={toggleVisualMode} aria-label={copy.theme} title={copy.theme}>
+          <span>{visualMode === "pearl" ? "◐" : "✦"}</span><b>{visualMode === "pearl" ? "Classic" : "Pearl"}</b>
+        </button>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
           <span>{copy.total}</span><b>{count} · {total.toLocaleString("hu-HU")} Ft</b>
