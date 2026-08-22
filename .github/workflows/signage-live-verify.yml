@@ -24,10 +24,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v16 prices + five cards",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v17 React overlay",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v16
+      - name: Wait for Render and verify deployed Smart Signage v17
         shell: bash
         run: |
           set -euo pipefail
@@ -38,53 +38,52 @@ jobs:
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
             css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
 
-            if [[ "$marker" == *"smart-signage-v16"* \
-              && "$marker" == *"motion=five-info-cards-body-fixed-five-lanes"* \
-              && "$marker" == *"anchor=document-body-fixed-to-sgGrid-bounds"* \
-              && "$marker" == *"prices=rolling-service-price-list"* \
+            if [[ "$marker" == *"smart-signage-v17"* \
+              && "$marker" == *"overlay=react-rendered-fixed-to-live-panels"* \
+              && "$marker" == *"prices=react-rolling-service-price-list"* \
+              && "$marker" == *"cards=exactly-five-react-cards"* \
               && "$marker" == *"nameday=20-percent"* \
               && "$marker" == *"weather=open-meteo"* \
-              && "$marker" == *"colors=nameday-magenta,weather-blue,motivation-amber,beauty-violet,gym-green"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
 
-              if grep -q '__kleoSignageInfoCardsV16Installed' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'body-fixed-five-cards-v16' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'visible-video-band-v16' /tmp/signage-live.js 2>/dev/null \
+              if grep -q 'smart-signage-v17' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'react-five-cards-v17' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'ÁRAINK' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgPriceListV16' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/signage/services' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '/api/signage/nameday' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'api.open-meteo.com' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'NÉVNAPI KEDVEZMÉNY' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'NAPI MOTIVÁCIÓ' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'SZÉPSÉG · ÓRÁNKÉNT ÚJ' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'GYM GYAKORLAT TIPP' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgxInfoDockV16' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgxInfoCardV16--nameday' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgxInfoCardV16--weather' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgxInfoCardV16--motivation' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgxInfoCardV16--beauty' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgxInfoCardV16--gym' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgPriceRollV16' /tmp/signage-live.css 2>/dev/null \
-                && ! grep -q '__kleoSignageInfoCardsV15Installed' /tmp/signage-live.js 2>/dev/null; then
-                echo "Smart Signage v16 five body-level cards + rolling prices are live. js=$js_asset css=$css_asset"
+                && grep -q 'sgPricePanelV17' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgPriceScrollV17' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoStripV17' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoCardV17--nameday' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoCardV17--weather' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoCardV17--motivation' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoCardV17--beauty' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgInfoCardV17--gym' /tmp/signage-live.css 2>/dev/null \
+                && ! grep -q '__kleoSignageInfoCardsV16Installed' /tmp/signage-live.js 2>/dev/null; then
+                echo "Smart Signage v17 React price panel + five cards are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
             fi
-            echo "Waiting for Render Smart Signage v16 deployment ($attempt/90)"
+            echo "Waiting for Render Smart Signage v17 deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v16 was not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1 || { echo "Smart Signage v17 was not observable on Render within the verification window." >&2; exit 1; }
 
       - name: Mark signage live verification success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v16 prices + five cards verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v17 React overlay verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
       - name: Mark signage live verification failure
@@ -92,5 +91,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v16 not verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v17 not verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
