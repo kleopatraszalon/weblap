@@ -1,0 +1,172 @@
+/* Smart Signage v21 — five compact colored bubbles roam across the full signage frame. */
+
+.kleoRoamLayerV21 {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.kleoRoamCardV21 {
+  position: fixed !important;
+  width: clamp(168px, 12vw, 228px) !important;
+  height: clamp(40px, 4.5vh, 50px) !important;
+  min-width: 0 !important;
+  padding: 5px 8px 6px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(9px) saturate(1.25) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.25) !important;
+  will-change: left, top !important;
+}
+
+.kleoRoamCardV21--nameday { background: linear-gradient(135deg,#df1f7c,#8e1558) !important; border-color:#ff9bd0 !important; }
+.kleoRoamCardV21--weather { background: linear-gradient(135deg,#1691d1,#0c4d8f) !important; border-color:#8bdcff !important; }
+.kleoRoamCardV21--motivation { background: linear-gradient(135deg,#ef961c,#9b5208) !important; border-color:#ffd584 !important; }
+.kleoRoamCardV21--beauty { background: linear-gradient(135deg,#a94fd1,#5c2587) !important; border-color:#e7aaff !important; }
+.kleoRoamCardV21--gym { background: linear-gradient(135deg,#24af79,#0b6645) !important; border-color:#89f0bf !important; }
+
+.kleoRoamLabelV21 {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  color: rgba(255,255,255,.94) !important;
+  font-size: clamp(6px,.42vw,8px) !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: .065em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kleoRoamMarqueeV21 {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  mask-image: linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+}
+
+/* One span only — the sentence never appears twice at the same time. */
+.kleoRoamTrackV21 {
+  display: inline-block !important;
+  min-width: max-content !important;
+  padding-left: 100% !important;
+  animation: kleoV21SingleMarquee var(--v21-marquee,16s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.kleoRoamTrackV21 span {
+  display: inline-block !important;
+  min-width: max-content !important;
+  color: rgba(255,255,255,.99) !important;
+  font-size: clamp(8px,.58vw,11px) !important;
+  line-height: 1.05 !important;
+  font-weight: 820 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.32) !important;
+}
+
+@keyframes kleoV21SingleMarquee {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(-100%,0,0); }
+}
+
+.kleoRoamCardV21::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background: linear-gradient(112deg,transparent 20%,rgba(255,255,255,.12) 48%,transparent 78%) !important;
+  transform: translateX(-135%);
+  animation: kleoV21Sheen 8s ease-in-out infinite !important;
+}
+
+.kleoRoamCardV21:nth-child(2)::after { animation-delay: -1.5s !important; }
+.kleoRoamCardV21:nth-child(3)::after { animation-delay: -3s !important; }
+.kleoRoamCardV21:nth-child(4)::after { animation-delay: -4.5s !important; }
+.kleoRoamCardV21:nth-child(5)::after { animation-delay: -6s !important; }
+
+@keyframes kleoV21Sheen {
+  0%,24% { transform: translateX(-135%); opacity: 0; }
+  42% { opacity: .54; }
+  62% { transform: translateX(135%); opacity: .10; }
+  100% { transform: translateX(135%); opacity: 0; }
+}
+
+/* Booking 4.0 price overlay follows the native ÁRAINK panel, but lives outside React. */
+.kleoPriceOverlayV21 {
+  position: fixed !important;
+  z-index: 2147482400 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,rgba(255,255,255,.99),rgba(250,246,240,.98)) !important;
+  border-radius: 10px !important;
+  box-shadow: inset 0 0 0 1px rgba(184,151,99,.18),0 6px 18px rgba(40,24,14,.06) !important;
+}
+
+.kleoPriceTrackV21 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  animation: kleoPriceRollV21 var(--v21-price-duration,120s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.kleoPriceRowV21 {
+  min-height: 29px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 5px 7px !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(182,152,97,.20) !important;
+  background: rgba(255,255,255,.985) !important;
+}
+
+.kleoPriceRowV21 span {
+  min-width: 0 !important;
+  color: #20140e !important;
+  font-size: clamp(8px,.57vw,11px) !important;
+  line-height: 1.05 !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kleoPriceRowV21 b {
+  color: #93692e !important;
+  font-size: clamp(8px,.60vw,12px) !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+}
+
+@keyframes kleoPriceRollV21 {
+  0%,4% { transform: translateY(0); }
+  96%,100% { transform: translateY(-50%); }
+}
+
+@media (max-width: 1400px) {
+  .kleoRoamCardV21 {
+    width: clamp(150px,13.2vw,190px) !important;
+    height: 40px !important;
+    padding: 4px 6px 5px !important;
+    border-radius: 8px !important;
+  }
+  .kleoRoamLabelV21 { font-size: 6px !important; }
+  .kleoRoamTrackV21 span { font-size: 8px !important; }
+}
