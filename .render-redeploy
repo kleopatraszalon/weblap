@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T17:10:00+02:00
-Force deploy the exact latest main for Smart Signage v12 content-band placement.
+2026-08-22T17:32:00+02:00
+Force deploy the exact latest main for Smart Signage v13 information cards.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
-Expected marker: smart-signage-v12 / motion=four-smart-cards-content-band-video-row / offers=forced-rotating-spotlight-video-row / character=none
-Required runtime: __kleoSignageContentBandV12 / floating-content-band-v12 / video-row-v12 / __kleoSignageOfferContentBandV12 / spotlight-content-band-v12.
-Keep enabled: curated random YouTube rotation for gym / hair / beauty.
-Important: four Smart cards and rotating offers must remain inside the visible .sgGrid / video row, never in the blank lower viewport area.
+Expected marker: smart-signage-v13 / motion=five-info-cards-video-band-random-roam / nameday=20-percent / motivation=daily-hu / beauty-quote=hourly-hu / gym-tip=hourly-form-cues / weather=open-meteo.
+Required runtime: __kleoSignageInfoCardsV13Installed / info-cards-v13-video-band / video-row-v13 / __kleoSignageOfferContentBandV12 / spotlight-content-band-v12.
+Keep enabled: curated random YouTube rotation for gym / hair / beauty and rotating flash/deal/last-minute/KLEOSHOP spotlight over the video row.
+Important: the old birthday/last-minute/product mini-card dock is hidden; the visible moving cards are nameday 20%, weather, daily motivation, hourly beauty quote and hourly gym technique tip, all bounded to the .sgGrid/video band.
