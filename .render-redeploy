@@ -1,8 +1,9 @@
 Render redeploy trigger
-2026-08-22T18:26:00+02:00
-Force deploy the exact latest main for Smart Signage v15 grid-child five-card layout.
+2026-08-22T18:42:00+02:00
+Force deploy the exact latest main for Smart Signage v15 grid-child five-card layout after the latest kiosk changes.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
 Expected marker: smart-signage-v15 / motion=five-info-cards-grid-child-five-lanes / anchor=sgGrid-direct-child.
 Required runtime: __kleoSignageInfoCardsV15Installed / five-lane-grid-child-v15.
 Visible cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green).
-Critical fix: the overlay is now appended directly inside the real .sgGrid so it cannot disappear because of viewport/fixed-coordinate containment. Legacy v13/v14 docks and birthday visuals remain hidden. Keep curated random YouTube rotation and rotating offer spotlight.
+Critical fix: the overlay is appended directly inside the real .sgGrid. Legacy v13/v14 docks and birthday visuals stay hidden. Keep curated random YouTube rotation and rotating offer spotlight.
+Deploy target main before trigger: 3ad6a634f60f499ffeba344244a2c431650589cd.
