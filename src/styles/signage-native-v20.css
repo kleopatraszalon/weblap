@@ -1,0 +1,218 @@
+/* Smart Signage v20 — compact, visibly moving, single-copy bubbles inside the live video. */
+
+.sgPricePanelV17,
+.sgInfoStripV17,
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15,
+.sgxInfoDockV16 {
+  display: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v20 {
+  z-index: 2147482800 !important;
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20 {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  padding: 5px 8px 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  overflow: hidden !important;
+  border-radius: 11px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  color: #fff !important;
+  backdrop-filter: blur(10px) saturate(1.22) !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  animation: none !important;
+}
+
+/* Palette duplicated in CSS as a fallback; JS also applies it inline with !important. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-nameday-v20 {
+  background: linear-gradient(135deg,#d71f77 0%,#8f1459 100%) !important;
+  border-color: rgba(255,160,211,.96) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-weather-v20 {
+  background: linear-gradient(135deg,#168bc8 0%,#0d4f91 100%) !important;
+  border-color: rgba(139,220,255,.96) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-motivation-v20 {
+  background: linear-gradient(135deg,#e58c17 0%,#9c5208 100%) !important;
+  border-color: rgba(255,219,145,.96) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-beauty-v20 {
+  background: linear-gradient(135deg,#a34cc8 0%,#5e2588 100%) !important;
+  border-color: rgba(232,171,255,.96) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-gym-v20 {
+  background: linear-gradient(135deg,#23a875 0%,#0c6847 100%) !important;
+  border-color: rgba(139,245,194,.96) !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-kicker-v20 {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  color: rgba(255,255,255,.92) !important;
+  font-size: clamp(6px,.42vw,8px) !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-v20 strong,
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-v20 small {
+  display: none !important;
+  animation: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-marquee-v20 {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+}
+
+/* Exactly one content span: text never appears twice in the same bubble. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-marquee-track-v20 {
+  display: inline-block !important;
+  min-width: max-content !important;
+  padding-left: 100% !important;
+  animation: sgV20SingleMarquee var(--sg-v20-marquee, 16s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-marquee-track-v20 span {
+  display: inline-block !important;
+  min-width: max-content !important;
+  color: rgba(255,255,255,.98) !important;
+  font-size: clamp(8px,.60vw,11px) !important;
+  line-height: 1.05 !important;
+  font-weight: 820 !important;
+  letter-spacing: .005em !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.30) !important;
+}
+
+@keyframes sgV20SingleMarquee {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(-100%,0,0); }
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-v20::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background: linear-gradient(112deg, transparent 22%, rgba(255,255,255,.11) 48%, transparent 76%) !important;
+  transform: translateX(-130%);
+  animation: sgV20Sheen 8.2s ease-in-out infinite !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20:nth-child(2)::after { animation-delay: -1.3s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20:nth-child(3)::after { animation-delay: -2.6s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20:nth-child(4)::after { animation-delay: -3.9s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20:nth-child(5)::after { animation-delay: -5.2s !important; }
+
+@keyframes sgV20Sheen {
+  0%,22% { transform: translateX(-130%); opacity: 0; }
+  39% { opacity: .55; }
+  61% { transform: translateX(130%); opacity: .12; }
+  100% { transform: translateX(130%); opacity: 0; }
+}
+
+/* Real prices are rendered as a separate overlay so React's native service list remains intact underneath. */
+.sgx.sgx-modern-v3 .sgServices[data-native-price-runtime="rolling-real-prices-v20"] {
+  position: relative !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceOverlayV20 {
+  position: absolute !important;
+  z-index: 25 !important;
+  left: .5vw !important;
+  right: .5vw !important;
+  top: clamp(52px,6.5vh,68px) !important;
+  bottom: clamp(24px,3.1vh,34px) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg,rgba(255,255,255,.985),rgba(251,247,242,.97)) !important;
+  border-radius: 12px !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceTrackV20 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  animation: sgPriceNativeRollV20 var(--sg-price-v20-duration, 68s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV20 {
+  min-height: 30px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 5px 7px !important;
+  box-sizing: border-box !important;
+  border-radius: 9px !important;
+  border: 1px solid rgba(182,152,97,.24) !important;
+  background: rgba(255,255,255,.98) !important;
+  box-shadow: 0 3px 9px rgba(18,12,8,.045) !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV20 span {
+  min-width: 0 !important;
+  color: #1b110d !important;
+  font-size: clamp(8px,.58vw,11px) !important;
+  line-height: 1.05 !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV20 b {
+  color: #8d642d !important;
+  font-size: clamp(8px,.60vw,12px) !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+}
+
+@keyframes sgPriceNativeRollV20 {
+  0%,5% { transform: translateY(0); }
+  95%,100% { transform: translateY(-50%); }
+}
+
+@media (max-width: 1400px) {
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v20 { gap: 4px !important; }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v20 > .sgx-widget-v20 {
+    padding: 4px 6px 5px !important;
+    border-radius: 9px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-kicker-v20 { font-size: 6px !important; }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v20 .sgx-widget-marquee-track-v20 span { font-size: 8px !important; }
+}
