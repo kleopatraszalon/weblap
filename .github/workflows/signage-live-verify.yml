@@ -24,10 +24,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v18 native UI",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v19 moving marquee UI",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v18
+      - name: Wait for Render and verify deployed Smart Signage v19
         shell: bash
         run: |
           set -euo pipefail
@@ -38,49 +38,53 @@ jobs:
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
             css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
 
-            if [[ "$marker" == *"smart-signage-v18"* \
-              && "$marker" == *"ui=native-signage-dom"* \
-              && "$marker" == *"prices=rolling-public-pricelist-v4"* \
-              && "$marker" == *"cards=exactly-five-native-cards"* \
-              && "$marker" == *"anchor=existing-sgx-widgetDock-v3-upper-content-band"* \
+            if [[ "$marker" == *"smart-signage-v19"* \
+              && "$marker" == *"cards=exactly-five-moving-marquee-cards"* \
+              && "$marker" == *"anchor=actual-video-panel-bottom-band"* \
+              && "$marker" == *"headlines=large-white-headlines-disabled"* \
+              && "$marker" == *"prices=rolling-public-pricelist-v4-with-signage-fallback"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
 
-              if grep -q '__kleoSignageNativeV18Installed' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'native-five-cards-v18' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'rolling-public-pricelist-v18' /tmp/signage-live.js 2>/dev/null \
+              if grep -q '__kleoSignageNativeV19Installed' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'native-five-moving-marquee-cards-v19' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'video-panel-bottom-band-v19' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'rolling-public-pricelist-v19' /tmp/signage-live.js 2>/dev/null \
                 && grep -q '/api/public/booking/v4/pricelist' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'ÁRAINK' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'NÉVNAPI KEDVEZMÉNY' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'NAPI MOTIVÁCIÓ' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'SZÉPSÉG · ÓRÁNKÉNT ÚJ' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'GYM GYAKORLAT TIPP' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'sgx-widgetDock-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-nameday-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-weather-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-motivation-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-beauty-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widget-gym-v18' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgPriceNativeRollV18' /tmp/signage-live.css 2>/dev/null \
-                && ! grep -q 'react-five-cards-v17' /tmp/signage-live.js 2>/dev/null; then
-                echo "Smart Signage v18 native price list + five cards are live. js=$js_asset css=$css_asset"
+                && grep -q '/api/signage/services' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'NÉVNAP · 20%' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'MOTIVÁCIÓ' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'SZÉPSÉG' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'GYM TIPP' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'sgx-widgetDock-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-marquee-track-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgV19TextMarquee' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgV19CardMoveA' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-nameday-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-weather-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-motivation-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-beauty-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgx-widget-gym-v19' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgPriceNativeRollV19' /tmp/signage-live.css 2>/dev/null \
+                && ! grep -q '__kleoSignageNativeV18Installed' /tmp/signage-live.js 2>/dev/null; then
+                echo "Smart Signage v19 moving marquee cards + rolling prices are live. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
             fi
-            echo "Waiting for Render Smart Signage v18 deployment ($attempt/90)"
+            echo "Waiting for Render Smart Signage v19 deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v18 was not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1 || { echo "Smart Signage v19 was not observable on Render within the verification window." >&2; exit 1; }
 
       - name: Mark signage live verification success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v18 native UI verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v19 moving marquee UI verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
       - name: Mark signage live verification failure
@@ -88,5 +92,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v18 not verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v19 not verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
