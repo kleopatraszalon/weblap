@@ -1,0 +1,248 @@
+/* Smart Signage v17 — React-rendered visual layer. No DOM injection. */
+
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15,
+.sgxInfoDockV16,
+.sgx-widgetDock-v3,
+.sgx-widget-birthday,
+.sgx-popup-kind-birthday,
+.sgx-toast-birthday {
+  display: none !important;
+}
+
+.sgPricePanelV17,
+.sgInfoStripV17 {
+  position: fixed !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.sgPricePanelV17 {
+  z-index: 2147483000 !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(182, 152, 97, .46);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.995), rgba(248,244,237,.985));
+  box-shadow: 0 18px 45px rgba(18,12,8,.20), inset 0 1px 0 rgba(255,255,255,.9);
+  color: #120c08;
+  font-family: "Gotham", "Montserrat", "Inter", system-ui, sans-serif;
+}
+
+.sgPricePanelV17__header {
+  flex: 0 0 auto;
+  min-height: 68px;
+  padding: 12px 15px 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid rgba(182,152,97,.28);
+  background: linear-gradient(100deg, rgba(255,255,255,.98), rgba(247,240,227,.96));
+}
+
+.sgPricePanelV17__header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sgPricePanelV17__header span {
+  font-size: clamp(8px, .55vw, 11px);
+  letter-spacing: .18em;
+  font-weight: 900;
+  color: #b69861;
+}
+
+.sgPricePanelV17__header strong {
+  font-size: clamp(19px, 1.35vw, 28px);
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: .04em;
+}
+
+.sgPricePanelV17__header small {
+  font-size: clamp(8px, .52vw, 11px);
+  color: #6e665c;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sgPricePanelV17__viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  padding: 7px 8px 10px;
+}
+
+.sgPricePanelV17__track {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: sgPriceScrollV17 var(--sg-price-duration, 28s) linear infinite;
+  will-change: transform;
+}
+
+.sgPricePanelV17__row {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(182,152,97,.26);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 6px 14px rgba(18,12,8,.055);
+}
+
+.sgPricePanelV17__row span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: clamp(12px, .82vw, 19px);
+  line-height: 1.08;
+  font-weight: 900;
+}
+
+.sgPricePanelV17__row b {
+  white-space: nowrap;
+  color: #9a7440;
+  font-size: clamp(13px, .86vw, 20px);
+  line-height: 1;
+  font-weight: 1000;
+}
+
+.sgPricePanelV17__empty {
+  padding: 18px 12px;
+  color: #7b7369;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+@keyframes sgPriceScrollV17 {
+  0%, 8% { transform: translateY(0); }
+  92%, 100% { transform: translateY(-50%); }
+}
+
+.sgInfoStripV17 {
+  z-index: 2147483600 !important;
+  box-sizing: border-box;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(6px, .55vw, 12px);
+  overflow: visible !important;
+}
+
+.sgInfoCardV17 {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+  padding: 10px 12px 11px;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.34);
+  color: #fff;
+  box-shadow: 0 15px 34px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.18);
+  backdrop-filter: blur(12px) saturate(1.22);
+  transform: translateY(calc(sin(var(--sg-card-index, 0)) * 1px));
+  animation: sgCardFloatV17 5.6s ease-in-out infinite alternate;
+  animation-delay: calc(var(--sg-card-index, 0) * -0.7s);
+}
+
+.sgInfoCardV17--nameday {
+  background: radial-gradient(circle at 100% 0%, rgba(255,80,170,.42), transparent 48%), linear-gradient(135deg, #5d0d3a, #ad2369);
+  border-color: rgba(255,117,184,.82);
+}
+.sgInfoCardV17--weather {
+  background: radial-gradient(circle at 100% 0%, rgba(92,182,255,.42), transparent 48%), linear-gradient(135deg, #12355f, #2877b6);
+  border-color: rgba(112,188,255,.82);
+}
+.sgInfoCardV17--motivation {
+  background: radial-gradient(circle at 100% 0%, rgba(255,198,91,.40), transparent 48%), linear-gradient(135deg, #5f360d, #b06b19);
+  border-color: rgba(247,193,91,.84);
+}
+.sgInfoCardV17--beauty {
+  background: radial-gradient(circle at 100% 0%, rgba(211,120,255,.40), transparent 48%), linear-gradient(135deg, #4a1768, #883cb0);
+  border-color: rgba(205,131,255,.84);
+}
+.sgInfoCardV17--gym {
+  background: radial-gradient(circle at 100% 0%, rgba(82,219,154,.40), transparent 48%), linear-gradient(135deg, #0f5137, #208d61);
+  border-color: rgba(91,222,159,.84);
+}
+
+.sgInfoCardV17__kicker,
+.sgInfoCardV17 strong,
+.sgInfoCardV17 small {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.sgInfoCardV17__kicker {
+  margin-bottom: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(255,255,255,.9);
+  font-size: clamp(7px, .46vw, 10px);
+  line-height: 1.05;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.sgInfoCardV17 strong {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #fff;
+  font-size: clamp(15px, .95vw, 22px);
+  line-height: 1.02;
+  font-weight: 1000;
+  letter-spacing: -.02em;
+}
+
+.sgInfoCardV17--nameday strong {
+  color: #ffe3f1;
+  font-size: clamp(22px, 1.28vw, 29px);
+}
+
+.sgInfoCardV17 small {
+  margin-top: 5px;
+  overflow: hidden;
+  color: rgba(255,255,255,.93);
+  font-size: clamp(7px, .47vw, 10px);
+  line-height: 1.15;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@keyframes sgCardFloatV17 {
+  from { transform: translateY(-2px); }
+  to { transform: translateY(3px); }
+}
+
+@media (max-width: 1100px) {
+  .sgInfoStripV17 {
+    gap: 5px;
+  }
+  .sgInfoCardV17 {
+    padding: 8px 9px;
+    border-radius: 12px;
+  }
+  .sgInfoCardV17 small {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}
