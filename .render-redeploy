@@ -1,7 +1,9 @@
 Render redeploy trigger
-2026-08-22T19:10:00+02:00
-Force deploy the current main for Pearl kiosk.
-Expected public route: https://weblap-o3g6.onrender.com/kiosk
-Required kiosk behavior: visible Pearl/Classic theme switcher; Pearl selectable; light Beauty Lab presentation active after selection.
-Preserve all current main features, including Smart Signage v16, AI beauty advisor, curated media rotation, and kiosk Classic mode.
-Deploy target main before trigger: 0142f0a8ad81d1ae1f7de4e096f28ead11a7e627.
+2026-08-22T19:12:00+02:00
+Force deploy the exact latest main with Smart Signage v17 React-rendered visual layer.
+Expected public route: https://weblap-o3g6.onrender.com/signage/
+Required signage marker: smart-signage-v17 / overlay=react-rendered-fixed-to-live-panels / prices=react-rolling-service-price-list / cards=exactly-five-react-cards.
+Required visible UI: ÁRAINK rolling service-price panel plus exactly five colored cards — nameday 20% magenta, weather blue, daily motivation amber, hourly beauty quote violet, gym tip green.
+Critical fix: v17 removes the v16 DOM-injection installer from main.tsx and renders both the price panel and five-card strip as normal React components with fixed positioning measured from the live signage panels.
+Preserve current kiosk Pearl/Classic theme switcher, AI beauty advisor, curated media rotation, offer spotlight and all other current main features.
+Deploy target merge: c8cebd07d925e923a4613de2aee03052743f7d4f.
