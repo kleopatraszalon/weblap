@@ -1,11 +1,10 @@
 Render redeploy trigger
-2026-08-22T19:41:00+02:00
-Force deploy the exact latest main with Smart Signage v18 native UI and the complete kiosk theme system.
+2026-08-22T19:55:00+02:00
+Force deploy the exact latest main with Smart Signage v18 and the complete kiosk theme system.
 Expected signage route: https://weblap-o3g6.onrender.com/signage/
-Expected signage marker: smart-signage-v18 / ui=native-signage-dom / prices=rolling-public-pricelist-v4 / cards=exactly-five-native-cards.
-Required signage runtime: __kleoSignageNativeV18Installed / native-five-cards-v18 / rolling-public-pricelist-v18 / /api/public/booking/v4/pricelist.
-Visible signage cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green), positioned in the upper content/video band using the already-rendered sgx-widgetDock-v3.
-Left signage panel: ÁRAINK with continuously rolling public Booking v4 service prices and fallback to current signage service rows.
+Required signage marker: smart-signage-v18 / ui=native-signage-dom.
 Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Required kiosk themes: Classic, Pearl, Silver. Preserve all current kiosk functionality.
-Deploy target main before trigger: f6403ba24dff36b6c1cc97effafe98e22cc2b55b.
+Required kiosk themes: Classic, Pearl, Silver, KIDS.
+Required KIDS markers: data-kiosk-visual=kids, kiosk-kids-stage, bunny.gif, bear.gif, fox.gif.
+Preserve all current signage and kiosk functionality.
+Deploy target main before trigger: 10da7a05dc3d751d97f7450260bff596e9c68251.
