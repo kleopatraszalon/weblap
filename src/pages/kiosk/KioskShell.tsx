@@ -9,7 +9,7 @@ const LANGS = [
   { code: "ru", label: "Русский", flag: "RU" },
 ] as const;
 type LangCode = (typeof LANGS)[number]["code"];
-type VisualMode = "classic" | "pearl" | "silver";
+type VisualMode = "classic" | "pearl" | "silver" | "kids";
 function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
 
 const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string }> = {
@@ -23,7 +23,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
-  const [visualMode, setVisualMode] = React.useState<VisualMode>(() => { const saved = localStorage.getItem("kiosk_visual_mode"); return saved === "pearl" || saved === "silver" ? saved : "classic"; });
+  const [visualMode, setVisualMode] = React.useState<VisualMode>(() => { const saved = localStorage.getItem("kiosk_visual_mode"); return saved === "pearl" || saved === "silver" || saved === "kids" ? saved : "classic"; });
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
   const loadConfig = React.useCallback(() => {
@@ -56,7 +56,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   }
 
   function toggleVisualMode() {
-    const next: VisualMode = visualMode === "classic" ? "pearl" : visualMode === "pearl" ? "silver" : "classic";
+    const next: VisualMode = visualMode === "classic" ? "pearl" : visualMode === "pearl" ? "silver" : visualMode === "silver" ? "kids" : "classic";
     localStorage.setItem("kiosk_visual_mode", next);
     setVisualMode(next);
   }
@@ -90,7 +90,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
       <div className="kiosk-utilities">
         <button className="kiosk-theme-toggle" type="button" onClick={toggleVisualMode} aria-label={copy.theme} title={copy.theme}>
-          <span>{visualMode === "classic" ? "✦" : visualMode === "pearl" ? "◈" : "◐"}</span><b>{visualMode === "classic" ? "Pearl" : visualMode === "pearl" ? "Silver" : "Classic"}</b>
+          <span>{visualMode === "classic" ? "✦" : visualMode === "pearl" ? "◈" : visualMode === "silver" ? "★" : "◐"}</span><b>{visualMode === "classic" ? "Pearl" : visualMode === "pearl" ? "Silver" : visualMode === "silver" ? "Kids" : "Classic"}</b>
         </button>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>

@@ -5,6 +5,7 @@ import "./kiosk/kiosk-gyongyos.css";
 import "./kiosk/kiosk-2026.css";
 import "./kiosk/kiosk-pearl.css";
 import "./kiosk/kiosk-silver.css";
+import "./kiosk/kiosk-kids.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";
