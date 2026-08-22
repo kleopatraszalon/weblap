@@ -1,5 +1,6 @@
 Render redeploy trigger
-2026-08-22T21:56:00+02:00
-Force deploy latest main for Smart Signage v22.3 hard-anchored video-frame cards.
-Required signage: five colored cards physically constrained to the middle video frame at full width; continuous repeating quote ticker; large white card headlines; ARAINK exclusively from Booking 4.0.
-Deploy target latest main before trigger: d0710af443ab5cc650b66a0cffe1d61ebdb01f03.
+2026-08-22T22:13:00+02:00
+Force deploy latest main for Smart Signage v23 hard inline runtime.
+Required signage: exactly five readable colored cards roaming across the full signage viewport with collision-aware motion; no repeated marquee text; small labels only; ARAINK rendered directly from Booking 4.0 into the native service list.
+Expected signage route: https://weblap-o3g6.onrender.com/signage/
+Deploy target latest main before trigger: 96325bc8413bdd3d2cd88d6017827e0b9030c96a.
