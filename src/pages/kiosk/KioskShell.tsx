@@ -9,6 +9,7 @@ const LANGS = [
   { code: "ru", label: "Русский", flag: "RU" },
 ] as const;
 type LangCode = (typeof LANGS)[number]["code"];
+type VisualMode = "classic" | "pearl" | "silver";
 function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
 
 const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string }> = {
@@ -22,7 +23,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
-  const [visualMode, setVisualMode] = React.useState<"classic" | "pearl">(() => localStorage.getItem("kiosk_visual_mode") === "pearl" ? "pearl" : "classic");
+  const [visualMode, setVisualMode] = React.useState<VisualMode>(() => { const saved = localStorage.getItem("kiosk_visual_mode"); return saved === "pearl" || saved === "silver" ? saved : "classic"; });
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
   const loadConfig = React.useCallback(() => {
@@ -55,7 +56,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   }
 
   function toggleVisualMode() {
-    const next = visualMode === "pearl" ? "classic" : "pearl";
+    const next: VisualMode = visualMode === "classic" ? "pearl" : visualMode === "pearl" ? "silver" : "classic";
     localStorage.setItem("kiosk_visual_mode", next);
     setVisualMode(next);
   }
@@ -89,7 +90,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
       <div className="kiosk-utilities">
         <button className="kiosk-theme-toggle" type="button" onClick={toggleVisualMode} aria-label={copy.theme} title={copy.theme}>
-          <span>{visualMode === "pearl" ? "◐" : "✦"}</span><b>{visualMode === "pearl" ? "Classic" : "Pearl"}</b>
+          <span>{visualMode === "classic" ? "✦" : visualMode === "pearl" ? "◈" : "◐"}</span><b>{visualMode === "classic" ? "Pearl" : visualMode === "pearl" ? "Silver" : "Classic"}</b>
         </button>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
