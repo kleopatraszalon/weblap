@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T20:35:00+02:00
-Force deploy latest main with Smart Signage v21 full-frame moving bubbles and Booking 4.0 rolling prices.
+2026-08-22T20:44:00+02:00
+Force deploy latest main with Smart Signage v22 readable full-frame moving cards and Booking 4.0 rolling prices.
 Expected signage route: https://weblap-o3g6.onrender.com/signage/
-Required signage: five compact bubbles roam across the full signage frame; bounce at viewport edges; collision separation; single-copy scrolling text; forced magenta/blue/amber/violet/green palettes.
+Required signage: five readable bubbles roam across the full signage frame; bounce at viewport edges; collision separation; full multi-line text visible without marquee or repetition; forced magenta/blue/amber/violet/green palettes.
 Required prices: ÁRAINK must use only /api/public/booking/v4/pricelist and show real Booking 4.0 service prices in a continuously rolling overlay.
 Preserve current YouTube rotation, offer spotlight, kiosk themes and all other current functionality.
-Deploy target main before trigger: ec0225955e09afe9369a4bf7f77b36501aff3067.
+Deploy target main before trigger: fd675891e53b073ca87ad907dbb38f10a32e209a.
