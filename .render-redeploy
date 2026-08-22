@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T20:05:00+02:00
-Force deploy the refined KIDS kiosk experience.
-Expected route: https://weblap-o3g6.onrender.com/kiosk
-Required themes: Classic, Pearl, Silver, KIDS.
-Required KIDS fix: new minimal cinematic mascots; correctly transparent animated GIFs; no black rectangles; smaller character composition with no title overlap.
-Preserve all current signage and kiosk functionality.
-Deploy target main before trigger: 4477293df0c4c7bc8b3b8b544a909a67d8c64cb9.
+2026-08-22T20:07:00+02:00
+Force deploy the complete current main with Smart Signage v19.
+Expected signage route: https://weblap-o3g6.onrender.com/signage/
+Required signage: five differently colored moving cards anchored to the actual video-panel bottom band; compact labels only; motivation, beauty, gym, weather and nameday content scroll continuously; no large white MAI GONDOLAT / SZÉPSÉG-IDÉZET / TECHNIKA headlines.
+Required prices: ÁRAINK continuously rolling from /api/public/booking/v4/pricelist with /api/signage/services fallback.
+Preserve current random GYM/fodrászat/kozmetika YouTube rotation, offer spotlight, and all current kiosk themes including Classic, Pearl, Silver and KIDS.
+Deploy target main before trigger: 51d1db900943c9c28b39410c99b92f1136c5085f.
