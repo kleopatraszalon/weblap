@@ -5,6 +5,12 @@
   display: none !important;
 }
 
+/* v13 policy: nameday 20% replaces every visible birthday surprise. */
+.sgx .sgx-popup-kind-birthday,
+.sgx .sgx-toast-birthday {
+  display: none !important;
+}
+
 .sgx .sgxInfoDockV13 {
   position: fixed;
   z-index: 255;
