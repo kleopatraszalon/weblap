@@ -24,6 +24,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
   const [visualMode, setVisualMode] = React.useState<VisualMode>(() => { const saved = localStorage.getItem("kiosk_visual_mode"); return saved === "pearl" || saved === "silver" || saved === "kids" ? saved : "classic"; });
+  const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
   const loadConfig = React.useCallback(() => {
@@ -55,10 +56,10 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     window.dispatchEvent(new Event("kiosk-lang-change"));
   }
 
-  function toggleVisualMode() {
-    const next: VisualMode = visualMode === "classic" ? "pearl" : visualMode === "pearl" ? "silver" : visualMode === "silver" ? "kids" : "classic";
+  function selectVisualMode(next: VisualMode) {
     localStorage.setItem("kiosk_visual_mode", next);
     setVisualMode(next);
+    setThemeMenuOpen(false);
   }
 
   const copy = COPY[lang];
@@ -89,9 +90,14 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
         })}
       </div>
       <div className="kiosk-utilities">
-        <button className="kiosk-theme-toggle" type="button" onClick={toggleVisualMode} aria-label={copy.theme} title={copy.theme}>
-          <span>{visualMode === "classic" ? "✦" : visualMode === "pearl" ? "◈" : visualMode === "silver" ? "★" : "◐"}</span><b>{visualMode === "classic" ? "Pearl" : visualMode === "pearl" ? "Silver" : visualMode === "silver" ? "Kids" : "Classic"}</b>
-        </button>
+        <div className="kiosk-theme-picker">
+          <button className="kiosk-theme-toggle" type="button" onClick={() => setThemeMenuOpen((open) => !open)} aria-label={copy.theme} aria-expanded={themeMenuOpen} title={copy.theme}>
+            <span>{visualMode === "classic" ? "◐" : visualMode === "pearl" ? "✦" : visualMode === "silver" ? "◈" : "★"}</span><b>{visualMode === "classic" ? "Classic" : visualMode === "pearl" ? "Pearl" : visualMode === "silver" ? "Silver" : "KIDS"}</b><i>⌄</i>
+          </button>
+          {themeMenuOpen&&<div className="kiosk-theme-menu" role="menu" aria-label={copy.theme}>
+            {([['classic','◐','Classic'],['pearl','✦','Pearl'],['silver','◈','Silver'],['kids','★','KIDS']] as const).map(([mode,icon,label])=><button key={mode} type="button" role="menuitemradio" aria-checked={visualMode===mode} className={visualMode===mode?'active':''} onClick={()=>selectVisualMode(mode)}><span>{icon}</span><b>{label}</b>{visualMode===mode&&<i>✓</i>}</button>)}
+          </div>}
+        </div>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
           <span>{copy.total}</span><b>{count} · {total.toLocaleString("hu-HU")} Ft</b>
