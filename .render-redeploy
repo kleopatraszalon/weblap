@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T20:25:00+02:00
-Force deploy latest main with the full KIDS cartoon interior.
+2026-08-22T20:48:00+02:00
+Force deploy latest main with framed KIDS companions and child-friendly copy.
 Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
 Required theme menu options: Classic, Pearl, Silver, KIDS.
-Required KIDS interior: animated bunny, bear and fox companions throughout catalog, AI advisor, cart, payment and success screens; playful cards and child-friendly touch styling.
+Required KIDS fixes: all mascots stay within kiosk frame; smaller helper characters; child-friendly hero, AI, card, cart, payment and success wording.
 Preserve Smart Signage v19 and all current kiosk functionality.
-Deploy target main before trigger: 37eb22e6190f03cb3cbe97e15099e7ab0dcd7871.
+Deploy target main before trigger: b931587a3167dd4cd581da85668bc4f5bc863b31.
