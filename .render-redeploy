@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T17:32:00+02:00
-Force deploy the exact latest main for Smart Signage v13 information cards.
+2026-08-22T17:53:00+02:00
+Force deploy the exact latest main for Smart Signage v13 information cards and birthday suppression.
 Expected public route: https://weblap-o3g6.onrender.com/signage/
 Expected marker: smart-signage-v13 / motion=five-info-cards-video-band-random-roam / nameday=20-percent / motivation=daily-hu / beauty-quote=hourly-hu / gym-tip=hourly-form-cues / weather=open-meteo.
 Required runtime: __kleoSignageInfoCardsV13Installed / info-cards-v13-video-band / video-row-v13 / __kleoSignageOfferContentBandV12 / spotlight-content-band-v12.
 Keep enabled: curated random YouTube rotation for gym / hair / beauty and rotating flash/deal/last-minute/KLEOSHOP spotlight over the video row.
-Important: the old birthday/last-minute/product mini-card dock is hidden; the visible moving cards are nameday 20%, weather, daily motivation, hourly beauty quote and hourly gym technique tip, all bounded to the .sgGrid/video band.
+Important: birthday visuals remain suppressed; the old birthday/last-minute/product mini-card dock stays hidden. Visible moving cards are nameday 20%, weather, daily motivation, hourly beauty quote and hourly gym technique tip, all bounded to the .sgGrid/video band.
