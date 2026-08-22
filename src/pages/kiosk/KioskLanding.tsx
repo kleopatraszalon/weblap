@@ -2,7 +2,9 @@ import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchKioskContext, fetchKioskProducts, fetchKioskServices } from "./kioskApi";
 import { KioskCartPanel } from "./KioskCartPanel";
-import type { KioskCategory } from "./types";
+import { AiBeautyAdvisor } from "./AiBeautyAdvisor";
+import { addToCart } from "./cartStore";
+import type { KioskCategory, KioskProduct, KioskService } from "./types";
 
 const FALLBACK_IMAGES=["/kiosk/tiles/fodraszat.png","/kiosk/tiles/kez_es_labapolas.png","/kiosk/tiles/kozmetika.png","/kiosk/tiles/masszazs.png","/kiosk/tiles/testkezeles.png","/kiosk/tiles/wellness_fitness_szolarium.png"];
 const slugify=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
@@ -10,6 +12,7 @@ const slugify=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u03
 export function KioskLanding(){
   const nav=useNavigate();const[params]=useSearchParams();const previewLocation=params.get("location_id")||params.get("locationId")||"";
   const[serviceCategories,setServiceCategories]=React.useState<KioskCategory[]>([]);const[productCategories,setProductCategories]=React.useState<KioskCategory[]>([]);
+  const[services,setServices]=React.useState<KioskService[]>([]);const[products,setProducts]=React.useState<KioskProduct[]>([]);
   const[locationId,setLocationId]=React.useState(previewLocation||"");const[locationName,setLocationName]=React.useState("Gyöngyös");const[menu,setMenu]=React.useState<any>(null);
   const[loading,setLoading]=React.useState(true);const[error,setError]=React.useState("");const[started,setStarted]=React.useState(()=>sessionStorage.getItem("kiosk_started")==="1");
 
@@ -18,7 +21,7 @@ export function KioskLanding(){
     const ctx=await fetchKioskContext(previewLocation||undefined);const bound=ctx.bound_location||ctx.locations?.[0];if(!bound)throw new Error("A Gyöngyös kiosk telephelye nem található.");
     setLocationId(bound.id);setLocationName(bound.name);localStorage.setItem("kiosk_location_id",bound.id);window.dispatchEvent(new Event("kiosk-location-change"));
     const[svc,prod]=await Promise.all([fetchKioskServices(localStorage.getItem("kiosk_lang")||"hu",bound.id),fetchKioskProducts(bound.id)]);
-    setServiceCategories(svc.categories||[]);setProductCategories(prod.categories||[]);setMenu(svc.menu||prod.menu||null);
+    setServiceCategories(svc.categories||[]);setProductCategories(prod.categories||[]);setServices(svc.services||[]);setProducts(prod.products||[]);setMenu(svc.menu||prod.menu||null);
     if((svc.menu||prod.menu)?.theme?.showStartScreen===false){sessionStorage.setItem("kiosk_started","1");setStarted(true)}
   }catch(e:any){setError(e?.message||"A kiosk menü nem tölthető be.")}finally{setLoading(false)}})()},[previewLocation]);
 
@@ -35,7 +38,8 @@ export function KioskLanding(){
     <section className="kiosk-catalog-home">
       {error&&<div className="kioskError">{error}</div>}{menu&&menu.is_active===false&&<div className="kioskError">A Gyöngyös kiosk menüje jelenleg ki van kapcsolva.</div>}
       {loading&&<div className="kioskInfo">Gyöngyös kiosk menü betöltése…</div>}
-      {!loading&&layoutOrder.filter(visible).map((block:string)=>block==="hero"?<div key={block} className="kiosk-catalog-hero" style={{backgroundImage:`linear-gradient(90deg,rgba(18,12,8,.82),rgba(18,12,8,.12)),url(${theme.heroImageUrl||"/images/szolgaltatasok.jpg"})`}}><span>{locationName}</span><h1>{theme.heroTitle||"Mit szeretnél ma?"}</h1><p>{theme.heroSubtitle||theme.welcomeText||"Válassz szolgáltatást vagy terméket néhány érintéssel."}</p></div>:block==="services"?<CatalogBlock key={block} kicker="SZOLGÁLTATÁSOK" title="Válassz szolgáltatáscsoportot" categories={serviceCategories} fallbackOffset={0} onOpen={c=>openCategory(c,"service")} columns={Number(theme.categoryColumns||2)}/>:theme.showProducts!==false?<CatalogBlock key={block} kicker="KLEOSHOP" title="Válassz termékcsoportot" categories={productCategories} fallbackOffset={3} onOpen={c=>openCategory(c,"product")} columns={Number(theme.productColumns||theme.categoryColumns||2)}/>:null)}
+      {!loading&&<AiBeautyAdvisor products={products} services={services} onProduct={p=>addToCart({id:p.id,title:p.name_hu||p.name,price:Number(p.sale_price??p.retail_price_gross??0),meta:{kind:"product",category_id:p.category_id,image_url:p.image_url||p.category_image}},1)} onService={s=>addToCart({id:s.id,title:s.name_hu||s.name,price:Number(s.list_price??s.base_price??0),meta:{kind:"service",duration:s.duration_minutes,category_id:s.category_id,image_url:s.image_url||s.category_image}},1)}/>}
+      {!loading&&layoutOrder.filter(visible).map((block:string)=>block==="hero"?<div key={block} className="kiosk-catalog-hero" style={{backgroundImage:`linear-gradient(100deg,rgba(20,9,15,.88),rgba(20,9,15,.18)),url(${theme.heroImageUrl||"/images/szolgaltatasok.jpg"})`}}><div className="kiosk-live-pill"><i/> MA NYITVA · AZONNALI VÁLASZTÁS</div><span>{locationName} · BEAUTY STUDIO</span><h1>{theme.heroTitle||"A szépségélmény, ami rád hangolódik."}</h1><p>{theme.heroSubtitle||theme.welcomeText||"Válassz szolgáltatást, fedezz fel professzionális termékeket, vagy kérj személyes AI-ajánlást."}</p><div className="kiosk-hero-stats"><b>4.9 <small>★ vendégértékelés</small></b><b>2 perc <small>AI rutinajánló</small></b></div></div>:block==="services"?<CatalogBlock key={block} kicker="SZOLGÁLTATÁSOK" title="Válassz szolgáltatáscsoportot" categories={serviceCategories} fallbackOffset={0} onOpen={c=>openCategory(c,"service")} columns={Number(theme.categoryColumns||2)}/>:theme.showProducts!==false?<CatalogBlock key={block} kicker="KLEOSHOP" title="Professzionális otthoni ápolás" categories={productCategories} fallbackOffset={3} onOpen={c=>openCategory(c,"product")} columns={Number(theme.productColumns||theme.categoryColumns||2)}/>:null)}
     </section><KioskCartPanel/>
   </div>;
 }
