@@ -1,4 +1,4 @@
-smart-signage-v22
+smart-signage-v22.1
 layout=viewport-native-responsive
 ui=body-level-readable-roaming-cards
 youtube=curated-random-gym-hair-beauty
@@ -19,4 +19,4 @@ text-motion=none-inside-card
 bubble-size=readable-88-118px
 motion=request-animation-frame-bouncing-collision-aware
 features=full-frame-roaming-readable-bubbles,bounce-at-frame-edges,collision-separation,full-quote-visible,forced-distinct-colors,booking-v4-price-overlay,booking-v4-prices,nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
-published=2026-08-22T20:38:00+02:00
+published=2026-08-22T21:15:00+02:00
