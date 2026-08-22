@@ -1,9 +1,11 @@
 Render redeploy trigger
-2026-08-22T19:40:00+02:00
-Force deploy the complete kiosk theme system.
-Expected route: https://weblap-o3g6.onrender.com/kiosk
-Required themes: Classic, Pearl, Silver.
-Required Silver markers: data-kiosk-visual=silver, kiosk-silver-stage, kiosk-silver-portrait, kiosk-silver-readout.
-Required Pearl markers: data-kiosk-visual=pearl, kiosk-pearl-stage.
-Preserve Smart Signage and all current main functionality.
-Deploy target main before trigger: a54240b0f68eebba1b7784541bd02b1842129669.
+2026-08-22T19:41:00+02:00
+Force deploy the exact latest main with Smart Signage v18 native UI and the complete kiosk theme system.
+Expected signage route: https://weblap-o3g6.onrender.com/signage/
+Expected signage marker: smart-signage-v18 / ui=native-signage-dom / prices=rolling-public-pricelist-v4 / cards=exactly-five-native-cards.
+Required signage runtime: __kleoSignageNativeV18Installed / native-five-cards-v18 / rolling-public-pricelist-v18 / /api/public/booking/v4/pricelist.
+Visible signage cards: exactly five at once — nameday 20% (magenta), weather (blue), daily motivation (amber), hourly beauty quote (violet), hourly gym technique tip (green), positioned in the upper content/video band using the already-rendered sgx-widgetDock-v3.
+Left signage panel: ÁRAINK with continuously rolling public Booking v4 service prices and fallback to current signage service rows.
+Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
+Required kiosk themes: Classic, Pearl, Silver. Preserve all current kiosk functionality.
+Deploy target main before trigger: f6403ba24dff36b6c1cc97effafe98e22cc2b55b.
