@@ -24,10 +24,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v10 + Kleo GTA woman on Render",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v11 offers without character overlay",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v10
+      - name: Wait for Render and verify deployed Smart Signage v11
         shell: bash
         run: |
           set -euo pipefail
@@ -38,48 +38,46 @@ jobs:
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
             css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
 
-            if [[ "$marker" == *"smart-signage-v10"* \
+            if [[ "$marker" == *"smart-signage-v11"* \
               && "$marker" == *"motion=four-smart-cards-bounded-random-roam"* \
               && "$marker" == *"youtube=curated-random-gym-hair-beauty"* \
-              && "$marker" == *"mascot=kleo-woman-gta-v1"* \
-              && "$marker" == *"feet=ticker-top-plus-6px"* \
-              && "$marker" == *"video-stop"* \
+              && "$marker" == *"character=none"* \
+              && "$marker" == *"offers=forced-rotating-spotlight"* \
               && -n "$js_asset" \
               && -n "$css_asset" ]]; then
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
               curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
-              curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL/images/signage/kleo-woman-gta.webp?_=${GITHUB_SHA}-${attempt}" -o /tmp/kleo-woman-gta.webp || true
 
               if grep -q '__kleoSignageMotionV10Installed' /tmp/signage-live.js 2>/dev/null \
                 && grep -q 'floating-bounded-v10' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'requestAnimationFrame' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '__kleoSignageMotionV8Installed' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'kleoLineMascotLayer' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'kleo-woman-gta-v1' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'ticker-top-plus-6px' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '/images/signage/kleo-woman-gta.webp' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '.sgPanel.sgVideo' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'kleoWomanTrack' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'sgx-widgetDock-v3' /tmp/signage-live.css 2>/dev/null \
+                && grep -q '__kleoSignageOfferSpotlightV11Installed' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'spotlight-v11' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/signage/flash' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/signage/deals' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/public/booking/v4/last-minute' /tmp/signage-live.js 2>/dev/null \
+                && grep -q '/api/public/webshop/products' /tmp/signage-live.js 2>/dev/null \
+                && grep -q 'sgOfferSpotlightV11' /tmp/signage-live.css 2>/dev/null \
+                && grep -q 'sgOfferProgressV11' /tmp/signage-live.css 2>/dev/null \
                 && grep -q 'motion-v10' /tmp/signage-live.css 2>/dev/null \
-                && test -s /tmp/kleo-woman-gta.webp \
-                && test "$(wc -c < /tmp/kleo-woman-gta.webp)" -gt 5000; then
-                echo "Smart Signage v10 + Kleo GTA woman + ticker-top feet clearance + video-stop are live. js=$js_asset css=$css_asset"
+                && ! grep -q 'kleo-woman-gta-v1' /tmp/signage-live.js 2>/dev/null \
+                && ! grep -q '/images/signage/kleo-woman-gta.webp' /tmp/signage-live.js 2>/dev/null \
+                && ! grep -q 'kleoWomanTrack' /tmp/signage-live.css 2>/dev/null; then
+                echo "Smart Signage v11 rotating offers are live and the woman overlay is absent. js=$js_asset css=$css_asset"
                 ok=1
                 break
               fi
             fi
-            echo "Waiting for Render Smart Signage v10 + Kleo GTA woman deployment ($attempt/90)"
+            echo "Waiting for Render Smart Signage v11 offer deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v10 + Kleo GTA woman was not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1 || { echo "Smart Signage v11 offers/no-character release was not observable on Render within the verification window." >&2; exit 1; }
 
       - name: Mark signage live verification success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v10 + Kleo GTA woman verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v11 offers live; character overlay removed",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
       - name: Mark signage live verification failure
@@ -87,5 +85,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v10 + Kleo GTA woman not verified live",context:"signage/live-render"}))')"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v11 offers/no-character release not verified live",context:"signage/live-render"}))')"
           curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
