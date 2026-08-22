@@ -1,0 +1,266 @@
+/* Smart Signage v19 — five moving cards anchored to the real video-row band. */
+
+.sgPricePanelV17,
+.sgInfoStripV17,
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15,
+.sgxInfoDockV16 {
+  display: none !important;
+}
+
+/* JS supplies exact viewport coordinates from .sgGrid + .sgPanel.sgVideo. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v19 {
+  z-index: 2147482500 !important;
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(10px, .72vw, 18px) !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19 {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  padding: 9px 12px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.34) !important;
+  color: #fff !important;
+  box-shadow: 0 15px 34px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.20) !important;
+  backdrop-filter: blur(15px) saturate(1.28) !important;
+  transform-origin: center center !important;
+  will-change: transform !important;
+  animation: sgV19CardMoveA var(--sg-v19-move, 6.2s) cubic-bezier(.37,.02,.24,1) var(--sg-v19-delay, 0s) infinite alternate !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(2) {
+  animation-name: sgV19CardMoveB !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(3) {
+  animation-name: sgV19CardMoveC !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(4) {
+  animation-name: sgV19CardMoveD !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(5) {
+  animation-name: sgV19CardMoveE !important;
+}
+
+@keyframes sgV19CardMoveA {
+  0% { transform: translate3d(-5px,-4px,0) rotate(-.35deg) scale(.99); }
+  40% { transform: translate3d(5px,3px,0) rotate(.24deg) scale(1.01); }
+  100% { transform: translate3d(-2px,5px,0) rotate(-.12deg) scale(1.005); }
+}
+@keyframes sgV19CardMoveB {
+  0% { transform: translate3d(4px,4px,0) rotate(.28deg) scale(1.006); }
+  48% { transform: translate3d(-5px,-3px,0) rotate(-.30deg) scale(.994); }
+  100% { transform: translate3d(3px,-5px,0) rotate(.16deg) scale(1.01); }
+}
+@keyframes sgV19CardMoveC {
+  0% { transform: translate3d(-4px,3px,0) rotate(-.22deg) scale(1.008); }
+  52% { transform: translate3d(5px,-5px,0) rotate(.34deg) scale(.992); }
+  100% { transform: translate3d(2px,4px,0) rotate(.12deg) scale(1.006); }
+}
+@keyframes sgV19CardMoveD {
+  0% { transform: translate3d(5px,-3px,0) rotate(.30deg) scale(.995); }
+  45% { transform: translate3d(-4px,5px,0) rotate(-.24deg) scale(1.01); }
+  100% { transform: translate3d(4px,2px,0) rotate(.18deg) scale(1.002); }
+}
+@keyframes sgV19CardMoveE {
+  0% { transform: translate3d(-3px,5px,0) rotate(-.20deg) scale(1.004); }
+  50% { transform: translate3d(5px,-4px,0) rotate(.32deg) scale(.993); }
+  100% { transform: translate3d(-5px,1px,0) rotate(-.30deg) scale(1.01); }
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-kicker-v19 {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  color: rgba(255,255,255,.88) !important;
+  font-size: clamp(8px,.53vw,11px) !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: .075em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* No large white headline in v19. The actual content is the moving line below. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-v19 strong,
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-v19 small {
+  display: none !important;
+  animation: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-marquee-v19 {
+  width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-marquee-track-v19 {
+  width: max-content !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 56px !important;
+  animation: sgV19TextMarquee var(--sg-v19-marquee, 20s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-marquee-track-v19 span {
+  display: block !important;
+  flex: 0 0 auto !important;
+  min-width: max-content !important;
+  color: rgba(255,255,255,.97) !important;
+  font-size: clamp(11px,.82vw,17px) !important;
+  line-height: 1.15 !important;
+  font-weight: 820 !important;
+  letter-spacing: .01em !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.26) !important;
+}
+
+@keyframes sgV19TextMarquee {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(calc(-50% - 28px),0,0); }
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-v19::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background: linear-gradient(112deg, transparent 18%, rgba(255,255,255,.12) 48%, transparent 78%) !important;
+  transform: translateX(-125%);
+  animation: sgV19Sheen 7.2s ease-in-out infinite !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(2)::after { animation-delay: -1.4s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(3)::after { animation-delay: -2.8s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(4)::after { animation-delay: -4.2s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19:nth-child(5)::after { animation-delay: -5.6s !important; }
+
+@keyframes sgV19Sheen {
+  0%,18% { transform: translateX(-125%); opacity: 0; }
+  36% { opacity: .78; }
+  58% { transform: translateX(125%); opacity: .18; }
+  100% { transform: translateX(125%); opacity: 0; }
+}
+
+/* Five deliberately different palettes. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-nameday-v19 {
+  background: radial-gradient(circle at 100% 0%, rgba(255,97,188,.52), transparent 48%), linear-gradient(135deg,#65113f,#c42c78) !important;
+  border-color: rgba(255,145,204,.90) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-weather-v19 {
+  background: radial-gradient(circle at 100% 0%, rgba(91,202,255,.50), transparent 48%), linear-gradient(135deg,#0d4772,#167fbd) !important;
+  border-color: rgba(118,211,255,.90) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-motivation-v19 {
+  background: radial-gradient(circle at 100% 0%, rgba(255,195,66,.48), transparent 48%), linear-gradient(135deg,#7a3f08,#c77712) !important;
+  border-color: rgba(255,206,105,.92) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-beauty-v19 {
+  background: radial-gradient(circle at 100% 0%, rgba(211,111,255,.50), transparent 48%), linear-gradient(135deg,#531b75,#983fc4) !important;
+  border-color: rgba(221,145,255,.92) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-gym-v19 {
+  background: radial-gradient(circle at 100% 0%, rgba(75,232,157,.50), transparent 48%), linear-gradient(135deg,#0e5f40,#15936a) !important;
+  border-color: rgba(101,237,171,.92) !important;
+}
+
+/* Existing left signage panel becomes the continuously rolling public price list. */
+.sgx.sgx-modern-v3 .sgServices[data-native-price-runtime="rolling-public-pricelist-v19"] .sgPanelHeader h2 {
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgSvcList[data-native-price-v19="true"] {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: .65vh .58vw !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceTrackV19 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .52vh !important;
+  animation: sgPriceNativeRollV19 var(--sg-price-v19-duration, 58s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV19 {
+  min-height: clamp(34px,4.3vh,48px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: .55vw !important;
+  padding: .55vh .55vw !important;
+  box-sizing: border-box !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(182,152,97,.24) !important;
+  background: linear-gradient(90deg,rgba(255,255,255,.98),rgba(249,244,236,.96)) !important;
+  box-shadow: 0 6px 14px rgba(18,12,8,.055) !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV19 span {
+  min-width: 0 !important;
+  color: #1b110d !important;
+  font-size: clamp(10px,.70vw,14px) !important;
+  line-height: 1.08 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV19 b {
+  color: #9a7440 !important;
+  font-size: clamp(10px,.73vw,15px) !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceEmptyV19 {
+  padding: 18px 12px !important;
+  color: #756a61 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+@keyframes sgPriceNativeRollV19 {
+  0%,4% { transform: translateY(0); }
+  96%,100% { transform: translateY(-50%); }
+}
+
+@media (max-width: 1400px) {
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v19 {
+    gap: 7px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v19 > .sgx-widget-v19 {
+    padding: 8px 9px !important;
+    border-radius: 13px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v19 .sgx-widget-marquee-track-v19 span {
+    font-size: clamp(9px,.75vw,13px) !important;
+  }
+}
