@@ -1,0 +1,204 @@
+/* Smart Signage v18 — use the native SignageExperience dock and native services panel. */
+
+/* Retire experimental overlays: the visible UI now lives in the already-rendered signage DOM. */
+.sgPricePanelV17,
+.sgInfoStripV17,
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15,
+.sgxInfoDockV16 {
+  display: none !important;
+}
+
+/* Five cards: always visible in the upper content/video band, never in the lower empty area. */
+.sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v18 {
+  position: fixed !important;
+  z-index: 2147482000 !important;
+  left: 16.8vw !important;
+  right: 1.15vw !important;
+  top: calc(13.8vh + 1.15vh) !important;
+  bottom: auto !important;
+  width: auto !important;
+  transform: none !important;
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: clamp(7px, .52vw, 12px) !important;
+  pointer-events: none !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18 {
+  min-width: 0 !important;
+  min-height: clamp(80px, 9.6vh, 104px) !important;
+  height: clamp(80px, 9.6vh, 104px) !important;
+  padding: clamp(9px, .65vw, 13px) clamp(10px, .78vw, 15px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 3px !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  border-radius: 17px !important;
+  border: 1px solid rgba(255,255,255,.30) !important;
+  box-shadow: 0 16px 34px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(14px) saturate(1.22) !important;
+  animation: sgNativeFloatV18 5.8s ease-in-out infinite alternate !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18:nth-child(2) { animation-delay: -.8s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18:nth-child(3) { animation-delay: -1.6s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18:nth-child(4) { animation-delay: -2.4s !important; }
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18:nth-child(5) { animation-delay: -3.2s !important; }
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-kicker {
+  width: 100% !important;
+  color: rgba(255,255,255,.90) !important;
+  font-size: clamp(8px, .52vw, 11px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: .07em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-v18 strong {
+  width: 100% !important;
+  color: #fff !important;
+  font-size: clamp(16px, 1.12vw, 24px) !important;
+  line-height: 1.02 !important;
+  font-weight: 1000 !important;
+  letter-spacing: -.025em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-nameday-v18 strong {
+  color: #ffe3f1 !important;
+  font-size: clamp(24px, 1.55vw, 32px) !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-v18 small {
+  width: 100% !important;
+  color: rgba(255,255,255,.91) !important;
+  font-size: clamp(8px, .54vw, 11px) !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  overflow: hidden !important;
+}
+
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-nameday-v18 {
+  background: radial-gradient(circle at 100% 0%, rgba(255,80,170,.42), transparent 48%), linear-gradient(135deg, #5d0d3a, #ad2369) !important;
+  border-color: rgba(255,117,184,.82) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-weather-v18 {
+  background: radial-gradient(circle at 100% 0%, rgba(92,182,255,.42), transparent 48%), linear-gradient(135deg, #12355f, #2877b6) !important;
+  border-color: rgba(112,188,255,.82) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-motivation-v18 {
+  background: radial-gradient(circle at 100% 0%, rgba(255,198,91,.40), transparent 48%), linear-gradient(135deg, #5f360d, #b06b19) !important;
+  border-color: rgba(247,193,91,.84) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-beauty-v18 {
+  background: radial-gradient(circle at 100% 0%, rgba(211,120,255,.40), transparent 48%), linear-gradient(135deg, #4a1768, #883cb0) !important;
+  border-color: rgba(205,131,255,.84) !important;
+}
+.sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-gym-v18 {
+  background: radial-gradient(circle at 100% 0%, rgba(82,219,154,.40), transparent 48%), linear-gradient(135deg, #0f5137, #208d61) !important;
+  border-color: rgba(91,222,159,.84) !important;
+}
+
+@keyframes sgNativeFloatV18 {
+  from { transform: translateY(-2px); }
+  to { transform: translateY(4px); }
+}
+
+/* Native left panel becomes a real continuously rolling public price list. */
+.sgx.sgx-modern-v3 .sgServices[data-native-price-runtime="rolling-public-pricelist-v18"] .sgPanelHeader h2 {
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgSvcList[data-native-price-v18="true"] {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: .65vh .58vw !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceTrackV18 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .52vh !important;
+  animation: sgPriceNativeRollV18 var(--sg-price-v18-duration, 50s) linear infinite !important;
+  will-change: transform !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV18 {
+  min-height: clamp(34px, 4.3vh, 48px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: .55vw !important;
+  padding: .55vh .55vw !important;
+  box-sizing: border-box !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(182,152,97,.24) !important;
+  background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(249,244,236,.96)) !important;
+  box-shadow: 0 6px 14px rgba(18,12,8,.055) !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV18 span {
+  min-width: 0 !important;
+  color: #1b110d !important;
+  font-size: clamp(10px, .70vw, 14px) !important;
+  line-height: 1.08 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceRowV18 b {
+  color: #9a7440 !important;
+  font-size: clamp(10px, .73vw, 15px) !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+}
+
+.sgx.sgx-modern-v3 .sgServices .sgPriceEmptyV18 {
+  padding: 18px 12px !important;
+  color: #756a61 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+@keyframes sgPriceNativeRollV18 {
+  0%, 5% { transform: translateY(0); }
+  95%, 100% { transform: translateY(-50%); }
+}
+
+@media (max-width: 1400px) {
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v3.sgx-widgetDock-v18 {
+    left: 1.15vw !important;
+    top: calc(13.8vh + 1.1vh) !important;
+    gap: 5px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v18 > .sgx-widget-v18 {
+    padding: 8px 9px !important;
+    border-radius: 13px !important;
+  }
+  .sgx.sgx-modern-v3 .sgx-widgetDock-v18 .sgx-widget-v18 small {
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
+  }
+}

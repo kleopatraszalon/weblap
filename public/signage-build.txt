@@ -1,6 +1,6 @@
-smart-signage-v17
+smart-signage-v18
 layout=viewport-native-responsive
-overlay=react-rendered-fixed-to-live-panels
+ui=native-signage-dom
 youtube=curated-random-gym-hair-beauty
 character=none
 offers=forced-rotating-spotlight-video-row
@@ -10,8 +10,8 @@ beauty-quote=hourly-hu
 gym-tip=hourly-form-cues
 weather=open-meteo
 colors=nameday-magenta,weather-blue,motivation-amber,beauty-violet,gym-green
-legacy-smart-dock=disabled
-prices=react-rolling-service-price-list
-cards=exactly-five-react-cards
-features=react-price-panel,react-five-card-strip,nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,distinct-card-colors,rolling-prices,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
-published=2026-08-22T19:08:00+02:00
+prices=rolling-public-pricelist-v4
+cards=exactly-five-native-cards
+anchor=existing-sgx-widgetDock-v3-upper-content-band
+features=native-price-panel,native-five-card-dock,nameday-20-percent,weather,daily-motivation,hourly-beauty-quote,hourly-gym-tip,distinct-card-colors,rolling-public-pricelist,random-youtube-gym,random-youtube-hair,random-youtube-beauty,offer-spotlight
+published=2026-08-22T19:29:00+02:00
