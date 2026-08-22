@@ -1,0 +1,188 @@
+/* Smart Signage v16 — body-level five-card overlay + rolling price list. */
+
+.sgx-widgetDock-v3,
+.sgx-widget-birthday,
+.sgx-popup-kind-birthday,
+.sgx-toast-birthday,
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15 {
+  display: none !important;
+}
+
+.sgxInfoDockV16 {
+  position: fixed !important;
+  z-index: 2147482000 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  isolation: isolate !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  contain: layout paint style;
+}
+
+.sgxInfoDockV16 > .sgxInfoCardV16 {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  min-height: 82px !important;
+  padding: 12px 14px 13px !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  box-shadow: 0 16px 34px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(13px) saturate(1.2);
+  will-change: transform;
+}
+
+.sgxInfoCardV16::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 10%, rgba(255,255,255,.12) 48%, transparent 84%);
+  opacity: .55;
+}
+
+.sgxInfoCardV16--nameday {
+  border-color: rgba(255,117,184,.78) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(255,80,170,.38), transparent 48%), linear-gradient(135deg, #5d0d3a, #ad2369) !important;
+}
+.sgxInfoCardV16--weather {
+  border-color: rgba(112,188,255,.78) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(92,182,255,.38), transparent 48%), linear-gradient(135deg, #12355f, #2877b6) !important;
+}
+.sgxInfoCardV16--motivation {
+  border-color: rgba(247,193,91,.80) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(255,198,91,.36), transparent 48%), linear-gradient(135deg, #5f360d, #b06b19) !important;
+}
+.sgxInfoCardV16--beauty {
+  border-color: rgba(205,131,255,.80) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(211,120,255,.36), transparent 48%), linear-gradient(135deg, #4a1768, #883cb0) !important;
+}
+.sgxInfoCardV16--gym {
+  border-color: rgba(91,222,159,.80) !important;
+  background: radial-gradient(circle at 100% 0%, rgba(82,219,154,.36), transparent 48%), linear-gradient(135deg, #0f5137, #208d61) !important;
+}
+
+.sgxInfoCardV16__kicker,
+.sgxInfoCardV16__strong,
+.sgxInfoCardV16__small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+.sgxInfoCardV16__kicker {
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.90);
+  font-size: clamp(8px,.55vw,11px);
+  line-height: 1.08;
+  font-weight: 950;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sgxInfoCardV16__strong {
+  color: #fff;
+  font-size: clamp(15px,1vw,23px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sgxInfoCardV16--nameday .sgxInfoCardV16__strong {
+  color: #ffe3f1;
+  font-size: clamp(22px,1.45vw,31px);
+}
+.sgxInfoCardV16__small {
+  margin-top: 5px;
+  color: rgba(255,255,255,.92);
+  font-size: clamp(8px,.56vw,11px);
+  line-height: 1.17;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Weekly offers panel becomes the scrolling public price list. */
+.sgPricesPanelV16 .sgPanelHeader h2 {
+  letter-spacing: .04em !important;
+}
+
+.sgPricesPanelV16 .sgSvcList {
+  overflow: hidden !important;
+  position: relative !important;
+  gap: 7px !important;
+  animation: sgPriceRollV16 12s ease-in-out infinite !important;
+  will-change: transform;
+}
+
+.sgPricesPanelV16 .sgSvcItem {
+  padding: 10px 12px !important;
+  min-height: 48px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(90deg, rgba(255,255,255,.97), rgba(249,244,236,.95)) !important;
+  border-color: rgba(182,152,97,.34) !important;
+}
+
+.sgPricesPanelV16 .sgSvcTitleRow {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.sgPricesPanelV16 .sgSvcTitle {
+  font-size: clamp(15px,1.02vw,22px) !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sgPricesPanelV16 .sgSvcPrice {
+  color: #9a7440 !important;
+  font-size: clamp(16px,1.05vw,23px) !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+}
+
+.sgPricesPanelV16 .sgSvcDesc,
+.sgPricesPanelV16 .sgAutoScrollY {
+  display: none !important;
+}
+
+.sgPricesPanelV16 .sgFooter {
+  font-size: 12px !important;
+}
+
+@keyframes sgPriceRollV16 {
+  0%, 12% { transform: translateY(0); }
+  42%, 58% { transform: translateY(-12%); }
+  88%, 100% { transform: translateY(0); }
+}
+
+@media (max-width: 1100px) {
+  .sgxInfoDockV16 > .sgxInfoCardV16 {
+    padding: 10px 11px !important;
+    border-radius: 14px !important;
+  }
+  .sgxInfoCardV16__small {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}
