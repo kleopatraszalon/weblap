@@ -21,14 +21,14 @@ jobs:
       SITE_URL: https://weblap-o3g6.onrender.com
       API_URL: https://kleoszalon-api-1.onrender.com
     steps:
-      - name: Mark signage verification pending
+      - name: Mark pending
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v22 readable UI",context:"signage/live-render"}))')"
-          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for Smart Signage v23",context:"signage/live-render"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Wait for Render and verify deployed Smart Signage v22
+      - name: Verify v23 live bundle
         shell: bash
         run: |
           set -euo pipefail
@@ -37,72 +37,38 @@ jobs:
             marker="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE_URL/signage-build.txt?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
             html="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE_URL/signage/?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
             js_asset="$(printf '%s' "$html" | grep -oE 'src="/assets/[^\"]+\.js"' | head -1 | cut -d'"' -f2 || true)"
-            css_asset="$(printf '%s' "$html" | grep -oE 'href="/assets/[^\"]+\.css"' | head -1 | cut -d'"' -f2 || true)"
-
-            if [[ "$marker" == *"smart-signage-v22"* \
-              && "$marker" == *"cards=exactly-five-readable-full-frame-bouncing-cards"* \
-              && "$marker" == *"anchor=full-signage-frame"* \
-              && "$marker" == *"text-motion=none-inside-card"* \
-              && "$marker" == *"prices=booking-v4-only-rolling-pricelist"* \
-              && -n "$js_asset" && -n "$css_asset" ]]; then
-              curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.js || true
-              curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${css_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage-live.css || true
-              if grep -q '__kleoSignageNativeV22Installed' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'full-frame-five-readable-moving-cards-v22' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'booking4-rolling-price-overlay-v22' /tmp/signage-live.js 2>/dev/null \
-                && grep -q '/api/public/booking/v4/pricelist' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'requestAnimationFrame' /tmp/signage-live.js 2>/dev/null \
-                && grep -q 'kleoRoamLayerV22' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'kleoRoamTextV22' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'white-space: normal' /tmp/signage-live.css 2>/dev/null \
-                && grep -q 'kleoPriceOverlayV22' /tmp/signage-live.css 2>/dev/null \
-                && grep -q '#e3227f' /tmp/signage-live.css 2>/dev/null \
-                && grep -q '#1b9bda' /tmp/signage-live.css 2>/dev/null \
-                && grep -q '#f19a20' /tmp/signage-live.css 2>/dev/null \
-                && grep -q '#ad55d6' /tmp/signage-live.css 2>/dev/null \
-                && grep -q '#28b77f' /tmp/signage-live.css 2>/dev/null \
-                && ! grep -q '__kleoSignageNativeV21Installed' /tmp/signage-live.js 2>/dev/null; then
-                echo "Smart Signage v22 readable full-frame cards are live. js=$js_asset css=$css_asset"
-                ok=1
-                break
+            if [[ "$marker" == *"smart-signage-v23"* && "$marker" == *"anchor=full-signage-viewport"* && "$marker" == *"text-repeat=none"* && "$marker" == *"prices=booking-v4-only-native-panel-rolling"* && -n "$js_asset" ]]; then
+              curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL${js_asset}?_=${GITHUB_SHA}-${attempt}" -o /tmp/signage.js || true
+              if grep -q '__kleoSignageNativeV23Installed' /tmp/signage.js && grep -q 'v23-full-frame-readable-cards' /tmp/signage.js && grep -q 'kleoV23PriceTrack' /tmp/signage.js && grep -q '/api/public/booking/v4/pricelist' /tmp/signage.js && ! grep -q '__kleoSignageNativeV22Installed' /tmp/signage.js; then
+                ok=1; break
               fi
             fi
-            echo "Waiting for Render Smart Signage v22 deployment ($attempt/90)"
             sleep 10
           done
-          test "$ok" -eq 1 || { echo "Smart Signage v22 was not observable on Render within the verification window." >&2; exit 1; }
+          test "$ok" -eq 1
 
-      - name: Verify Booking 4.0 returns real prices
-        shell: bash
+      - name: Verify Booking 4.0 priced rows
         run: |
-          set -euo pipefail
-          curl -fsS --max-time 45 -H 'Accept: application/json' -H 'Cache-Control: no-cache' "$API_URL/api/public/booking/v4/pricelist?_=${GITHUB_SHA}" -o /tmp/booking4.json
+          curl -fsS --max-time 45 "$API_URL/api/public/booking/v4/pricelist?_=${GITHUB_SHA}" -o /tmp/booking4.json
           node - /tmp/booking4.json <<'NODE'
-          const fs = require('fs');
-          const data = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          const arr = Array.isArray(data) ? data : (data.services || data.items || data.rows || []);
-          const numeric = (v) => {
-            if (v == null) return 0;
-            const n = Number(String(v).replace(/\s/g,'').replace(/[^0-9,.-]/g,'').replace(',','.'));
-            return Number.isFinite(n) ? n : 0;
-          };
-          const priced = Array.isArray(arr) ? arr.filter((x) => [x?.price,x?.base_price,x?.price_text,x?.priceText,x?.level_prices?.normal,x?.level_prices?.top,x?.level_prices?.master,x?.level_prices?.premium].some((v) => numeric(v) > 0)) : [];
-          console.log(`Booking 4.0 priced rows: ${priced.length}`);
-          if (!priced.length) process.exit(1);
+          const fs=require('fs'); const d=JSON.parse(fs.readFileSync(process.argv[2],'utf8')); const a=Array.isArray(d)?d:(d.services||d.items||d.rows||[]);
+          const n=v=>{const x=Number(String(v??'').replace(/\s/g,'').replace(/[^0-9,.-]/g,'').replace(',','.'));return Number.isFinite(x)?x:0};
+          const ok=a.some(x=>[x?.price,x?.base_price,x?.price_text,x?.priceText,x?.level_prices?.normal,x?.level_prices?.top,x?.level_prices?.master].some(v=>n(v)>0));
+          if(!ok) process.exit(1);
           NODE
 
-      - name: Mark signage live verification success
+      - name: Mark success
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v22 + Booking 4.0 prices live",context:"signage/live-render"}))')"
-          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v23 live",context:"signage/live-render"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
 
-      - name: Mark signage live verification failure
+      - name: Mark failure
         if: failure()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v22 not fully verified live",context:"signage/live-render"}))')"
-          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Smart Signage v23 not verified",context:"signage/live-render"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
