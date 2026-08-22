@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-22T21:12:00+02:00
-Force deploy ALL currently merged changes from latest main.
-Deploy scope: Smart Signage v22; Booking 4.0 rolling prices; YouTube rotation; offer spotlight; all kiosk themes; KIDS Arcade with 14 local closable games including four advanced 8+ challenges.
-Required advanced games: robot tic-tac-toe, ten-round Math Sprint, Hungarian word scramble and 128 number merge challenge.
+2026-08-22T20:59:00+02:00
+Force deploy ALL currently merged changes from latest main after signage v22 verification was cancelled by later kiosk pushes.
+Deploy scope: Smart Signage v22 readable full-frame moving cards; Booking 4.0 rolling prices; YouTube rotation; offer spotlight; all kiosk themes; KIDS Arcade and all current main changes.
+Required signage: exactly five readable moving cards; no full-width fallback bars; complete wrapped quote text; Booking 4.0 prices visible in ARAINK.
 Expected signage route: https://weblap-o3g6.onrender.com/signage/
 Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Deploy target main before trigger: 51d3a286a212007f442ffbb455fa496c2264d2e2.
+Deploy target latest main before trigger: 2b9bba1b7e88cd37e2bab9ee7fe9688520730823.
