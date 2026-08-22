@@ -142,6 +142,39 @@
   white-space: nowrap !important;
 }
 
+/* A láblécben pontosan egy idézet látszik: nincs marquee, nincs ismétlés. */
+.sgx.sgx-modern-v3 .sgTicker {
+  min-height: 70px !important;
+  height: auto !important;
+  padding: 10px clamp(18px, 2.4vw, 48px) !important;
+}
+
+.sgx.sgx-modern-v3 .sgQuoteStaticV22 {
+  width: 100% !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-align: center !important;
+  font-size: clamp(15px, 1.12vw, 23px) !important;
+  line-height: 1.32 !important;
+  animation: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* A régi signage-verziók nagy fehér headline-jai nem maradhatnak a V22 fölött. */
+.sgx .sgx-widgetDock-v3,
+.sgx .sgx-widgetDock-v19,
+.sgx .sgx-widgetDock-v20,
+.sgx .sgx-widgetDock-v21,
+.sgxInfoDockV13,
+.sgxInfoDockV14,
+.sgxInfoDockV15,
+.sgxInfoDockV16,
+.sgInfoStripV17,
+.sgPricePanelV17 {
+  display: none !important;
+}
+
 @keyframes kleoPriceRollV22 {
   0%,4% { transform: translateY(0); }
   96%,100% { transform: translateY(-50%); }
