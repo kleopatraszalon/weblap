@@ -1,8 +1,10 @@
 Render redeploy trigger
-2026-08-22T20:07:00+02:00
-Force deploy the complete current main with Smart Signage v19.
+2026-08-22T20:15:00+02:00
+Force deploy latest main with Smart Signage v19 and explicit kiosk theme selector.
 Expected signage route: https://weblap-o3g6.onrender.com/signage/
-Required signage: five differently colored moving cards anchored to the actual video-panel bottom band; compact labels only; motivation, beauty, gym, weather and nameday content scroll continuously; no large white MAI GONDOLAT / SZÉPSÉG-IDÉZET / TECHNIKA headlines.
-Required prices: ÁRAINK continuously rolling from /api/public/booking/v4/pricelist with /api/signage/services fallback.
-Preserve current random GYM/fodrászat/kozmetika YouTube rotation, offer spotlight, and all current kiosk themes including Classic, Pearl, Silver and KIDS.
-Deploy target main before trigger: 51d1db900943c9c28b39410c99b92f1136c5085f.
+Preserve Smart Signage v19 moving marquee cards and all current signage functionality.
+Expected kiosk route: https://weblap-o3g6.onrender.com/kiosk
+Required visible theme menu options: Classic, Pearl, Silver, KIDS.
+Required behavior: theme button opens menu; KIDS is directly selectable; selected theme persists.
+Preserve refined transparent KIDS mascots and all kiosk functionality.
+Deploy target main before trigger: f0ea9396ad8f5fbab2869f94dc6e77ebd1d939c6.
