@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { cartCount, cartTotal, readCart } from "./cartStore";
 import { fetchKioskConfig } from "./kioskApi";
 import { KidsGameArcade } from "./KidsGameArcade";
+import { KioskHairMirror } from "./KioskHairMirror";
 
 const LANGS = [
   { code: "hu", label: "Magyar", flag: "HU" },
@@ -106,6 +107,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
     </header>
     <main className="kioskBody">{children}</main>
+    <KioskHairMirror visualMode={visualMode} />
     <KidsGameArcade active={visualMode === "kids"} />
     <div className="kiosk-kids-companions" aria-hidden="true">
       <div className="kiosk-kids-guide bunny"><img src="/images/kiosk/kids/bunny.gif" alt=""/><span>Mit válasszunk? ✨</span></div>
