@@ -6,7 +6,7 @@ import { Footer } from "./components/Footer";
 import ModernPublicStyles from "./components/ModernPublicStyles";
 import BrandRefreshStyles from "./components/BrandRefreshStyles";
 import BrandRefreshFixes from "./components/BrandRefreshFixes";
-import { HomePage } from "./pages/HomePage";
+import { HomePageEnhanced } from "./pages/HomePageEnhanced";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
 import { ServicesPage } from "./pages/ServicesPage";
@@ -101,7 +101,7 @@ function AppShell() {
     <Routes>
       <Route path="/signage" element={<SignageExperience />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
-      <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
+      <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
 
       <Route path="/booking" element={<BookingPageV5 />} />
       <Route path="/idopontfoglalas" element={<BookingPageV5 />} />
@@ -150,7 +150,7 @@ function AppShell() {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/fizetes" element={<CheckoutPage />} />
 
-      <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
+      <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
     </Routes>
     {!isSignage && !isFocusedFranchise && <Footer />}
   </>;
