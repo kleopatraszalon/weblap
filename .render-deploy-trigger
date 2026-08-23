@@ -1,4 +1,4 @@
-deploy requested: 2026-08-23T09:48:00+02:00
-target application commit: 9987f82353b22601957380abe93b21d4f415f603
+deploy requested: 2026-08-23T09:52:00+02:00
+target application commit: 8bba804937e179c74d0aa71091ef6d0c3df81308
 service: kleoszalon-weblap
-reason: 2026 luxury mobile navigation redesign
+reason: enforce 2026 mobile luxury style layer after dynamic brand styles
