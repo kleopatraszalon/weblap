@@ -1,7 +1,7 @@
 Render redeploy trigger
-2026-08-23T17:48:00+02:00
-Force deploy latest main with Kleo Hair Mirror.
+2026-08-23T17:55:00+02:00
+Force deploy latest main with completed Kleo Hair Mirror.
 Required kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Required Hair Mirror: available in Classic, Pearl, Silver and KIDS; webcam or local image; eight hairstyles; eight colors; manual fit controls; explicit privacy consent; no image upload or persistence.
-Preserve Smart Signage v23.1 ticker, Booking service-first flow, KIDS Arcade and all current functionality.
-Deploy target latest main before trigger: 2bbb69965543e7ece39b3f25cc58a00474162261.
+Required Hair Mirror: Classic, Pearl, Silver and KIDS themed interfaces; webcam or local photo; eight hairstyles and colors; manual fitting; selection confirmation; explicit consent; no image upload or persistence.
+Preserve Smart Signage v23.1, Booking service-first flow, KIDS Arcade and all current functionality.
+Deploy target latest main before trigger: de71c1acc5b198362fc0ad52606a4e9d20804c08.
