@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useI18n } from "../i18n";
 import { useWebsiteCms } from "../websiteCms";
+import MobileLuxuryStyles from "./MobileLuxuryStyles";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   "kleo-modern-nav__link" + (isActive ? " is-active" : "");
@@ -47,6 +48,7 @@ export function Header() {
 
   return (
     <header className={"kleo-modern-header" + (open ? " is-menu-open" : "")}>
+      <MobileLuxuryStyles />
       <div className="kleo-modern-container kleo-modern-header__inner">
         <NavLink to="/" className="kleo-modern-header__brand" aria-label="Kleopátra főoldal" onClick={close}>
           <img src={cms.brand.logoUrl} alt="Kleopátra Szépségszalonok" />
