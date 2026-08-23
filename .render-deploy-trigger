@@ -1,4 +1,4 @@
-deploy requested: 2026-08-23T09:52:00+02:00
-target application commit: 8bba804937e179c74d0aa71091ef6d0c3df81308
+deploy requested: 2026-08-23T10:01:00+02:00
+target application commit: 2e6df5201087303229f7bc128284ed5a23df20fa
 service: kleoszalon-weblap
-reason: enforce 2026 mobile luxury style layer after dynamic brand styles
+reason: enlarge mobile logo hamburger and menu presentation
