@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { API_BASE } from "../apiClient";
 import "../styles/webshop-modern.css";
 
@@ -55,6 +55,7 @@ const buildImageUrl = (value?: string | null) => {
 export const WebshopProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as { product?: Product } | null;
 
   const [product, setProduct] = useState<Product | null>(state?.product ?? null);
@@ -126,8 +127,8 @@ export const WebshopProductDetailPage: React.FC = () => {
     [reviews]
   );
 
-  const addToCart = () => {
-    if (!product) return;
+  const persistProductToCart = () => {
+    if (!product) return false;
     try {
       const raw = localStorage.getItem("kleoCart");
       const cart: CartItem[] = raw ? JSON.parse(raw) : [];
@@ -137,11 +138,28 @@ export const WebshopProductDetailPage: React.FC = () => {
         : [...cart, { product, quantity: 1 }];
       localStorage.setItem("kleoCart", JSON.stringify(next));
       window.dispatchEvent(new Event("kleo-cart-updated"));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const addToCart = () => {
+    if (persistProductToCart()) {
       setCartMessage("A termék a kosárba került.");
       window.setTimeout(() => setCartMessage(""), 2200);
-    } catch {
+    } else {
       setCartMessage("A kosár frissítése nem sikerült.");
     }
+  };
+
+  const buyNow = () => {
+    if (!product || priceInfo(product).effective <= 0) return;
+    if (!persistProductToCart()) {
+      setCartMessage("A kosár frissítése nem sikerült.");
+      return;
+    }
+    navigate("/checkout");
   };
 
   const submitReview = async (event: React.FormEvent) => {
@@ -222,11 +240,12 @@ export const WebshopProductDetailPage: React.FC = () => {
             </div>
             <div className="kleo-product-actions">
               <button type="button" onClick={addToCart} disabled={price.effective <= 0}>＋ Kosárba teszem</button>
+              <button type="button" className="kleo-shop-primary" onClick={buyNow} disabled={price.effective <= 0}>Vásárlás most →</button>
               <Link to="/webshop">← Vissza a kínálathoz</Link>
             </div>
             {cartMessage && <div className="kleo-shop-message kleo-shop-message--ok" style={{ marginTop: 12 }}>{cartMessage}</div>}
             <div className="kleo-product-benefits">
-              <div><strong>Gyors vásárlás</strong><small>Vendégként is véglegesíthető rendelés.</small></div>
+              <div><strong>Gyors vásárlás</strong><small>Egy termékkel közvetlenül a pénztárra léphetsz.</small></div>
               <div><strong>Kupon használható</strong><small>A pénztár a kódot szerveroldalon ellenőrzi.</small></div>
               <div><strong>Átlátható ár</strong><small>Az akciós és eredeti ár külön jelenik meg.</small></div>
             </div>
