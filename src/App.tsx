@@ -6,7 +6,7 @@ import { Footer } from "./components/Footer";
 import ModernPublicStyles from "./components/ModernPublicStyles";
 import BrandRefreshStyles from "./components/BrandRefreshStyles";
 import BrandRefreshFixes from "./components/BrandRefreshFixes";
-import { HomePage } from "./pages/HomePage";
+import { HomePageEnhanced } from "./pages/HomePageEnhanced";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
 import { ServicesPage } from "./pages/ServicesPage";
@@ -28,7 +28,7 @@ import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import { BookingPage as VoiceBookingPage } from "./pages/BookingPage";
-import { BookingPageV5 } from "./pages/BookingPageV5";
+import { BookingPageV6 } from "./pages/BookingPageV6";
 import { API_BASE } from "./apiClient";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
@@ -101,11 +101,11 @@ function AppShell() {
     <Routes>
       <Route path="/signage" element={<SignageExperience />} />
       <Route path="/kiosk/*" element={<KioskPage />} />
-      <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
+      <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
 
-      <Route path="/booking" element={<BookingPageV5 />} />
-      <Route path="/idopontfoglalas" element={<BookingPageV5 />} />
-      <Route path="/foglalas" element={<BookingPageV5 />} />
+      <Route path="/booking" element={<BookingPageV6 />} />
+      <Route path="/idopontfoglalas" element={<BookingPageV6 />} />
+      <Route path="/foglalas" element={<BookingPageV6 />} />
       <Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
 
       <Route path="/salons" element={<SalonsPage />} />
@@ -150,7 +150,7 @@ function AppShell() {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/fizetes" element={<CheckoutPage />} />
 
-      <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePage />} />
+      <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
     </Routes>
     {!isSignage && !isFocusedFranchise && <Footer />}
   </>;

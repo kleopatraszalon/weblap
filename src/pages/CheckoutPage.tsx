@@ -37,7 +37,10 @@ export const CheckoutPage: React.FC = () => {
     name: "",
     email: "",
     phone: "",
-    address: "",
+    shippingAddress: "",
+    billingSameAsShipping: true,
+    billingName: "",
+    billingAddress: "",
     note: "",
     payment: "cod" as "card" | "cod",
   });
@@ -109,6 +112,12 @@ export const CheckoutPage: React.FC = () => {
     setError("");
     setMessage("");
     if (!cart.length) return setError("A kosár üres.");
+    if (!form.billingSameAsShipping && (!form.billingName.trim() || !form.billingAddress.trim())) {
+      return setError("Add meg a külön számlázási nevet és címet.");
+    }
+
+    const billingName = form.billingSameAsShipping ? form.name.trim() : form.billingName.trim();
+    const billingAddress = form.billingSameAsShipping ? form.shippingAddress.trim() : form.billingAddress.trim();
 
     setLoading(true);
     try {
@@ -121,7 +130,11 @@ export const CheckoutPage: React.FC = () => {
             full_name: form.name.trim(),
             email: form.email.trim(),
             phone: form.phone.trim(),
-            address: form.address.trim(),
+            address: form.shippingAddress.trim(),
+            shipping_address: form.shippingAddress.trim(),
+            billing_same_as_shipping: form.billingSameAsShipping,
+            billing_name: billingName,
+            billing_address: billingAddress,
             note: form.note.trim(),
           },
           payment_method: form.payment,
@@ -182,7 +195,7 @@ export const CheckoutPage: React.FC = () => {
             <p>
               {orderCompleted
                 ? "A rendelésed bekerült a rendszerbe. A részleteket a megadott e-mail címen kapod meg."
-                : "Nem kötelező fiókot létrehoznod. Add meg a teljesítéshez szükséges adatokat, alkalmazd a kuponod, majd ellenőrizd a végösszeget."}
+                : "Nem kötelező fiókot létrehoznod. Add meg a szállítási adatokat, ellenőrizd a számlázási címet, alkalmazd a kuponod, majd véglegesítsd a rendelést."}
             </p>
           </div>
         </header>
@@ -204,48 +217,28 @@ export const CheckoutPage: React.FC = () => {
         ) : (
           <div className="kleo-shop-layout">
             <form onSubmit={submitOrder} className="kleo-shop-card kleo-checkout-form">
-              <h2>Vásárló és számlázási adatok</h2>
+              <h2>Vásárló és szállítási adatok</h2>
               <p>A csillaggal jelölt mezők szükségesek a rendelés rögzítéséhez.</p>
 
               <div className="kleo-field-grid">
                 <label className="kleo-field">
                   <span>Teljes név *</span>
-                  <input
-                    autoComplete="name"
-                    value={form.name}
-                    onChange={(event) => setForm((previous) => ({ ...previous, name: event.target.value }))}
-                    required
-                  />
+                  <input autoComplete="name" value={form.name} onChange={(event) => setForm((previous) => ({ ...previous, name: event.target.value }))} required />
                 </label>
                 <label className="kleo-field">
                   <span>E-mail cím *</span>
-                  <input
-                    type="email"
-                    autoComplete="email"
-                    value={form.email}
-                    onChange={(event) => setForm((previous) => ({ ...previous, email: event.target.value }))}
-                    required
-                  />
+                  <input type="email" autoComplete="email" value={form.email} onChange={(event) => setForm((previous) => ({ ...previous, email: event.target.value }))} required />
                 </label>
               </div>
 
               <div className="kleo-field-grid">
                 <label className="kleo-field">
                   <span>Telefonszám</span>
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    value={form.phone}
-                    onChange={(event) => setForm((previous) => ({ ...previous, phone: event.target.value }))}
-                  />
+                  <input type="tel" inputMode="tel" autoComplete="tel" value={form.phone} onChange={(event) => setForm((previous) => ({ ...previous, phone: event.target.value }))} />
                 </label>
                 <label className="kleo-field">
                   <span>Fizetési mód</span>
-                  <select
-                    value={form.payment}
-                    onChange={(event) => setForm((previous) => ({ ...previous, payment: event.target.value as "card" | "cod" }))}
-                  >
+                  <select value={form.payment} onChange={(event) => setForm((previous) => ({ ...previous, payment: event.target.value as "card" | "cod" }))}>
                     <option value="cod">Utánvét / fizetés átvételkor</option>
                     <option value="card" disabled>Bankkártya · bekötés alatt</option>
                   </select>
@@ -253,23 +246,32 @@ export const CheckoutPage: React.FC = () => {
               </div>
 
               <label className="kleo-field">
-                <span>Számlázási / szállítási cím *</span>
-                <input
-                  autoComplete="street-address"
-                  value={form.address}
-                  onChange={(event) => setForm((previous) => ({ ...previous, address: event.target.value }))}
-                  required
-                />
+                <span>Szállítási cím *</span>
+                <input autoComplete="shipping street-address" value={form.shippingAddress} onChange={(event) => setForm((previous) => ({ ...previous, shippingAddress: event.target.value }))} required />
               </label>
+
+              <label className="kleo-field" style={{ display: "flex", gridTemplateColumns: "auto 1fr", alignItems: "center", gap: 10, textTransform: "none" }}>
+                <input type="checkbox" style={{ width: 18, height: 18 }} checked={form.billingSameAsShipping} onChange={(event) => setForm((previous) => ({ ...previous, billingSameAsShipping: event.target.checked }))} />
+                <span>A számlázási cím megegyezik a szállítási címmel</span>
+              </label>
+
+              {!form.billingSameAsShipping && <div className="kleo-shop-card" style={{ padding: 18, boxShadow: "none" }}>
+                <h3 style={{ marginTop: 0 }}>Külön számlázási adatok</h3>
+                <div className="kleo-field-grid">
+                  <label className="kleo-field">
+                    <span>Számlázási név *</span>
+                    <input autoComplete="billing name" value={form.billingName} onChange={(event) => setForm((previous) => ({ ...previous, billingName: event.target.value }))} required={!form.billingSameAsShipping} />
+                  </label>
+                  <label className="kleo-field">
+                    <span>Számlázási cím *</span>
+                    <input autoComplete="billing street-address" value={form.billingAddress} onChange={(event) => setForm((previous) => ({ ...previous, billingAddress: event.target.value }))} required={!form.billingSameAsShipping} />
+                  </label>
+                </div>
+              </div>}
 
               <label className="kleo-field">
                 <span>Megjegyzés a rendeléshez</span>
-                <textarea
-                  rows={4}
-                  value={form.note}
-                  onChange={(event) => setForm((previous) => ({ ...previous, note: event.target.value }))}
-                  placeholder="Ajándéküzenet, átvételi kérés vagy egyéb megjegyzés…"
-                />
+                <textarea rows={4} value={form.note} onChange={(event) => setForm((previous) => ({ ...previous, note: event.target.value }))} placeholder="Ajándéküzenet, átvételi kérés vagy egyéb megjegyzés…" />
               </label>
 
               <div className="kleo-checkout-notice">
@@ -300,12 +302,7 @@ export const CheckoutPage: React.FC = () => {
               <div className="kleo-shop-coupon">
                 <label htmlFor="checkout-coupon">Kuponkód</label>
                 <div>
-                  <input
-                    id="checkout-coupon"
-                    value={couponInput}
-                    onChange={(event) => setCouponInput(event.target.value.toUpperCase())}
-                    placeholder="pl. KLEO10"
-                  />
+                  <input id="checkout-coupon" value={couponInput} onChange={(event) => setCouponInput(event.target.value.toUpperCase())} placeholder="pl. KLEO10" />
                   <button type="button" onClick={applyCoupon} disabled={loading}>Alkalmaz</button>
                 </div>
               </div>
