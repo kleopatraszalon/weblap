@@ -1,4 +1,4 @@
-deploy requested: 2026-08-23T09:15:00+02:00
-target application commit: 51f64f76dec0705b564f152a4b03fd7117fb3cd9
+deploy requested: 2026-08-23T09:48:00+02:00
+target application commit: 9987f82353b22601957380abe93b21d4f415f603
 service: kleoszalon-weblap
-reason: mobile VIR-style navigation release
+reason: 2026 luxury mobile navigation redesign
