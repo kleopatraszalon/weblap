@@ -1,5 +1,7 @@
 Render redeploy trigger
-2026-08-22T22:20:00+02:00
-Force deploy latest main for Smart Signage v23.1.
-Required ticker: bottom pink band runs active Signage Admin flash promotions and daily deals in priority order.
-Deploy target latest main before trigger: 91cab13617d82dfa80aa1aa8f361c6e73f2f3524.
+2026-08-23T17:48:00+02:00
+Force deploy latest main with Kleo Hair Mirror.
+Required kiosk route: https://weblap-o3g6.onrender.com/kiosk
+Required Hair Mirror: available in Classic, Pearl, Silver and KIDS; webcam or local image; eight hairstyles; eight colors; manual fit controls; explicit privacy consent; no image upload or persistence.
+Preserve Smart Signage v23.1 ticker, Booking service-first flow, KIDS Arcade and all current functionality.
+Deploy target latest main before trigger: 2bbb69965543e7ece39b3f25cc58a00474162261.
