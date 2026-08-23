@@ -6,6 +6,7 @@ import { Footer } from "./components/Footer";
 import ModernPublicStyles from "./components/ModernPublicStyles";
 import BrandRefreshStyles from "./components/BrandRefreshStyles";
 import BrandRefreshFixes from "./components/BrandRefreshFixes";
+import { SiteLanguageBridge, FloatingSiteLanguageSwitcher } from "./components/SiteLanguage";
 import { HomePageEnhanced } from "./pages/HomePageEnhanced";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
@@ -41,21 +42,8 @@ const NBA_BOOKING_PATHS=new Set(["/booking","/idopontfoglalas","/foglalas"]);
 
 const FloatingCartButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
-  const updateCountFromStorage = () => {
-    try {
-      const raw = localStorage.getItem("kleoCart");
-      if (!raw) return setCount(0);
-      const items = JSON.parse(raw) as CartItem[];
-      setCount(items.reduce((sum, item) => sum + (item.quantity || 0), 0));
-    } catch { setCount(0); }
-  };
-  useEffect(() => {
-    updateCountFromStorage();
-    const handler = () => updateCountFromStorage();
-    window.addEventListener("storage", handler);
-    window.addEventListener("kleo-cart-updated", handler as EventListener);
-    return () => { window.removeEventListener("storage", handler); window.removeEventListener("kleo-cart-updated", handler as EventListener); };
-  }, []);
+  const updateCountFromStorage = () => { try { const raw = localStorage.getItem("kleoCart"); if (!raw) return setCount(0); const items = JSON.parse(raw) as CartItem[]; setCount(items.reduce((sum, item) => sum + (item.quantity || 0), 0)); } catch { setCount(0); } };
+  useEffect(() => { updateCountFromStorage(); const handler = () => updateCountFromStorage(); window.addEventListener("storage", handler); window.addEventListener("kleo-cart-updated", handler as EventListener); return () => { window.removeEventListener("storage", handler); window.removeEventListener("kleo-cart-updated", handler as EventListener); }; }, []);
   return <Link to="/cart" className="kleo-cart-fab"><span className="kleo-cart-fab__icon">🛒</span><span className="kleo-cart-fab__label">Kosár</span><span className="kleo-cart-fab__badge">{count}</span></Link>;
 };
 
@@ -76,80 +64,28 @@ function AppShell() {
     sessionStorage.setItem("kleo_nba_job_id",jobId);
     const nativeFetch=window.fetch.bind(window);
     void nativeFetch(`${API_BASE}/api/public/booking/nba/touch`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId})}).catch(()=>undefined);
-    window.fetch=async(input:RequestInfo|URL,init?:RequestInit)=>{
-      const response=await nativeFetch(input,init);
-      try{
-        const target=typeof input==="string"?input:input instanceof URL?input.toString():input.url;
-        const requestMethod=typeof Request!=="undefined"&&input instanceof Request?input.method:"GET";
-        const method=String(init?.method||requestMethod||"GET").toUpperCase();
-        if(response.ok&&method==="POST"&&target.includes("/api/public/booking/book")){
-          const payload=await response.clone().json().catch(()=>null);
-          if(payload?.id)void nativeFetch(`${API_BASE}/api/public/booking/nba/attribute`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId,appointment_id:String(payload.id)})}).catch(()=>undefined);
-        }
-      }catch{}
-      return response;
-    };
+    window.fetch=async(input:RequestInfo|URL,init?:RequestInit)=>{const response=await nativeFetch(input,init);try{const target=typeof input==="string"?input:input instanceof URL?input.toString():input.url;const requestMethod=typeof Request!=="undefined"&&input instanceof Request?input.method:"GET";const method=String(init?.method||requestMethod||"GET").toUpperCase();if(response.ok&&method==="POST"&&target.includes("/api/public/booking/book")){const payload=await response.clone().json().catch(()=>null);if(payload?.id)void nativeFetch(`${API_BASE}/api/public/booking/nba/attribute`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({nba_job_id:jobId,appointment_id:String(payload.id)})}).catch(()=>undefined);}}catch{}return response;};
     return()=>{window.fetch=nativeFetch};
   },[location.pathname,location.search]);
 
   return <>
+    <SiteLanguageBridge />
     {!isSignage && <ModernPublicStyles />}
     {!isSignage && useBrandRefresh && <BrandRefreshStyles />}
     {!isSignage && useBrandRefresh && <BrandRefreshFixes />}
     {!isSignage && !isFocusedFranchise && <Header />}
+    {!isSignage && isFocusedFranchise && <FloatingSiteLanguageSwitcher />}
     {!isSignage && !isFocusedFranchise && <FloatingCartButton />}
     <Routes>
-      <Route path="/signage" element={<SignageExperience />} />
-      <Route path="/kiosk/*" element={<KioskPage />} />
+      <Route path="/signage" element={<SignageExperience />} /><Route path="/kiosk/*" element={<KioskPage />} />
       <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
-
-      <Route path="/booking" element={<BookingPageV6 />} />
-      <Route path="/idopontfoglalas" element={<BookingPageV6 />} />
-      <Route path="/foglalas" element={<BookingPageV6 />} />
-      <Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
-
-      <Route path="/salons" element={<SalonsPage />} />
-      <Route path="/salons/:id" element={<SalonDetailPage />} />
-      <Route path="/szalonok" element={<SalonsPage />} />
-      <Route path="/szalonok/:id" element={<SalonDetailPage />} />
-
-      <Route path="/services" element={<ServicesPage />} />
-      <Route path="/szolgaltatasok" element={<ServicesPage />} />
-      <Route path="/szolgaltatasok/:slug" element={<ServiceDetailPage />} />
-      <Route path="/prices" element={<PriceListPage />} />
-      <Route path="/araink" element={<PriceListPage />} />
-
-      <Route path="/loyalty" element={<LoyaltyPage />} />
-      <Route path="/husegprogram" element={<LoyaltyPage />} />
-      <Route path="/franchise" element={<FranchisePage />} />
-
-      {/* Franchise funnel canonical routes */}
-      <Route path="/lp1" element={<FranchiseV1Page />} />
-      <Route path="/ajanlat" element={<FranchiseInfoPage />} />
-      <Route path="/koszonjuk" element={<FranchiseKoszonjukPage />} />
-
-      {/* Legacy aliases kept until Render 301 rules have propagated */}
-      <Route path="/franchise-v1" element={<FranchiseV1Page />} />
-      <Route path="/franchise-info" element={<FranchiseInfoPage />} />
-      <Route path="/franchise-koszonjuk" element={<FranchiseKoszonjukPage />} />
-
-      <Route path="/career" element={<CareerPage />} />
-      <Route path="/karrier" element={<CareerPage />} />
-      <Route path="/training" element={<TrainingPage />} />
-      <Route path="/education" element={<TrainingPage />} />
-      <Route path="/oktatas" element={<TrainingPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/rolunk" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/kapcsolat" element={<ContactPage />} />
-
-      <Route path="/webshop" element={<WebshopPage />} />
-      <Route path="/webshop/:productId" element={<WebshopProductDetailPage />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/kosar" element={<CartPage />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/fizetes" element={<CheckoutPage />} />
-
+      <Route path="/booking" element={<BookingPageV6 />} /><Route path="/idopontfoglalas" element={<BookingPageV6 />} /><Route path="/foglalas" element={<BookingPageV6 />} /><Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
+      <Route path="/salons" element={<SalonsPage />} /><Route path="/salons/:id" element={<SalonDetailPage />} /><Route path="/szalonok" element={<SalonsPage />} /><Route path="/szalonok/:id" element={<SalonDetailPage />} />
+      <Route path="/services" element={<ServicesPage />} /><Route path="/szolgaltatasok" element={<ServicesPage />} /><Route path="/szolgaltatasok/:slug" element={<ServiceDetailPage />} /><Route path="/prices" element={<PriceListPage />} /><Route path="/araink" element={<PriceListPage />} />
+      <Route path="/loyalty" element={<LoyaltyPage />} /><Route path="/husegprogram" element={<LoyaltyPage />} /><Route path="/franchise" element={<FranchisePage />} />
+      <Route path="/lp1" element={<FranchiseV1Page />} /><Route path="/ajanlat" element={<FranchiseInfoPage />} /><Route path="/koszonjuk" element={<FranchiseKoszonjukPage />} /><Route path="/franchise-v1" element={<FranchiseV1Page />} /><Route path="/franchise-info" element={<FranchiseInfoPage />} /><Route path="/franchise-koszonjuk" element={<FranchiseKoszonjukPage />} />
+      <Route path="/career" element={<CareerPage />} /><Route path="/karrier" element={<CareerPage />} /><Route path="/training" element={<TrainingPage />} /><Route path="/education" element={<TrainingPage />} /><Route path="/oktatas" element={<TrainingPage />} /><Route path="/about" element={<AboutPage />} /><Route path="/rolunk" element={<AboutPage />} /><Route path="/contact" element={<ContactPage />} /><Route path="/kapcsolat" element={<ContactPage />} />
+      <Route path="/webshop" element={<WebshopPage />} /><Route path="/webshop/:productId" element={<WebshopProductDetailPage />} /><Route path="/cart" element={<CartPage />} /><Route path="/kosar" element={<CartPage />} /><Route path="/checkout" element={<CheckoutPage />} /><Route path="/fizetes" element={<CheckoutPage />} />
       <Route path="*" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
     </Routes>
     {!isSignage && !isFocusedFranchise && <Footer />}
