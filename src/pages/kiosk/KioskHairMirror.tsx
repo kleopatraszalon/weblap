@@ -20,10 +20,11 @@ const COLORS=["#241814","#5b3222","#9c6236","#d5aa62","#e9d6ac","#9b2534","#5f31
 export function KioskHairMirror({ visualMode }: { visualMode:VisualMode }) {
   const [open,setOpen]=React.useState(false),[accepted,setAccepted]=React.useState(false),[started,setStarted]=React.useState(false),[error,setError]=React.useState("");
   const [photo,setPhoto]=React.useState(""),[hair,setHair]=React.useState(HAIRS[0]),[color,setColor]=React.useState(COLORS[0]);
+  const [chosen,setChosen]=React.useState(false);
   const [scale,setScale]=React.useState(1),[x,setX]=React.useState(0),[y,setY]=React.useState(0);
   const videoRef=React.useRef<HTMLVideoElement>(null),streamRef=React.useRef<MediaStream|null>(null);
   const stop=React.useCallback(()=>{streamRef.current?.getTracks().forEach(t=>t.stop());streamRef.current=null;},[]);
-  const close=()=>{stop();setOpen(false);setPhoto("");setAccepted(false);setStarted(false);setError("");};
+  const close=()=>{stop();setOpen(false);setPhoto("");setAccepted(false);setStarted(false);setChosen(false);setError("");};
   React.useEffect(()=>()=>stop(),[stop]);
   const camera=async()=>{setError("");try{stop();const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:960}},audio:false});streamRef.current=stream;if(videoRef.current){videoRef.current.srcObject=stream;await videoRef.current.play();}}catch{setError("A kamera nem indítható. Ellenőrizd a kameraengedélyt, vagy válassz képet!");}};
   const capture=()=>{const v=videoRef.current;if(!v||!v.videoWidth)return;const c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;const ctx=c.getContext("2d");if(!ctx)return;ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(v,0,0);setPhoto(c.toDataURL("image/jpeg",.9));stop();};
@@ -43,7 +44,7 @@ export function KioskHairMirror({ visualMode }: { visualMode:VisualMode }) {
             {photo&&<button className="hair-retake" onClick={()=>{setPhoto("");setTimeout(camera,30)}}>↻ Új kép</button>}
             {error&&<p className="hair-error">{error}</p>}
           </div>
-          <aside><h3>Válassz frizurát</h3><div className="hair-styles">{HAIRS.map(item=><button className={item.id===hair.id?"active":""} key={item.id} onClick={()=>setHair(item)}><span>{item.type}</span><b>{item.name}</b></button>)}</div><h3>Hajszín</h3><div className="hair-colors">{COLORS.map(c=><button key={c} className={c===color?"active":""} style={{background:c}} onClick={()=>setColor(c)} aria-label="Hajszín"/>)}</div><h3>Igazítás</h3><div className="hair-adjust"><button onClick={()=>setY(y-8)}>↑</button><button onClick={()=>setY(y+8)}>↓</button><button onClick={()=>setX(x-8)}>←</button><button onClick={()=>setX(x+8)}>→</button><button onClick={()=>setScale(Math.max(.7,scale-.06))}>−</button><button onClick={()=>setScale(Math.min(1.4,scale+.06))}>＋</button></div><button className="hair-consult">Ezt a frizurát szeretném →</button><p>A látvány tájékoztató jellegű. A fodrász személyes konzultáción pontosítja a megvalósíthatóságot.</p></aside>
+          <aside><h3>Válassz frizurát</h3><div className="hair-styles">{HAIRS.map(item=><button className={item.id===hair.id?"active":""} key={item.id} onClick={()=>{setHair(item);setChosen(false)}}><span>{item.type}</span><b>{item.name}</b></button>)}</div><h3>Hajszín</h3><div className="hair-colors">{COLORS.map(c=><button key={c} className={c===color?"active":""} style={{background:c}} onClick={()=>{setColor(c);setChosen(false)}} aria-label="Hajszín"/>)}</div><h3>Igazítás</h3><div className="hair-adjust"><button onClick={()=>setY(y-8)}>↑</button><button onClick={()=>setY(y+8)}>↓</button><button onClick={()=>setX(x-8)}>←</button><button onClick={()=>setX(x+8)}>→</button><button onClick={()=>setScale(Math.max(.7,scale-.06))}>−</button><button onClick={()=>setScale(Math.min(1.4,scale+.06))}>＋</button></div><button className="hair-consult" onClick={()=>setChosen(true)}>{chosen?"✓ Elmentve ehhez a próbaalkalomhoz":"Ezt a frizurát szeretném →"}</button>{chosen&&<p><b>{hair.name}</b> kiválasztva. Mutasd meg a fodrásznak a konzultáción!</p>}<p>A látvány tájékoztató jellegű. A fodrász személyes konzultáción pontosítja a megvalósíthatóságot.</p></aside>
         </div>}
       </section>
     </div>}
