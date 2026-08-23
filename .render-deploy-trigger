@@ -1,3 +1,4 @@
-deploy requested: 2026-08-21T16:49:00+02:00
-target application commit: c74068f78b300bd1a4098f08e065227f9eb0afaa
+deploy requested: 2026-08-23T09:15:00+02:00
+target application commit: 51f64f76dec0705b564f152a4b03fd7117fb3cd9
 service: kleoszalon-weblap
+reason: mobile VIR-style navigation release
