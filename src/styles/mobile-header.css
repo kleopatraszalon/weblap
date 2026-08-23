@@ -1,39 +1,56 @@
 body.kleo-mobile-menu-open{overflow:hidden!important}
-.kleo-modern-header__backdrop,.kleo-modern-header__mobile-head,.kleo-modern-header__mobile-note,.kleo-modern-nav__link>span,.kleo-modern-header__menu-label{display:none!important}
+.kleo-modern-header__backdrop,.kleo-modern-header__mobile-head,.kleo-modern-header__mobile-footer,.kleo-modern-nav__index,.kleo-modern-nav__label{display:none!important}
+
 @media(max-width:980px){
-.kleo-modern-header{backdrop-filter:saturate(1.25) blur(18px)!important;background:rgba(255,255,255,.88)!important}
-.kleo-modern-header__inner{min-height:72px!important;position:relative!important}
-.kleo-modern-header__brand{width:158px!important;position:relative!important;z-index:1003!important}
-.kleo-modern-header__brand img{height:50px!important}
-.kleo-modern-header__menu-btn{position:relative!important;z-index:1003!important;width:auto!important;height:46px!important;display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:9px!important;padding:0 14px!important;border:1px solid rgba(18,12,8,.09)!important;border-radius:14px!important;background:#fff!important;box-shadow:0 8px 24px rgba(18,12,8,.08)!important;color:#120c08!important;transition:transform .2s ease,box-shadow .2s ease!important}
-.kleo-modern-header__menu-btn:active{transform:scale(.97)!important}
-.kleo-modern-header__menu-icon{width:20px!important;height:16px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important}
-.kleo-modern-header__menu-icon i{display:block!important;width:20px!important;height:2px!important;border-radius:999px!important;background:currentColor!important;transform-origin:center!important;transition:transform .25s ease,opacity .2s ease,width .2s ease!important}
-.kleo-modern-header.is-menu-open .kleo-modern-header__menu-icon i:nth-child(1){transform:translateY(7px) rotate(45deg)!important}
-.kleo-modern-header.is-menu-open .kleo-modern-header__menu-icon i:nth-child(2){opacity:0!important;width:0!important}
-.kleo-modern-header.is-menu-open .kleo-modern-header__menu-icon i:nth-child(3){transform:translateY(-7px) rotate(-45deg)!important}
-.kleo-modern-header__menu-label{display:inline!important;font-size:11px!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important}
-.kleo-modern-header__backdrop{position:fixed!important;inset:0!important;z-index:1001!important;display:block!important;border:0!important;background:rgba(18,12,8,.35)!important;backdrop-filter:blur(5px)!important;opacity:0!important;pointer-events:none!important;transition:opacity .25s ease!important}
+.kleo-modern-header{top:10px!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0 10px!important;pointer-events:none!important}
+.kleo-modern-header__inner{width:100%!important;min-height:62px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:7px 9px 7px 14px!important;border:1px solid rgba(255,255,255,.72)!important;border-radius:22px!important;background:rgba(255,255,255,.72)!important;backdrop-filter:blur(24px) saturate(1.4)!important;-webkit-backdrop-filter:blur(24px) saturate(1.4)!important;box-shadow:0 16px 45px rgba(33,22,18,.09),inset 0 1px 0 rgba(255,255,255,.85)!important;pointer-events:auto!important}
+.kleo-modern-header__brand{width:150px!important;position:relative!important;z-index:1011!important}
+.kleo-modern-header__brand img{height:46px!important;object-fit:contain!important}
+.kleo-modern-header__menu-btn{position:relative!important;z-index:1011!important;width:44px!important;height:44px!important;display:grid!important;place-items:center!important;padding:0!important;border:1px solid rgba(18,12,8,.08)!important;border-radius:50%!important;background:rgba(255,255,255,.9)!important;box-shadow:0 8px 24px rgba(18,12,8,.08)!important;color:#17110e!important;transition:transform .22s ease,background .22s ease!important}
+.kleo-modern-header__menu-btn:active{transform:scale(.94)!important}
+.kleo-modern-header__menu-icon{width:18px!important;height:12px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important}
+.kleo-modern-header__menu-icon i{display:block!important;width:18px!important;height:1.5px!important;border-radius:99px!important;background:currentColor!important;transition:transform .28s cubic-bezier(.2,.8,.2,1),width .2s ease!important}
+.kleo-modern-header__menu-icon i:nth-child(2){width:12px!important;align-self:flex-end!important}
+.kleo-modern-header.is-menu-open .kleo-modern-header__menu-icon i:nth-child(1){transform:translateY(5.25px) rotate(45deg)!important}
+.kleo-modern-header.is-menu-open .kleo-modern-header__menu-icon i:nth-child(2){width:18px!important;transform:translateY(-5.25px) rotate(-45deg)!important}
+.kleo-modern-header__backdrop{position:fixed!important;inset:0!important;z-index:1005!important;display:block!important;border:0!important;background:rgba(25,17,14,.28)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;opacity:0!important;pointer-events:none!important;transition:opacity .32s ease!important}
 .kleo-modern-header__backdrop.is-open{opacity:1!important;pointer-events:auto!important}
-.kleo-modern-header__nav-wrap{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:min(88vw,390px)!important;height:100dvh!important;z-index:1002!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:18px 18px 22px!important;border:0!important;border-radius:28px 0 0 28px!important;background:rgba(255,255,255,.98)!important;box-shadow:-24px 0 70px rgba(18,12,8,.2)!important;transform:translateX(104%)!important;opacity:1!important;overflow-y:auto!important;transition:transform .32s cubic-bezier(.22,.8,.2,1)!important}
-.kleo-modern-header__nav-wrap.is-open{transform:translateX(0)!important}
-.kleo-modern-header__mobile-head{display:flex!important;align-items:center!important;justify-content:space-between!important;min-height:52px!important;padding:0 2px 10px!important;border-bottom:1px solid #eee7df!important;color:#7b6b5f!important;font-size:11px!important;font-weight:800!important;letter-spacing:.12em!important;text-transform:uppercase!important}
-.kleo-modern-header__mobile-head button{width:38px!important;height:38px!important;border:0!important;border-radius:12px!important;background:#f7f3ee!important;color:#120c08!important;font-size:25px!important;line-height:1!important}
-.kleo-modern-nav{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:12px 0!important}
-.kleo-modern-nav__link{width:100%!important;min-height:52px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 4px!important;border-bottom:1px solid #f0ebe5!important;color:#231b17!important;font-size:14px!important;font-weight:750!important;letter-spacing:.02em!important;text-transform:none!important}
-.kleo-modern-nav__link>span{display:inline!important;color:#b69861!important;font-size:18px!important;font-weight:500!important;transition:transform .2s ease!important}
-.kleo-modern-nav__link:hover>span,.kleo-modern-nav__link.is-active>span{transform:translateX(3px)!important}
-.kleo-modern-nav__link.is-active{color:#ec008c!important}
-.kleo-modern-header__tools{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;margin-top:auto!important;padding-top:18px!important}
-.kleo-modern-lang{display:flex!important;align-self:flex-start!important}
-.kleo-modern-lang button{min-width:34px!important;height:30px!important}
-.kleo-modern-header__cta{width:100%!important;min-height:50px!important;border-radius:14px!important;font-size:12px!important;box-shadow:0 12px 28px rgba(236,0,140,.22)!important}
-.kleo-modern-header__mobile-note{display:block!important;margin:14px 0 0!important;color:#9a9189!important;font-size:10px!important;text-align:center!important}
+.kleo-modern-header__nav-wrap{position:fixed!important;left:10px!important;right:10px!important;top:84px!important;width:auto!important;height:min(760px,calc(100dvh - 94px))!important;z-index:1008!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:22px 20px 18px!important;border:1px solid rgba(255,255,255,.78)!important;border-radius:28px!important;background:linear-gradient(180deg,rgba(255,252,249,.985),rgba(250,245,240,.98))!important;box-shadow:0 30px 90px rgba(26,17,14,.22)!important;transform:translateY(-14px) scale(.985)!important;transform-origin:top center!important;opacity:0!important;visibility:hidden!important;overflow:hidden!important;transition:opacity .24s ease,transform .32s cubic-bezier(.22,.8,.2,1),visibility .32s!important}
+.kleo-modern-header__nav-wrap:before{content:"";position:absolute;right:-90px;top:-120px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(236,0,140,.08),transparent 70%);pointer-events:none}
+.kleo-modern-header__nav-wrap.is-open{transform:translateY(0) scale(1)!important;opacity:1!important;visibility:visible!important}
+.kleo-modern-header__mobile-head{position:relative;z-index:1;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;padding:2px 0 18px!important;border-bottom:1px solid rgba(24,17,14,.09)!important}
+.kleo-modern-header__mobile-kicker{display:block!important;margin-bottom:3px!important;color:#b69861!important;font-size:9px!important;font-weight:800!important;letter-spacing:.2em!important;text-transform:uppercase!important}
+.kleo-modern-header__mobile-head strong{display:block!important;color:#1d1511!important;font-family:var(--cms-heading-font,"Montserrat"),Arial,sans-serif!important;font-size:24px!important;font-weight:520!important;letter-spacing:-.035em!important;line-height:1.1!important}
+.kleo-modern-header__close{width:38px!important;height:38px!important;position:relative!important;border:1px solid rgba(18,12,8,.08)!important;border-radius:50%!important;background:rgba(255,255,255,.72)!important}
+.kleo-modern-header__close span{position:absolute!important;left:11px!important;top:18px!important;width:16px!important;height:1.5px!important;background:#1d1511!important;border-radius:99px!important}
+.kleo-modern-header__close span:first-child{transform:rotate(45deg)!important}.kleo-modern-header__close span:last-child{transform:rotate(-45deg)!important}
+.kleo-modern-nav{position:relative;z-index:1;display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:22px!important;row-gap:0!important;padding:12px 0 8px!important;overflow:auto!important}
+.kleo-modern-nav__link{min-width:0!important;min-height:52px!important;display:grid!important;grid-template-columns:26px minmax(0,1fr)!important;align-items:center!important;padding:0!important;border-bottom:1px solid rgba(24,17,14,.075)!important;color:#211813!important;text-transform:none!important;letter-spacing:0!important;transition:color .2s ease,transform .2s ease!important}
+.kleo-modern-nav__index{display:block!important;color:#b8aaa1!important;font-size:8px!important;font-weight:800!important;letter-spacing:.08em!important}
+.kleo-modern-nav__label{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;color:inherit!important;font-family:var(--cms-heading-font,"Montserrat"),Arial,sans-serif!important;font-size:14px!important;font-weight:560!important;letter-spacing:-.015em!important;white-space:nowrap!important}
+.kleo-modern-nav__link.is-active{color:#ec008c!important}.kleo-modern-nav__link:active{transform:translateX(2px)!important}
+.kleo-modern-header__tools{position:relative;z-index:1;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;margin-top:auto!important;padding-top:16px!important;border-top:1px solid rgba(24,17,14,.09)!important}
+.kleo-modern-header__cta{width:100%!important;min-height:50px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 17px!important;border:0!important;border-radius:16px!important;background:linear-gradient(135deg,#ec008c,#d9007f)!important;color:#fff!important;box-shadow:0 14px 32px rgba(236,0,140,.2)!important;font-size:11px!important;font-weight:800!important;letter-spacing:.08em!important}
+.kleo-modern-header__cta b{font-size:18px!important;font-weight:400!important;line-height:1!important}
+.kleo-modern-lang{display:flex!important;align-items:center!important;gap:2px!important;padding:3px!important;border:1px solid rgba(24,17,14,.08)!important;border-radius:999px!important;background:rgba(255,255,255,.72)!important}
+.kleo-modern-lang button{min-width:31px!important;height:31px!important;padding:0!important;border-radius:50%!important;font-size:8px!important;font-weight:800!important}.kleo-modern-lang button.is-active{background:#1f1713!important;color:#fff!important}
+.kleo-modern-header__mobile-footer{position:relative;z-index:1;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;padding-top:14px!important;color:#958980!important;font-size:8px!important;letter-spacing:.04em!important;white-space:nowrap!important}
 }
-@media(max-width:440px){
-.kleo-modern-header__inner{min-height:66px!important}
-.kleo-modern-header__brand{width:142px!important}.kleo-modern-header__brand img{height:46px!important}
-.kleo-modern-header__menu-btn{height:42px!important;padding:0 12px!important;border-radius:13px!important}
-.kleo-modern-header__nav-wrap{width:92vw!important;border-radius:24px 0 0 24px!important;padding:16px 16px 20px!important}
-.kleo-modern-nav__link{min-height:50px!important;font-size:13px!important}
+
+@media(max-width:620px){
+.kleo-modern-header{top:7px!important;padding:0 7px!important}
+.kleo-modern-header__inner{min-height:58px!important;padding:6px 7px 6px 12px!important;border-radius:19px!important}
+.kleo-modern-header__brand{width:136px!important}.kleo-modern-header__brand img{height:42px!important}
+.kleo-modern-header__menu-btn{width:40px!important;height:40px!important}
+.kleo-modern-header__nav-wrap{left:7px!important;right:7px!important;top:72px!important;height:calc(100dvh - 79px)!important;max-height:none!important;padding:20px 17px 16px!important;border-radius:24px!important}
+.kleo-modern-header__mobile-head{padding-bottom:15px!important}.kleo-modern-header__mobile-head strong{font-size:22px!important}
+.kleo-modern-nav{grid-template-columns:1fr!important;padding:8px 0!important}
+.kleo-modern-nav__link{min-height:47px!important;grid-template-columns:28px minmax(0,1fr)!important}.kleo-modern-nav__label{font-size:15px!important}
+.kleo-modern-header__tools{grid-template-columns:1fr!important;gap:10px!important;padding-top:13px!important}
+.kleo-modern-lang{order:2!important;justify-self:flex-start!important}.kleo-modern-header__cta{order:1!important;min-height:48px!important}
+.kleo-modern-header__mobile-footer{font-size:7px!important;overflow:hidden!important}.kleo-modern-header__mobile-footer span:last-child{overflow:hidden!important;text-overflow:ellipsis!important}
+}
+
+@media(max-width:380px){
+.kleo-modern-header__brand{width:124px!important}.kleo-modern-header__nav-wrap{padding:17px 15px 14px!important}.kleo-modern-nav__link{min-height:43px!important}.kleo-modern-nav__label{font-size:14px!important}.kleo-modern-header__mobile-footer span:last-child{display:none!important}
 }

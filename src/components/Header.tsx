@@ -6,6 +6,18 @@ import { useWebsiteCms } from "../websiteCms";
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   "kleo-modern-nav__link" + (isActive ? " is-active" : "");
 
+const mobileNavItems = [
+  ["01", "/services", "Szolgáltatások"],
+  ["02", "/prices", "Áraink"],
+  ["03", "/salons", "Szalonjaink"],
+  ["04", "/loyalty", "Hűségprogram"],
+  ["05", "/webshop", "Webshop"],
+  ["06", "/education", "Oktatás"],
+  ["07", "/career", "Karrier"],
+  ["08", "/about", "Rólunk"],
+  ["09", "/franchise", "Franchise"],
+] as const;
+
 export function Header() {
   const { lang, setLang, t } = useI18n();
   const cms = useWebsiteCms();
@@ -51,9 +63,7 @@ export function Header() {
           <span className="kleo-modern-header__menu-icon" aria-hidden="true">
             <i />
             <i />
-            <i />
           </span>
-          <span className="kleo-modern-header__menu-label">Menü</span>
         </button>
 
         <button
@@ -66,23 +76,31 @@ export function Header() {
 
         <div id="kleo-mobile-navigation" className={"kleo-modern-header__nav-wrap" + (open ? " is-open" : "")}>
           <div className="kleo-modern-header__mobile-head">
-            <span>Navigáció</span>
-            <button type="button" aria-label="Menü bezárása" onClick={close}>×</button>
+            <div>
+              <span className="kleo-modern-header__mobile-kicker">Kleopátra</span>
+              <strong>Fedezd fel</strong>
+            </div>
+            <button type="button" className="kleo-modern-header__close" aria-label="Menü bezárása" onClick={close}>
+              <span />
+              <span />
+            </button>
           </div>
 
           <nav className="kleo-modern-nav" aria-label="Fő navigáció">
-            <NavLink to="/services" className={navLinkClass} onClick={close}>Szolgáltatások <span>→</span></NavLink>
-            <NavLink to="/prices" className={navLinkClass} onClick={close}>Áraink <span>→</span></NavLink>
-            <NavLink to="/salons" className={navLinkClass} onClick={close}>Szalonjaink <span>→</span></NavLink>
-            <NavLink to="/loyalty" className={navLinkClass} onClick={close}>Hűségprogram <span>→</span></NavLink>
-            <NavLink to="/webshop" className={navLinkClass} onClick={close}>{t("menu.webshop")} <span>→</span></NavLink>
-            <NavLink to="/education" className={navLinkClass} onClick={close}>Oktatás <span>→</span></NavLink>
-            <NavLink to="/career" className={navLinkClass} onClick={close}>Karrier <span>→</span></NavLink>
-            <NavLink to="/about" className={navLinkClass} onClick={close}>Rólunk <span>→</span></NavLink>
-            <NavLink to="/franchise" className={navLinkClass} onClick={close}>Franchise <span>→</span></NavLink>
+            {mobileNavItems.map(([index, to, label]) => (
+              <NavLink key={to} to={to} className={navLinkClass} onClick={close}>
+                <span className="kleo-modern-nav__index">{index}</span>
+                <span className="kleo-modern-nav__label">{to === "/webshop" ? t("menu.webshop") : label}</span>
+              </NavLink>
+            ))}
           </nav>
 
           <div className="kleo-modern-header__tools">
+            <NavLink to="/booking" className="kleo-modern-header__cta" onClick={close}>
+              <span>{cms.header.bookingLabel}</span>
+              <b aria-hidden="true">↗</b>
+            </NavLink>
+
             {cms.header.showLanguageSwitcher && (
               <div className="kleo-modern-lang" aria-label={t("header.language.label")}>
                 {(["hu", "en", "ru"] as const).map((value) => (
@@ -92,10 +110,12 @@ export function Header() {
                 ))}
               </div>
             )}
-            <NavLink to="/booking" className="kleo-modern-header__cta" onClick={close}>{cms.header.bookingLabel}</NavLink>
           </div>
 
-          <p className="kleo-modern-header__mobile-note">Kleopátra Szépségszalonok</p>
+          <div className="kleo-modern-header__mobile-footer">
+            <span>Beauty since 2003</span>
+            <span>Budapest · Eger · Gyöngyös · Salgótarján</span>
+          </div>
         </div>
       </div>
     </header>
