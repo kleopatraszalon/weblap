@@ -29,7 +29,7 @@ import { WebshopProductDetailPage } from "./pages/WebshopProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import { BookingPage as VoiceBookingPage } from "./pages/BookingPage";
-import { BookingPageV6 } from "./pages/BookingPageV6";
+import { BookingPageV7 } from "./pages/BookingPageV7";
 import { API_BASE } from "./apiClient";
 import type { CartItem } from "./utils/cart";
 import { LanguageProvider } from "./i18n";
@@ -79,7 +79,7 @@ function AppShell() {
     <Routes>
       <Route path="/signage" element={<SignageExperience />} /><Route path="/kiosk/*" element={<KioskPage />} />
       <Route path="/" element={franchiseHost ? <FranchiseV1Page /> : <HomePageEnhanced />} />
-      <Route path="/booking" element={<BookingPageV6 />} /><Route path="/idopontfoglalas" element={<BookingPageV6 />} /><Route path="/foglalas" element={<BookingPageV6 />} /><Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
+      <Route path="/booking" element={<BookingPageV7 />} /><Route path="/idopontfoglalas" element={<BookingPageV7 />} /><Route path="/foglalas" element={<BookingPageV7 />} /><Route path="/hangos-idopontfoglalas" element={<VoiceBookingPage />} />
       <Route path="/salons" element={<SalonsPage />} /><Route path="/salons/:id" element={<SalonDetailPage />} /><Route path="/szalonok" element={<SalonsPage />} /><Route path="/szalonok/:id" element={<SalonDetailPage />} />
       <Route path="/services" element={<ServicesPage />} /><Route path="/szolgaltatasok" element={<ServicesPage />} /><Route path="/szolgaltatasok/:slug" element={<ServiceDetailPage />} /><Route path="/prices" element={<PriceListPage />} /><Route path="/araink" element={<PriceListPage />} />
       <Route path="/loyalty" element={<LoyaltyPage />} /><Route path="/husegprogram" element={<LoyaltyPage />} /><Route path="/franchise" element={<FranchisePage />} />
