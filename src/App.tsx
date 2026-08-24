@@ -7,6 +7,7 @@ import ModernPublicStyles from "./components/ModernPublicStyles";
 import BrandRefreshStyles from "./components/BrandRefreshStyles";
 import BrandRefreshFixes from "./components/BrandRefreshFixes";
 import { SiteLanguageBridge, FloatingSiteLanguageSwitcher } from "./components/SiteLanguage";
+import { SiteStyleSwitcher } from "./components/SiteStyleSwitcher";
 import { HomePageEnhanced } from "./pages/HomePageEnhanced";
 import { SalonsPage } from "./pages/SalonsPage";
 import { SalonDetailPage } from "./pages/SalonDetailPage";
@@ -73,6 +74,7 @@ function AppShell() {
     {!isSignage && <ModernPublicStyles />}
     {!isSignage && useBrandRefresh && <BrandRefreshStyles />}
     {!isSignage && useBrandRefresh && <BrandRefreshFixes />}
+    {!isSignage && <SiteStyleSwitcher />}
     {!isSignage && !isFocusedFranchise && <Header />}
     {!isSignage && isFocusedFranchise && <FloatingSiteLanguageSwitcher />}
     {!isSignage && !isFocusedFranchise && <FloatingCartButton />}
