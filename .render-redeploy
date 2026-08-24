@@ -1,7 +1,6 @@
 Render redeploy trigger
-2026-08-23T18:05:00+02:00
-Force a clean production deploy from the current main branch.
-Required kiosk route: https://weblap-o3g6.onrender.com/kiosk
-Required Hair Mirror: visible and operational in Classic, Pearl, Silver and KIDS; webcam permission flow; local image selection; eight hairstyles and colors; fitting controls; selection confirmation; images remain local and are cleared on close.
-Preserve Smart Signage v23.1, Booking service-first flow, KIDS Arcade and all current production functionality.
-Exact deploy target main: 1594f5dbe5f95c653210eece6ea71821d2542500.
+2026-08-24T17:24:00+02:00
+Force a clean production deploy from the current main branch after API and VIR frontend stages.
+Reason: explicit deploy-all request after the latest Rebeka booking-flow fixes.
+Expected service: weblap-o3g6.onrender.com
+Preserve current Booking flexible flow, Smart Signage, kiosk and public website functionality.
