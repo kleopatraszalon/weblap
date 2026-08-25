@@ -1,76 +1,44 @@
 import React from "react";
 
-type SiteVisualMode = "classic" | "pearl" | "silver" | "kids";
-
-const THEMES: Array<{mode:SiteVisualMode;icon:string;label:string}> = [
-  {mode:"classic",icon:"◐",label:"Classic"},
-  {mode:"pearl",icon:"✦",label:"Pearl"},
-  {mode:"silver",icon:"◈",label:"Silver"},
-  {mode:"kids",icon:"★",label:"KIDS"},
+type SiteVisualMode = "classic" | "pearl" | "silver" | "kids" | "noir" | "rose-gold" | "aqua" | "zen";
+const THEMES: Array<{mode:SiteVisualMode;icon:string;label:string;color:string}> = [
+  {mode:"classic",icon:"◐",label:"Classic",color:"#ec008c"},
+  {mode:"pearl",icon:"✦",label:"Pearl",color:"#b36ad8"},
+  {mode:"silver",icon:"◈",label:"Silver",color:"#9fa4aa"},
+  {mode:"kids",icon:"★",label:"KIDS",color:"#8fd7ff"},
+  {mode:"noir",icon:"◆",label:"Noir",color:"#c8a96b"},
+  {mode:"rose-gold",icon:"◇",label:"Rose Gold",color:"#c98f86"},
+  {mode:"aqua",icon:"≈",label:"Aqua",color:"#25a9b8"},
+  {mode:"zen",icon:"○",label:"Zen",color:"#7d9270"},
 ];
-
 const STORAGE_KEY="kleo_site_visual_mode";
-const isMode=(value:string|null):value is SiteVisualMode=>value==="classic"||value==="pearl"||value==="silver"||value==="kids";
-const readMode=():SiteVisualMode=>{try{const v=localStorage.getItem(STORAGE_KEY);return isMode(v)?v:"classic"}catch{return "classic"}};
+const isMode=(value:string|null):value is SiteVisualMode=>THEMES.some(theme=>theme.mode===value);
+const readMode=():SiteVisualMode=>{try{const value=localStorage.getItem(STORAGE_KEY);return isMode(value)?value:"classic"}catch{return "classic"}};
 
 const CSS=String.raw`
-.site-style-picker{position:fixed;right:18px;bottom:82px;z-index:2200;font-family:Montserrat,Arial,sans-serif}
-.site-style-toggle{min-height:44px;display:flex;align-items:center;gap:8px;padding:0 13px;border:1px solid rgba(31,23,25,.14);border-radius:999px;background:rgba(255,255,255,.95);color:#21171a;box-shadow:0 10px 34px rgba(27,15,20,.14);backdrop-filter:blur(16px);cursor:pointer}
-.site-style-toggle span{font-size:17px}.site-style-toggle b{font-size:10px;letter-spacing:.05em}.site-style-toggle i{font-style:normal;font-size:11px;opacity:.65}
-.site-style-menu{position:absolute;right:0;bottom:52px;width:190px;padding:8px;border:1px solid rgba(31,23,25,.12);border-radius:18px;background:rgba(255,255,255,.98);box-shadow:0 22px 60px rgba(25,14,18,.2);backdrop-filter:blur(18px)}
-.site-style-menu button{width:100%;min-height:44px;display:grid;grid-template-columns:26px 1fr 18px;align-items:center;gap:7px;padding:0 10px;border:0;border-radius:12px;background:transparent;color:#21171a;text-align:left;cursor:pointer}.site-style-menu button:hover,.site-style-menu button.active{background:#f7f0f3}.site-style-menu button span{font-size:17px}.site-style-menu button b{font-size:11px}.site-style-menu button i{font-style:normal;color:#ec008c}
-
-html[data-site-visual="pearl"] body{background:#fffaf7;color:#33242a}
-html[data-site-visual="pearl"] .kleo-modern-header,html[data-site-visual="pearl"] header{background:rgba(255,250,247,.94)!important}
-html[data-site-visual="pearl"] .kleo-v3-hero,html[data-site-visual="pearl"] .b6hero,html[data-site-visual="pearl"] .b7hero{background:linear-gradient(135deg,#f4e6df,#fffaf7 56%,#e9d5c8)!important;color:#3d2b30!important}
-html[data-site-visual="pearl"] .kleo-v3-hero *,html[data-site-visual="pearl"] .b6hero *,html[data-site-visual="pearl"] .b7hero *{color:inherit}
-html[data-site-visual="pearl"] main,html[data-site-visual="pearl"] .b6,html[data-site-visual="pearl"] .b7{background:linear-gradient(#fffaf7,#fff 620px)!important}
-html[data-site-visual="pearl"] .b6card,html[data-site-visual="pearl"] .b7card,html[data-site-visual="pearl"] article,html[data-site-visual="pearl"] .kleo-v3-service{border-color:#ead8d0!important;box-shadow:0 14px 40px rgba(132,99,83,.08)!important}
-html[data-site-visual="pearl"] a:hover,html[data-site-visual="pearl"] button:hover{--site-accent:#c79a85}
-
-html[data-site-visual="silver"] body{background:#f3f4f5;color:#202327}
-html[data-site-visual="silver"] .kleo-modern-header,html[data-site-visual="silver"] header{background:rgba(244,245,246,.95)!important;border-color:#d8dadd!important}
-html[data-site-visual="silver"] main,html[data-site-visual="silver"] .b6,html[data-site-visual="silver"] .b7{background:linear-gradient(#eceeef,#fff 660px)!important;color:#202327!important}
-html[data-site-visual="silver"] .kleo-v3-hero,html[data-site-visual="silver"] .b6hero,html[data-site-visual="silver"] .b7hero{background:linear-gradient(135deg,#151719,#45494e)!important;color:#fff!important}
-html[data-site-visual="silver"] .b6card,html[data-site-visual="silver"] .b7card,html[data-site-visual="silver"] article,html[data-site-visual="silver"] .kleo-v3-service{border-color:#d5d8dc!important;box-shadow:0 12px 32px rgba(24,27,30,.08)!important}
-html[data-site-visual="silver"] .btn,html[data-site-visual="silver"] .b7btn,html[data-site-visual="silver"] .kleo-modern-header__cta{background:#2f3337!important;color:#fff!important}
-
-html[data-site-visual="kids"] body{background:#fff8fd;color:#3f2c4d}
-html[data-site-visual="kids"] body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 18%,rgba(255,193,226,.35),transparent 22%),radial-gradient(circle at 88% 24%,rgba(183,225,255,.38),transparent 24%),radial-gradient(circle at 42% 90%,rgba(255,229,160,.28),transparent 22%)}
-html[data-site-visual="kids"] .kleo-modern-header,html[data-site-visual="kids"] header{background:rgba(255,250,254,.95)!important;border-color:#f0cfe5!important}
-html[data-site-visual="kids"] main,html[data-site-visual="kids"] .b6,html[data-site-visual="kids"] .b7{background:linear-gradient(135deg,#fff9fd,#f5fbff 55%,#fff9e9)!important;color:#3f2c4d!important}
-html[data-site-visual="kids"] .kleo-v3-hero,html[data-site-visual="kids"] .b6hero,html[data-site-visual="kids"] .b7hero{background:linear-gradient(135deg,#ff8bc8,#8fd7ff 52%,#ffd66f)!important;color:#fff!important;border-radius:34px!important}
-html[data-site-visual="kids"] .b6card,html[data-site-visual="kids"] .b7card,html[data-site-visual="kids"] article,html[data-site-visual="kids"] .kleo-v3-service{border:2px solid #f5d5e8!important;border-radius:26px!important;box-shadow:0 12px 32px rgba(153,102,153,.1)!important}
-html[data-site-visual="kids"] button,html[data-site-visual="kids"] input,html[data-site-visual="kids"] select,html[data-site-visual="kids"] textarea{border-radius:16px!important}
-html[data-site-visual="kids"] .btn,html[data-site-visual="kids"] .b7btn,html[data-site-visual="kids"] .kleo-modern-header__cta{background:linear-gradient(135deg,#ef4fa4,#8f77ef)!important;color:#fff!important;border:none!important}
-html[data-site-visual="kids"] h1,html[data-site-visual="kids"] h2,html[data-site-visual="kids"] h3{letter-spacing:-.02em}
-html[data-site-visual="kids"] .site-style-toggle{background:linear-gradient(135deg,#fff,#fff4fb);border:2px solid #f0cce2}
-
-@media(max-width:680px){.site-style-picker{right:10px;bottom:72px}.site-style-toggle{min-height:40px;padding:0 11px}.site-style-menu{width:172px}}
+:root{--st-bg:#fff;--st-surface:#fff;--st-ink:#21171a;--st-accent:#ec008c;--st-border:rgba(31,23,25,.12);--st-shadow:rgba(27,15,20,.14);--st-page:linear-gradient(#fff,#fff)}
+.site-style-picker{position:fixed;right:18px;bottom:82px;z-index:2200;font-family:Montserrat,Arial,sans-serif}.site-style-toggle{min-height:44px;display:flex;align-items:center;gap:8px;padding:0 13px;border:1px solid var(--st-border);border-radius:999px;background:color-mix(in srgb,var(--st-surface) 94%,transparent);color:var(--st-ink);box-shadow:0 10px 34px var(--st-shadow);backdrop-filter:blur(16px);cursor:pointer}.site-style-toggle>span{font-size:17px;color:var(--st-accent)}.site-style-toggle b{font-size:10px;letter-spacing:.05em}.site-style-toggle i{font-style:normal;font-size:11px;opacity:.65}.site-style-menu{position:absolute;right:0;bottom:52px;width:214px;max-height:min(430px,calc(100vh - 160px));overflow:auto;padding:8px;border:1px solid var(--st-border);border-radius:18px;background:color-mix(in srgb,var(--st-surface) 97%,transparent);box-shadow:0 22px 60px var(--st-shadow);backdrop-filter:blur(18px)}.site-style-menu button{width:100%;min-height:44px;display:grid;grid-template-columns:26px 1fr 18px;align-items:center;gap:7px;padding:0 10px;border:0;border-radius:12px;background:transparent;color:var(--st-ink);text-align:left;cursor:pointer}.site-style-menu button:hover,.site-style-menu button:focus-visible,.site-style-menu button.active{background:color-mix(in srgb,var(--st-accent) 11%,transparent);outline:none}.site-style-menu button span{font-size:17px}.site-style-menu button b{font-size:11px}.site-style-menu button i{font-style:normal;color:var(--st-accent)}
+html[data-site-visual] body{background:var(--st-bg);color:var(--st-ink);transition:background-color .25s ease,color .25s ease}html[data-site-visual] .kleo-modern-header,html[data-site-visual] header{background:color-mix(in srgb,var(--st-surface) 94%,transparent)!important;border-color:var(--st-border)!important;color:var(--st-ink)!important}html[data-site-visual] main,html[data-site-visual] .b6,html[data-site-visual] .b7{background:var(--st-page)!important;color:var(--st-ink)!important}html[data-site-visual] .b6card,html[data-site-visual] .b7card,html[data-site-visual] article,html[data-site-visual] .kleo-v3-service{border-color:var(--st-border)!important;box-shadow:0 14px 38px var(--st-shadow)!important}
+html[data-site-visual="pearl"]{--st-bg:#fbfaff;--st-surface:#fff;--st-ink:#37343d;--st-accent:#b36ad8;--st-border:rgba(184,159,201,.28);--st-shadow:rgba(96,77,120,.11);--st-page:radial-gradient(circle at 90% 8%,rgba(207,187,255,.34),transparent 28%),radial-gradient(circle at 8% 82%,rgba(255,206,222,.32),transparent 28%),linear-gradient(145deg,#fff,#f0eff7)}html[data-site-visual="pearl"] .kleo-v3-hero,html[data-site-visual="pearl"] .b6hero,html[data-site-visual="pearl"] .b7hero{background:linear-gradient(135deg,#f4effc,#fff 52%,#fceef5)!important;color:#312b36!important}
+html[data-site-visual="silver"]{color-scheme:dark;--st-bg:#0b0c0d;--st-surface:#1b1d1e;--st-ink:#f4f3ef;--st-accent:#ec008c;--st-border:#484b4d;--st-shadow:rgba(0,0,0,.38);--st-page:radial-gradient(circle at 80% 0,rgba(236,0,140,.09),transparent 25%),linear-gradient(135deg,#0b0c0d,#222426 48%,#0d0e0f)}html[data-site-visual="silver"] body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(176,175,173,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(176,175,173,.05) 1px,transparent 1px);background-size:42px 42px}html[data-site-visual="silver"] .kleo-modern-header,html[data-site-visual="silver"] header{background:linear-gradient(180deg,rgba(28,30,32,.97),rgba(14,15,16,.94))!important;border-bottom:1px solid rgba(182,152,97,.35)!important}html[data-site-visual="silver"] .kleo-v3-hero,html[data-site-visual="silver"] .b6hero,html[data-site-visual="silver"] .b7hero{background:linear-gradient(110deg,#090a0b,#272a2d 52%,#3b1029)!important;color:#fff!important;border:1px solid #484b4d!important}html[data-site-visual="silver"] .b6card,html[data-site-visual="silver"] .b7card,html[data-site-visual="silver"] article,html[data-site-visual="silver"] .kleo-v3-service{background:linear-gradient(145deg,#303335,#171819)!important;color:#f3f2ef!important}html[data-site-visual="silver"] .btn,html[data-site-visual="silver"] .b7btn,html[data-site-visual="silver"] .kleo-modern-header__cta{background:linear-gradient(135deg,#ec008c,#a80064)!important;color:#fff!important;border-color:#f173ac!important;box-shadow:0 0 0 5px rgba(236,0,140,.08),0 12px 28px rgba(236,0,140,.2)!important}
+html[data-site-visual="kids"]{--st-bg:#fff8fd;--st-surface:#fff;--st-ink:#3f2c4d;--st-accent:#ef4fa4;--st-border:#f0cfe5;--st-shadow:rgba(153,102,153,.11);--st-page:radial-gradient(circle at 10% 18%,rgba(255,193,226,.35),transparent 22%),radial-gradient(circle at 88% 24%,rgba(183,225,255,.38),transparent 24%),linear-gradient(135deg,#fff9fd,#f5fbff 55%,#fff9e9)}html[data-site-visual="kids"] .kleo-v3-hero,html[data-site-visual="kids"] .b6hero,html[data-site-visual="kids"] .b7hero{background:linear-gradient(135deg,#ff8bc8,#8fd7ff 52%,#ffd66f)!important;color:#fff!important;border-radius:34px!important}html[data-site-visual="kids"] .b6card,html[data-site-visual="kids"] .b7card,html[data-site-visual="kids"] article,html[data-site-visual="kids"] .kleo-v3-service{border:2px solid #f5d5e8!important;border-radius:26px!important}html[data-site-visual="kids"] button,html[data-site-visual="kids"] input,html[data-site-visual="kids"] select,html[data-site-visual="kids"] textarea{border-radius:16px!important}
+html[data-site-visual="noir"]{color-scheme:dark;--st-bg:#080808;--st-surface:#151515;--st-ink:#f3eee6;--st-accent:#c8a96b;--st-border:rgba(200,169,107,.28);--st-shadow:rgba(0,0,0,.44);--st-page:linear-gradient(145deg,#080808,#191714 55%,#050505)}html[data-site-visual="noir"] .kleo-v3-hero,html[data-site-visual="noir"] .b6hero,html[data-site-visual="noir"] .b7hero{background:linear-gradient(120deg,#050505,#241f18)!important;color:#f7f1e8!important;border-bottom:1px solid #c8a96b!important}html[data-site-visual="noir"] .btn,html[data-site-visual="noir"] .b7btn,html[data-site-visual="noir"] .kleo-modern-header__cta{background:#c8a96b!important;color:#090909!important}
+html[data-site-visual="rose-gold"]{--st-bg:#fbf5f3;--st-surface:#fffaf8;--st-ink:#4b3030;--st-accent:#b87872;--st-border:rgba(184,120,114,.25);--st-shadow:rgba(126,73,71,.11);--st-page:radial-gradient(circle at 82% 5%,rgba(223,177,164,.28),transparent 28%),linear-gradient(150deg,#fffaf8,#f3e2de)}html[data-site-visual="rose-gold"] .kleo-v3-hero,html[data-site-visual="rose-gold"] .b6hero,html[data-site-visual="rose-gold"] .b7hero{background:linear-gradient(135deg,#5a3435,#c98f86 62%,#e2b8a9)!important;color:#fff!important}
+html[data-site-visual="aqua"]{--st-bg:#effbfc;--st-surface:#fff;--st-ink:#153e43;--st-accent:#168d9b;--st-border:rgba(37,169,184,.24);--st-shadow:rgba(26,116,126,.11);--st-page:radial-gradient(circle at 85% 8%,rgba(86,211,218,.26),transparent 27%),linear-gradient(150deg,#f5ffff,#e2f4f5)}html[data-site-visual="aqua"] .kleo-v3-hero,html[data-site-visual="aqua"] .b6hero,html[data-site-visual="aqua"] .b7hero{background:linear-gradient(135deg,#075f69,#25a9b8 56%,#8ddde2)!important;color:#fff!important}
+html[data-site-visual="zen"]{--st-bg:#f5f6ef;--st-surface:#fffef9;--st-ink:#344034;--st-accent:#718364;--st-border:rgba(113,131,100,.23);--st-shadow:rgba(70,83,61,.1);--st-page:radial-gradient(circle at 12% 15%,rgba(188,204,165,.25),transparent 25%),linear-gradient(145deg,#fffef9,#edf0e4)}html[data-site-visual="zen"] .kleo-v3-hero,html[data-site-visual="zen"] .b6hero,html[data-site-visual="zen"] .b7hero{background:linear-gradient(135deg,#405344,#7d9270 60%,#c0b996)!important;color:#fff!important}html[data-site-visual="zen"] .b6card,html[data-site-visual="zen"] .b7card,html[data-site-visual="zen"] article,html[data-site-visual="zen"] .kleo-v3-service{border-radius:4px!important}
+@media(max-width:680px){.site-style-picker{right:10px;bottom:72px}.site-style-toggle{min-height:40px;padding:0 11px}.site-style-menu{width:192px}}@media(prefers-reduced-motion:reduce){html[data-site-visual] body{transition:none}}
 `;
 
 export function SiteStyleSwitcher(){
   const[mode,setMode]=React.useState<SiteVisualMode>(()=>typeof window==="undefined"?"classic":readMode());
   const[open,setOpen]=React.useState(false);
-
-  React.useEffect(()=>{
-    document.documentElement.dataset.siteVisual=mode;
-    try{localStorage.setItem(STORAGE_KEY,mode)}catch{}
-    window.dispatchEvent(new CustomEvent("kleo-site-style-change",{detail:{mode}}));
-    return()=>{};
-  },[mode]);
-
-  React.useEffect(()=>{
-    const close=(e:MouseEvent)=>{const target=e.target as HTMLElement|null;if(target&&!target.closest(".site-style-picker"))setOpen(false)};
-    document.addEventListener("click",close);
-    return()=>document.removeEventListener("click",close);
-  },[]);
-
-  const current=THEMES.find(x=>x.mode===mode)||THEMES[0];
-  return <><style data-kleo-site-style>{CSS}</style><div className="site-style-picker">
-    <button type="button" className="site-style-toggle" onClick={()=>setOpen(v=>!v)} aria-expanded={open} aria-label="Stílus választása" title="Stílus választása"><span>{current.icon}</span><b>{current.label}</b><i>⌄</i></button>
-    {open&&<div className="site-style-menu" role="menu" aria-label="Weboldal stílusa">{THEMES.map(item=><button key={item.mode} type="button" role="menuitemradio" aria-checked={mode===item.mode} className={mode===item.mode?"active":""} onClick={()=>{setMode(item.mode);setOpen(false)}}><span>{item.icon}</span><b>{item.label}</b><i>{mode===item.mode?"✓":""}</i></button>)}</div>}
+  const pickerRef=React.useRef<HTMLDivElement>(null);
+  React.useLayoutEffect(()=>{document.documentElement.dataset.siteVisual=mode;try{localStorage.setItem(STORAGE_KEY,mode)}catch{}window.dispatchEvent(new CustomEvent("kleo-site-style-change",{detail:{mode}}))},[mode]);
+  React.useEffect(()=>{const close=(event:MouseEvent)=>{if(!pickerRef.current?.contains(event.target as Node))setOpen(false)};const escape=(event:KeyboardEvent)=>{if(event.key==="Escape")setOpen(false)};document.addEventListener("click",close);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("click",close);document.removeEventListener("keydown",escape)}},[]);
+  const current=THEMES.find(theme=>theme.mode===mode)??THEMES[0];
+  return <><style data-kleo-site-style>{CSS}</style><div className="site-style-picker" ref={pickerRef}>
+    <button type="button" className="site-style-toggle" onClick={()=>setOpen(value=>!value)} aria-expanded={open} aria-haspopup="menu" aria-label={`Weboldal stílusa: ${current.label}`} title="Weboldal stílusa"><span>{current.icon}</span><b>{current.label}</b><i aria-hidden="true">⌄</i></button>
+    {open&&<div className="site-style-menu" role="menu" aria-label="Weboldal stílusa">{THEMES.map(item=><button key={item.mode} type="button" role="menuitemradio" aria-checked={mode===item.mode} className={mode===item.mode?"active":""} onClick={()=>{setMode(item.mode);setOpen(false)}}><span style={{color:item.color}}>{item.icon}</span><b>{item.label}</b><i>{mode===item.mode?"✓":""}</i></button>)}</div>}
   </div></>;
 }
-
 export default SiteStyleSwitcher;
