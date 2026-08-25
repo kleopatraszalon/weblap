@@ -35,16 +35,35 @@ html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-section--ink{b
 html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-section--ink :where(h1,h2,h3,p,span,strong,a,small){color:var(--st-on-ink)!important}
 html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-eyebrow{color:var(--st-accent)!important;font-weight:800}
 
-/* A fő női vizuál témánként más képi kezelést kap, miközben a Classic eredeti marad. */
-html[data-site-visual="pearl"] .kleo-v3-hero__image img{filter:saturate(.82) contrast(.94) brightness(1.08);border-radius:48% 52% 43% 57%/57% 44% 56% 43%;box-shadow:0 28px 70px rgba(127,91,150,.22)!important}
-html[data-site-visual="silver"] .kleo-v3-hero__image img{filter:grayscale(1) contrast(1.28) brightness(.82);clip-path:polygon(3% 0,92% 0,100% 10%,100% 94%,91% 100%,0 100%,0 8%);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 34px rgba(236,0,140,.22)!important}
-html[data-site-visual="silver"] .kleo-v3-hero__image:after{content:"BEAUTY / PROFILE";position:absolute;right:10px;bottom:10px;padding:6px 8px;background:#0d0e0f;color:#c8b187;border:1px solid rgba(200,177,135,.45);font:700 8px/1 ui-monospace,monospace;letter-spacing:.16em;z-index:5}
-html[data-site-visual="kids"] .kleo-v3-hero__image img{filter:saturate(1.12) brightness(1.06);border-radius:34% 66% 52% 48%/52% 42% 58% 48%;outline:5px solid #fff;box-shadow:0 10px 0 #e3d8c3,0 24px 44px rgba(102,66,127,.18)!important}
-html[data-site-visual="noir"] .kleo-v3-hero__image img{filter:grayscale(.88) sepia(.2) contrast(1.13) brightness(.84);border-radius:0;box-shadow:18px 18px 0 rgba(200,169,107,.14)!important}
-html[data-site-visual="rose-gold"] .kleo-v3-hero__image img{filter:saturate(.9) sepia(.12) hue-rotate(-8deg) brightness(1.02);border-radius:52% 48% 60% 40%/45% 58% 42% 55%;box-shadow:0 28px 58px rgba(126,73,71,.2)!important}
-html[data-site-visual="aqua"] .kleo-v3-hero__image img{filter:saturate(.86) hue-rotate(8deg) brightness(1.04);border-radius:42% 58% 50% 50%/60% 42% 58% 40%;box-shadow:0 26px 58px rgba(22,141,155,.2)!important}
-html[data-site-visual="zen"] .kleo-v3-hero__image img{filter:saturate(.58) contrast(.92) brightness(1.03);border-radius:48% 52% 44% 56%/61% 39% 61% 39%;box-shadow:none!important}
-html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-hero__image{position:relative;isolation:isolate}
+/* A fő női vizuál ténylegesen más kép minden nem-Classic témában. */
+html[data-site-visual="pearl"] .kleo-v3-hero__image img{content:url('/images/images_1.webp');filter:saturate(.82) contrast(.94) brightness(1.08);border-radius:48% 52% 43% 57%/57% 44% 56% 43%;box-shadow:0 28px 70px rgba(127,91,150,.22)!important}
+html[data-site-visual="silver"] .kleo-v3-hero__image img{content:url('/images/images_4.webp');filter:grayscale(.35) saturate(.92) contrast(1.32) brightness(.9);object-position:50% 18%;transform:scale(1.035);clip-path:polygon(3% 0,92% 0,100% 10%,100% 94%,91% 100%,0 100%,0 8%);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 42px rgba(236,0,140,.32)!important}
+html[data-site-visual="silver"] .kleo-v3-hero__image:after{content:"BEAUTY / PROFILE";position:absolute;right:10px;bottom:10px;padding:6px 8px;background:#0d0e0f;color:#fff;border:1px solid rgba(236,0,140,.7);font:700 8px/1 ui-monospace,monospace;letter-spacing:.16em;z-index:5}
+html[data-site-visual="kids"] .kleo-v3-hero__image img{content:url('/images/images_3.webp');filter:saturate(1.12) brightness(1.06);border-radius:34% 66% 52% 48%/52% 42% 58% 48%;outline:5px solid #fff;box-shadow:0 10px 0 #e3d8c3,0 24px 44px rgba(102,66,127,.18)!important}
+html[data-site-visual="noir"] .kleo-v3-hero__image img{content:url('/images/images_2.webp');filter:grayscale(.88) sepia(.2) contrast(1.13) brightness(.84);border-radius:0;box-shadow:18px 18px 0 rgba(200,169,107,.14)!important}
+html[data-site-visual="rose-gold"] .kleo-v3-hero__image img{content:url('/images/images_5.webp');filter:saturate(.9) sepia(.12) hue-rotate(-8deg) brightness(1.02);border-radius:52% 48% 60% 40%/45% 58% 42% 55%;box-shadow:0 28px 58px rgba(126,73,71,.2)!important}
+html[data-site-visual="aqua"] .kleo-v3-hero__image img{content:url('/images/actisztitas.png');filter:saturate(.86) hue-rotate(8deg) brightness(1.04);border-radius:42% 58% 50% 50%/60% 42% 58% 40%;box-shadow:0 26px 58px rgba(22,141,155,.2)!important}
+html[data-site-visual="zen"] .kleo-v3-hero__image img{content:url('/images/arcmasszazs.jpg');filter:saturate(.58) contrast(.92) brightness(1.03);border-radius:48% 52% 44% 56%/61% 39% 61% 39%;box-shadow:none!important}
+html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-hero__image{position:relative;isolation:isolate;overflow:visible}
+
+/* SILVER + NOIR: a felső és mobil menü mindig erős kontrasztú. */
+html[data-site-visual="silver"] .kleo-modern-nav__link,html[data-site-visual="silver"] .kleo-modern-nav__label,html[data-site-visual="silver"] .kleo-modern-header__mobile-head,html[data-site-visual="silver"] .kleo-modern-header__mobile-head strong,html[data-site-visual="silver"] .kleo-modern-header__mobile-kicker,html[data-site-visual="silver"] .kleo-modern-header__mobile-footer{color:#fff!important}
+html[data-site-visual="silver"] .kleo-modern-nav__index{color:#ec008c!important}
+html[data-site-visual="silver"] .kleo-modern-nav__link:hover,html[data-site-visual="silver"] .kleo-modern-nav__link:focus-visible,html[data-site-visual="silver"] .kleo-modern-nav__link.is-active,html[data-site-visual="silver"] .kleo-modern-nav__link:hover .kleo-modern-nav__label,html[data-site-visual="silver"] .kleo-modern-nav__link.is-active .kleo-modern-nav__label{color:#ec008c!important}
+html[data-site-visual="silver"] .kleo-modern-header__menu-icon i,html[data-site-visual="silver"] .kleo-modern-header__close span{background:#fff!important}
+html[data-site-visual="silver"] .kleo-modern-header__nav-wrap{color:#fff!important}
+html[data-site-visual="noir"] .kleo-modern-nav__link,html[data-site-visual="noir"] .kleo-modern-nav__label,html[data-site-visual="noir"] .kleo-modern-header__mobile-head,html[data-site-visual="noir"] .kleo-modern-header__mobile-head strong,html[data-site-visual="noir"] .kleo-modern-header__mobile-kicker,html[data-site-visual="noir"] .kleo-modern-header__mobile-footer{color:#fff!important}
+html[data-site-visual="noir"] .kleo-modern-nav__index{color:#ec008c!important}
+html[data-site-visual="noir"] .kleo-modern-nav__link:hover,html[data-site-visual="noir"] .kleo-modern-nav__link:focus-visible,html[data-site-visual="noir"] .kleo-modern-nav__link.is-active,html[data-site-visual="noir"] .kleo-modern-nav__link:hover .kleo-modern-nav__label,html[data-site-visual="noir"] .kleo-modern-nav__link.is-active .kleo-modern-nav__label{color:#ec008c!important}
+html[data-site-visual="noir"] .kleo-modern-header__menu-icon i,html[data-site-visual="noir"] .kleo-modern-header__close span{background:#fff!important}
+html[data-site-visual="noir"] .kleo-modern-header__nav-wrap{color:#fff!important}
+
+/* ZEN: a zöld hero-mező nagyobb, így a teljes szövegtömb a zöld felületen marad. */
+html[data-site-visual="zen"] .kleo-v3-hero,html[data-site-visual="zen"] .b6hero,html[data-site-visual="zen"] .b7hero{background:linear-gradient(90deg,#405344 0 62%,#f5f6ef 62% 100%)!important}
+html[data-site-visual="zen"] .kleo-v3-hero__grid{grid-template-columns:minmax(0,1.14fr) minmax(300px,.86fr)!important}
+html[data-site-visual="zen"] .kleo-v3-hero__copy{max-width:100%!important;padding-right:clamp(24px,4vw,72px)!important}
+html[data-site-visual="zen"] .kleo-v3-hero__copy :where(h1,p,em,span,strong){color:#f5f6ef!important}
+html[data-site-visual="zen"] .kleo-v3-hero__lead{max-width:58ch!important}
 
 /* KIDS: minden, a fő tartalomban megjelenő kép saját állatfigurát kap. */
 html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img){position:relative;isolation:isolate}
@@ -56,6 +75,14 @@ html[data-site-visual="kids"] main .kleo-v3-hero__image::after{width:clamp(76px,
 html[data-site-visual="kids"] main .kleo-v3-salon:nth-child(3n+2)::after{background-image:url('/images/kiosk/kids/bear.gif')}
 html[data-site-visual="kids"] main .kleo-v3-salon:nth-child(3n)::after{background-image:url('/images/kiosk/kids/fox.gif')}
 
+/* KIDS lebegő figurák: az alsó maci és róka a középső navigáció fölé kerül, nem mögé. */
+html[data-site-visual="kids"] .site-theme-atmosphere{z-index:2100!important}
+html[data-site-visual="kids"] .theme-kids-animals{inset:0!important;z-index:1!important}
+html[data-site-visual="kids"] .theme-kids-animals img:nth-child(1){left:1.5%!important;top:24%!important;bottom:auto!important;right:auto!important}
+html[data-site-visual="kids"] .theme-kids-animals img:nth-child(2){left:calc(50% - 150px)!important;right:auto!important;top:auto!important;bottom:138px!important;width:clamp(92px,9vw,132px)!important;height:clamp(122px,12vw,172px)!important}
+html[data-site-visual="kids"] .theme-kids-animals img:nth-child(3){right:calc(50% - 150px)!important;left:auto!important;top:auto!important;bottom:130px!important;width:clamp(92px,9vw,132px)!important;height:clamp(122px,12vw,172px)!important}
+html[data-site-visual="kids"] .theme-kids-animals span{right:4%!important;top:18%!important}
+
 /* Erős kontraszt a témák sötétebb és színes felületein. */
 html[data-site-visual="silver"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(h1,h2,h3,h4,p,small,strong,span,a){color:#f3f2ef!important}
 html[data-site-visual="noir"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(h1,h2,h3,h4,p,small,strong,span){color:#eee7dc!important}
@@ -65,7 +92,8 @@ html[data-site-visual="aqua"] :where(.b6card,.b7card,article,.kleo-v3-service) :
 html[data-site-visual="zen"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(p,small){color:#52604f!important}
 
 @keyframes kidsImageBuddy{50%{transform:translateY(-7px) rotate(3deg)}}
-@media(max-width:720px){html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{width:58px;top:6px;right:6px}html[data-site-visual="kids"] main .kleo-v3-hero__image::after{width:76px}}
+@media(max-width:900px){html[data-site-visual="zen"] .kleo-v3-hero,html[data-site-visual="zen"] .b6hero,html[data-site-visual="zen"] .b7hero{background:linear-gradient(180deg,#405344 0 66%,#f5f6ef 66% 100%)!important}html[data-site-visual="zen"] .kleo-v3-hero__grid{grid-template-columns:1fr!important}html[data-site-visual="zen"] .kleo-v3-hero__copy{padding-right:0!important}html[data-site-visual="kids"] .theme-kids-animals img:nth-child(2){left:calc(50% - 112px)!important;bottom:112px!important}html[data-site-visual="kids"] .theme-kids-animals img:nth-child(3){right:calc(50% - 112px)!important;bottom:106px!important}}
+@media(max-width:720px){html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{width:58px;top:6px;right:6px}html[data-site-visual="kids"] main .kleo-v3-hero__image::after{width:76px}html[data-site-visual="kids"] .theme-kids-animals img:nth-child(2){left:calc(50% - 92px)!important;width:78px!important;height:106px!important;bottom:94px!important}html[data-site-visual="kids"] .theme-kids-animals img:nth-child(3){right:calc(50% - 92px)!important;width:78px!important;height:106px!important;bottom:90px!important}}
 @media(prefers-reduced-motion:reduce){html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{animation:none}}
 `;
 
