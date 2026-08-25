@@ -16,6 +16,59 @@ const STORAGE_KEY="kleo_site_visual_mode";
 const isMode=(value:string|null):value is SiteVisualMode=>THEMES.some(theme=>theme.mode===value);
 const readMode=():SiteVisualMode=>{try{const value=localStorage.getItem(STORAGE_KEY);return isMode(value)?value:"classic"}catch{return "classic"}};
 
+const THEME_POLISH_CSS=String.raw`
+/* A Classic szándékosan érintetlen. A többi téma külön kontraszt- és képi karaktert kap. */
+html[data-site-visual="pearl"]{--st-muted:#5c5367;--st-link:#8d3e8d;--st-hero-ink:#312b36;--st-on-ink:#fffafc}
+html[data-site-visual="silver"]{--st-muted:#d6d3ce;--st-link:#ff79bc;--st-hero-ink:#fff;--st-on-ink:#fff}
+html[data-site-visual="kids"]{--st-muted:#59476a;--st-link:#c51d78;--st-hero-ink:#fff;--st-on-ink:#fff}
+html[data-site-visual="noir"]{--st-muted:#d6cec3;--st-link:#d3b477;--st-hero-ink:#f7f1e8;--st-on-ink:#f7f1e8}
+html[data-site-visual="rose-gold"]{--st-muted:#67494a;--st-link:#9d4f5c;--st-hero-ink:#fff;--st-on-ink:#fff}
+html[data-site-visual="aqua"]{--st-muted:#31585d;--st-link:#0d7784;--st-hero-ink:#fff;--st-on-ink:#fff}
+html[data-site-visual="zen"]{--st-muted:#52604f;--st-link:#536747;--st-hero-ink:#f5f6ef;--st-on-ink:#f5f6ef}
+
+html[data-site-visual]:not([data-site-visual="classic"]) main{color:var(--st-ink)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) main :where(h1,h2,h3,h4,h5,h6,strong){color:var(--st-ink)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) main :where(p,li,small,label,blockquote,figcaption){color:var(--st-muted)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) main a:not(.kleo-v3-btn):not(.btn):not(.b7btn){color:var(--st-link)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) :is(.kleo-v3-hero,.b6hero,.b7hero) :where(h1,h2,h3,h4,p,small,strong,em,.kleo-v3-eyebrow,.kleo-v3-hero__meta span){color:var(--st-hero-ink)!important;text-shadow:0 1px 1px rgba(0,0,0,.08)}
+html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-section--ink{background:color-mix(in srgb,var(--st-ink) 92%,#000)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-section--ink :where(h1,h2,h3,p,span,strong,a,small){color:var(--st-on-ink)!important}
+html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-eyebrow{color:var(--st-accent)!important;font-weight:800}
+
+/* A fő női vizuál témánként más képi kezelést kap, miközben a Classic eredeti marad. */
+html[data-site-visual="pearl"] .kleo-v3-hero__image img{filter:saturate(.82) contrast(.94) brightness(1.08);border-radius:48% 52% 43% 57%/57% 44% 56% 43%;box-shadow:0 28px 70px rgba(127,91,150,.22)!important}
+html[data-site-visual="silver"] .kleo-v3-hero__image img{filter:grayscale(1) contrast(1.28) brightness(.82);clip-path:polygon(3% 0,92% 0,100% 10%,100% 94%,91% 100%,0 100%,0 8%);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 34px rgba(236,0,140,.22)!important}
+html[data-site-visual="silver"] .kleo-v3-hero__image:after{content:"BEAUTY / PROFILE";position:absolute;right:10px;bottom:10px;padding:6px 8px;background:#0d0e0f;color:#c8b187;border:1px solid rgba(200,177,135,.45);font:700 8px/1 ui-monospace,monospace;letter-spacing:.16em;z-index:5}
+html[data-site-visual="kids"] .kleo-v3-hero__image img{filter:saturate(1.12) brightness(1.06);border-radius:34% 66% 52% 48%/52% 42% 58% 48%;outline:5px solid #fff;box-shadow:0 10px 0 #e3d8c3,0 24px 44px rgba(102,66,127,.18)!important}
+html[data-site-visual="noir"] .kleo-v3-hero__image img{filter:grayscale(.88) sepia(.2) contrast(1.13) brightness(.84);border-radius:0;box-shadow:18px 18px 0 rgba(200,169,107,.14)!important}
+html[data-site-visual="rose-gold"] .kleo-v3-hero__image img{filter:saturate(.9) sepia(.12) hue-rotate(-8deg) brightness(1.02);border-radius:52% 48% 60% 40%/45% 58% 42% 55%;box-shadow:0 28px 58px rgba(126,73,71,.2)!important}
+html[data-site-visual="aqua"] .kleo-v3-hero__image img{filter:saturate(.86) hue-rotate(8deg) brightness(1.04);border-radius:42% 58% 50% 50%/60% 42% 58% 40%;box-shadow:0 26px 58px rgba(22,141,155,.2)!important}
+html[data-site-visual="zen"] .kleo-v3-hero__image img{filter:saturate(.58) contrast(.92) brightness(1.03);border-radius:48% 52% 44% 56%/61% 39% 61% 39%;box-shadow:none!important}
+html[data-site-visual]:not([data-site-visual="classic"]) .kleo-v3-hero__image{position:relative;isolation:isolate}
+
+/* KIDS: minden, a fő tartalomban megjelenő kép saját állatfigurát kap. */
+html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img){position:relative;isolation:isolate}
+html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{content:"";position:absolute;top:8px;right:8px;width:clamp(54px,6.6vw,88px);aspect-ratio:1;background:url('/images/kiosk/kids/bunny.gif') center/contain no-repeat;filter:drop-shadow(0 8px 8px rgba(83,50,98,.22));z-index:8;pointer-events:none;animation:kidsImageBuddy 3.8s ease-in-out infinite}
+html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img):nth-child(3n+2)::after{background-image:url('/images/kiosk/kids/bear.gif');animation-delay:-1.1s}
+html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img):nth-child(3n)::after{background-image:url('/images/kiosk/kids/fox.gif');animation-delay:-2.2s}
+html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img) > img{outline:4px solid rgba(255,255,255,.96);box-shadow:0 8px 0 #e3d8c3,0 18px 34px rgba(83,50,98,.12)!important}
+html[data-site-visual="kids"] main .kleo-v3-hero__image::after{width:clamp(76px,9vw,124px);top:10px;right:10px;background-image:url('/images/kiosk/kids/fox.gif')}
+html[data-site-visual="kids"] main .kleo-v3-salon:nth-child(3n+2)::after{background-image:url('/images/kiosk/kids/bear.gif')}
+html[data-site-visual="kids"] main .kleo-v3-salon:nth-child(3n)::after{background-image:url('/images/kiosk/kids/fox.gif')}
+
+/* Erős kontraszt a témák sötétebb és színes felületein. */
+html[data-site-visual="silver"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(h1,h2,h3,h4,p,small,strong,span,a){color:#f3f2ef!important}
+html[data-site-visual="noir"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(h1,h2,h3,h4,p,small,strong,span){color:#eee7dc!important}
+html[data-site-visual="pearl"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(p,small){color:#5c5367!important}
+html[data-site-visual="rose-gold"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(p,small){color:#67494a!important}
+html[data-site-visual="aqua"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(p,small){color:#31585d!important}
+html[data-site-visual="zen"] :where(.b6card,.b7card,article,.kleo-v3-service) :where(p,small){color:#52604f!important}
+
+@keyframes kidsImageBuddy{50%{transform:translateY(-7px) rotate(3deg)}}
+@media(max-width:720px){html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{width:58px;top:6px;right:6px}html[data-site-visual="kids"] main .kleo-v3-hero__image::after{width:76px}}
+@media(prefers-reduced-motion:reduce){html[data-site-visual="kids"] main :where(div,a,figure,picture):has(> img)::after{animation:none}}
+`;
+
 export function SiteStyleSwitcher(){
   const[mode,setMode]=React.useState<SiteVisualMode>(()=>typeof window==="undefined"?"classic":readMode());
   const[open,setOpen]=React.useState(false);
@@ -23,7 +76,7 @@ export function SiteStyleSwitcher(){
   React.useLayoutEffect(()=>{document.documentElement.dataset.siteVisual=mode;try{localStorage.setItem(STORAGE_KEY,mode)}catch{}window.dispatchEvent(new CustomEvent("kleo-site-style-change",{detail:{mode}}))},[mode]);
   React.useEffect(()=>{const close=(event:MouseEvent)=>{if(!pickerRef.current?.contains(event.target as Node))setOpen(false)};const escape=(event:KeyboardEvent)=>{if(event.key==="Escape")setOpen(false)};document.addEventListener("click",close);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("click",close);document.removeEventListener("keydown",escape)}},[]);
   const current=THEMES.find(theme=>theme.mode===mode)??THEMES[0];
-  return <><div className="site-theme-atmosphere" aria-hidden="true">
+  return <><style>{THEME_POLISH_CSS}</style><div className="site-theme-atmosphere" aria-hidden="true">
     <div className="theme-orb theme-orb-a"/><div className="theme-orb theme-orb-b"/><div className="theme-grid"/><div className="theme-scan"/><div className="theme-ring"><i/><i/><i/><i/></div><div className="theme-wave theme-wave-a"/><div className="theme-wave theme-wave-b"/><div className="theme-noir-line"/><div className="theme-zen-stone"/>
     <div className="theme-kids-animals"><img src="/images/kiosk/kids/bunny.gif" alt=""/><img src="/images/kiosk/kids/bear.gif" alt=""/><img src="/images/kiosk/kids/fox.gif" alt=""/><span>Szia! Válassz velünk! ✨</span></div>
   </div><div className="site-style-picker" ref={pickerRef}>
