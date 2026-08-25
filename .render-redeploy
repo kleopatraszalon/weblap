@@ -1,6 +1,7 @@
 Render redeploy trigger
-2026-08-24T17:24:00+02:00
-Force a clean production deploy from the current main branch after API and VIR frontend stages.
-Reason: explicit deploy-all request after the latest Rebeka booking-flow fixes.
+2026-08-25T14:46:00+02:00
+Force a clean production deploy from the current main branch after theme visual polish round 2.
+Reason: explicit deploy request after Silver/Noir navigation contrast, larger ZEN hero field, KIDS mascot positioning and theme-specific hero image updates.
+Target application commit: d9b5a829c5cee27bae5e24f931101a8dbf27d232
 Expected service: weblap-o3g6.onrender.com
-Preserve current Booking flexible flow, Smart Signage, kiosk and public website functionality.
+Preserve Booking flexible flow, Smart Signage, kiosk and all existing public website functionality.
