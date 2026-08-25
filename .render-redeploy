@@ -1,7 +1,7 @@
 Render redeploy trigger
-2026-08-25T14:46:00+02:00
-Force a clean production deploy from the current main branch after theme visual polish round 2.
-Reason: explicit deploy request after Silver/Noir navigation contrast, larger ZEN hero field, KIDS mascot positioning and theme-specific hero image updates.
-Target application commit: d9b5a829c5cee27bae5e24f931101a8dbf27d232
+2026-08-25T15:39:00+02:00
+Force a clean production deploy from the current main branch after new theme hero artwork round 3.
+Reason: explicit deploy request after replacing every non-Classic hero with brand-new theme-specific artwork and restoring exact Classic hero frame geometry.
+Target application commit: 070458d9c5d8c01215f1f47ad6b3bb14a9e463a2
 Expected service: weblap-o3g6.onrender.com
-Preserve Booking flexible flow, Smart Signage, kiosk and all existing public website functionality.
+Silver: adult cyber-glam chrome/magenta futuristic portrait. KIDS: child-friendly child portrait. Preserve Silver/Noir navigation contrast, larger ZEN field, KIDS mascot positioning, Booking flexible flow, Smart Signage, kiosk and all existing public website functionality.
