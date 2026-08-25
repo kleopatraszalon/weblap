@@ -1,4 +1,4 @@
-deploy requested: 2026-08-23T10:01:00+02:00
-target application commit: 2e6df5201087303229f7bc128284ed5a23df20fa
+deploy requested: 2026-08-25T21:05:00+02:00
+target application commit: 27f7cc04ee6e921616daa464eadfc3eda381d125
 service: kleoszalon-weblap
-reason: enlarge mobile logo hamburger and menu presentation
+reason: deploy approved final profile WebP hero images for all non-Classic themes
