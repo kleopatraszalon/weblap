@@ -1,4 +1,4 @@
-deploy requested: 2026-08-25T21:05:00+02:00
-target application commit: 27f7cc04ee6e921616daa464eadfc3eda381d125
+deploy requested: 2026-08-27T17:15:00+02:00
+target application commit: 37f8357a61e350b95800015313b69a7dd4e63a9d
 service: kleoszalon-weblap
-reason: deploy approved final profile WebP hero images for all non-Classic themes
+reason: deploy final approved left-facing decorative theme hero portraits
