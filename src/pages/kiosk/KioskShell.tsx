@@ -14,10 +14,10 @@ type LangCode = (typeof LANGS)[number]["code"];
 type VisualMode = "classic" | "pearl" | "silver" | "kids";
 function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
 
-const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string }> = {
-  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma" },
-  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home", theme: "Theme" },
-  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная", theme: "Тема" },
+const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string; mapping: string }> = {
+  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma", mapping: "Face / Body Mapping" },
+  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home", theme: "Theme", mapping: "Face / Body Mapping" },
+  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная", theme: "Тема", mapping: "Face / Body Mapping" },
 };
 
 export function KioskShell({ children }: { children: React.ReactNode }) {
@@ -100,6 +100,9 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
             {([['classic','◐','Classic'],['pearl','✦','Pearl'],['silver','◈','Silver'],['kids','★','KIDS']] as const).map(([mode,icon,label])=><button key={mode} type="button" role="menuitemradio" aria-checked={visualMode===mode} className={visualMode===mode?'active':''} onClick={()=>selectVisualMode(mode)}><span>{icon}</span><b>{label}</b>{visualMode===mode&&<i>✓</i>}</button>)}
           </div>}
         </div>
+        <button className="kiosk-face-map-launcher" type="button" onClick={() => navigate("/kiosk/face-body-mapping")} aria-label={copy.mapping} title={copy.mapping}>
+          <span>◎</span><b>{copy.mapping}</b>
+        </button>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
           <span>{copy.total}</span><b>{count} · {total.toLocaleString("hu-HU")} Ft</b>
