@@ -6,11 +6,13 @@ import "./kiosk/kiosk-2026.css";
 import "./kiosk/kiosk-pearl.css";
 import "./kiosk/kiosk-silver.css";
 import "./kiosk/kiosk-kids.css";
+import "./kiosk/kiosk-face-body-mapping.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";
 import { KioskPay } from "./kiosk/KioskPay";
 import { KioskTicket } from "./kiosk/KioskTicket";
+import { KioskFaceBodyMapping } from "./kiosk/KioskFaceBodyMapping";
 
 export function KioskPage() {
   return (
@@ -18,6 +20,7 @@ export function KioskPage() {
       <Routes>
         <Route path="/" element={<KioskLanding />} />
         <Route path="cat/:slug" element={<KioskCategory />} />
+        <Route path="face-body-mapping" element={<KioskFaceBodyMapping />} />
         <Route path="pay" element={<KioskPay />} />
         <Route path="ticket" element={<KioskTicket />} />
         <Route path="*" element={<Navigate to="/kiosk" replace />} />
