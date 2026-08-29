@@ -10,6 +10,7 @@ import "./kiosk/kiosk-face-body-mapping.css";
 import "./kiosk/kiosk-mapping-launcher-hotfix.css";
 import "./kiosk/kiosk-mapping-recommendations.css";
 import "./kiosk/kiosk-theme-service-art.css";
+import "./kiosk/kiosk-theme-assets-production.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";

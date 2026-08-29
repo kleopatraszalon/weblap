@@ -1,7 +1,7 @@
 import React from "react";
 import "./KioskHairMirror.css";
 
-type VisualMode = "classic" | "pearl" | "silver" | "kids";
+type VisualMode = "classic" | "pearl" | "silver" | "kids" | "noir" | "rose-gold" | "aqua" | "zen";
 type Hair = { id:string; name:string; type:string; path:string; extra?:string };
 
 const HAIRS:Hair[]=[
