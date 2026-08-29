@@ -1,0 +1,91 @@
+/* Theme-specific service artwork. Classic deliberately remains untouched. */
+.kiosk-theme-service-art{
+  display:block;
+  width:100%;
+  height:100%;
+  background-repeat:no-repeat;
+  background-size:300% 200%;
+  background-color:transparent;
+}
+.kiosk-rail-list .kiosk-theme-service-art{
+  width:58px;
+  height:58px;
+  min-width:58px;
+  flex:0 0 58px;
+  border-radius:16px;
+  background-color:color-mix(in srgb,var(--kiosk-surface) 86%,transparent);
+  box-shadow:0 5px 16px rgba(0,0,0,.09);
+}
+.kiosk-category-card-image .kiosk-theme-service-art{
+  min-height:190px;
+  border-radius:inherit;
+  background-color:color-mix(in srgb,var(--kiosk-surface) 88%,transparent);
+  filter:saturate(1.04) contrast(1.02);
+}
+.kioskScreen[data-kiosk-visual="pearl"] .kiosk-theme-service-art{filter:saturate(1.04) brightness(1.03)}
+.kioskScreen[data-kiosk-visual="silver"] .kiosk-theme-service-art{filter:saturate(1.14) contrast(1.08)}
+.kioskScreen[data-kiosk-visual="kids"] .kiosk-theme-service-art{filter:saturate(1.12) brightness(1.03)}
+.kioskScreen[data-kiosk-visual="noir"] .kiosk-theme-service-art{filter:saturate(.95) contrast(1.08)}
+.kioskScreen[data-kiosk-visual="rose-gold"] .kiosk-theme-service-art{filter:saturate(1.04) brightness(1.03)}
+.kioskScreen[data-kiosk-visual="aqua"] .kiosk-theme-service-art{filter:saturate(1.08) brightness(1.02)}
+.kioskScreen[data-kiosk-visual="zen"] .kiosk-theme-service-art{filter:saturate(.94) brightness(1.03)}
+
+.kiosk-theme-menu-expanded{
+  max-height:min(70vh,520px);
+  overflow:auto;
+  scrollbar-width:thin;
+}
+
+/* Additional 2026 visual families. No selectors target Classic. */
+.kioskScreen[data-kiosk-visual="noir"]{background:radial-gradient(circle at 72% 6%,#3a2b13 0,#111 34%,#080808 100%)!important}
+.kioskScreen[data-kiosk-visual="noir"] .kioskTop,
+.kioskScreen[data-kiosk-visual="noir"] .kiosk-category-rail,
+.kioskScreen[data-kiosk-visual="noir"] .kiosk-catalog-home,
+.kioskScreen[data-kiosk-visual="noir"] .kioskCartPanel{background:rgba(15,15,15,.96);color:#f8edcf;border-color:rgba(201,160,72,.25)}
+.kioskScreen[data-kiosk-visual="noir"] .kiosk-category-card{background:linear-gradient(145deg,#181818,#0d0d0d);color:#f7e8bf;border-color:rgba(201,160,72,.25)}
+
+.kioskScreen[data-kiosk-visual="rose-gold"]{background:radial-gradient(circle at 80% 8%,#ffe2df 0,#f7ece8 42%,#f5efe8 100%)!important}
+.kioskScreen[data-kiosk-visual="rose-gold"] .kiosk-category-card{background:linear-gradient(145deg,#fffaf8,#f8e4df);border-color:#e9c1b7}
+
+.kioskScreen[data-kiosk-visual="aqua"]{background:radial-gradient(circle at 78% 6%,#d9ffff 0,#eaf8f5 40%,#f5f1e9 100%)!important}
+.kioskScreen[data-kiosk-visual="aqua"] .kiosk-category-card{background:linear-gradient(145deg,#fbffff,#e3f7f5);border-color:#b8e2dd}
+
+.kioskScreen[data-kiosk-visual="zen"]{background:radial-gradient(circle at 78% 8%,#edf1db 0,#f4f0df 42%,#f3eee4 100%)!important}
+.kioskScreen[data-kiosk-visual="zen"] .kiosk-category-card{background:linear-gradient(145deg,#fffdf5,#edf0df);border-color:#ccd2ad}
+
+/* Photoreal mapping for every non-Classic theme. The clickable zone buttons stay above the artwork. */
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy{
+  isolation:isolate;
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(247,242,235,.94));
+}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy .mapping-figure-svg{opacity:0!important}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  z-index:0;
+  pointer-events:none;
+  background-image:url('/kiosk/mapping/mapping-photo.webp');
+  background-repeat:no-repeat;
+  background-size:auto 100%;
+  filter:saturate(1.02) contrast(1.02);
+  border-radius:18px;
+}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy::before{z-index:1;opacity:.2}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-zone{z-index:3}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-hair::after{background-position:left center}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-face::after{background-position:37% center}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-body-front::after{background-position:72% center}
+.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-body-back::after{background-position:right center}
+
+.kioskScreen[data-kiosk-visual="silver"] .mapping-anatomy::after{filter:saturate(.88) contrast(1.12) brightness(.86)}
+.kioskScreen[data-kiosk-visual="noir"] .mapping-anatomy::after{filter:saturate(.78) contrast(1.14) brightness(.78)}
+.kioskScreen[data-kiosk-visual="rose-gold"] .mapping-anatomy::after{filter:saturate(1.08) sepia(.06) brightness(1.03)}
+.kioskScreen[data-kiosk-visual="aqua"] .mapping-anatomy::after{filter:saturate(.92) hue-rotate(6deg) brightness(1.03)}
+.kioskScreen[data-kiosk-visual="zen"] .mapping-anatomy::after{filter:saturate(.82) sepia(.08) brightness(1.02)}
+
+@media(max-width:900px){
+  .kiosk-rail-list .kiosk-theme-service-art{width:50px;height:50px;min-width:50px}
+  .kiosk-category-card-image .kiosk-theme-service-art{min-height:150px}
+  .kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy::after{background-size:auto 96%;inset:4px}
+}

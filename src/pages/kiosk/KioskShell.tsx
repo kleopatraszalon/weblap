@@ -10,9 +10,29 @@ const LANGS = [
   { code: "en", label: "English", flag: "EN" },
   { code: "ru", label: "Русский", flag: "RU" },
 ] as const;
+
+const VISUAL_MODES = [
+  { id: "classic", icon: "◐", label: "Classic" },
+  { id: "pearl", icon: "✦", label: "Pearl" },
+  { id: "silver", icon: "◈", label: "Silver" },
+  { id: "kids", icon: "★", label: "KIDS" },
+  { id: "noir", icon: "◆", label: "Noir" },
+  { id: "rose-gold", icon: "◇", label: "Rose Gold" },
+  { id: "aqua", icon: "≈", label: "Aqua" },
+  { id: "zen", icon: "☘", label: "Zen" },
+] as const;
+
 type LangCode = (typeof LANGS)[number]["code"];
-type VisualMode = "classic" | "pearl" | "silver" | "kids";
-function getStoredLang(): LangCode { const raw = localStorage.getItem("kiosk_lang"); return raw === "en" || raw === "ru" ? raw : "hu"; }
+export type KioskVisualMode = (typeof VISUAL_MODES)[number]["id"];
+
+function getStoredLang(): LangCode {
+  const raw = localStorage.getItem("kiosk_lang");
+  return raw === "en" || raw === "ru" ? raw : "hu";
+}
+function getStoredVisualMode(): KioskVisualMode {
+  const raw = localStorage.getItem("kiosk_visual_mode");
+  return VISUAL_MODES.some((mode) => mode.id === raw) ? raw as KioskVisualMode : "classic";
+}
 
 const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string; mapping: string }> = {
   hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma", mapping: "Face / Body Mapping" },
@@ -25,7 +45,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [cart, setCart] = React.useState(() => readCart());
   const [lang, setLang] = React.useState<LangCode>(() => getStoredLang());
-  const [visualMode, setVisualMode] = React.useState<VisualMode>(() => { const saved = localStorage.getItem("kiosk_visual_mode"); return saved === "pearl" || saved === "silver" || saved === "kids" ? saved : "classic"; });
+  const [visualMode, setVisualMode] = React.useState<KioskVisualMode>(() => getStoredVisualMode());
   const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
   const [theme, setTheme] = React.useState<Record<string, any>>({});
 
@@ -58,13 +78,15 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     window.dispatchEvent(new Event("kiosk-lang-change"));
   }
 
-  function selectVisualMode(next: VisualMode) {
+  function selectVisualMode(next: KioskVisualMode) {
     localStorage.setItem("kiosk_visual_mode", next);
     setVisualMode(next);
     setThemeMenuOpen(false);
+    window.dispatchEvent(new CustomEvent("kiosk-visual-mode-change", { detail: next }));
   }
 
   const copy = COPY[lang];
+  const currentVisual = VISUAL_MODES.find((mode) => mode.id === visualMode) || VISUAL_MODES[0];
   const step = location.pathname.includes("/ticket") ? 3 : location.pathname.includes("/pay") ? 2 : 1;
   const total = cartTotal(cart);
   const count = cartCount(cart);
@@ -86,7 +108,8 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </button>
       <div className="kiosk-progress" aria-label="Kiosk folyamat">
         {[copy.menu, copy.pay, copy.ticket].map((label, index) => {
-          const n = index + 1; return <div key={label} className={`kiosk-progress-step ${n === step ? "active" : n < step ? "done" : ""}`}>
+          const n = index + 1;
+          return <div key={label} className={`kiosk-progress-step ${n === step ? "active" : n < step ? "done" : ""}`}>
             <span>{n < step ? "✓" : n}</span><b>{label}</b>
           </div>;
         })}
@@ -94,10 +117,12 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       <div className="kiosk-utilities">
         <div className="kiosk-theme-picker">
           <button className="kiosk-theme-toggle" type="button" onClick={() => setThemeMenuOpen((open) => !open)} aria-label={copy.theme} aria-expanded={themeMenuOpen} title={copy.theme}>
-            <span>{visualMode === "classic" ? "◐" : visualMode === "pearl" ? "✦" : visualMode === "silver" ? "◈" : "★"}</span><b>{visualMode === "classic" ? "Classic" : visualMode === "pearl" ? "Pearl" : visualMode === "silver" ? "Silver" : "KIDS"}</b><i>⌄</i>
+            <span>{currentVisual.icon}</span><b>{currentVisual.label}</b><i>⌄</i>
           </button>
-          {themeMenuOpen&&<div className="kiosk-theme-menu" role="menu" aria-label={copy.theme}>
-            {([['classic','◐','Classic'],['pearl','✦','Pearl'],['silver','◈','Silver'],['kids','★','KIDS']] as const).map(([mode,icon,label])=><button key={mode} type="button" role="menuitemradio" aria-checked={visualMode===mode} className={visualMode===mode?'active':''} onClick={()=>selectVisualMode(mode)}><span>{icon}</span><b>{label}</b>{visualMode===mode&&<i>✓</i>}</button>)}
+          {themeMenuOpen && <div className="kiosk-theme-menu kiosk-theme-menu-expanded" role="menu" aria-label={copy.theme}>
+            {VISUAL_MODES.map((mode) => <button key={mode.id} type="button" role="menuitemradio" aria-checked={visualMode === mode.id} className={visualMode === mode.id ? "active" : ""} onClick={() => selectVisualMode(mode.id)}>
+              <span>{mode.icon}</span><b>{mode.label}</b>{visualMode === mode.id && <i>✓</i>}
+            </button>)}
           </div>}
         </div>
         <button className="kiosk-face-map-launcher" type="button" onClick={() => navigate("/kiosk/face-body-mapping")} aria-label={copy.mapping} title={copy.mapping}>
@@ -110,7 +135,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
     </header>
     <main className="kioskBody">{children}</main>
-    <KioskHairMirror visualMode={visualMode} />
+    <KioskHairMirror visualMode={visualMode as "classic" | "pearl" | "silver" | "kids"} />
     <KidsGameArcade active={visualMode === "kids"} />
     <div className="kiosk-kids-companions" aria-hidden="true">
       <div className="kiosk-kids-guide bunny"><img src="/images/kiosk/kids/bunny.gif" alt=""/><span>Mit válasszunk? ✨</span></div>
