@@ -1,0 +1,20 @@
+.mapping-view-tabs.mapping-view-tabs-four{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mapping-hair .mapping-figure-svg{height:88%;width:76%;color:var(--kiosk-ink)}
+.mapping-hair .mapping-zone{border-style:solid;background:color-mix(in srgb,var(--kiosk-surface) 80%,transparent)}
+.mapping-recommend-empty{margin:0 0 15px;padding:14px 15px;border:1px dashed color-mix(in srgb,var(--kiosk-accent) 32%,transparent);border-radius:15px;background:color-mix(in srgb,var(--kiosk-accent) 5%,var(--kiosk-surface));font-size:13px;line-height:1.45;color:color-mix(in srgb,var(--kiosk-ink) 72%,transparent)}
+.mapping-recommendations{display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 15px}
+.mapping-recommendations>button{display:grid;grid-template-columns:1fr auto;gap:3px 10px;text-align:left;border:1px solid color-mix(in srgb,var(--kiosk-ink) 10%,transparent);border-radius:15px;padding:12px 13px;background:color-mix(in srgb,var(--kiosk-bg) 45%,var(--kiosk-surface));color:var(--kiosk-ink);font:inherit;cursor:pointer;transition:border-color .15s ease,background .15s ease,transform .15s ease}
+.mapping-recommendations>button:hover{border-color:color-mix(in srgb,var(--kiosk-accent) 42%,transparent);transform:translateY(-1px)}
+.mapping-recommendations>button>span{grid-column:1/-1;font-size:9px;font-weight:950;letter-spacing:.12em;color:var(--kiosk-accent)}
+.mapping-recommendations>button>b{font-size:13px;line-height:1.25}
+.mapping-recommendations>button>small{grid-column:1/2;font-size:11px;opacity:.58}
+.mapping-recommendations>button>strong{grid-column:2/3;grid-row:2/4;align-self:center;font-size:13px;white-space:nowrap}
+.mapping-recommendations>button>i{grid-column:1/-1;margin-top:3px;font-style:normal;font-size:10px;font-weight:900;color:var(--kiosk-accent)}
+.mapping-recommendations>button.active{border-color:var(--kiosk-accent);background:color-mix(in srgb,var(--kiosk-accent) 9%,var(--kiosk-surface));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--kiosk-accent) 55%,transparent)}
+.kiosk-rail-list button img{display:block!important;visibility:visible!important;opacity:1!important;object-fit:cover;background:color-mix(in srgb,var(--kiosk-bg) 65%,var(--kiosk-surface))}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-recommend-empty{background:rgba(0,229,255,.04);border-color:rgba(0,229,255,.22);color:#c9e8ec}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-recommendations>button{background:rgba(5,18,22,.82);border-color:rgba(0,229,255,.16);color:#e5fbfd}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-recommendations>button.active{background:rgba(0,195,219,.12);border-color:#5feaf6}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-hair .mapping-figure-svg{color:#9cecf4}
+.kioskScreen[data-kiosk-visual="kids"] .mapping-recommendations>button{border-width:2px}
+@media(max-width:760px){.mapping-view-tabs.mapping-view-tabs-four{grid-template-columns:repeat(2,minmax(0,1fr))}.mapping-recommendations>button{padding:11px}.mapping-hair .mapping-figure-svg{width:92%}}
