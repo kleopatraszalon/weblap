@@ -7,6 +7,7 @@ import "./kiosk/kiosk-pearl.css";
 import "./kiosk/kiosk-silver.css";
 import "./kiosk/kiosk-kids.css";
 import "./kiosk/kiosk-face-body-mapping.css";
+import "./kiosk/kiosk-mapping-launcher-hotfix.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";
