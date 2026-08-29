@@ -4,7 +4,7 @@ import { addToCart, readCart, writeCart } from "./cartStore";
 import { fetchKioskServices } from "./kioskApi";
 import type { KioskService } from "./types";
 
-type ViewMode = "face" | "body-front" | "body-back";
+type ViewMode = "hair" | "face" | "body-front" | "body-back";
 type Zone = { id: string; label: string; x: number; y: number; w?: number; h?: number };
 
 type MappingDraft = {
@@ -16,6 +16,15 @@ type MappingDraft = {
 };
 
 const STORAGE_KEY = "kiosk_face_body_mapping_v1";
+
+const HAIR_ZONES: Zone[] = [
+  { id: "scalp", label: "Fejbőr", x: 50, y: 20, w: 45, h: 20 },
+  { id: "hairline", label: "Hajvonal", x: 50, y: 33, w: 38, h: 9 },
+  { id: "hair-roots", label: "Hajtő", x: 50, y: 43, w: 44, h: 13 },
+  { id: "hair-length-left", label: "Bal hajhossz", x: 27, y: 62, w: 22, h: 42 },
+  { id: "hair-length-right", label: "Jobb hajhossz", x: 73, y: 62, w: 22, h: 42 },
+  { id: "hair-ends", label: "Hajvégek", x: 50, y: 86, w: 55, h: 15 },
+];
 
 const FACE_ZONES: Zone[] = [
   { id: "forehead", label: "Homlok", x: 50, y: 20, w: 27, h: 11 },
@@ -60,14 +69,76 @@ const BODY_BACK_ZONES: Zone[] = [
   { id: "calf-right", label: "Jobb vádli", x: 57, y: 91, w: 13, h: 19 },
 ];
 
+const normalize = (value: string | null | undefined) => (value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
 function zonesFor(view: ViewMode) {
-  return view === "face" ? FACE_ZONES : view === "body-front" ? BODY_FRONT_ZONES : BODY_BACK_ZONES;
+  return view === "hair" ? HAIR_ZONES : view === "face" ? FACE_ZONES : view === "body-front" ? BODY_FRONT_ZONES : BODY_BACK_ZONES;
+}
+
+function serviceText(service: KioskService) {
+  return normalize([
+    service.name,
+    service.name_hu,
+    service.description,
+    service.category_name,
+    service.category_name_hu,
+    service.category_subtitle,
+  ].filter(Boolean).join(" "));
+}
+
+function recommendationKeywords(view: ViewMode, zones: string[]) {
+  const keywords = new Set<string>();
+  const add = (...items: string[]) => items.forEach((item) => keywords.add(normalize(item)));
+
+  if (view === "hair") add("haj", "fodrász", "fejbőr", "hair", "scalp", "keratin", "hajápolás", "hajkezelés", "frizura");
+  if (view === "face") add("arc", "arckezelés", "kozmetika", "bőr", "skin");
+  if (view === "body-front" || view === "body-back") add("testkezelés", "masszázs", "alakformálás", "szőrtelenítés");
+
+  zones.forEach((zone) => {
+    if (/scalp|hairline|hair-roots/.test(zone)) add("fejbőr", "hajtő", "hajkezelés", "regeneráló", "keratin", "haj");
+    if (/hair-length|hair-ends/.test(zone)) add("haj", "hajápolás", "regeneráló", "keratin", "vágás", "festés", "balayage");
+    if (/eye/.test(zone)) add("szemkörnyék", "szem", "kozmetika", "szempilla");
+    if (/forehead|temple|nose|cheek|chin|jaw/.test(zone)) add("arc", "arckezelés", "kozmetika", "bőr", "tisztítás", "hidratálás");
+    if (/upper-lip/.test(zone)) add("ajak", "arc", "gyanta", "szőrtelenítés");
+    if (/neck|decollete/.test(zone)) add("nyak", "dekoltázs", "kozmetika", "testkezelés", "masszázs");
+    if (/shoulders|upper-back|lower-back/.test(zone)) add("hát", "váll", "masszázs", "testkezelés");
+    if (/abdomen|waist|thigh|glute/.test(zone)) add("alakformálás", "cellulit", "zsírbontás", "testkezelés", "masszázs");
+    if (/arm|shin|calf/.test(zone)) add("szőrtelenítés", "gyanta", "lézer", "testkezelés", "masszázs");
+  });
+
+  return [...keywords].filter(Boolean);
+}
+
+function recommendServices(services: KioskService[], view: ViewMode, zones: string[]) {
+  if (!zones.length) return [];
+  const keywords = recommendationKeywords(view, zones);
+
+  return services
+    .map((service) => {
+      const text = serviceText(service);
+      let score = 0;
+      keywords.forEach((keyword) => {
+        if (!keyword || !text.includes(keyword)) return;
+        score += keyword.length >= 8 ? 4 : keyword.length >= 5 ? 3 : 2;
+      });
+      if (view === "hair" && /(haj|fodrasz|hair|fejbor)/.test(text)) score += 8;
+      if (view === "face" && /(kozmet|arc|skin|bor)/.test(text)) score += 6;
+      if ((view === "body-front" || view === "body-back") && /(test|massz|alak|cellulit|szortelen|gyanta|lezer)/.test(text)) score += 5;
+      return { service, score };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || String(a.service.name_hu || a.service.name).localeCompare(String(b.service.name_hu || b.service.name), "hu"))
+    .slice(0, 5)
+    .map((item) => item.service);
 }
 
 function readDraft(): MappingDraft | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as MappingDraft;
+    const validViews: ViewMode[] = ["hair", "face", "body-front", "body-back"];
+    return validViews.includes(parsed.view) ? parsed : { ...parsed, view: "face", zones: [] };
   } catch {
     return null;
   }
@@ -104,27 +175,37 @@ export function KioskFaceBodyMapping() {
 
   const currentZones = zonesFor(view);
   const selectedService = services.find((service) => String(service.id) === serviceId);
+  const recommendations = React.useMemo(() => recommendServices(services, view, selectedZones), [services, view, selectedZones]);
 
   function toggleZone(id: string) {
     setSaved(false);
+    setError("");
     setSelectedZones((prev) => prev.includes(id) ? prev.filter((zone) => zone !== id) : [...prev, id]);
   }
 
   function changeView(next: ViewMode) {
     setSaved(false);
+    setError("");
     setView(next);
     setSelectedZones([]);
+  }
+
+  function chooseRecommended(service: KioskService) {
+    setServiceId(String(service.id));
+    setSaved(false);
+    setError("");
   }
 
   function clearMapping() {
     setSelectedZones([]);
     setNote("");
     setSaved(false);
+    setError("");
   }
 
   function attachTreatment() {
-    if (!selectedService) return setError("Válassz kezelést a térképhez.");
     if (!selectedZones.length) return setError("Jelölj ki legalább egy kezelési területet.");
+    if (!selectedService) return setError("Válassz egy ajánlott vagy másik kezelést a térképhez.");
     setError("");
 
     const mapping = {
@@ -132,6 +213,7 @@ export function KioskFaceBodyMapping() {
       zones: selectedZones,
       zone_labels: currentZones.filter((zone) => selectedZones.includes(zone.id)).map((zone) => zone.label),
       note: note.trim(),
+      recommended_service_ids: recommendations.map((service) => service.id),
       mapped_at: new Date().toISOString(),
     };
     const cart = readCart();
@@ -159,15 +241,15 @@ export function KioskFaceBodyMapping() {
   return <div className="kiosk-mapping-page">
     <div className="kiosk-mapping-toolbar">
       <button type="button" onClick={() => nav("/kiosk")}>← Főmenü</button>
-      <div><span>17. FUNKCIÓ</span><b>Face / Body Mapping</b></div>
+      <div><span>17. FUNKCIÓ</span><b>Hair / Face / Body Mapping</b></div>
       <button type="button" className="mapping-pay-link" onClick={() => nav("/kiosk/pay")}>Kosár →</button>
     </div>
 
     <section className="kiosk-mapping-hero">
       <div>
         <span className="mapping-kicker">KEZELÉSI TÉRKÉP · KLEOPÁTRA 2026</span>
-        <h1>Mutasd meg pontosan, hol szeretnéd a kezelést.</h1>
-        <p>Válassz kezelést, jelöld meg az arc vagy a test érintett területeit, majd kösd a térképet közvetlenül a kiválasztott szolgáltatáshoz.</p>
+        <h1>Mutasd meg pontosan, melyik terület érdekel.</h1>
+        <p>Jelöld ki a haj, arc vagy test területét. A rendszer azonnal a kijelölt területhez illő, valóban elérhető szalonkezeléseket ajánlja.</p>
       </div>
       <div className="mapping-hero-stat"><strong>{selectedZones.length}</strong><span>kijelölt terület</span></div>
     </section>
@@ -177,22 +259,38 @@ export function KioskFaceBodyMapping() {
 
     <div className="kiosk-mapping-grid">
       <section className="mapping-control-card">
-        <div className="mapping-step"><span>01</span><div><b>Kezelés kiválasztása</b><small>A kiosk aktuális szolgáltatáslistájából</small></div></div>
+        <div className="mapping-step"><span>01</span><div><b>Nézet kiválasztása</b><small>Haj, arc, test elöl vagy test hátul</small></div></div>
+        <div className="mapping-view-tabs mapping-view-tabs-four">
+          <button className={view === "hair" ? "active" : ""} onClick={() => changeView("hair")}><span>✂</span>Haj</button>
+          <button className={view === "face" ? "active" : ""} onClick={() => changeView("face")}><span>◉</span>Arc</button>
+          <button className={view === "body-front" ? "active" : ""} onClick={() => changeView("body-front")}><span>♙</span>Test · elöl</button>
+          <button className={view === "body-back" ? "active" : ""} onClick={() => changeView("body-back")}><span>♟</span>Test · hátul</button>
+        </div>
+
+        <div className="mapping-step"><span>02</span><div><b>Ajánlott kezelések</b><small>A kijelölt terület alapján, az aktuális szolgáltatáslistából</small></div></div>
+        {!selectedZones.length && <div className="mapping-recommend-empty">Jelölj ki egy területet a jobb oldali ábrán, és itt rögtön megjelennek a hozzá illő kezelések.</div>}
+        {!!selectedZones.length && !loading && !recommendations.length && <div className="mapping-recommend-empty">Ehhez a területhez most nem találtam automatikusan illeszkedő kezelést. Az alábbi listából továbbra is választhatsz.</div>}
+        {!!recommendations.length && <div className="mapping-recommendations">
+          {recommendations.map((service, index) => {
+            const active = String(service.id) === serviceId;
+            return <button key={service.id} type="button" className={active ? "active" : ""} onClick={() => chooseRecommended(service)}>
+              <span>{index === 0 ? "LEGJOBB TALÁLAT" : "AJÁNLOTT"}</span>
+              <b>{service.name_hu || service.name}</b>
+              <small>{service.category_name_hu || service.category_name || "Kezelés"}{service.duration_minutes ? ` · ${service.duration_minutes} perc` : ""}</small>
+              <strong>{Number(service.list_price ?? service.base_price ?? 0).toLocaleString("hu-HU")} Ft</strong>
+              <i>{active ? "✓ Kiválasztva" : "Ezt választom →"}</i>
+            </button>;
+          })}
+        </div>}
+
         <label className="mapping-service-select">
-          <span>Kezelés</span>
-          <select value={serviceId} onChange={(e) => { setServiceId(e.target.value); setSaved(false); }} disabled={loading}>
+          <span>Másik kezelés választása</span>
+          <select value={serviceId} onChange={(e) => { setServiceId(e.target.value); setSaved(false); setError(""); }} disabled={loading}>
             <option value="">{loading ? "Kezelések betöltése…" : "Válassz kezelést"}</option>
             {services.map((service) => <option key={service.id} value={service.id}>{service.category_name ? `${service.category_name} · ` : ""}{service.name_hu || service.name}</option>)}
           </select>
         </label>
         {selectedService && <div className="mapping-service-summary"><b>{selectedService.name_hu || selectedService.name}</b><span>{selectedService.duration_minutes ? `${selectedService.duration_minutes} perc · ` : ""}{Number(selectedService.list_price ?? selectedService.base_price ?? 0).toLocaleString("hu-HU")} Ft</span></div>}
-
-        <div className="mapping-step"><span>02</span><div><b>Nézet kiválasztása</b><small>Arc, test elöl vagy test hátul</small></div></div>
-        <div className="mapping-view-tabs">
-          <button className={view === "face" ? "active" : ""} onClick={() => changeView("face")}><span>◉</span>Arc</button>
-          <button className={view === "body-front" ? "active" : ""} onClick={() => changeView("body-front")}><span>♙</span>Test · elöl</button>
-          <button className={view === "body-back" ? "active" : ""} onClick={() => changeView("body-back")}><span>♟</span>Test · hátul</button>
-        </div>
 
         <div className="mapping-step"><span>03</span><div><b>Megjegyzés</b><small>Opcionális információ a szakembernek</small></div></div>
         <textarea className="mapping-note" value={note} onChange={(e) => { setNote(e.target.value); setSaved(false); }} placeholder="Pl. érzékeny terület, kerülendő rész, korábbi kezelés…" />
@@ -227,6 +325,13 @@ export function KioskFaceBodyMapping() {
 }
 
 function AnatomyFigure({ view }: { view: ViewMode }) {
+  if (view === "hair") return <svg className="mapping-figure-svg mapping-hair-figure" viewBox="0 0 300 420" aria-hidden="true">
+    <defs><linearGradient id="hairFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="currentColor" stopOpacity=".15"/><stop offset="1" stopColor="currentColor" stopOpacity=".045"/></linearGradient></defs>
+    <path d="M150 42c-60 0-98 42-98 105 0 28 7 55 19 79l-20 139c21-3 40-15 55-33 12 23 26 37 44 46 18-9 32-23 44-46 15 18 34 30 55 33l-20-139c12-24 19-51 19-79 0-63-38-105-98-105Z" fill="url(#hairFill)" stroke="currentColor" strokeWidth="2"/>
+    <path d="M78 139c8-49 33-73 72-73s64 24 72 73M77 145c22-20 46-29 73-29s51 9 73 29M103 128c-11 67-9 141 3 204M197 128c11 67 9 141-3 204M150 116v244" fill="none" stroke="currentColor" strokeWidth="2" opacity=".42" strokeLinecap="round"/>
+    <path d="M108 162c8 19 22 31 42 31s34-12 42-31" fill="none" stroke="currentColor" strokeWidth="2" opacity=".25"/>
+  </svg>;
+
   if (view === "face") return <svg className="mapping-figure-svg" viewBox="0 0 300 420" aria-hidden="true">
     <defs><linearGradient id="faceFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="currentColor" stopOpacity=".09"/><stop offset="1" stopColor="currentColor" stopOpacity=".025"/></linearGradient></defs>
     <path d="M150 35c-62 0-101 48-101 118 0 83 36 153 101 188 65-35 101-105 101-188 0-70-39-118-101-118Z" fill="url(#faceFill)" stroke="currentColor" strokeWidth="2"/>
