@@ -1,7 +1,7 @@
 Render redeploy trigger
-2026-08-29T08:49:18+02:00
+2026-08-29T21:39:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: production hotfix after kiosk 503 incident and Face / Body Mapping visibility fix.
-Target application commit: fc372f09efd5c82b8e1857cd462e578bda599ca9
+Reason: deploy kiosk theme service artwork and photoreal Hair / Face / Body Mapping release.
+Target application commit: a351c974b106f667b7cc919266c73391498fdb43
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: persistent Face / Body Mapping launcher, existing mapping route and treatment binding, kiosk catalog, Hair Mirror, theme support, and all existing public website functionality.
+Deploy scope: Classic unchanged; Pearl, Silver, KIDS, Noir, Rose Gold, Aqua and Zen service artwork; themed sidebar/category art; photoreal mapping artwork; existing zone selection, treatment recommendations, cart and public website functionality.
