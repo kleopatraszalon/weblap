@@ -8,6 +8,43 @@ import type { KioskCategory, KioskProduct, KioskService } from "./types";
 
 const FALLBACK_IMAGES=["/kiosk/tiles/fodraszat.png","/kiosk/tiles/kez_es_labapolas.png","/kiosk/tiles/kozmetika.png","/kiosk/tiles/masszazs.png","/kiosk/tiles/testkezeles.png","/kiosk/tiles/wellness_fitness_szolarium.png"];
 const slugify=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const normalize=(s:string)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+function fallbackImageFor(name:string,index=0){
+  const n=normalize(name||"");
+  if(n.includes("haj")||n.includes("fodras"))return FALLBACK_IMAGES[0];
+  if(n.includes("kez")||n.includes("lab")||n.includes("korom")||n.includes("manik")||n.includes("pedik"))return FALLBACK_IMAGES[1];
+  if(n.includes("kozmet")||n.includes("arc")||n.includes("bor"))return FALLBACK_IMAGES[2];
+  if(n.includes("massz"))return FALLBACK_IMAGES[3];
+  if(n.includes("test")||n.includes("alak")||n.includes("cellulit"))return FALLBACK_IMAGES[4];
+  if(n.includes("wellness")||n.includes("fitness")||n.includes("szol"))return FALLBACK_IMAGES[5];
+  return FALLBACK_IMAGES[index%FALLBACK_IMAGES.length];
+}
+
+function categoriesFromServices(services:KioskService[]):KioskCategory[]{
+  const map=new Map<string,KioskCategory>();
+  services.forEach((service,index)=>{
+    const id=String(service.category_id??service.category_name??`service-${index}`);
+    const name=service.category_name_hu||service.category_name||"Szolgáltatások";
+    if(!map.has(id))map.set(id,{id,name,subtitle:service.category_subtitle||null,image_path:service.category_image||service.image_url||fallbackImageFor(name,index)});
+  });
+  return [...map.values()];
+}
+
+function categoriesFromProducts(products:KioskProduct[]):KioskCategory[]{
+  const map=new Map<string,KioskCategory>();
+  products.forEach((product,index)=>{
+    const id=String(product.category_id??product.category_name??product.main_category??`product-${index}`);
+    const name=product.category_name||product.main_category||"Termékek";
+    if(!map.has(id))map.set(id,{id,name,subtitle:product.category_subtitle||null,image_path:product.category_image||product.image_url||fallbackImageFor(name,index)});
+  });
+  return [...map.values()];
+}
+
+function CategoryImage({category,index,alt=""}:{category:KioskCategory;index:number;alt?:string}){
+  const fallback=fallbackImageFor(category.name,index);
+  return <img src={category.image_path||fallback} alt={alt} onError={(event)=>{const image=event.currentTarget;if(image.dataset.fallback!=="1"){image.dataset.fallback="1";image.src=fallback;}}}/>;
+}
 
 export function KioskLanding(){
   const nav=useNavigate();const[params]=useSearchParams();const previewLocation=params.get("location_id")||params.get("locationId")||"";
@@ -21,7 +58,11 @@ export function KioskLanding(){
     const ctx=await fetchKioskContext(previewLocation||undefined);const bound=ctx.bound_location||ctx.locations?.[0];if(!bound)throw new Error("A Gyöngyös kiosk telephelye nem található.");
     setLocationId(bound.id);setLocationName(bound.name);localStorage.setItem("kiosk_location_id",bound.id);window.dispatchEvent(new Event("kiosk-location-change"));
     const[svc,prod]=await Promise.all([fetchKioskServices(localStorage.getItem("kiosk_lang")||"hu",bound.id),fetchKioskProducts(bound.id)]);
-    setServiceCategories(svc.categories||[]);setProductCategories(prod.categories||[]);setServices(svc.services||[]);setProducts(prod.products||[]);setMenu(svc.menu||prod.menu||null);
+    const loadedServices=svc.services||[];const loadedProducts=prod.products||[];
+    setServices(loadedServices);setProducts(loadedProducts);
+    setServiceCategories(svc.categories?.length?svc.categories:categoriesFromServices(loadedServices));
+    setProductCategories(prod.categories?.length?prod.categories:categoriesFromProducts(loadedProducts));
+    setMenu(svc.menu||prod.menu||null);
     if((svc.menu||prod.menu)?.theme?.showStartScreen===false){sessionStorage.setItem("kiosk_started","1");setStarted(true)}
   }catch(e:any){setError(e?.message||"A kiosk menü nem tölthető be.")}finally{setLoading(false)}})()},[previewLocation]);
 
@@ -34,7 +75,7 @@ export function KioskLanding(){
 
   const rail=[...serviceCategories.map(c=>({...c,type:"service" as const})),...(theme.showProducts!==false?productCategories.map(c=>({...c,type:"product" as const})):[])];
   return <div className="kiosk-order-layout" style={{"--kiosk-radius":`${Number(theme.cardRadius||24)}px`} as React.CSSProperties}>
-    <aside className="kiosk-category-rail"><div className="kiosk-location-card"><span>TELEPÍTETT KIOSK</span><strong>{locationName}</strong><small>Gyöngyös szalon</small></div><div className="kiosk-rail-title">Menü</div><div className="kiosk-rail-list">{rail.map((c,i)=><button key={`${c.type}-${c.id}`} onClick={()=>openCategory(c,c.type)}><img src={c.image_path||FALLBACK_IMAGES[i%FALLBACK_IMAGES.length]} alt=""/><span>{c.name}</span><small>{c.type==="product"?"TERMÉK":"SZOLGÁLTATÁS"}</small></button>)}</div></aside>
+    <aside className="kiosk-category-rail"><div className="kiosk-location-card"><span>TELEPÍTETT KIOSK</span><strong>{locationName}</strong><small>Gyöngyös szalon</small></div><div className="kiosk-rail-title">Menü</div><div className="kiosk-rail-list">{rail.map((c,i)=><button key={`${c.type}-${c.id}`} onClick={()=>openCategory(c,c.type)}><CategoryImage category={c} index={i}/><span>{c.name}</span><small>{c.type==="product"?"TERMÉK":"SZOLGÁLTATÁS"}</small></button>)}</div></aside>
     <section className="kiosk-catalog-home">
       {error&&<div className="kioskError">{error}</div>}{menu&&menu.is_active===false&&<div className="kioskError">A Gyöngyös kiosk menüje jelenleg ki van kapcsolva.</div>}
       {loading&&<div className="kioskInfo">Gyöngyös kiosk menü betöltése…</div>}
@@ -45,5 +86,5 @@ export function KioskLanding(){
 }
 
 function CatalogBlock({kicker,title,categories,fallbackOffset,onOpen,columns}:{kicker:string;title:string;categories:KioskCategory[];fallbackOffset:number;onOpen:(c:KioskCategory)=>void;columns:number}){
-  return <section className="kiosk-home-menu-block"><div className="kiosk-section-heading"><div><span>{kicker}</span><h2>{title}</h2></div><p>{categories.length} csoport</p></div><div className="kiosk-category-grid" style={{gridTemplateColumns:`repeat(${Math.max(1,Math.min(3,columns))},minmax(0,1fr))`}}>{categories.map((c,i)=><button key={c.id} className="kiosk-category-card" onClick={()=>onOpen(c)}><div className="kiosk-category-card-image"><img src={c.image_path||FALLBACK_IMAGES[(i+fallbackOffset)%FALLBACK_IMAGES.length]} alt={c.name}/></div><div className="kiosk-category-card-copy"><h3>{c.name}</h3>{c.subtitle&&<p>{c.subtitle}</p>}<span>Megnézem <b>→</b></span></div></button>)}{!categories.length&&<div className="kioskInfo">Ebben a menüben jelenleg nincs aktív csoport.</div>}</div></section>
+  return <section className="kiosk-home-menu-block"><div className="kiosk-section-heading"><div><span>{kicker}</span><h2>{title}</h2></div><p>{categories.length} csoport</p></div><div className="kiosk-category-grid" style={{gridTemplateColumns:`repeat(${Math.max(1,Math.min(3,columns))},minmax(0,1fr))`}}>{categories.map((c,i)=><button key={c.id} className="kiosk-category-card" onClick={()=>onOpen(c)}><div className="kiosk-category-card-image"><CategoryImage category={c} index={i+fallbackOffset} alt={c.name}/></div><div className="kiosk-category-card-copy"><h3>{c.name}</h3>{c.subtitle&&<p>{c.subtitle}</p>}<span>Megnézem <b>→</b></span></div></button>)}{!categories.length&&<div className="kioskInfo">Ebben a menüben jelenleg nincs aktív csoport.</div>}</div></section>
 }
