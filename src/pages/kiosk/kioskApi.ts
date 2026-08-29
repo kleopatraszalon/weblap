@@ -27,17 +27,54 @@ export async function fetchKioskConfig(locationId?: string | null) {
   }>;
 }
 
+function catalogParams(locationId?: string | null, lang?: string) {
+  const qs = new URLSearchParams();
+  if (lang) qs.set("lang", lang);
+  if (locationId) {
+    // The kiosk API has used both query naming conventions during earlier releases.
+    // Sending both keeps deployed API revisions compatible while location_id remains canonical elsewhere.
+    qs.set("location_id", locationId);
+    qs.set("locationId", locationId);
+  }
+  return qs.toString();
+}
+
 export async function fetchKioskServices(lang: string, locationId?: string | null) {
-  const qs = new URLSearchParams({ lang: lang || "hu" });
-  if (locationId) qs.set("locationId", locationId);
-  const data = await json(await fetch(`${base()}/api/kiosk/services?${qs}`, { credentials: "include" }));
-  return data as { ok: true; location?: { id: string; name: string }; categories: KioskCategory[]; services: KioskService[]; menu?: { id: string; name: string; is_active: boolean; theme: Record<string, any> } | null };
+  const load = async (withLocation: boolean) => {
+    const query = catalogParams(withLocation ? locationId : null, lang || "hu");
+    return json(await fetch(`${base()}/api/kiosk/services?${query}`, { credentials: "include" })) as Promise<{
+      ok: true;
+      location?: { id: string; name: string };
+      categories: KioskCategory[];
+      services: KioskService[];
+      menu?: { id: string; name: string; is_active: boolean; theme: Record<string, any> } | null;
+    }>;
+  };
+
+  const scoped = await load(true);
+  if (locationId && !(scoped.services?.length || scoped.categories?.length)) {
+    // A missing/legacy location binding must not leave the kiosk with an empty sidebar.
+    // Fall back to the active global kiosk catalogue; checkout still keeps the bound location.
+    return load(false);
+  }
+  return scoped;
 }
 
 export async function fetchKioskProducts(locationId?: string | null) {
-  const qs = locationId ? `?locationId=${encodeURIComponent(locationId)}` : "";
-  const data = await json(await fetch(`${base()}/api/kiosk/products${qs}`, { credentials: "include" }));
-  return data as { ok: true; location?: { id: string; name: string }; categories: KioskCategory[]; products: KioskProduct[]; menu?: { id: string; name: string; is_active: boolean; theme: Record<string, any> } | null };
+  const load = async (withLocation: boolean) => {
+    const query = catalogParams(withLocation ? locationId : null);
+    return json(await fetch(`${base()}/api/kiosk/products${query ? `?${query}` : ""}`, { credentials: "include" })) as Promise<{
+      ok: true;
+      location?: { id: string; name: string };
+      categories: KioskCategory[];
+      products: KioskProduct[];
+      menu?: { id: string; name: string; is_active: boolean; theme: Record<string, any> } | null;
+    }>;
+  };
+
+  const scoped = await load(true);
+  if (locationId && !(scoped.products?.length || scoped.categories?.length)) return load(false);
+  return scoped;
 }
 
 export async function createKioskWorkOrder(input: {
