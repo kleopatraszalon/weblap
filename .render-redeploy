@@ -1,7 +1,7 @@
 Render redeploy trigger
-2026-08-28T22:12:00+02:00
+2026-08-29T08:49:18+02:00
 Force a clean production deploy from the current main branch.
-Reason: explicit deploy request after merging PR #68: Face / Body Mapping for kiosk.
-Target application commit: ec462af1407cb2f6d9fe61b405fb46e72ffd6e03
+Reason: production hotfix after kiosk 503 incident and Face / Body Mapping visibility fix.
+Target application commit: fc372f09efd5c82b8e1857cd462e578bda599ca9
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: kiosk Face / Body Mapping route, graphical face/body treatment zones, service binding, cart metadata persistence, Silver/KIDS theme adjustments, and all existing public website/kiosk functionality.
+Deploy scope: persistent Face / Body Mapping launcher, existing mapping route and treatment binding, kiosk catalog, Hair Mirror, theme support, and all existing public website functionality.
