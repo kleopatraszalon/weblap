@@ -4,6 +4,7 @@ import { cartCount, cartTotal, readCart } from "./cartStore";
 import { fetchKioskConfig } from "./kioskApi";
 import { KidsGameArcade } from "./KidsGameArcade";
 import { KioskHairMirror } from "./KioskHairMirror";
+import { KioskWaitingUpsell } from "./KioskWaitingUpsell";
 
 const LANGS = [
   { code: "hu", label: "Magyar", flag: "HU" },
@@ -34,10 +35,10 @@ function getStoredVisualMode(): KioskVisualMode {
   return VISUAL_MODES.some((mode) => mode.id === raw) ? raw as KioskVisualMode : "classic";
 }
 
-const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string; mapping: string }> = {
-  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma", mapping: "Face / Body Mapping" },
-  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home", theme: "Theme", mapping: "Face / Body Mapping" },
-  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная", theme: "Тема", mapping: "Face / Body Mapping" },
+const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string; mapping: string; retail: string }> = {
+  hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma", mapping: "Face / Body Mapping", retail: "Termékeladás" },
+  en: { menu: "Choose", pay: "Details & payment", ticket: "Done", total: "Basket", home: "Home", theme: "Theme", mapping: "Face / Body Mapping", retail: "Products" },
+  ru: { menu: "Выбор", pay: "Данные и оплата", ticket: "Готово", total: "Корзина", home: "Главная", theme: "Тема", mapping: "Face / Body Mapping", retail: "Товары" },
 };
 
 export function KioskShell({ children }: { children: React.ReactNode }) {
@@ -128,6 +129,9 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
         <button className="kiosk-face-map-launcher" type="button" onClick={() => navigate("/kiosk/face-body-mapping")} aria-label={copy.mapping} title={copy.mapping}>
           <span>◎</span><b>{copy.mapping}</b>
         </button>
+        <button className="kiosk-retail-launcher" type="button" onClick={() => navigate("/kiosk/products")} aria-label={copy.retail} title={copy.retail}>
+          <span>🛍</span><b>{copy.retail}</b>
+        </button>
         <div className="kioskLangFlags">{LANGS.map((item) => <button key={item.code} type="button" className={`kioskFlagBtn ${lang === item.code ? "isActive" : ""}`} onClick={() => changeLang(item.code)}>{item.flag}</button>)}</div>
         <button className="kiosk-mini-cart" onClick={() => navigate("/kiosk/pay")} disabled={!count}>
           <span>{copy.total}</span><b>{count} · {total.toLocaleString("hu-HU")} Ft</b>
@@ -135,6 +139,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       </div>
     </header>
     <main className="kioskBody">{children}</main>
+    <KioskWaitingUpsell />
     <KioskHairMirror visualMode={visualMode as "classic" | "pearl" | "silver" | "kids"} />
     <KidsGameArcade active={visualMode === "kids"} />
     <div className="kiosk-kids-companions" aria-hidden="true">
