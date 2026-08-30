@@ -19,6 +19,15 @@ const GROUPS: { id: Group; label: string; icon: string }[] = [
   { id: "other", label: "Egyéb", icon: "🛍" },
 ];
 
+const normalize = (value: string | null | undefined) =>
+  (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
 function productName(p: KioskProduct) { return p.name_hu || p.name || "Termék"; }
 function productPrice(p: KioskProduct) { return Number(p.sale_price ?? p.retail_price_gross ?? 0); }
 function productMetaText(p: KioskProduct) {
@@ -28,11 +37,34 @@ function productSearchText(p: KioskProduct) {
   return [productName(p), productMetaText(p)].filter(Boolean).join(" ");
 }
 
-/** Product name has priority. Category metadata is only a fallback. */
+/**
+ * Strict retail classification.
+ * The concrete product name always wins. Generic database labels such as
+ * "ital" or "termék" are deliberately not allowed to pull unrelated items
+ * into a retail tab.
+ */
 function classifyProduct(p: KioskProduct): RetailGroup {
-  const byName = retailGroup(productName(p));
+  const name = normalize(productName(p));
+  const byName = retailGroup(name);
   if (byName !== "other") return byName;
-  return retailGroup(productMetaText(p));
+
+  const meta = normalize(productMetaText(p));
+  const byMeta = retailGroup(meta);
+  if (byMeta === "other") return "other";
+
+  // Generic beverage metadata is too broad. Only accept it when the metadata
+  // also identifies a concrete beverage family/brand.
+  if (byMeta === "drink") {
+    const concreteDrink = /\b(cola|coca cola|pepsi|fanta|sprite|tonic|limonade|juice|gyumolcsle|narancsle|almale|energiaital|energy drink)\b/.test(meta);
+    return concreteDrink ? "drink" : "other";
+  }
+
+  return byMeta;
+}
+
+function semanticName(group: RetailGroup, p: KioskProduct) {
+  const label = GROUPS.find((g) => g.id === group)?.label || group;
+  return `${group} ${label} ${productSearchText(p)}`;
 }
 
 export function KioskRetail() {
@@ -82,7 +114,7 @@ export function KioskRetail() {
       id: p.id,
       title: productName(p),
       price: productPrice(p),
-      meta: { kind: "product", category_id: p.category_id, image_url: p.image_url || p.category_image, retail_group: strictGroup },
+      meta: { kind: "product", category_id: p.category_id, image_url: p.image_url || null, retail_group: strictGroup },
     }, 1);
     setAdded(p.id);
     window.setTimeout(() => setAdded(""), 800);
@@ -110,7 +142,14 @@ export function KioskRetail() {
       {!loading && products.length > 0 && !visible.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Ebben a csoportban nincs termék.</h2><p>A csoport kizárólag a hozzá tartozó termékeket jeleníti meg.</p></div>}
       <div className="kiosk-retail-grid">
         {visible.map(({ product: p, group: productGroup }) => <article key={p.id} className="kiosk-retail-card" data-retail-group={productGroup}>
-          <div className="kiosk-retail-photo"><KioskSemanticArt kind="product" name={`${productGroup} ${productSearchText(p)}`} source={p.image_url || p.category_image} /><span>{GROUPS.find((g) => g.id === productGroup)?.label}</span></div>
+          <div className="kiosk-retail-photo">
+            <KioskSemanticArt
+              kind="product"
+              name={semanticName(productGroup, p)}
+              source={p.image_url || null}
+            />
+            <span>{GROUPS.find((g) => g.id === productGroup)?.label}</span>
+          </div>
           <div className="kiosk-retail-copy"><h3>{productName(p)}</h3>{p.web_description && <p>{p.web_description}</p>}<div><strong>{productPrice(p).toLocaleString("hu-HU")} Ft</strong><button className={added === p.id ? "added" : ""} onClick={() => add(p)}>{added === p.id ? "✓ Hozzáadva" : "Kosárba"}</button></div></div>
         </article>)}
       </div>
