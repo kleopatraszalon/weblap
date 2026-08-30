@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-30T22:16:00+02:00
+2026-08-30T22:21:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: deploy strict kiosk retail product grouping and category-matched fallback artwork.
-Target application commit: d314f15af218b3496b64263ac70a3da59d71d9e5
+Reason: deploy strict kiosk retail grouping v2 with product-name-first classification and matching product imagery.
+Target application commit: 3ceaef20eb1336f1ad52e20fa535c6f3dcdd10bb
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: strict Kávé / Ital / Csoki / Protein shake / Víz / Tea / Snack / Egyéb filtering; product-name-first classification; category metadata fallback; no broad substring leakage; matching semantic fallback artwork and per-tab counts.
-Asset cache version: 20260830-8
+Deploy scope: Kávé only coffee; Italok only concrete soft drinks/beverages; Csokik only chocolate; Protein shake only protein drinks; Víz only water; Tea only tea; Snack only snacks; product-specific DB image first, group-matched semantic image fallback, no generic category-image leakage.
+Asset cache version: 20260830-9
