@@ -17,10 +17,12 @@ import { KioskCategory } from "./kiosk/KioskCategory";
 import { KioskPay } from "./kiosk/KioskPay";
 import { KioskTicket } from "./kiosk/KioskTicket";
 import { KioskFaceBodyMapping } from "./kiosk/KioskFaceBodyMapping";
+import { KioskClassicImageParity } from "./kiosk/KioskClassicImageParity";
 
 export function KioskPage() {
   return (
     <KioskShell>
+      <KioskClassicImageParity />
       <Routes>
         <Route path="/" element={<KioskLanding />} />
         <Route path="cat/:slug" element={<KioskCategory />} />
