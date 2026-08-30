@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, readCart } from "./cartStore";
 import { fetchKioskProducts } from "./kioskApi";
 import { KioskCartPanel } from "./KioskCartPanel";
-import { KioskSemanticArt, retailGroup } from "./KioskSemanticArt";
+import { KioskSemanticArt, retailGroup, type RetailGroup } from "./KioskSemanticArt";
 import type { KioskProduct } from "./types";
 
-type Group = "all" | "coffee" | "drink" | "chocolate" | "protein" | "water" | "tea" | "snack" | "other";
+type Group = "all" | RetailGroup;
 const GROUPS: { id: Group; label: string; icon: string }[] = [
   { id: "all", label: "Összes", icon: "✦" },
   { id: "coffee", label: "Kávék", icon: "☕" },
@@ -21,7 +21,19 @@ const GROUPS: { id: Group; label: string; icon: string }[] = [
 
 function productName(p: KioskProduct) { return p.name_hu || p.name || "Termék"; }
 function productPrice(p: KioskProduct) { return Number(p.sale_price ?? p.retail_price_gross ?? 0); }
-function productSearchText(p: KioskProduct) { return [productName(p), p.category_name, p.main_category, p.sub_category, p.service_category].filter(Boolean).join(" "); }
+function productMetaText(p: KioskProduct) {
+  return [p.category_name, p.main_category, p.sub_category, p.service_category].filter(Boolean).join(" ");
+}
+function productSearchText(p: KioskProduct) {
+  return [productName(p), productMetaText(p)].filter(Boolean).join(" ");
+}
+
+/** Product name has priority. Category metadata is only a fallback. */
+function classifyProduct(p: KioskProduct): RetailGroup {
+  const byName = retailGroup(productName(p));
+  if (byName !== "other") return byName;
+  return retailGroup(productMetaText(p));
+}
 
 export function KioskRetail() {
   const nav = useNavigate();
@@ -44,16 +56,33 @@ export function KioskRetail() {
     })();
   }, []);
 
-  const grouped = React.useMemo(() => products.map((p) => ({ product: p, group: retailGroup(productSearchText(p)) as Group })), [products]);
+  const grouped = React.useMemo(
+    () => products.map((product) => ({ product, group: classifyProduct(product) })),
+    [products],
+  );
+  const counts = React.useMemo(() => {
+    const result = new Map<Group, number>();
+    result.set("all", grouped.length);
+    grouped.forEach((item) => result.set(item.group, (result.get(item.group) || 0) + 1));
+    return result;
+  }, [grouped]);
   const availableGroups = React.useMemo(() => new Set(grouped.map((x) => x.group)), [grouped]);
-  const visible = group === "all" ? grouped : grouped.filter((x) => x.group === group);
+  const visible = React.useMemo(
+    () => group === "all" ? grouped : grouped.filter((x) => x.group === group),
+    [group, grouped],
+  );
+
+  React.useEffect(() => {
+    if (group !== "all" && !availableGroups.has(group)) setGroup("all");
+  }, [availableGroups, group]);
 
   function add(p: KioskProduct) {
+    const strictGroup = classifyProduct(p);
     addToCart({
       id: p.id,
       title: productName(p),
       price: productPrice(p),
-      meta: { kind: "product", category_id: p.category_id, image_url: p.image_url || p.category_image, retail_group: retailGroup(productSearchText(p)) },
+      meta: { kind: "product", category_id: p.category_id, image_url: p.image_url || p.category_image, retail_group: strictGroup },
     }, 1);
     setAdded(p.id);
     window.setTimeout(() => setAdded(""), 800);
@@ -72,15 +101,16 @@ export function KioskRetail() {
       </header>
 
       <nav className="kiosk-retail-tabs" aria-label="Termékkategóriák">
-        {GROUPS.filter((g) => g.id === "all" || availableGroups.has(g.id)).map((g) => <button key={g.id} className={group === g.id ? "active" : ""} onClick={() => setGroup(g.id)}><span>{g.icon}</span>{g.label}</button>)}
+        {GROUPS.filter((g) => g.id === "all" || availableGroups.has(g.id as RetailGroup)).map((g) => <button key={g.id} className={group === g.id ? "active" : ""} onClick={() => setGroup(g.id)}><span>{g.icon}</span>{g.label}<small>{counts.get(g.id) || 0}</small></button>)}
       </nav>
 
       {loading && <div className="kioskInfo">Termékek betöltése a VIR adatbázisból…</div>}
       {error && <div className="kioskError">{error}</div>}
       {!loading && !products.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Jelenleg nincs kioskon értékesíthető termék.</h2><p>A termékek a VIR adatbázisból és a kiosk termékkínálatából érkeznek.</p></div>}
+      {!loading && products.length > 0 && !visible.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Ebben a csoportban nincs termék.</h2><p>A csoport kizárólag a hozzá tartozó termékeket jeleníti meg.</p></div>}
       <div className="kiosk-retail-grid">
-        {visible.map(({ product: p, group: productGroup }) => <article key={p.id} className="kiosk-retail-card">
-          <div className="kiosk-retail-photo"><KioskSemanticArt kind="product" name={productSearchText(p)} source={p.image_url || p.category_image} /><span>{GROUPS.find((g) => g.id === productGroup)?.label}</span></div>
+        {visible.map(({ product: p, group: productGroup }) => <article key={p.id} className="kiosk-retail-card" data-retail-group={productGroup}>
+          <div className="kiosk-retail-photo"><KioskSemanticArt kind="product" name={`${productGroup} ${productSearchText(p)}`} source={p.image_url || p.category_image} /><span>{GROUPS.find((g) => g.id === productGroup)?.label}</span></div>
           <div className="kiosk-retail-copy"><h3>{productName(p)}</h3>{p.web_description && <p>{p.web_description}</p>}<div><strong>{productPrice(p).toLocaleString("hu-HU")} Ft</strong><button className={added === p.id ? "added" : ""} onClick={() => add(p)}>{added === p.id ? "✓ Hozzáadva" : "Kosárba"}</button></div></div>
         </article>)}
       </div>

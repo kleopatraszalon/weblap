@@ -1,9 +1,23 @@
 import React from "react";
 
 const normalize = (value: string | null | undefined) =>
-  (value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
-function includesAny(text: string, terms: string[]) { return terms.some((term) => text.includes(term)); }
+function includesAny(text: string, terms: string[]) { return terms.some((term) => text.includes(normalize(term))); }
+function hasWord(text: string, word: string) {
+  const normalizedWord = normalize(word);
+  if (!normalizedWord) return false;
+  return (` ${text} `).includes(` ${normalizedWord} `);
+}
+function hasAnyWord(text: string, words: string[]) { return words.some((word) => hasWord(text, word)); }
+
+export type RetailGroup = "coffee" | "drink" | "chocolate" | "protein" | "water" | "tea" | "snack" | "other";
 
 export function serviceSemanticSlot(value: string | null | undefined) {
   const n = normalize(value);
@@ -26,9 +40,9 @@ export function serviceSemanticSlot(value: string | null | undefined) {
   if (includesAny(n,["menyasszony","bridal"])) return 29;
   if (includesAny(n,["smink"])) return 12;
   if (includesAny(n,["aha","gyumolcssav"])) return 27;
-  if (includesAny(n,["anti-aging","anti aging","antiaging","fiatalit"])) return 11;
+  if (includesAny(n,["anti aging","antiaging","fiatalit"])) return 11;
   if (includesAny(n,["arctiszt","kozmet","arckezeles","arc kezeles"])) return 10;
-  if (includesAny(n,["nyirok","masszazs","masszazs"])) return 14;
+  if (includesAny(n,["nyirok","masszazs"])) return 14;
   if (includesAny(n,["radiofrek","rf ","borfeszes","feszesites"])) return 17;
   if (includesAny(n,["kavit","zsirbont"])) return 16;
   if (includesAny(n,["cellulit","narancsbor"])) return 15;
@@ -43,39 +57,72 @@ export function serviceSemanticSlot(value: string | null | undefined) {
   return 10;
 }
 
-export function productSemanticSlot(value: string | null | undefined) {
+/**
+ * Strict retail grouping. Broad fragments (for example `le`) are deliberately
+ * forbidden because they caused unrelated products to leak into the drink tab.
+ * More specific beverage types win before the generic `drink` bucket.
+ */
+export function retailGroup(value: string | null | undefined): RetailGroup {
   const n = normalize(value);
-  if (includesAny(n,["espresso"])) return 0;
-  if (includesAny(n,["cappuccino"])) return 1;
-  if (includesAny(n,["latte","macchiato"])) return 2;
-  if (includesAny(n,["jeges kave","iced coffee","ice coffee"])) return 3;
-  if (includesAny(n,["cola","udito","soda","pepsi","coca"])) return 4;
-  if (includesAny(n,["limonade","limonádé"])) return 5;
-  if (includesAny(n,["szensavas viz","sparkling water"])) return 6;
-  if (includesAny(n,["viz","water","asvanyviz"])) return 7;
-  if (includesAny(n,["jeges tea","ice tea","iced tea"])) return 8;
-  if (includesAny(n,["tea","green tea","zold tea"])) return 9;
-  if (includesAny(n,["praline","bonbon"])) return 11;
-  if (includesAny(n,["csoki","csokolade","chocolate"])) return 10;
-  if (includesAny(n,["protein"]) && includesAny(n,["csoki","chocolate","kakao"])) return 13;
-  if (includesAny(n,["protein"])) return 12;
-  if (includesAny(n,["smoothie"]) && includesAny(n,["bogy","berry","eper","malna"])) return 14;
-  if (includesAny(n,["smoothie"])) return 15;
-  if (includesAny(n,["mandula","almond","dio","mogyoro"])) return 16;
-  if (includesAny(n,["muzli","granola","szelet","snack"])) return 17;
-  return 17;
+  if (!n) return "other";
+
+  const proteinMarker = hasAnyWord(n, ["protein", "proteines", "proteines"]);
+  const shakeMarker = hasAnyWord(n, ["shake", "turmix", "smoothie"]) || includesAny(n, ["protein shake", "proteinshake"]);
+  if (proteinMarker && shakeMarker) return "protein";
+
+  if (
+    hasAnyWord(n, ["espresso", "cappuccino", "latte", "macchiato", "americano", "ristretto", "mocha", "kave", "kavek", "coffee"])
+    || includesAny(n, ["jeges kave", "iced coffee", "flat white"])
+  ) return "coffee";
+
+  if (
+    hasAnyWord(n, ["csoki", "csokik", "csokolade", "chocolate", "praline", "bonbon", "truffle"])
+    || includesAny(n, ["forro csoki", "hot chocolate"])
+  ) return "chocolate";
+
+  if (hasAnyWord(n, ["tea", "teak"]) || includesAny(n, ["ice tea", "iced tea", "jeges tea", "zold tea", "green tea"])) return "tea";
+
+  if (
+    hasAnyWord(n, ["viz", "vizek", "water", "asvanyviz", "szodaviz"])
+    || includesAny(n, ["szensavas viz", "mentes viz", "sparkling water", "mineral water"])
+  ) return "water";
+
+  if (
+    hasAnyWord(n, ["cola", "pepsi", "fanta", "sprite", "tonic", "limonade", "juice", "udito", "uditok", "ital", "italok", "energiaital"])
+    || includesAny(n, ["coca cola", "soft drink", "energy drink", "gyumolcsle", "narancsle", "almale"])
+  ) return "drink";
+
+  if (
+    hasAnyWord(n, ["snack", "snackek", "granola", "muzli", "mandula", "dio", "mogyoro", "chips", "keksz", "szelet", "bar"])
+    || (proteinMarker && hasAnyWord(n, ["szelet", "bar", "snack"]))
+  ) return "snack";
+
+  return "other";
 }
 
-export function retailGroup(value: string | null | undefined) {
+export function productSemanticSlot(value: string | null | undefined) {
   const n = normalize(value);
-  if (includesAny(n,["espresso","cappuccino","latte","macchiato","kave","coffee"])) return "coffee";
-  if (includesAny(n,["protein","shake","smoothie"])) return "protein";
-  if (includesAny(n,["csoki","csokolade","chocolate","praline","bonbon"])) return "chocolate";
-  if (includesAny(n,["tea"])) return "tea";
-  if (includesAny(n,["viz","water","asvanyviz"])) return "water";
-  if (includesAny(n,["cola","udito","ital","limonade","limonádé","juice","le"])) return "drink";
-  if (includesAny(n,["snack","szelet","granola","muzli","mandula","dio","mogyoro"])) return "snack";
-  return "other";
+  if (hasWord(n, "espresso")) return 0;
+  if (hasWord(n, "cappuccino")) return 1;
+  if (hasAnyWord(n, ["latte", "macchiato"])) return 2;
+  if (includesAny(n,["jeges kave","iced coffee","ice coffee"])) return 3;
+  if (hasAnyWord(n,["cola","pepsi","fanta","sprite","udito"])) return 4;
+  if (hasWord(n,"limonade")) return 5;
+  if (includesAny(n,["szensavas viz","sparkling water"])) return 6;
+  if (retailGroup(n) === "water") return 7;
+  if (includesAny(n,["jeges tea","ice tea","iced tea"])) return 8;
+  if (retailGroup(n) === "tea") return 9;
+  if (hasAnyWord(n,["praline","bonbon"])) return 11;
+  if (retailGroup(n) === "chocolate") return 10;
+  if (retailGroup(n) === "protein" && includesAny(n,["csoki","chocolate","kakao"])) return 13;
+  if (retailGroup(n) === "protein") return 12;
+  if (hasWord(n,"smoothie") && includesAny(n,["bogy","berry","eper","malna"])) return 14;
+  if (hasWord(n,"smoothie")) return 15;
+  if (hasAnyWord(n,["mandula","almond","dio","mogyoro"])) return 16;
+  if (retailGroup(n) === "snack") return 17;
+  if (retailGroup(n) === "coffee") return 0;
+  if (retailGroup(n) === "drink") return 4;
+  return 17;
 }
 
 function spritePosition(slot: number, cols: number, rows: number) {
@@ -104,7 +151,7 @@ export function KioskSemanticArt({ kind, name, source, className = "" }: {
     role="img"
     aria-label={name}
     style={{
-      backgroundImage: `url(${service ? "/kiosk/art/service-semantic-sprite.webp" : "/kiosk/art/retail-semantic-sprite.webp"}?v=20260830-5)`,
+      backgroundImage: `url(${service ? "/kiosk/art/service-semantic-sprite.webp" : "/kiosk/art/retail-semantic-sprite.webp"}?v=20260830-7)`,
       backgroundSize: `${cols * 100}% ${rows * 100}%`,
       backgroundPosition: spritePosition(slot, cols, rows),
     }}
