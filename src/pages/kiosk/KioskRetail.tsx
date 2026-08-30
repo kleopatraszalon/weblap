@@ -16,7 +16,6 @@ const GROUPS: { id: Group; label: string; icon: string }[] = [
   { id: "water", label: "Víz", icon: "💧" },
   { id: "tea", label: "Tea", icon: "🍵" },
   { id: "snack", label: "Snackek", icon: "🥜" },
-  { id: "other", label: "Egyéb", icon: "🛍" },
 ];
 
 const normalize = (value: string | null | undefined) =>
@@ -37,29 +36,41 @@ function productSearchText(p: KioskProduct) {
   return [productName(p), productMetaText(p)].filter(Boolean).join(" ");
 }
 
+const BLOCKED_NON_RETAIL = /\b(berlet|hajszaritas|hajvagas|fodrasz|frizura|loknis|kezeles|szolgaltatas|csomag|alkalom|honap|hosszu|extra hosszu|manikur|pedikur|kozmetika|masszazs|szortelenites|gyanta|kavitacio|radiofrekvencia|rf kezeles|hajegyenesites|festes|balayage)\b/;
+
+function brandGroup(name: string): RetailGroup | null {
+  if (/\b(nespresso|lavazza|tchibo|illy|jacobs|douwe egberts)\b/.test(name)) return "coffee";
+  if (/\b(coca cola|coke|pepsi|fanta|sprite|schweppes|kinley|red bull|hell|monster|cappy)\b/.test(name)) return "drink";
+  if (/\b(nestea|fuze tea|lipton)\b/.test(name)) return "tea";
+  if (/\b(szentkiralyi|natur aqua|theodora|jana|evian|voss)\b/.test(name)) return "water";
+  if (/\b(milka|kinder|snickers|twix|mars|bounty|toblerone|lindt|merci|sport szelet)\b/.test(name)) return "chocolate";
+  return null;
+}
+
 /**
- * Strict retail classification.
- * The concrete product name always wins. Generic database labels such as
- * "ital" or "termék" are deliberately not allowed to pull unrelated items
- * into a retail tab.
+ * Only real consumables may enter the retail page. Services, passes and
+ * treatment packages are rejected before grouping, even if a broad database
+ * category accidentally contains the word "ital" or "termék".
  */
-function classifyProduct(p: KioskProduct): RetailGroup {
+function classifyConsumable(p: KioskProduct): RetailGroup | null {
   const name = normalize(productName(p));
-  const byName = retailGroup(name);
-  if (byName !== "other") return byName;
-
   const meta = normalize(productMetaText(p));
+  const all = `${name} ${meta}`.trim();
+  if (!name || BLOCKED_NON_RETAIL.test(all)) return null;
+
+  const named = retailGroup(name);
+  if (named !== "other") return named;
+
+  const branded = brandGroup(name);
+  if (branded) return branded;
+
   const byMeta = retailGroup(meta);
-  if (byMeta === "other") return "other";
-
-  // Generic beverage metadata is too broad. Only accept it when the metadata
-  // also identifies a concrete beverage family/brand.
+  if (["coffee", "chocolate", "protein", "water", "tea", "snack"].includes(byMeta)) return byMeta;
   if (byMeta === "drink") {
-    const concreteDrink = /\b(cola|coca cola|pepsi|fanta|sprite|tonic|limonade|juice|gyumolcsle|narancsle|almale|energiaital|energy drink)\b/.test(meta);
-    return concreteDrink ? "drink" : "other";
+    const specificDrink = /\b(cola|coca cola|pepsi|fanta|sprite|schweppes|kinley|tonic|limonade|juice|gyumolcsle|narancsle|almale|energiaital|energy drink|red bull|hell|monster|cappy)\b/.test(all);
+    return specificDrink ? "drink" : null;
   }
-
-  return byMeta;
+  return null;
 }
 
 function semanticName(group: RetailGroup, p: KioskProduct) {
@@ -89,7 +100,9 @@ export function KioskRetail() {
   }, []);
 
   const grouped = React.useMemo(
-    () => products.map((product) => ({ product, group: classifyProduct(product) })),
+    () => products
+      .map((product) => ({ product, group: classifyConsumable(product) }))
+      .filter((item): item is { product: KioskProduct; group: RetailGroup } => Boolean(item.group)),
     [products],
   );
   const counts = React.useMemo(() => {
@@ -109,7 +122,8 @@ export function KioskRetail() {
   }, [availableGroups, group]);
 
   function add(p: KioskProduct) {
-    const strictGroup = classifyProduct(p);
+    const strictGroup = classifyConsumable(p);
+    if (!strictGroup) return;
     addToCart({
       id: p.id,
       title: productName(p),
@@ -128,7 +142,7 @@ export function KioskRetail() {
       </div>
       <header className="kiosk-retail-hero">
         <div className="kiosk-retail-hero-icon">☕</div>
-        <div><span>TERMÉKELADÁS · KLEOPÁTRA</span><h1>{service ? "A kezelés mellé kérsz valamit inni?" : "Kávé, frissítő és finomságok"}</h1><p>{service ? "Válassz egy italt vagy nassolnivalót, hogy kellemesebb legyen a várakozás." : "A Gyöngyös szalon adatbázisban elérhető termékei közül válogathatsz."}</p></div>
+        <div><span>TERMÉKELADÁS · KLEOPÁTRA</span><h1>{service ? "A kezelés mellé kérsz valamit inni?" : "Kávé, frissítő és finomságok"}</h1><p>{service ? "Válassz egy italt vagy nassolnivalót, hogy kellemesebb legyen a várakozás." : "A szalon adatbázisban elérhető fogyasztható termékei közül válogathatsz."}</p></div>
         {service && <div className="kiosk-retail-selected-service"><small>Kiválasztott kezelés</small><b>{service.title}</b>{service.meta?.duration ? <span>{service.meta.duration} perc</span> : null}</div>}
       </header>
 
@@ -138,16 +152,12 @@ export function KioskRetail() {
 
       {loading && <div className="kioskInfo">Termékek betöltése a VIR adatbázisból…</div>}
       {error && <div className="kioskError">{error}</div>}
-      {!loading && !products.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Jelenleg nincs kioskon értékesíthető termék.</h2><p>A termékek a VIR adatbázisból és a kiosk termékkínálatából érkeznek.</p></div>}
-      {!loading && products.length > 0 && !visible.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Ebben a csoportban nincs termék.</h2><p>A csoport kizárólag a hozzá tartozó termékeket jeleníti meg.</p></div>}
+      {!loading && !grouped.length && <div className="kiosk-retail-empty"><span>☕</span><h2>Jelenleg nincs kioskon értékesíthető fogyasztható termék.</h2><p>Csak kávé, ital, csoki, protein shake, víz, tea és snack jelenhet meg ezen az oldalon.</p></div>}
+      {!loading && grouped.length > 0 && !visible.length && <div className="kiosk-retail-empty"><span>🛍️</span><h2>Ebben a csoportban nincs termék.</h2><p>A csoport kizárólag a hozzá tartozó termékeket jeleníti meg.</p></div>}
       <div className="kiosk-retail-grid">
         {visible.map(({ product: p, group: productGroup }) => <article key={p.id} className="kiosk-retail-card" data-retail-group={productGroup}>
           <div className="kiosk-retail-photo">
-            <KioskSemanticArt
-              kind="product"
-              name={semanticName(productGroup, p)}
-              source={p.image_url || null}
-            />
+            <KioskSemanticArt kind="product" name={semanticName(productGroup, p)} source={p.image_url || null} />
             <span>{GROUPS.find((g) => g.id === productGroup)?.label}</span>
           </div>
           <div className="kiosk-retail-copy"><h3>{productName(p)}</h3>{p.web_description && <p>{p.web_description}</p>}<div><strong>{productPrice(p).toLocaleString("hu-HU")} Ft</strong><button className={added === p.id ? "added" : ""} onClick={() => add(p)}>{added === p.id ? "✓ Hozzáadva" : "Kosárba"}</button></div></div>
