@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-29T22:23:00+02:00
+2026-08-30T14:16:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: production hotfix for visible kiosk theme assets and photoreal Hair / Face / Body Mapping.
-Target application commit: 6305603dca8568f063c71f9b2f30ab6e933fb1cc
+Reason: deploy kiosk photoreal mapping, larger top Mapping launcher, and Classic catalogue image parity across every visual theme.
+Target application commit: acb2070ad2aef3157f3004bbae1b7c78afb86fdd
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: Classic unchanged; Pearl, Silver, KIDS, Noir, Rose Gold, Aqua and Zen service artwork; forced cache-busted sidebar/category art; photoreal mapping artwork; Hair Mirror compatibility; existing zone selection, treatment recommendations, cart and public website functionality.
-Asset cache version: 20260829-3
+Deploy scope: Hair / Face / Body Mapping photoreal artwork in all themes including Classic; larger header Mapping button; Classic API-provided catalogue/category images reused in Pearl, Silver, KIDS, Noir, Rose Gold, Aqua and Zen; existing treatment recommendations, cart, Hair Mirror and public website functionality.
+Asset cache version: 20260830-1
