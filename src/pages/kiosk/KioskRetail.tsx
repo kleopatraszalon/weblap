@@ -4,6 +4,7 @@ import { addToCart, readCart } from "./cartStore";
 import { fetchKioskProducts } from "./kioskApi";
 import { KioskCartPanel } from "./KioskCartPanel";
 import { KioskSemanticArt, retailGroup, type RetailGroup } from "./KioskSemanticArt";
+import { KioskRetailInlineArt } from "./KioskRetailInlineArt";
 import type { KioskProduct } from "./types";
 
 type Group = "all" | RetailGroup;
@@ -47,11 +48,6 @@ function brandGroup(name: string): RetailGroup | null {
   return null;
 }
 
-/**
- * Only real consumables may enter the retail page. Services, passes and
- * treatment packages are rejected before grouping, even if a broad database
- * category accidentally contains the word "ital" or "termék".
- */
 function classifyConsumable(p: KioskProduct): RetailGroup | null {
   const name = normalize(productName(p));
   const meta = normalize(productMetaText(p));
@@ -157,7 +153,9 @@ export function KioskRetail() {
       <div className="kiosk-retail-grid">
         {visible.map(({ product: p, group: productGroup }) => <article key={p.id} className="kiosk-retail-card" data-retail-group={productGroup}>
           <div className="kiosk-retail-photo">
-            <KioskSemanticArt kind="product" name={semanticName(productGroup, p)} source={p.image_url || null} />
+            {p.image_url
+              ? <KioskSemanticArt kind="product" name={semanticName(productGroup, p)} source={p.image_url} />
+              : <KioskRetailInlineArt name={semanticName(productGroup, p)} />}
             <span>{GROUPS.find((g) => g.id === productGroup)?.label}</span>
           </div>
           <div className="kiosk-retail-copy"><h3>{productName(p)}</h3>{p.web_description && <p>{p.web_description}</p>}<div><strong>{productPrice(p).toLocaleString("hu-HU")} Ft</strong><button className={added === p.id ? "added" : ""} onClick={() => add(p)}>{added === p.id ? "✓ Hozzáadva" : "Kosárba"}</button></div></div>
