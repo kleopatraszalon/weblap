@@ -135,7 +135,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     </div>
     <main className="kioskBody">{children}</main>
     <KioskWaitingUpsell />
-    <KioskHairMirror visualMode={visualMode as "classic" | "pearl" | "silver" | "kids"} />
+    <KioskHairMirror visualMode={visualMode} config={theme?.kioskExperiences?.hairMirror} />
     <KidsGameArcade active={visualMode === "kids"} />
     <div className="kiosk-kids-companions" aria-hidden="true">
       <div className="kiosk-kids-guide bunny"><img src="/images/kiosk/kids/bunny.gif" alt=""/><span>Mit válasszunk? ✨</span></div>
