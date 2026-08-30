@@ -1,7 +1,7 @@
-/* Production visual hotfix.
-   Service thumbnails are restored from the Classic catalogue by
-   KioskClassicImageParity. This stylesheet only guarantees geometry and the
-   photoreal mapping layer. */
+/* Production visual layer.
+   Real service thumbnails are selected by KioskClassicImageParity.
+   This stylesheet keeps their geometry consistent and gives Hair / Face / Body
+   Mapping a premium photo-first presentation in every theme. */
 
 .kiosk-theme-service-art{
   display:block!important;
@@ -24,47 +24,165 @@
   min-height:190px!important;
 }
 
-/* Photoreal Hair / Face / Body mapping in EVERY theme, including Classic. */
+/* Premium photo-first Hair / Face / Body Mapping — all themes, Classic too. */
+.kiosk-mapping-grid{
+  grid-template-columns:minmax(330px,.78fr) minmax(560px,1.52fr)!important;
+  gap:24px!important;
+}
+.mapping-canvas-card{
+  padding:18px!important;
+  border-radius:30px!important;
+  overflow:hidden!important;
+  box-shadow:0 24px 70px rgba(40,24,14,.10)!important;
+}
+.mapping-canvas-head{
+  padding:4px 8px 16px!important;
+}
+.mapping-canvas-head>div b{
+  font-size:16px!important;
+  letter-spacing:-.01em!important;
+}
 .mapping-anatomy{
   isolation:isolate!important;
   position:relative!important;
   overflow:hidden!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,242,235,.96))!important;
+  min-height:620px!important;
+  height:min(71vh,760px)!important;
+  border-radius:26px!important;
+  border:1px solid color-mix(in srgb,var(--kiosk-ink) 8%,transparent)!important;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(255,255,255,.98),rgba(250,246,241,.96) 58%,rgba(244,238,231,.98) 100%)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 -40px 90px rgba(112,74,52,.035)!important;
 }
 .mapping-anatomy .mapping-figure-svg{opacity:0!important}
 .mapping-anatomy::after{
   content:""!important;
   position:absolute!important;
-  inset:8px!important;
+  inset:16px 20px 18px!important;
   z-index:0!important;
   pointer-events:none!important;
-  background-image:url('/kiosk/mapping/mapping-photo.webp?v=20260830-1')!important;
+  background-image:url('/kiosk/mapping/mapping-photo.webp?v=20260830-2')!important;
   background-repeat:no-repeat!important;
-  background-size:400% 100%!important;
-  background-color:#f8f4ee!important;
-  border-radius:18px!important;
+  background-size:auto 96%!important;
+  background-color:transparent!important;
+  border-radius:22px!important;
   opacity:1!important;
   visibility:visible!important;
-  filter:saturate(1.02) contrast(1.015)!important;
+  filter:saturate(1.025) contrast(1.015) brightness(1.01)!important;
 }
-.mapping-anatomy::before{z-index:1!important;opacity:.12!important}
+.mapping-anatomy::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.78),transparent 12%,transparent 88%,rgba(255,255,255,.78)),
+    linear-gradient(180deg,rgba(255,255,255,.48),transparent 14%,transparent 88%,rgba(255,255,255,.4))!important;
+  mask-image:none!important;
+}
 .mapping-zone{z-index:3!important}
-.mapping-hair::after{background-position:0% 50%!important}
-.mapping-face::after{background-position:33.333% 50%!important}
-.mapping-body-front::after{background-position:66.667% 50%!important}
-.mapping-body-back::after{background-position:100% 50%!important}
+.mapping-hair::after{background-position:left center!important}
+.mapping-face::after{background-position:39% center!important}
+.mapping-body-front::after{background-position:72% center!important}
+.mapping-body-back::after{background-position:right center!important}
 
-/* Keep theme colour treatment subtle; the anatomy remains realistic. */
-.kioskScreen[data-kiosk-visual="silver"] .mapping-anatomy::after{filter:saturate(.92) contrast(1.05)!important}
-.kioskScreen[data-kiosk-visual="noir"] .mapping-anatomy::after{filter:saturate(.9) contrast(1.06) brightness(.94)!important}
-.kioskScreen[data-kiosk-visual="rose-gold"] .mapping-anatomy::after{filter:saturate(1.03) sepia(.025)!important}
-.kioskScreen[data-kiosk-visual="aqua"] .mapping-anatomy::after{filter:saturate(.98) hue-rotate(2deg)!important}
-.kioskScreen[data-kiosk-visual="zen"] .mapping-anatomy::after{filter:saturate(.94) sepia(.025)!important}
+/* Zones outline the photographed anatomy without hiding it. */
+.mapping-zone{
+  border:1.5px dashed color-mix(in srgb,var(--kiosk-accent) 54%,transparent)!important;
+  background:color-mix(in srgb,var(--kiosk-surface) 8%,transparent)!important;
+  backdrop-filter:none!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.35) inset!important;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+.mapping-zone>b{
+  max-width:128px!important;
+  padding:5px 9px!important;
+  border-radius:999px!important;
+  background:color-mix(in srgb,var(--kiosk-surface) 92%,transparent)!important;
+  color:var(--kiosk-ink)!important;
+  font-size:10px!important;
+  line-height:1.1!important;
+  box-shadow:0 5px 16px rgba(38,24,18,.10)!important;
+}
+.mapping-zone>span{
+  width:22px!important;
+  height:22px!important;
+  min-height:22px!important;
+  border:1px solid color-mix(in srgb,var(--kiosk-accent) 24%,transparent)!important;
+  background:color-mix(in srgb,var(--kiosk-surface) 94%,transparent)!important;
+  box-shadow:0 4px 12px rgba(38,24,18,.08)!important;
+}
+.mapping-zone:hover{
+  border-style:solid!important;
+  background:color-mix(in srgb,var(--kiosk-accent) 7%,transparent)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--kiosk-accent) 8%,transparent)!important;
+}
+.mapping-zone.selected{
+  border:2px solid var(--kiosk-accent)!important;
+  background:color-mix(in srgb,var(--kiosk-accent) 19%,transparent)!important;
+  color:#fff!important;
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--kiosk-accent) 9%,transparent),0 12px 30px color-mix(in srgb,var(--kiosk-accent) 14%,transparent)!important;
+}
+.mapping-zone.selected>b{
+  background:var(--kiosk-accent)!important;
+  color:#fff!important;
+  box-shadow:0 7px 18px color-mix(in srgb,var(--kiosk-accent) 24%,transparent)!important;
+}
+.mapping-zone.selected>span{
+  background:#fff!important;
+  color:var(--kiosk-accent)!important;
+  border-color:#fff!important;
+}
+.mapping-selected-list{
+  margin-top:10px!important;
+  padding:13px 8px 2px!important;
+  border-top:1px solid color-mix(in srgb,var(--kiosk-ink) 7%,transparent)!important;
+}
+
+/* Mapping view tabs feel like a dedicated body selector rather than form buttons. */
+.mapping-view-tabs-four{
+  gap:10px!important;
+}
+.mapping-view-tabs-four button{
+  min-height:78px!important;
+  border-radius:18px!important;
+  background:color-mix(in srgb,var(--kiosk-surface) 94%,var(--kiosk-bg))!important;
+  box-shadow:0 6px 18px rgba(31,20,15,.05)!important;
+}
+.mapping-view-tabs-four button.active{
+  transform:translateY(-1px)!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--kiosk-accent) 14%,var(--kiosk-surface)),color-mix(in srgb,var(--kiosk-accent) 5%,var(--kiosk-surface)))!important;
+  box-shadow:0 9px 24px color-mix(in srgb,var(--kiosk-accent) 13%,transparent),inset 0 0 0 1px var(--kiosk-accent)!important;
+}
+
+/* Dark themes keep the photo natural and only tint the surrounding UI. */
+.kioskScreen[data-kiosk-visual="silver"] .mapping-anatomy,
+.kioskScreen[data-kiosk-visual="noir"] .mapping-anatomy{
+  background:radial-gradient(circle at 50% 42%,#fafafa,#eeece9 72%,#e6e3df)!important;
+}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-anatomy::after{filter:saturate(.96) contrast(1.035) brightness(1.01)!important}
+.kioskScreen[data-kiosk-visual="noir"] .mapping-anatomy::after{filter:saturate(.94) contrast(1.04) brightness(.99)!important}
+.kioskScreen[data-kiosk-visual="rose-gold"] .mapping-anatomy::after{filter:saturate(1.035) sepia(.018) brightness(1.015)!important}
+.kioskScreen[data-kiosk-visual="aqua"] .mapping-anatomy::after{filter:saturate(.99) hue-rotate(1deg) brightness(1.01)!important}
+.kioskScreen[data-kiosk-visual="zen"] .mapping-anatomy::after{filter:saturate(.96) sepia(.018) brightness(1.01)!important}
+.kioskScreen[data-kiosk-visual="silver"] .mapping-zone>b,
+.kioskScreen[data-kiosk-visual="noir"] .mapping-zone>b{
+  background:rgba(255,255,255,.93)!important;
+  color:#171717!important;
+}
 
 .kiosk-theme-menu-expanded{max-height:min(72vh,560px)!important;overflow-y:auto!important}
 
+@media(max-width:1180px){
+  .kiosk-mapping-grid{grid-template-columns:1fr!important}
+  .mapping-anatomy{height:700px!important;min-height:640px!important}
+}
 @media(max-width:900px){
   .kiosk-rail-list .kiosk-theme-service-art{width:50px!important;height:50px!important;min-width:50px!important}
   .kiosk-category-card-image .kiosk-theme-service-art{min-height:150px!important}
-  .mapping-anatomy::after{inset:4px!important}
+  .mapping-anatomy{height:620px!important;min-height:600px!important}
+  .mapping-anatomy::after{inset:8px!important;background-size:auto 94%!important}
+  .mapping-zone>b{font-size:9px!important;padding:4px 7px!important}
 }
