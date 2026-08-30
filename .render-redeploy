@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-30T14:38:27+02:00
+2026-08-30T16:08:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: deploy polished photo-first Hair / Face / Body Mapping and service-name-aware Classic thumbnails across all kiosk themes.
-Target application commit: edede8e198bfd31f8ac94aa7a2e354b884e357da
+Reason: deploy kiosk retail sales, waiting refreshment upsell and expanded semantic service/product graphics.
+Target application commit: 2489c4673f3450673b1cab21a7e82b6da624541f
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: improved natural-aspect photoreal Mapping canvas; less obstructive treatment zones; larger header Mapping launcher; 12-family Classic semantic artwork for hair, nails, cosmetics, men, massage, body shaping, kids/teens, wellness, gift vouchers and packages; service-name correction for CocoChoco/keratin, anti-aging, cavitation and other concrete treatments in every theme.
-Asset cache version: 20260830-2
+Deploy scope: /kiosk/products retail page; coffee/drinks/chocolate/protein/water/tea/snack filters from kiosk API data; automatic “Amíg várakozol, fogyassz valamit!” offer after service selection including Body Mapping; expanded semantic service graphics; retail image fallbacks; persistent Termékeladás launcher.
+Asset cache version: 20260830-6
