@@ -34,6 +34,10 @@ function getStoredVisualMode(): KioskVisualMode {
   const raw = localStorage.getItem("kiosk_visual_mode");
   return VISUAL_MODES.some((mode) => mode.id === raw) ? raw as KioskVisualMode : "classic";
 }
+function cssImage(value: unknown, fallback: string) {
+  const raw = String(value || "").trim();
+  return `url("${(raw || fallback).replace(/"/g, "%22")}")`;
+}
 
 const COPY: Record<LangCode, { menu: string; pay: string; ticket: string; total: string; home: string; theme: string; mapping: string; retail: string }> = {
   hu: { menu: "Választás", pay: "Adatok és fizetés", ticket: "Kész", total: "Kosár", home: "Főmenü", theme: "Téma", mapping: "Face / Body Mapping", retail: "Termékeladás" },
@@ -92,6 +96,11 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
   const total = cartTotal(cart);
   const count = cartCount(cart);
   const radius = Math.max(12, Math.min(38, Number(theme.cardRadius || 24)));
+  const mapping = theme?.kioskExperiences?.mapping || {};
+  const mappingImages = mapping?.viewImages || {};
+  const sprite = "/kiosk/mapping/mapping-photo.webp?v=20260830-2";
+  const imageFit = mapping.imageFit === "cover" ? "cover" : "contain";
+  const hasHair = Boolean(mappingImages.hair), hasFace = Boolean(mappingImages.face), hasFront = Boolean(mappingImages.bodyFront), hasBack = Boolean(mappingImages.bodyBack);
   const shellStyle = {
     "--kiosk-bg": theme.backgroundColor || "#f4efe7",
     "--kiosk-surface": theme.surfaceColor || "#ffffff",
@@ -99,6 +108,24 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     "--kiosk-gold": theme.primaryColor || "#b69861",
     "--kiosk-accent": theme.accentColor || "#ec008c",
     "--kiosk-radius": `${radius}px`,
+    "--mapping-accent": mapping.accent || theme.accentColor || "#ec008c",
+    "--mapping-surface": mapping.surface || "#f7f2ec",
+    "--mapping-label-display": mapping.showLabels === false ? "none" : "block",
+    "--mapping-guide-opacity": mapping.showGuide === false ? "0" : "1",
+    "--mapping-title": JSON.stringify(mapping.title || "Mutasd meg pontosan, melyik terület érdekel."),
+    "--mapping-subtitle": JSON.stringify(mapping.subtitle || "Jelöld ki a haj, arc vagy test területét. A rendszer azonnal a kijelölt területhez illő, valóban elérhető szalonkezeléseket ajánlja."),
+    "--mapping-hair-image": cssImage(mappingImages.hair, sprite),
+    "--mapping-face-image": cssImage(mappingImages.face, sprite),
+    "--mapping-front-image": cssImage(mappingImages.bodyFront, sprite),
+    "--mapping-back-image": cssImage(mappingImages.bodyBack, sprite),
+    "--mapping-hair-position": hasHair ? "center" : "left center",
+    "--mapping-face-position": hasFace ? "center" : "39% center",
+    "--mapping-front-position": hasFront ? "center" : "72% center",
+    "--mapping-back-position": hasBack ? "center" : "right center",
+    "--mapping-hair-size": hasHair ? imageFit : "auto 96%",
+    "--mapping-face-size": hasFace ? imageFit : "auto 96%",
+    "--mapping-front-size": hasFront ? imageFit : "auto 96%",
+    "--mapping-back-size": hasBack ? imageFit : "auto 96%",
     background: theme.backgroundColor || "#f4efe7",
   } as React.CSSProperties;
 
@@ -118,9 +145,9 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
             </button>)}
           </div>}
         </div>
-        <button className="kiosk-face-map-launcher" type="button" onClick={() => navigate("/kiosk/face-body-mapping")} aria-label={copy.mapping} title={copy.mapping}>
+        {mapping.enabled !== false && <button className="kiosk-face-map-launcher" type="button" onClick={() => navigate("/kiosk/face-body-mapping")} aria-label={copy.mapping} title={copy.mapping}>
           <span>◎</span><b>{copy.mapping}</b>
-        </button>
+        </button>}
         <button className="kiosk-retail-launcher" type="button" onClick={() => navigate("/kiosk/products")} aria-label={copy.retail} title={copy.retail}>
           <span>🛍</span><b>{copy.retail}</b>
         </button>
@@ -135,7 +162,7 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
     </div>
     <main className="kioskBody">{children}</main>
     <KioskWaitingUpsell />
-    <KioskHairMirror visualMode={visualMode as "classic" | "pearl" | "silver" | "kids"} />
+    <KioskHairMirror visualMode={visualMode} config={theme?.kioskExperiences?.hairMirror} />
     <KidsGameArcade active={visualMode === "kids"} />
     <div className="kiosk-kids-companions" aria-hidden="true">
       <div className="kiosk-kids-guide bunny"><img src="/images/kiosk/kids/bunny.gif" alt=""/><span>Mit válasszunk? ✨</span></div>
