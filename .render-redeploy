@@ -1,8 +1,7 @@
 Render redeploy trigger
-2026-08-30T22:42:00+02:00
+2026-08-31
 Force a clean production deploy from the current main branch.
-Reason: deploy consumable-only kiosk retail filtering and three-color horizontal progress lines.
-Target application commit: 0c67189ae06c638722497942d9e60f87ac5990ae
+Reason: publish admin-driven Face / Body Mapping and photorealistic Hair Mirror.
+Target application commit: 9d3a7f57b8a30cf3e30eb3272e602d49a3d018ec
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: remove services/passes/treatment packages from retail; only Coffee / Drinks / Chocolate / Protein shake / Water / Tea / Snacks; product-name and known-brand classification; matching product imagery; replace numbered 1/2/3 header progress with three horizontal colored lines directly below the header.
-Asset cache version: 20260830-10
+Deploy scope: mapping appearance variables and per-view images; remove SVG hair silhouettes; real PNG/WebP hair photo overlays with camera/photo alignment controls.
