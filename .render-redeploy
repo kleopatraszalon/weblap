@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-30T22:21:00+02:00
+2026-08-30T22:42:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: deploy strict kiosk retail grouping v2 with product-name-first classification and matching product imagery.
-Target application commit: 3ceaef20eb1336f1ad52e20fa535c6f3dcdd10bb
+Reason: deploy consumable-only kiosk retail filtering and three-color horizontal progress lines.
+Target application commit: 0c67189ae06c638722497942d9e60f87ac5990ae
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: Kávé only coffee; Italok only concrete soft drinks/beverages; Csokik only chocolate; Protein shake only protein drinks; Víz only water; Tea only tea; Snack only snacks; product-specific DB image first, group-matched semantic image fallback, no generic category-image leakage.
-Asset cache version: 20260830-9
+Deploy scope: remove services/passes/treatment packages from retail; only Coffee / Drinks / Chocolate / Protein shake / Water / Tea / Snacks; product-name and known-brand classification; matching product imagery; replace numbered 1/2/3 header progress with three horizontal colored lines directly below the header.
+Asset cache version: 20260830-10
