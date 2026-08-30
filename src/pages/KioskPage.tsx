@@ -11,9 +11,11 @@ import "./kiosk/kiosk-mapping-launcher-hotfix.css";
 import "./kiosk/kiosk-mapping-recommendations.css";
 import "./kiosk/kiosk-theme-service-art.css";
 import "./kiosk/kiosk-theme-assets-production.css";
+import "./kiosk/kiosk-retail.css";
 import { KioskShell } from "./kiosk/KioskShell";
 import { KioskLanding } from "./kiosk/KioskLanding";
 import { KioskCategory } from "./kiosk/KioskCategory";
+import { KioskRetail } from "./kiosk/KioskRetail";
 import { KioskPay } from "./kiosk/KioskPay";
 import { KioskTicket } from "./kiosk/KioskTicket";
 import { KioskFaceBodyMapping } from "./kiosk/KioskFaceBodyMapping";
@@ -26,6 +28,7 @@ export function KioskPage() {
       <Routes>
         <Route path="/" element={<KioskLanding />} />
         <Route path="cat/:slug" element={<KioskCategory />} />
+        <Route path="products" element={<KioskRetail />} />
         <Route path="face-body-mapping" element={<KioskFaceBodyMapping />} />
         <Route path="pay" element={<KioskPay />} />
         <Route path="ticket" element={<KioskTicket />} />
