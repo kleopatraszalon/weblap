@@ -15,6 +15,7 @@ export function KioskCartPanel() {
 
   const total = cartTotal(cart);
   const count = cartCount(cart);
+  const hasService = cart.some((item) => item.meta?.kind === "service");
   const change = (id: string, delta: number) => { changeCartQty(id, delta); setCart(readCart()); };
 
   return <aside className="kiosk-order-panel">
@@ -38,6 +39,7 @@ export function KioskCartPanel() {
       <button className="kiosk-checkout-btn" disabled={!cart.length} onClick={() => nav("/kiosk/pay")}>
         Tovább a fizetéshez <span>→</span>
       </button>
+      {hasService && <div className="kiosk-refresh-card"><b>☕ Amíg várakozol, fogyassz valamit!</b><p>Kávé, hideg üdítő, csoki, protein shake és snack a szalon adatbázisából.</p><button onClick={() => nav("/kiosk/products")}>Termékek megtekintése →</button></div>}
       <small>A véglegesítés után a rendelés munkalapként bekerül a VIR rendszerbe.</small>
     </div>
   </aside>;
