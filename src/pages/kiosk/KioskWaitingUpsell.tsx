@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { addToCart } from "./cartStore";
+import { addToCart, readCart } from "./cartStore";
 import { fetchKioskProducts } from "./kioskApi";
 import { KioskSemanticArt, retailGroup } from "./KioskSemanticArt";
 import type { KioskProduct } from "./types";
@@ -14,6 +14,7 @@ export function KioskWaitingUpsell() {
   const [open, setOpen] = React.useState(false);
   const [products, setProducts] = React.useState<KioskProduct[]>([]);
   const [serviceTitle, setServiceTitle] = React.useState("");
+  const knownServices = React.useRef(new Set(readCart().filter((item) => item.meta?.kind === "service").map((item) => item.id)));
 
   const load = React.useCallback(async () => {
     try {
@@ -22,21 +23,33 @@ export function KioskWaitingUpsell() {
     } catch { setProducts([]); }
   }, []);
 
+  const showForService = React.useCallback((title: string) => {
+    setServiceTitle(title || "a kezelésed");
+    window.setTimeout(() => setOpen(true), 260);
+  }, []);
+
   React.useEffect(() => {
     load();
     const locationChange = () => load();
     const selected = (event: Event) => {
       const detail = (event as CustomEvent<{ title?: string }>).detail;
-      setServiceTitle(detail?.title || "a kezelésed");
-      window.setTimeout(() => setOpen(true), 260);
+      showForService(detail?.title || "a kezelésed");
+    };
+    const cartChanged = () => {
+      const services = readCart().filter((item) => item.meta?.kind === "service");
+      const newest = services.find((item) => !knownServices.current.has(item.id));
+      knownServices.current = new Set(services.map((item) => item.id));
+      if (newest) showForService(newest.title);
     };
     window.addEventListener("kiosk-location-change", locationChange as EventListener);
     window.addEventListener("kiosk-service-selected", selected as EventListener);
+    window.addEventListener("kiosk-cart-change", cartChanged as EventListener);
     return () => {
       window.removeEventListener("kiosk-location-change", locationChange as EventListener);
       window.removeEventListener("kiosk-service-selected", selected as EventListener);
+      window.removeEventListener("kiosk-cart-change", cartChanged as EventListener);
     };
-  }, [load]);
+  }, [load, showForService]);
 
   const suggestions = React.useMemo(() => {
     const priority = ["coffee", "drink", "chocolate", "protein", "water", "tea", "snack"];
