@@ -107,14 +107,6 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
       <button className="kiosk-home-button" onClick={() => navigate("/kiosk")} aria-label={copy.home}>
         <img src={theme.logoUrl || "/images/kleo_logo@2x.png"} className="kioskBrandLogo" alt="Kleopátra" />
       </button>
-      <div className="kiosk-progress" aria-label="Kiosk folyamat">
-        {[copy.menu, copy.pay, copy.ticket].map((label, index) => {
-          const n = index + 1;
-          return <div key={label} className={`kiosk-progress-step ${n === step ? "active" : n < step ? "done" : ""}`}>
-            <span>{n < step ? "✓" : n}</span><b>{label}</b>
-          </div>;
-        })}
-      </div>
       <div className="kiosk-utilities">
         <div className="kiosk-theme-picker">
           <button className="kiosk-theme-toggle" type="button" onClick={() => setThemeMenuOpen((open) => !open)} aria-label={copy.theme} aria-expanded={themeMenuOpen} title={copy.theme}>
@@ -138,6 +130,9 @@ export function KioskShell({ children }: { children: React.ReactNode }) {
         </button>
       </div>
     </header>
+    <div className="kiosk-step-lines" role="progressbar" aria-label="Kiosk folyamat" aria-valuemin={1} aria-valuemax={3} aria-valuenow={step}>
+      {[1, 2, 3].map((n) => <span key={n} className={`kiosk-step-line step-${n} ${n === step ? "active" : n < step ? "done" : ""}`} />)}
+    </div>
     <main className="kioskBody">{children}</main>
     <KioskWaitingUpsell />
     <KioskHairMirror visualMode={visualMode as "classic" | "pearl" | "silver" | "kids"} />
