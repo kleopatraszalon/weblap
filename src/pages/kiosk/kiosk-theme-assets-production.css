@@ -1,50 +1,70 @@
-/* Production asset binding: Classic intentionally has no overrides here. */
-.kioskScreen[data-kiosk-visual="pearl"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/pearl.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="silver"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/silver.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="kids"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/kids.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="noir"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/noir.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="rose-gold"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/rose-gold.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="aqua"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/aqua.webp?v=20260829-3')!important}
-.kioskScreen[data-kiosk-visual="zen"] .kiosk-theme-service-art{background-image:url('/kiosk/themes/zen.webp?v=20260829-3')!important}
+/* Production visual hotfix.
+   Service thumbnails are restored from the Classic catalogue by
+   KioskClassicImageParity. This stylesheet only guarantees geometry and the
+   photoreal mapping layer. */
 
-/* Keep the service sprite crisp and clearly visible both in the rail and cards. */
-.kioskScreen:not([data-kiosk-visual="classic"]) .kiosk-theme-service-art{
-  background-size:300% 200%!important;
-  background-repeat:no-repeat!important;
+.kiosk-theme-service-art{
+  display:block!important;
   opacity:1!important;
   visibility:visible!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
 }
-.kioskScreen:not([data-kiosk-visual="classic"]) .kiosk-rail-list .kiosk-theme-service-art{
-  display:block!important;
+.kiosk-rail-list .kiosk-theme-service-art{
   width:58px!important;
   height:58px!important;
   min-width:58px!important;
+  flex:0 0 58px!important;
   border-radius:15px!important;
 }
-.kioskScreen:not([data-kiosk-visual="classic"]) .kiosk-category-card-image .kiosk-theme-service-art{
-  display:block!important;
+.kiosk-category-card-image .kiosk-theme-service-art{
   width:100%!important;
   height:100%!important;
   min-height:190px!important;
 }
 
-/* Photoreal Hair / Face / Body mapping. Zone buttons remain interactive above the photo. */
-.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-anatomy::after{
-  background-image:url('/kiosk/mapping/mapping-photo.webp?v=20260829-3')!important;
+/* Photoreal Hair / Face / Body mapping in EVERY theme, including Classic. */
+.mapping-anatomy{
+  isolation:isolate!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,242,235,.96))!important;
+}
+.mapping-anatomy .mapping-figure-svg{opacity:0!important}
+.mapping-anatomy::after{
+  content:""!important;
+  position:absolute!important;
+  inset:8px!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background-image:url('/kiosk/mapping/mapping-photo.webp?v=20260830-1')!important;
   background-repeat:no-repeat!important;
-  background-size:auto 100%!important;
+  background-size:400% 100%!important;
+  background-color:#f8f4ee!important;
+  border-radius:18px!important;
   opacity:1!important;
   visibility:visible!important;
+  filter:saturate(1.02) contrast(1.015)!important;
 }
-.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-hair::after{background-position:left center!important}
-.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-face::after{background-position:37% center!important}
-.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-body-front::after{background-position:72% center!important}
-.kioskScreen:not([data-kiosk-visual="classic"]) .mapping-body-back::after{background-position:right center!important}
+.mapping-anatomy::before{z-index:1!important;opacity:.12!important}
+.mapping-zone{z-index:3!important}
+.mapping-hair::after{background-position:0% 50%!important}
+.mapping-face::after{background-position:33.333% 50%!important}
+.mapping-body-front::after{background-position:66.667% 50%!important}
+.mapping-body-back::after{background-position:100% 50%!important}
 
-/* Make new theme selector entries usable on kiosk displays. */
+/* Keep theme colour treatment subtle; the anatomy remains realistic. */
+.kioskScreen[data-kiosk-visual="silver"] .mapping-anatomy::after{filter:saturate(.92) contrast(1.05)!important}
+.kioskScreen[data-kiosk-visual="noir"] .mapping-anatomy::after{filter:saturate(.9) contrast(1.06) brightness(.94)!important}
+.kioskScreen[data-kiosk-visual="rose-gold"] .mapping-anatomy::after{filter:saturate(1.03) sepia(.025)!important}
+.kioskScreen[data-kiosk-visual="aqua"] .mapping-anatomy::after{filter:saturate(.98) hue-rotate(2deg)!important}
+.kioskScreen[data-kiosk-visual="zen"] .mapping-anatomy::after{filter:saturate(.94) sepia(.025)!important}
+
 .kiosk-theme-menu-expanded{max-height:min(72vh,560px)!important;overflow-y:auto!important}
 
 @media(max-width:900px){
-  .kioskScreen:not([data-kiosk-visual="classic"]) .kiosk-rail-list .kiosk-theme-service-art{width:50px!important;height:50px!important;min-width:50px!important}
-  .kioskScreen:not([data-kiosk-visual="classic"]) .kiosk-category-card-image .kiosk-theme-service-art{min-height:150px!important}
+  .kiosk-rail-list .kiosk-theme-service-art{width:50px!important;height:50px!important;min-width:50px!important}
+  .kiosk-category-card-image .kiosk-theme-service-art{min-height:150px!important}
+  .mapping-anatomy::after{inset:4px!important}
 }
