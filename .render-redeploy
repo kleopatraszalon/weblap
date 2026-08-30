@@ -1,8 +1,8 @@
 Render redeploy trigger
-2026-08-30T16:08:00+02:00
+2026-08-30T17:20:00+02:00
 Force a clean production deploy from the current main branch.
-Reason: deploy kiosk retail sales, waiting refreshment upsell and expanded semantic service/product graphics.
-Target application commit: 2489c4673f3450673b1cab21a7e82b6da624541f
+Reason: deploy premium single-model Body Mapping v2 after visual UAT.
+Target application commit: a4a38fa2ed6fe60ac855a72abe4971820098d158
 Expected service: weblap-o3g6.onrender.com
-Deploy scope: /kiosk/products retail page; coffee/drinks/chocolate/protein/water/tea/snack filters from kiosk API data; automatic “Amíg várakozol, fogyassz valamit!” offer after service selection including Body Mapping; expanded semantic service graphics; retail image fallbacks; persistent Termékeladás launcher.
-Asset cache version: 20260830-6
+Deploy scope: separate clean front/back Body Mapping photographs; centered single model; compact anatomical touch hotspots; corrected hero contrast; preserved treatment recommendation and retail upsell flow.
+Asset cache version: 20260830-7
