@@ -1,0 +1,8 @@
+.kiosk-mapping-page{background:var(--mapping-admin-surface,var(--kiosk-bg))}
+.mapping-anatomy.has-admin-photo::after{opacity:0!important;visibility:hidden!important}
+.mapping-admin-photo{position:absolute;z-index:1;width:94%;height:94%;max-width:none;max-height:none;object-position:center;pointer-events:none;transform-origin:center center;filter:saturate(1.02) contrast(1.01);border-radius:22px}
+.mapping-anatomy .mapping-admin-guide{position:absolute;z-index:0;left:50%;top:50%;width:min(58%,360px);height:90%;transform:translate(-50%,-50%);opacity:.14!important;color:var(--kiosk-ink);pointer-events:none}
+.mapping-anatomy.has-admin-photo .mapping-admin-guide{opacity:.06!important}
+.mapping-anatomy .mapping-zone{z-index:4!important}
+.mapping-disabled{min-height:60vh;display:grid;place-content:center;justify-items:center;gap:20px;text-align:center}.mapping-disabled>button{border:0;border-radius:14px;background:var(--kiosk-ink);color:var(--kiosk-surface);padding:12px 18px;font-weight:850}.mapping-disabled h1{max-width:650px}
+@media(max-width:900px){.mapping-admin-photo{width:98%;height:96%}.mapping-anatomy .mapping-admin-guide{width:min(70%,330px)}}
