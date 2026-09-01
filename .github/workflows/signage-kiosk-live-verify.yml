@@ -38,7 +38,7 @@ jobs:
             script="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE_URL/signage-kiosk-queue.js?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
             queue="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$API_URL/api/signage/wallboard/queue.json?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
 
-            HTML="$html" SCRIPT="$script" QUEUE="$queue" node - <<'NODE'
+            if HTML="$html" SCRIPT="$script" QUEUE="$queue" node - <<'NODE'
           const html=process.env.HTML||'';
           const script=process.env.SCRIPT||'';
           let queue={};
@@ -48,7 +48,7 @@ jobs:
           const queueOk=queue?.version==='1.0' && Array.isArray(queue?.waiting) && Array.isArray(queue?.ready);
           process.exit(htmlOk&&scriptOk&&queueOk?0:1);
           NODE
-            if [ $? -eq 0 ]; then
+            then
               printf '%s\n' "$queue" > /tmp/live-kiosk-queue.json
               ok=1
               break
