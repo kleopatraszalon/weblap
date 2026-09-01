@@ -31,8 +31,6 @@ function catalogParams(locationId?: string | null, lang?: string) {
   const qs = new URLSearchParams();
   if (lang) qs.set("lang", lang);
   if (locationId) {
-    // The kiosk API has used both query naming conventions during earlier releases.
-    // Sending both keeps deployed API revisions compatible while location_id remains canonical elsewhere.
     qs.set("location_id", locationId);
     qs.set("locationId", locationId);
   }
@@ -52,11 +50,7 @@ export async function fetchKioskServices(lang: string, locationId?: string | nul
   };
 
   const scoped = await load(true);
-  if (locationId && !(scoped.services?.length || scoped.categories?.length)) {
-    // A missing/legacy location binding must not leave the kiosk with an empty sidebar.
-    // Fall back to the active global kiosk catalogue; checkout still keeps the bound location.
-    return load(false);
-  }
+  if (locationId && !(scoped.services?.length || scoped.categories?.length)) return load(false);
   return scoped;
 }
 
@@ -93,4 +87,19 @@ export async function createKioskWorkOrder(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   }));
+}
+
+export async function fetchKioskQueueTicket(workOrderId: string) {
+  return json(await fetch(`${base()}/api/signage/wallboard/queue/workorder/${encodeURIComponent(workOrderId)}.json`, {
+    credentials: "include",
+    cache: "no-store",
+  })) as Promise<{
+    ok: true;
+    work_order_id: string;
+    work_order_number: string;
+    kiosk_queue_no: number;
+    kiosk_queue_code: string;
+    kiosk_queue_date: string;
+    status: string;
+  }>;
 }
