@@ -1,0 +1,76 @@
+name: KIOSK signage live verification
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: write
+
+concurrency:
+  group: kiosk-signage-live-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-kiosk-signage-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      SITE_URL: https://weblap-o3g6.onrender.com
+      API_URL: https://kleoszalon-api-1.onrender.com
+    steps:
+      - name: Mark pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"pending",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Waiting for live KIOSK signage queue",context:"signage/kiosk-queue-live"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
+
+      - name: Verify live KIOSK signage script and queue API
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in $(seq 1 100); do
+            html="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE_URL/signage/?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
+            script="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE_URL/signage-kiosk-queue.js?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
+            queue="$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$API_URL/api/signage/wallboard/queue.json?_=${GITHUB_SHA}-${attempt}" 2>/dev/null || true)"
+
+            HTML="$html" SCRIPT="$script" QUEUE="$queue" node - <<'NODE'
+          const html=process.env.HTML||'';
+          const script=process.env.SCRIPT||'';
+          let queue={};
+          try{queue=JSON.parse(process.env.QUEUE||'{}')}catch{}
+          const htmlOk=html.includes('/signage-kiosk-queue.js?v=20260901-1708');
+          const scriptOk=script.includes('[signage-kiosk-queue]') && script.includes('/api/signage/wallboard/queue.json') && script.includes('Mehet a szakemberhez');
+          const queueOk=queue?.version==='1.0' && Array.isArray(queue?.waiting) && Array.isArray(queue?.ready);
+          process.exit(htmlOk&&scriptOk&&queueOk?0:1);
+          NODE
+            if [ $? -eq 0 ]; then
+              printf '%s\n' "$queue" > /tmp/live-kiosk-queue.json
+              ok=1
+              break
+            fi
+            echo "Waiting for KIOSK signage rollout ($attempt/100)"
+            sleep 10
+          done
+          test "$ok" -eq 1 || { echo "KIOSK signage queue did not become live." >&2; exit 1; }
+          echo "Live queue response:"
+          cat /tmp/live-kiosk-queue.json
+
+      - name: Mark success
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"success",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Live KIOSK signage script and queue API verified",context:"signage/kiosk-queue-live"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
+
+      - name: Mark failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="$(node -e 'process.stdout.write(JSON.stringify({state:"failure",target_url:`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,description:"Live KIOSK signage verification failed",context:"signage/kiosk-queue-live"}))')"
+          curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -X POST --data "$body" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA"
